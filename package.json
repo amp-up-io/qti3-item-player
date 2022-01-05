@@ -1,0 +1,55 @@
+{
+  "name": "qti3-item-player",
+  "version": "0.2.3",
+  "description": "QTI 3 Item Player",
+  "author": {
+    "name": "Paul Grudnitski",
+    "email": "paul.grudnitski@amp-up.io"
+  },
+  "license": "MIT",
+  "private": false,
+  "files": ["dist"],
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "build:npm": "vue-cli-service build --target lib --name qti3Player src/Qti3Player.vue",
+    "lint": "vue-cli-service lint"
+  },
+  "main": "dist/qti3Player.umd.js",
+  "unpkg": "dist/qti3Player.umd.min.js",
+  "dependencies": {
+    "bignumber.js": "^9.0.2",
+    "core-js": "^3.6.5",
+    "printf": "^0.6.1",
+    "sweetalert2": "^11.3.1",
+    "vue": "^2.6.11"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
