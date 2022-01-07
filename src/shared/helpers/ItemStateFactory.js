@@ -1,4 +1,4 @@
-export class itemState {
+export class ItemStateFactory {
 
   constructor(guid, identifier, responseVars, templateVars, outcomeVars) {
     this.guid = guid

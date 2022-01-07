@@ -16,7 +16,7 @@
  */
 import Vue from 'vue'
 import { store } from '@/store/store'
-import { itemState } from '@/shared/helpers/itemState'
+import { ItemStateFactory } from '@/shared/helpers/ItemStateFactory'
 import EventListener from '@/shared/components/EventListener'
 import QtiContextDeclaration from '@/components/qti/declarations/QtiContextDeclaration'
 import QtiResponseDeclaration from '@/components/qti/declarations/QtiResponseDeclaration'
@@ -361,7 +361,7 @@ export default {
       // Update the store's responses and state of response variables
       this.getResponses()
 
-      const state = new itemState(
+      const state = new ItemStateFactory(
         store.getItemContextGuid(),
         this.identifier,
         store.getResponseDeclarations(),
@@ -739,7 +739,7 @@ export default {
   .qti3-player-container-fluid .qti-layout-row .qti-layout-offset1:first-child  {margin-left:8.547008547008547%;*margin-left:8.440625568285142%;}
 }
 
-.qti-underline {text-decoration: underline;}
+.qti-underline {text-decoration: underline; text-decoration-color: var(--foreground);}
 .qti-italic {font-style: italic;}
 .qti-align-left {text-align: left;}
 .qti-align-center {text-align: center;}
@@ -752,8 +752,16 @@ export default {
 .qti-hidden {display: none;}
 .qti-display-inline-block {display: inline-block;}
 .qti-visually-hidden {position:fixed !important;overflow: hidden;clip: rect(1px 1px 1px 1px);height: 1px;width: 1px;border: 0;margin: -1px;}
-.qti-bordered {border: 1px solid #888888;padding: 2px;}
-.qti-well {min-height:20px;padding:19px;margin-bottom:20px;background-color:#f5f5f5;border:1px solid #e3e3e3;border-radius:4px;box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);}
+.qti-bordered {border: 1px solid var(--table-border-color); padding: 2px;}
+
+.qti-well {
+  min-height:20px;
+  padding:19px;
+  margin-bottom:20px;
+  background-color: var(--well-bg);
+  border: var(--well-border);
+  border-radius:4px;box-shadow: var(--well-box-shadow);
+}
 
 /* General utility classes not part of QTI 3 Best Practices */
 /* Overrides to improve appearance of visual header tags */
@@ -787,14 +795,14 @@ hr {
   margin-top: 1rem;
   margin-bottom: 1rem;
   border: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: var(--hr-border);
 }
 
 /* Table classes */
 .table {
   width: 100%;
   margin-bottom: 4px;
-  color: #212529;
+  color: var(--foreground);
   background-color: transparent;
 }
 
@@ -811,11 +819,11 @@ hr {
 }
 
 .table-bordered {
-    border: 1px solid #000;
+    border: 1px solid var(--table-border-color);
 }
 
 .table-bordered thead th {
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid var(--table-border-color);
 }
 
 .table-bordered tbody:first-child tr:first-child th,

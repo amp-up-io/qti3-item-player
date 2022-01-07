@@ -271,42 +271,42 @@ export default {
 [role="radio"]:not(.control-hidden)::before {
   width: 16px;
   height: 16px;
-  border: 1px solid hsl(0, 0%, 66%);
+  border: var(--rb-default-border);
   border-radius: 100%;
-  background-image: linear-gradient(to bottom, hsl(300, 3%, 93%), #fff 60%);
+  background-image: var(--rb-default-bg-image);
 }
 
 [role="radio"]:not(.control-hidden):active::before {
-  background-image: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%));
+  background-image: var(--rb-default-bg-image-active)
 }
 
 [role="radio"][aria-checked="true"]:not(.control-hidden)::before {
-  border-color: hsl(216, 80%, 50%);
-  background: hsl(217, 95%, 68%);
-  background-image: linear-gradient(to bottom, hsl(217, 95%, 68%), hsl(216, 80%, 57%));
+  border-color: var(--rb-default-border-color-checked);
+  background: var(--rb-default-bg-checked);
+  background-image: var(--rb-default-bg-image-checked);
 }
 
 [role="radio"][aria-checked="true"]:not(.control-hidden)::after {
   display: block;
-  border: .1875em solid #FFF;
+  border: var(--rb-default-border-checked);
   border-radius: 100%;
   transform: translateY(-50%) translateX(-50%);
 }
 
 [role="radio"][aria-checked="mixed"]:not(.control-hidden):active::before,
 [role="radio"][aria-checked="true"]:not(.control-hidden):active::before {
-  background-image: linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%) 60%);
+  background-image: var(--rb-default-bg-image-checked-active);
 }
 
 [role="radio"]:not(.control-hidden):hover::before {
-  border-color: hsl(216, 94%, 65%);
+  border-color: var(--rb-default-hover);
 }
 
 [role="checkbox"]:not(.control-hidden):focus,
 [role="radio"]:not(.control-hidden):focus {
   border: 1px solid transparent;
   border-radius: 2px;
-  border-color: rgba(82, 168, 236, 0.8);
+  border-color: var(--choice-default-border-focus);
   /*
   IMPORTANT:  causing problems with vertical stacking column wrapping.
   Try a less-prominent inset.
@@ -334,10 +334,10 @@ export default {
   width: 16px;
   height: 16px;
   box-sizing: content-box;
-  border-color: hsl(216, 94%, 73%);
+  border-color: var(--rb-default-border-focus);
   border-width: 3px;
   border-radius: 100%;
-  box-shadow: inset 0 0 0 1px hsl(216, 80%, 50%);
+  box-shadow: var(--rb-default-border-focus-inset);
 }
 
 [role="checkbox"]::before,
@@ -352,26 +352,26 @@ export default {
 [role="checkbox"]:not(.control-hidden)::before {
   width: 16px;
   height: 16px;
-  border: 1px solid hsl(0, 0%, 66%);
+  border: var(--rb-default-border);
   border-radius: 0.2em;
-  background-image: linear-gradient(to bottom, hsl(300, 3%, 93%), #fff 30%);
+  background-image: var(--rb-default-bg-image);
 }
 
 [role="checkbox"]:not(.control-hidden):active::before {
-  background-image: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%) 30%);
+  background-image: var(--cb-default-bg-image-active);
 }
 
 [role="checkbox"][aria-checked="mixed"]:not(.control-hidden)::before,
 [role="checkbox"][aria-checked="true"]:not(.control-hidden)::before {
-  border-color: hsl(216, 80%, 50%);
-  background: hsl(217, 95%, 68%);
-  background-image: linear-gradient(to bottom, hsl(217, 95%, 68%), hsl(216, 80%, 57%));
+  border-color: var(--rb-default-border-color-checked);
+  background: var(--rb-default-bg-checked);
+  background-image: var(--cb-default-bg-image-checked);
 }
 
 [role="checkbox"][aria-checked="mixed"]:not(.control-hidden)::after {
   display: block;
   width: 8px;
-  border-bottom: 0.125em solid #FFF;
+  border-bottom: 0.125em solid var(--foreground);
   transform: translate(-50%, -50%) rotateZ(45deg);
   transform-origin: center center;
 }
@@ -381,14 +381,14 @@ export default {
   display: block;
   width: 0.25em;
   height: 0.4em;
-  border: solid #FFF;
+  border: solid var(--background);
   border-width: 0 0.125em 0.125em 0;
   transform: translateY(-65%) translateX(-50%) rotate(45deg);
 }
 
 [role="checkbox"][aria-checked="mixed"]:not(.control-hidden):active::before,
 [role="checkbox"][aria-checked="true"]:not(.control-hidden):active::before {
-  background-image: linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%));
+  background-image: var(--cb-default-bg-image-checked-active);
 }
 
 [role="checkbox"]:focus {
@@ -399,10 +399,10 @@ export default {
   width: 16px;
   height: 16px;
   box-sizing: content-box;
-  border-color: hsl(216, 94%, 73%);
+  border-color: var(--rb-default-border-focus);
   border-width: 3px;
   border-radius: calc(0.2em + 3px);
-  box-shadow: inset 0 0 0 1px hsl(216, 80%, 50%);
+  box-shadow: var(--rb-default-border-focus-inset);
 }
 
 .amp-choice-label {
@@ -414,14 +414,12 @@ export default {
     display: none;
     width: 0px;
 }
-
 .amp-choice-description {
   display: inline-block;
   vertical-align: top;
   padding-left: 2px;
   width: 80%;
 }
-
 .control-hidden .amp-choice-label,
 .control-hidden .amp-choice-description {
   padding-left: 4px;

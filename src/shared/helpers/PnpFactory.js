@@ -1,6 +1,6 @@
 export class PnpFactory {
 
-  constructor() {
+  constructor () {
     this.pnp = this.defaultPnp()
     return this
   }

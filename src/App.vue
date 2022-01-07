@@ -12,7 +12,7 @@
 <script>
 import Qti3Player from '@/Qti3Player.vue'
 import { PnpFactory } from '@/shared/helpers/PnpFactory'
-//import { sessionControlFactory } from '@/shared/helpers/sessionControlFactory'
+import { SessionControlFactory } from '@/shared/helpers/SessionControlFactory'
 
 export default {
   name: 'App',
@@ -25,6 +25,11 @@ export default {
       isTestStarted: false,
       currentItem: 0,
       items: [
+        {
+          "identifier": "q2-choice-interaction-multiple-cardinality",
+          "guid": "0000-0001-0000",
+          "xml": "<qti-assessment-item xmlns=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd\" identifier=\"q2-choice-interaction-multiple-cardinality\" title=\"Q2 - Choice Interaction - Multiple Cardinality\" adaptive=\"false\" time-dependent=\"false\"><qti-response-declaration identifier=\"RESPONSE\" cardinality=\"multiple\" base-type=\"identifier\"/><qti-item-body><qti-choice-interaction response-identifier=\"RESPONSE\" min-choices=\"0\" max-choices=\"3\"><qti-prompt>Select 0 to N SimpleChoices below and end the attempt by submitting the response.</qti-prompt><qti-simple-choice identifier=\"choice_a\">choice_a</qti-simple-choice><qti-simple-choice identifier=\"choice_b\">choice_b</qti-simple-choice><qti-simple-choice identifier=\"choice_c\">choice_c</qti-simple-choice></qti-choice-interaction></qti-item-body></qti-assessment-item>"
+        },
         {
           "identifier": "q2-choice-interaction-single-cardinality",
           "guid": "0000-0000-0001",
@@ -57,6 +62,7 @@ export default {
       // Load pnp
       this.pnp = new PnpFactory()
       // Load sessionControl
+      this.sessionControl = new SessionControlFactory()
     },
 
     loadFirstItem () {
@@ -164,7 +170,7 @@ export default {
       // IMPORTANT: Stamp the item's tracking guid onto the configuration
       configuration.guid = guid
       configuration.pnp = this.pnp.getPnp()
-      configuration.sessionControl = this.sessionControl
+      configuration.sessionControl = this.sessionControl.getSessionControl()
 
       return configuration
     }

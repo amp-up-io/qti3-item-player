@@ -1,4 +1,5 @@
 import { PnpFactory } from '@/shared/helpers/PnpFactory'
+import { SessionControlFactory } from '@/shared/helpers/SessionControlFactory'
 
 export const store = {
 
@@ -21,7 +22,7 @@ export const store = {
   itemContext: {
     guid: null,
     pnp: null,
-    sessionControl: null,
+    sc: null, // itemSessionControl
     state: null
   },
 
@@ -257,7 +258,7 @@ export const store = {
     this.itemContext.state = null
     // For now, do not reset pnp and sessionControl
     // this.itemContext.pnp = null
-    // this.itemContext.sessionControl = null
+    // this.itemContext.sc = null
   },
 
   initializeBuiltInDeclarations () {
@@ -474,12 +475,20 @@ export const store = {
     this.itemContext.pnp.setPnp(pnp)
   },
 
+  initializeItemContextSessionControl () {
+    this.itemContext.sc = new SessionControlFactory()
+  },
+
   getItemContextSessionControl () {
-    return this.itemContext.sessionControl
+    return this.itemContext.sc
   },
 
   setItemContextSessionControl (sessionControl) {
-    this.itemContext.sessionControl = sessionControl
+    // Should always be a SessionControlFactory in itemContext, but check anyway.
+    if (this.itemContext.sc === null) {
+      this.initializeItemContextSessionControl()
+    }
+    this.itemContext.sc.setSessionControl(sessionControl)
   },
 
   getItemContextState () {

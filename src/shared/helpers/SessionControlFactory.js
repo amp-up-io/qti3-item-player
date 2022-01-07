@@ -1,27 +1,84 @@
 export class SessionControlFactory {
 
-  constructor(
-      maxAttempts=0,
-      showFeedback=false,
-      allowReview=true,
-      allowComment=false,
-      allowSkipping=true,
-      showSolution=false,
-      validateResponses=false,
-      timeLimits=null) {
-    this.maxAttempts = maxAttempts
-    this.showFeedback = showFeedback
-    this.allowReview = allowReview
-    this.allowComment = allowComment
-    this.allowSkipping = allowSkipping
-    this.showSolution = showSolution
-    this.validateResponses = validateResponses
-    this.timeLimits = timeLimits
+  constructor () {
+    this.sc = this.defaultSessionControl()
     return this
   }
 
+  constants = {
+    TIME_LIMITS_DEFAULT: {
+      minTime: null, // no limit
+      maxTime: null, // no limit
+      allowLateSubmission: false
+    },
+    ATTEMPTS_UNLIMITED: 0
+  }
+
+  defaultSessionControl () {
+    let sc = {
+      allowComment: false,
+      allowReview: true,
+      allowSkipping: true,
+      maxAttempts: this.constants.ATTEMPTS_UNLIMITED,
+      showFeedback: false,
+      showSolution: false,
+      timeLimits: this.constants.TIME_LIMITS_DEFAULT,
+      validateResponses: false
+    }
+    return sc
+  }
+
+  setSessionControl (sc) {
+    if (typeof sc === 'undefined') return
+
+    if (sc === null) {
+      this.sc = this.defaultSessionControl()
+    }
+
+    if (('allowComment' in sc) && (sc.allowComment !== null)) {
+      this.setAllowComment(sc.allowComment)
+    }
+
+    if (('allowReview' in sc) && (sc.allowReview !== null)) {
+      this.setAllowReview(sc.allowReview)
+    }
+
+    if (('allowSkipping' in sc) && (sc.allowSkipping !== null)) {
+      this.setAllowSkipping(sc.allowSkipping)
+    }
+
+    if (('maxAttempts' in sc) && (sc.maxAttempts !== null)) {
+      this.setMaxAttempts(sc.maxAttempts)
+    }
+
+    if (('showFeedback' in sc) && (sc.showFeedback !== null)) {
+      this.setShowFeedback(sc.showFeedback)
+    }
+
+    if (('showSolution' in sc) && (sc.showSolution !== null)) {
+      this.setShowSolution(sc.showSolution)
+    }
+
+    if (('timeLimits' in sc) && (sc.timeLimits !== null)) {
+      if ('minTime' in sc.timeLimits) {
+        this.setTimeLimitsMinTime(sc.timeLimits.minTime)
+      }
+      if ('maxTime' in sc.timeLimits) {
+        this.setTimeLimitsMaxTime(sc.timeLimits.maxTime)
+      }
+      if ('allowLateSubmission' in sc.timeLimits) {
+        this.setTimeLimitsAllowLateSubmission(sc.timeLimits.allowLateSubmission)
+      }
+    }
+
+    if (('validateResponses' in sc) && (sc.validateResponses !== null)) {
+      this.setValidateResponses(sc.validateResponses)
+    }
+  }
+
+
   getSessionControl () {
-    let sessionControl = {
+    let sc = {
       allowComment: this.getAllowComment(),
       allowReview: this.getAllowReview(),
       allowSkipping: this.getAllowSkipping(),
@@ -31,27 +88,27 @@ export class SessionControlFactory {
       timeLimits: this.getTimeLimits(),
       validateResponses: this.getValidateResponses()
     }
-    return sessionControl
+    return sc
   }
 
   getAllowComment () {
-    return this.allowComment
+    return this.sc.allowComment
   }
 
   setAllowComment (allowComment) {
-    this.allowComment = allowComment
+    this.sc.allowComment = allowComment
   }
 
   getAllowReview () {
-    return this.allowReview
+    return this.sc.allowReview
   }
 
   setAllowReview (allowReview) {
-    this.allowReview = allowReview
+    this.sc.allowReview = allowReview
   }
 
   getAllowSkipping () {
-    return this.allowSkipping
+    return this.sc.allowSkipping
   }
 
   setAllowSkipping (allowSkipping) {
@@ -59,51 +116,75 @@ export class SessionControlFactory {
   }
 
   getMaxAttempts () {
-    return this.maxAttempts
+    return this.sc.maxAttempts
   }
 
   setMaxAttempts (maxAttempts) {
-    this.maxAttempts = maxAttempts
+    this.sc.maxAttempts = maxAttempts
   }
 
   getShowFeedback () {
-    return this.showFeedback
+    return this.sc.showFeedback
   }
 
   setShowFeedback (showFeedback) {
-    this.showFeedback = showFeedback
+    this.sc.showFeedback = showFeedback
   }
 
   getShowSolution () {
-    return this.showSolution
+    return this.sc.showSolution
   }
 
   setShowSolution (showSolution) {
-    this.showSolution = showSolution
+    this.sc.showSolution = showSolution
   }
 
   getTimeLimits () {
-    return this.timeLimits
+    return this.sc.timeLimits
   }
 
   /**
-   * @description TimeLimits is an object with the following schema:
-   * {
-   *   minTime: [0..1] non-negative double
-   *   maxTime: [0..1] non-negative double
-   *   allowLateSubmission: [0..1] boolean=false
-   * }
+   * @description Set all timeLimits properties in one call.
+   * @param minTime - non-negative double=null
+   * @param maxTime - non-negative double=null
+   * @param allowLateSubmission - boolean=false
    */
-  setTimeLimits (timeLimits) {
-    this.timeLimits = timeLimits
+  setTimeLimits (minTime=null, maxTime=null, allowLateSubmission=false) {
+    this.setTimeLimitsMinTime(minTime)
+    this.setTimeLimitsMaxTime(maxTime)
+    this.setTimeLimitsAllowLateSubmission(allowLateSubmission)
+  }
+
+  getTimeLimitsMinTime () {
+    return this.sc.timeLimits.minTime
+  }
+
+  setTimeLimitsMinTime (minTime) {
+    this.sc.timeLimits.minTime = minTime
+  }
+
+  getTimeLimitsMaxTime () {
+    return this.sc.timeLimits.maxTime
+  }
+
+  setTimeLimitsMaxTime(maxTime) {
+    this.sc.timeLimits.maxTime = maxTime
+  }
+
+  getTimeLimitsAllowLateSubmission () {
+    return this.sc.timeLimits.allowLateSubmission
+  }
+
+  setTimeLimitsAllowLateSubmission(allowLateSubmission) {
+    this.sc.timeLimits.allowLateSubmission = allowLateSubmission
   }
 
   getValidateResponses () {
-    return this.validateResponses
+    return this.sc.validateResponses
   }
 
   setValidateResponses (validateResponses) {
-    this.validateResponses = validateResponses
+    this.sc.validateResponses = validateResponses
   }
 
 }

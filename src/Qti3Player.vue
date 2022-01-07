@@ -97,12 +97,9 @@ export default {
         if ('pnp' in configuration) {
           store.setItemContextPnp(configuration.pnp)
 
-          // Examine the textAppearance.colorStyle.
-          // Update the UI if modified.
+          // Update the UI if textAppearance.colorStyle modified.
           const colorStyle = store.getItemContextPnp().getColorStyle()
-          if (this.cssColorClass !== colorStyle) {
-            this.cssColorClass = colorStyle
-          }
+          if (this.cssColorClass !== colorStyle) this.cssColorClass = colorStyle
         }
         if ('sessionControl' in configuration) {
           store.setItemContextSessionControl(configuration.sessionControl)
@@ -271,6 +268,29 @@ class XmlFilters {
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --foreground: var(--darker);
   --background: var(--white);
+  --hr-border: 1px solid rgba(0, 0, 0, 0.1);
+  --table-border-color: var(--black);
+  --well-bg: #f5f5f5;
+  --well-border: 1px solid #e3e3e3;
+  --well-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  --rb-default-border: 1px solid hsl(0, 0%, 66%);
+  --rb-default-border-checked: .1875em solid #fff;
+  --rb-default-bg-image: linear-gradient(to bottom, hsl(300, 3%, 93%), #fff 60%);
+  --rb-default-bg-image-active: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%));
+  --rb-default-bg-image-checked-active:  linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%) 60%);
+  --rb-default-hover: hsl(216, 94%, 65%);
+  --rb-default-border-color-checked: hsl(216, 80%, 50%);
+  --rb-default-bg-checked: hsl(217, 95%, 68%);
+  --rb-default-bg-image-checked: linear-gradient(to bottom, hsl(217, 95%, 68%), hsl(216, 80%, 57%));
+  --cb-default-bg-image-checked: linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%));
+  --cb-default-bg-image-active: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%) 30%);
+  --cb-default-bg-image-checked-active: linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%));
+  /* focus border around the radio or checkbox itself */
+  --rb-default-border-focus: hsl(216, 94%, 73%);
+  /* focus border inset around the radio or checkbox itself */
+  --rb-default-border-focus-inset: inset 0 0 0 1px hsl(216, 80%, 50%);
+  /* overall choice focus border */
+  --choice-default-border-focus: rgba(82, 168, 236, 0.8);
 }
 
 /* Default foreground / background colors */
@@ -282,16 +302,57 @@ class XmlFilters {
 .qti3-player-color-defaultreverse {
   --foreground: var(--white);
   --background: var(--darker);
+  --hr-border: 1px solid rgba(0, 0, 0, 0.1);
+  --table-border-color: var(--white);
 }
 /* High Contrast */
 .qti3-player-color-blackwhite {
   --foreground: var(--black);
   --background: var(--white);
+  --hr-border: 1px solid var(--black);
+  --rb-default-border: 1px solid hsl(0, 0%, 66%);
+  --rb-default-border-checked: .1875em solid #fff;
+  --rb-default-bg-image: linear-gradient(to bottom, hsl(300, 3%, 93%), #fff 60%);
+  --rb-default-bg-image-active: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%));
+  --rb-default-bg-image-checked-active:  linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%) 60%);
+  --rb-default-hover: hsl(216, 94%, 65%);
+  --rb-default-border-color-checked: hsl(216, 80%, 50%);
+  --rb-default-bg-checked: hsl(217, 95%, 68%);
+  --rb-default-bg-image-checked: linear-gradient(to bottom, hsl(217, 95%, 68%), hsl(216, 80%, 57%));
+  --cb-default-bg-image-checked: linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%));
+  --cb-default-bg-image-active: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%) 30%);
+  --cb-default-bg-image-checked-active: linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%));
+  /* focus border around the radio or checkbox itself */
+  --rb-default-border-focus: hsl(216, 94%, 73%);
+  /* focus border inset around the radio or checkbox itself */
+  --rb-default-border-focus-inset: inset 0 0 0 1px hsl(216, 80%, 50%);
+  /* overall choice focus border */
+  --choice-default-border-focus: rgba(82, 168, 236, 0.8);
 }
 /* High Contrast - reverse polarity */
 .qti3-player-color-whiteblack {
   --foreground: var(--white);
   --background: var(--black);
+  --hr-border: 1px solid var(--white);
+  --table-border-color: var(--white);
+  --rb-default-border: 1px solid hsl(0, 0%, 66%);
+  --rb-default-border-checked: .1875em solid var(--white);
+  --rb-default-bg-image: linear-gradient(to bottom, hsl(300, 3%, 93%), #fff 60%);
+  --rb-default-bg-image-active: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%));
+  --rb-default-bg-image-checked-active:  linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%) 60%);
+  --rb-default-hover: hsl(216, 94%, 65%);
+  --rb-default-border-color-checked: var(--white);
+  --rb-default-bg-checked: var(--white);
+  --rb-default-bg-image-checked: linear-gradient(to bottom, hsl(217, 95%, 68%), hsl(216, 80%, 57%));
+  --cb-default-bg-image-checked: var(--white);
+  --cb-default-bg-image-active: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%) 30%);
+  --cb-default-bg-image-checked-active: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%) 30%);
+  /* focus border around the radio or checkbox itself */
+  --rb-default-border-focus: hsl(0,0%,83%);
+  /* focus border inset around the radio or checkbox itself */
+  --rb-default-border-focus-inset: inset 0 0 0 1px hsl(216, 80%, 50%);
+  /* overall choice focus border */
+  --choice-default-border-focus: var(--white); /*rgb(211,211,211)rgba(82, 168, 236, 0.8);*/
 }
 
 .qti3-player-container,
