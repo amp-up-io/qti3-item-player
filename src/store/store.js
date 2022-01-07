@@ -1,3 +1,4 @@
+import { PnpFactory } from '@/shared/helpers/PnpFactory'
 
 export const store = {
 
@@ -253,9 +254,10 @@ export const store = {
     this.state.printedVariables.splice(0, this.state.printedVariables.length)
     // Reset itemContext
     this.itemContext.guid = null
-    this.itemContext.pnp = null
-    this.itemContext.sessionControl = null
     this.itemContext.state = null
+    // For now, do not reset pnp and sessionControl
+    // this.itemContext.pnp = null
+    // this.itemContext.sessionControl = null
   },
 
   initializeBuiltInDeclarations () {
@@ -456,12 +458,20 @@ export const store = {
     this.itemContext.guid = guid
   },
 
+  initializeItemContextPnp () {
+    this.itemContext.pnp = new PnpFactory()
+  },
+
   getItemContextPnp () {
     return this.itemContext.pnp
   },
 
   setItemContextPnp (pnp) {
-    this.itemContext.pnp = pnp
+    // Should always be a PnpFactory in itemContext, but check anyway.
+    if (this.itemContext.pnp === null) {
+      this.initializeItemContextPnp()
+    }
+    this.itemContext.pnp.setPnp(pnp)
   },
 
   getItemContextSessionControl () {
@@ -536,7 +546,6 @@ export const store = {
   }
 
 }
-
 
 /**
  * @description Helper Class for initializing default Record Fields.

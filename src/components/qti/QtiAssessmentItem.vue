@@ -493,21 +493,8 @@ export default {
 }
 </script>
 
-<style>
-.qti-assessment-item {
-  color: var(--darker);
-  background-color: var(--white);
-}
-
-.pnp-high-contrast .qti-assessment-item {
-  color: black;
-  background-color: var(--white);
-}
-
-.pnp-high-contrast.pnp-reverse-polarity .qti-assessment-item {
-  color: var(--white);
-  background-color: var(--black);
-}
+<style scoped>
+.qti-assessment-item {}
 
 /*
  * ======================= Begin Layout Row and Column Definitions ========================

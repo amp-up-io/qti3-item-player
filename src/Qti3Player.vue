@@ -1,6 +1,7 @@
 <template>
   <div
-    class="qti3-player-container-fluid">
+    ref="player"
+    v-bind:class="[cssContainerClass, cssColorClass]">
     <component
       ref="item"
       @itemReady="handleItemReady"
@@ -21,11 +22,26 @@ Vue.component('qti-assessment-item', QtiAssessmentItem)
 export default {
   name: 'Qti3Player',
 
+  props: {
+    containerClass: {
+      type: String,
+      required: false,
+      default: 'qti3-player-container-fluid'
+    },
+    colorClass: {
+      type: String,
+      required: false,
+      default: 'qti3-player-color-default'
+    }
+  },
+
   data () {
     return {
       item: null,  // Set to the qti-assessment-item component
       itemXml: '', // QTI XML string injected into the qti-assessment-item component
-      xmlFilters: new XmlFilters()
+      xmlFilters: new XmlFilters(),
+      cssContainerClass: this.containerClass,
+      cssColorClass: this.colorClass
     }
   },
 
@@ -55,27 +71,18 @@ export default {
 
   methods: {
 
-    handleItemReady (param) {
-      console.log('[Qti3Player][ItemReady]', param.item)
-      this.item = param.item
-      store.NotifyItemReady({
-          item: this.item
-        })
-    },
-
-    handleItemCompleted () {
-      console.log('[Qti3Player][ItemCompleted]')
-    },
-
     /**
-     * @description event handler for the itemStateReady event.
-     * @param data - an object containing a state property and a target property.
+     * @description Main item loading method for the Qti3Player.  Accepts
+     * a raw QTI 3 xml string and a configuration object.
+     * @param xml - string of qti-assessment-item xml
+     * @param configuration - object of the following schema:
+     * {
+     *   guid: string (a tracking guid)
+     *   pnp: a PnpFactory object
+     *   sessionControl: a sessionControl object
+     *   state: itemState object containing any prior state
+     * }
      */
-    handleItemStateReady (data) {
-      console.log('[Qti3Player][ItemStateReady]', data)
-      this.$emit('getItemStateCompleted', data)
-    },
-
     loadItemFromXml (xml, configuration) {
       console.log('[Qti3Player][loadItemFromXml][configuration]', configuration)
 
@@ -89,6 +96,13 @@ export default {
         }
         if ('pnp' in configuration) {
           store.setItemContextPnp(configuration.pnp)
+
+          // Examine the textAppearance.colorStyle.
+          // Update the UI if modified.
+          const colorStyle = store.getItemContextPnp().getColorStyle()
+          if (this.cssColorClass !== colorStyle) {
+            this.cssColorClass = colorStyle
+          }
         }
         if ('sessionControl' in configuration) {
           store.setItemContextSessionControl(configuration.sessionControl)
@@ -102,9 +116,46 @@ export default {
       this.itemXml = xml
     },
 
+    handleItemReady (param) {
+      console.log('[Qti3Player][ItemReady]', param.item)
+      this.item = param.item
+      store.NotifyItemReady({
+          item: this.item
+        })
+    },
+
+    handleItemCompleted () {
+      console.log('[Qti3Player][ItemCompleted]')
+    },
+
+    /**
+     * @description Initiate a getItemState request in the QtiAssessmentItem
+     * component.  When the method completes the Item will trigger the
+     * 'itemStateReady' event - handled by the 'handleItemStateReady' method.
+     * @param target
+     */
     getItemState (target) {
       console.log('[Qti3Player][getItemState][' + target + ']')
       this.item.getItemState(target)
+    },
+
+    /**
+     * @description event handler for the itemStateReady event.
+     * @param data - an object containing a state property and a target property.
+     */
+    handleItemStateReady (data) {
+      console.log('[Qti3Player][ItemStateReady]', data)
+      this.$emit('getItemStateCompleted', data)
+    },
+
+    /**
+     * @description Method for a controller to inject a pnp.
+     * Normally, a pnp is injected via a configuration property
+     * when an item is loaded.
+     * @param pnp - a pnp object built from a PnpFactory
+     */
+    setPnp (pnp) {
+      store.setItemContextPnp(pnp)
     },
 
     /**
@@ -133,16 +184,21 @@ export default {
 
   },
 
+  created () {
+    // Set up the PnpFactory
+    store.initializeItemContextPnp()
+    // TODO Set up the sessionControlFactory
+  },
+
   mounted () {
     console.log('[Qti3Player][Mounted]')
   }
 }
 
-/**
- * @description Helper Class for processing the QTI XML
- */
 class XmlFilters {
-
+  /**
+   * @description Helper Class for transforming the QTI XML
+   */
   constructor() {
   }
 
@@ -213,15 +269,41 @@ class XmlFilters {
   --breakpoint-xl: 1200px;
   --font-family-sans-serif: "Roboto", sans-serif;
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --foreground: var(--darker);
+  --background: var(--white);
+}
 
+/* Default foreground / background colors */
+.qti3-player-color-default {
+  --foreground: var(--darker);
+  --background: var(--white);
+}
+/* Default - reverse polarity */
+.qti3-player-color-defaultreverse {
+  --foreground: var(--white);
+  --background: var(--darker);
+}
+/* High Contrast */
+.qti3-player-color-blackwhite {
+  --foreground: var(--black);
+  --background: var(--white);
+}
+/* High Contrast - reverse polarity */
+.qti3-player-color-whiteblack {
+  --foreground: var(--white);
+  --background: var(--black);
+}
+
+.qti3-player-container,
+.qti3-player-container-fluid {
   margin: 0;
   font-size: 16px;
   font-weight: 400;
   line-height: 1.6;
   font-family: "Roboto", sans-serif;
-  color: var(--dark);
+  color: var(--foreground);
   text-align: left;
-  background-color: var(--white);
+  background-color: var(--background);
 }
 
 /* Set default non-fluid container to live nicely (plenty of whitespace/padding/margin) with

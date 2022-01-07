@@ -11,6 +11,8 @@
 
 <script>
 import Qti3Player from '@/Qti3Player.vue'
+import { PnpFactory } from '@/shared/helpers/PnpFactory'
+//import { sessionControlFactory } from '@/shared/helpers/sessionControlFactory'
 
 export default {
   name: 'App',
@@ -41,6 +43,8 @@ export default {
       ],
       maxItems: 3,
       itemStates: new Map(),
+      sessionControl: null,
+      pnp: null,
       qti3Player: null
     }
   },
@@ -50,6 +54,9 @@ export default {
     initialize () {
       // Get handle on the player
       this.qti3Player = this.$refs.qti3player
+      // Load pnp
+      this.pnp = new PnpFactory()
+      // Load sessionControl
     },
 
     loadFirstItem () {
@@ -156,8 +163,8 @@ export default {
 
       // IMPORTANT: Stamp the item's tracking guid onto the configuration
       configuration.guid = guid
-      configuration.pnp = null
-      configuration.sessionControl = null
+      configuration.pnp = this.pnp.getPnp()
+      configuration.sessionControl = this.sessionControl
 
       return configuration
     }
