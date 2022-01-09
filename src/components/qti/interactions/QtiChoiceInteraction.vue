@@ -409,11 +409,9 @@ export default {
      * @description This method should be called prior to setting checked=true on a choice.
      */
     checkMaxChoicesLimit () {
-      if ((this.isRadio) || (this.maxChoices == 0)) {
-        // max-choices = 0 means no limit.
-        // On Radio Groups there should always be at most 1 choice.
-        return false
-      }
+      // max-choices = 0 means no limit.
+      // On Radio Groups there should always be at most 1 choice.
+      if ((this.isRadio) || (this.maxChoices == 0)) return false
 
       // Should only get to this code on a multiple cardinality ChoiceGroup.
       // In this case, response should be an array of identifier strings.
@@ -427,21 +425,12 @@ export default {
     },
 
     notifyMaxChoicesLimit () {
-      this.$swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'warning',
-        html: this.maxSelectionsMessage,
-        showConfirmButton: false,
-        showCloseButton: true,
-        timer: 3000,
-        timerProgressBar: true
-      })
+      store.NotifyInteractionSelectionsLimit(this.maxSelectionsMessage)
     },
 
     notifyResponseChange () {
       // TODO: put this in the $store
-      this.$emit('notifyResponseChange', { response: this.response })
+      //this.$emit('notifyResponseChange', { response: this.response })
     },
 
     checkIsValidResponse () {

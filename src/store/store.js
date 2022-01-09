@@ -3,6 +3,8 @@ import { SessionControlFactory } from '@/shared/helpers/SessionControlFactory'
 
 export const store = {
 
+  player: null,
+
   state: {
     item: null,
     itemBody: null,
@@ -520,6 +522,15 @@ export const store = {
   },
 
   /**
+   * @description Called when the Qti3Player is mounted.  Pass a copy
+   * of itself in the playerNode parameter.
+   * @param playerNode - object containing the player (playerNode.player)
+   */
+  NotifyPlayerReady (playerNode) {
+    this.player = playerNode.player
+  },
+
+  /**
    * @description This method should be called whenever we want to end an attempt.
    * For example, this might be called by a qti-end-attempt-interaction, or it might be
    * called by an item container such as an item or test controller.
@@ -552,8 +563,15 @@ export const store = {
    */
   NotifyItemReady (itemNode) {
     this.setItem(itemNode)
-  }
+  },
 
+  NotifyInteractionSelectionsLimit(message) {
+    const event = {
+      icon: 'warning',
+      message: message
+    }
+    this.player.handleAlertEvent(event)
+  }
 }
 
 /**

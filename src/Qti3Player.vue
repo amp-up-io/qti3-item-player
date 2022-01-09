@@ -15,6 +15,7 @@
 <script>
 import Vue from 'vue'
 import { store } from '@/store/store'
+import Swal from 'sweetalert2'
 import QtiAssessmentItem from '@/components/qti/QtiAssessmentItem'
 
 Vue.component('qti-assessment-item', QtiAssessmentItem)
@@ -41,7 +42,9 @@ export default {
       itemXml: '', // QTI XML string injected into the qti-assessment-item component
       xmlFilters: new XmlFilters(),
       cssContainerClass: this.containerClass,
-      cssColorClass: this.colorClass
+      cssColorClass: this.colorClass,
+      suppressAlertMessages: false,
+      suppressAlertEvents: false
     }
   },
 
@@ -156,6 +159,29 @@ export default {
     },
 
     /**
+     * @description Handler for QTI item events.
+     * @param event - object containing an icon property and a message property
+     */
+    handleAlertEvent (event) {
+      if (!this.suppressAlertMessages) {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: event.icon,
+          html: event.message,
+          showConfirmButton: false,
+          showCloseButton: true,
+          timer: 3000,
+          timerProgressBar: true
+        })
+      }
+    },
+
+    handleValidationEvent () {
+      // TODO
+    },
+
+    /**
      * @description After an item is updated, we may need to do some cleanup of the DOM or
      * perform other post processing.  Do this here.
      */
@@ -189,6 +215,9 @@ export default {
 
   mounted () {
     console.log('[Qti3Player][Mounted]')
+    store.NotifyPlayerReady({
+        player: this
+      })
   }
 }
 
@@ -264,7 +293,7 @@ class XmlFilters {
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
-  --font-family-sans-serif: "Roboto", sans-serif;
+  --font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --foreground: var(--darker);
   --background: var(--white);
@@ -411,5 +440,10 @@ class XmlFilters {
 /* Typical desktop or chromebook */
 @media (min-width:1200px) {
   .qti3-player-container { max-width: 1170px; }
+}
+
+/* Sweet Alert should use same font-family as player */
+.swal2-popup {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 </style>
