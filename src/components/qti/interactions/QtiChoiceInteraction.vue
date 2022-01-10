@@ -11,11 +11,11 @@
       :maxChoices="maxChoices"
       :minChoices="minChoices"
       :priorState="priorState"
-      v-on:choiceGroupReady="handleChoiceGroupReady"
-      v-on:setChecked="handleSetChecked"
-      v-on:setFocusNextChoice="handleSetFocusNextChoice"
-      v-on:setFocusPreviousChoice="handleSetFocusPreviousChoice"
-      v-on:setActiveDescendant="handleSetActiveDescendant"
+      @choiceGroupReady="handleChoiceGroupReady"
+      @setChecked="handleSetChecked"
+      @setFocusNextChoice="handleSetFocusNextChoice"
+      @setFocusPreviousChoice="handleSetFocusPreviousChoice"
+      @setActiveDescendant="handleSetActiveDescendant"
       v-bind="$attrs">
       <slot name="default" />
     </ChoiceGroup>
@@ -107,52 +107,54 @@ export default {
   methods: {
 
     /**
-     * Method used by an item controller to get this interaction's response.
+     * @description Get this interaction's response.
      * @return response (string or array) - depending on cardinality
      */
     getResponse () {
-      console.log('[GetResponseMethod][' + this.responseIdentifier + ']', this.response)
       return this.response
     },
 
     /**
-     * @description Set the interaction's response value
-     * @param - response (string or array depending on cardinality) containing selected choice identifier(s).
+     * @description Set this interaction's response
+     * @param response (string or array depending on cardinality) containing selected choice identifier(s).
      */
     setResponse (response) {
-      console.log('[SetResponseMethod][' + this.responseIdentifier + ']', response)
       this.response = response
     },
 
     /**
-     * Method used by an item controller to get this interaction's state.
+     * @description Get this interaction's state.
      * @return state (object)
      */
     getState () {
-      console.log('[GetState][identifier]', this.responseIdentifier)
       return this.state
     },
 
     /**
-     * Method used by an item controller to set/restore this interaction's state.
-     * @param - state (object)
+     * @description Set/restore this interaction's state.
+     * @param state (object)
      */
     setState (state) {
-      console.log('[SetState][identifier]', this.responseIdentifier, state)
       this.state = state
     },
 
     /**
-     * Has candidate achieved required answeredness on this interaction
+     * @description Get this interaction's response validity
      */
     getIsValid () {
-      console.log('[GetIsValid][identifier]', this.responseIdentifier, this.isValidResponse)
       return this.isValidResponse
     },
 
+    /**
+     * @description Set this interaction's response validity
+     * @param isValid boolean
+     */
     setIsValid (isValid) {
-      console.log('[SetIsValid][identifier]', isValid)
       this.isValidResponse = isValid
+    },
+
+    getInvalidResponseMessage () {
+      return this.minSelectionsMessage
     },
 
     resetValue () {
@@ -165,11 +167,16 @@ export default {
       })
       this.currentChoice = null
       this.setResponse(null)
+      this.updateValidity(this.computeIsValid())
 
       // Call the ChoiceGroup component to rebuild the UI
       this.$refs.choicegroup.processGroupUI()
     },
 
+    /**
+     * @description Restores this interaction's response.
+     * @param response
+     */
     restoreValue (response) {
       if (response === null) return
 
@@ -179,24 +186,25 @@ export default {
             identifier: response,
             checked: "true"
           }, true)
-        return
+      } else {
+        // response is an array of identifiers
+        response.forEach((identifier) => {
+          this.handleSetChecked({
+              identifier: identifier,
+              checked: "true"
+            }, true)
+          }, this)
       }
 
-      // response is an array of identifiers
-      response.forEach((identifier) => {
-        this.handleSetChecked({
-            identifier: identifier,
-            checked: "true"
-          }, true)
-      }, this)
+      // When restoring, manually update validity
+      this.updateValidity(this.computeIsValid())
     },
 
     /**
-     * Handles computation of this interaction's cardinality.  Side effect: sets the
-     * model's cardinality property.
+     * @description Handles computation of this interaction's cardinality (single, multiple).
+     * Side effect: sets the model's cardinality property.
      */
     getCardinality () {
-      // single, multiple
       let rv = store.getResponseDeclaration(this.responseIdentifier)
       // Default to single if the response variable is not found
       this.cardinality = (typeof rv !== 'undefined' ? (rv.cardinality !== 'multiple' ? 'single' : 'multiple') : 'single')
@@ -204,7 +212,8 @@ export default {
     },
 
     /**
-     * Iterate through $slots. Find the first (if any) qti-prompt component.
+     * @description Iterate through $slots. Finds the first (if any) qti-prompt component.
+     * @param slots
      */
     getPrompt (slots) {
       let prompt = []
@@ -225,6 +234,8 @@ export default {
 
     /**
      * @description Implements checked behavior on radio button and checkbox groups.
+     * @param choice - the choice that is being checked/unchecked.
+     * @param restoring - boolean set to true when restoring
      */
     handleSetChecked (choice, restoring=false) {
       this.choices.forEach((simpleChoice) => {
@@ -253,11 +264,11 @@ export default {
 
       if (!restoring) {
         // Update the response to reflect the current checked state of the choices
-        this.response = this.computeResponse()
-        // Notify parent of updated response
-        this.notifyResponseChange()
+        this.setResponse(this.computeResponse())
         // Focus the choice if we are not restoring.
         this.currentChoice.setFocus()
+        // Update validity
+        this.evaluateValidity()
       }
 
       this.currentChoice.setTabIndex('0')
@@ -266,6 +277,7 @@ export default {
     /**
      * @description Find the previous radio choice.  If we are already on the first choice
      * then circle back around to the last choice.
+    * @param identifier - the identifier of the choice that currently has the focus
      */
     handleSetFocusPreviousChoice (identifier) {
       if (this.isRadio) {
@@ -277,6 +289,7 @@ export default {
     /**
      * @description Find the next radio choice.  If we are already on the last choice
      * then circle back around to the first choice.
+     * @param identifier - the identifier of the choice that currently has the focus.
      */
     handleSetFocusNextChoice (identifier) {
       if (this.isRadio) {
@@ -285,6 +298,10 @@ export default {
       this.setFocusChoice(this.findNextIdentifier(identifier))
     },
 
+    /**
+     * @description For accessibility, set the choice group's activedescendant.
+     * @param id - the id of the active descendant.
+     */
     handleSetActiveDescendant (id) {
       this.$refs.choicegroup.setActiveDescendant(id)
     },
@@ -345,7 +362,7 @@ export default {
 
     /**
      * @description Handler called by ChoiceGroup component.
-     * @param - config - an object containing all choice components
+     * @param config - an object containing all choice components
      * nested within the ChoiceGroup.
      */
     handleChoiceGroupReady (config) {
@@ -363,7 +380,7 @@ export default {
 
       this.setResponse(this.computeResponse())
       this.setState(this.computeState())
-      this.isValidResponse = false
+      this.setIsValid(this.computeIsValid())
     },
 
     /**
@@ -406,7 +423,60 @@ export default {
     },
 
     /**
+     * @description The determines an interaction's validity status based
+     * on the min-choices attribute.
+     * @return boolean (true if valid, false if invalid)
+     */
+    computeIsValid () {
+      // If minChoices is 0, there are no constraints
+      if ((this.minChoices*1) === 0) return true
+
+      // MinChoices is > 0.  There are constraints.
+
+      // A null response is invalid
+      if (this.response === null) return false
+
+      // A single cardinality interaction with a non-null response is valid
+      if (this.cardinality === 'single') return true
+
+      // A multiple cardinality interaction that is non-null must have at least
+      // minChoices selections in order to be valid
+      if ((this.cardinality === 'multiple') && (this.response.length >= (this.minChoices*1))) return true
+
+      // Must be invalid
+      return false
+    },
+
+    /**
+     * @description Evaluate the interaction's response validity.
+     * Update the interaction's validity if there is a change.
+     */
+    evaluateValidity () {
+      // Save old validity value
+      const priorValidity = this.getIsValid()
+      // Compute new validity value
+      const currentValidity = this.computeIsValid()
+      // Bail if no change
+      if (priorValidity === currentValidity) return
+      // There is a change.
+      this.updateValidity(currentValidity)
+    },
+
+    /**
+     * @description Update the interaction's validity.
+     * @param isValid boolean
+     */
+    updateValidity (isValid) {
+      this.setIsValid(isValid)
+      store.setInteractionIsValidResponse({
+          identifier: this.responseIdentifier,
+          isValidResponse: isValid
+        })
+    },
+
+    /**
      * @description This method should be called prior to setting checked=true on a choice.
+     * @return boolean (true if exceeding max-choices, false if not)
      */
     checkMaxChoicesLimit () {
       // max-choices = 0 means no limit.
@@ -417,53 +487,18 @@ export default {
       // In this case, response should be an array of identifier strings.
       const response = this.getResponse()
       if ((response !== null) && (response.length == this.maxChoices)) {
-        this.notifyMaxChoicesLimit()
+        store.NotifyInteractionSelectionsLimit(this.maxSelectionsMessage)
         return true
       }
 
       return false
     },
 
-    notifyMaxChoicesLimit () {
-      store.NotifyInteractionSelectionsLimit(this.maxSelectionsMessage)
-    },
-
-    notifyResponseChange () {
-      // TODO: put this in the $store
-      //this.$emit('notifyResponseChange', { response: this.response })
-    },
-
-    checkIsValidResponse () {
-      let oldIsValidResponse = this.isValidResponse
-      if (this.minChoices == 0) {
-        this.isValidResponse = true
-      } else if (this.response === null) {
-        this.isValidResponse = false
-      } else {
-        if (this.cardinality === 'single') {
-          this.isValidResponse = true
-        } else if ((this.cardinality === 'multiple') && (this.response.length >= this.minChoices)) {
-          this.isValidResponse = true
-        } else {
-          this.isValidResponse = false
-        }
-      }
-      if (oldIsValidResponse != this.isValidResponse) {
-        // Only notify store when we have a state change
-        store.setInteractionIsValidResponse({
-            identifier: this.responseIdentifier,
-            isValidResponse: this.isValidResponse
-          })
-      }
-    },
-
     computeMaxSelectionsMessage () {
-      //this.maxSelectionsMessage = (typeof this.dataMaxSelectionsMessage !== 'undefined') ? this.dataMaxSelectionsMessage : this.$tc('interactions.choice.maxSelectionsMessage', this.maxChoices)
       this.maxSelectionsMessage = (typeof this.dataMaxSelectionsMessage !== 'undefined') ? this.dataMaxSelectionsMessage : 'You are permitted a maximum of ' + this.maxChoices + ' choice' + (this.maxChoices > 1 ? 's' : '') + ' for this question.<br/><br/>Please unselect one of your choices before making another choice.'
     },
 
     computeMinSelectionsMessage () {
-      //this.minSelectionsMessage = (typeof this.dataMinSelectionsMessage !== 'undefined') ? this.dataMinSelectionsMessage : this.$tc('interactions.choice.minSelectionsMessage', this.minChoices)
       this.minSelectionsMessage = (typeof this.dataMinSelectionsMessage !== 'undefined') ? this.dataMinSelectionsMessage : 'You must make at least ' + this.minChoices + ' choice' + (this.minChoices > 1 ? 's' : '') + 'for this question.'
     },
 
@@ -536,12 +571,11 @@ export default {
             interactionType: 'Choice',
             node: this,
             resetValue: this.resetValue,
-            isValidResponse: this.isValidResponse,
+            isValidResponse: this.getIsValid(),
             minSelectionsMessage: this.minSelectionsMessage,
             maxSelectionsMessage: this.maxSelectionsMessage
           })
 
-        //this._checkIsValidResponse()
         console.log('[' + this.$options.name + '][Identifier]', this.responseIdentifier)
       } catch (err) {
         this.isQtiValid = false
