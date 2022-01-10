@@ -145,6 +145,12 @@ export default {
      */
     handleItemStateReady (data) {
       console.log('[Qti3Player][ItemStateReady]', data)
+
+      // Display validation messages if validateResponses=true AND ok to display the messages in the Player.
+      if (store.getItemContextSessionControl().getValidateResponses() && (!this.suppressValidationMessages)) {
+        this.handleValidationEvents(data.state.validationMessages)
+      }
+
       this.$emit('getItemStateCompleted', data)
     },
 
@@ -177,8 +183,19 @@ export default {
       }
     },
 
-    handleValidationEvent () {
-      // TODO
+    handleValidationEvents (events) {
+      events.forEach((event) => {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'warning',
+            html: event.message,
+            showConfirmButton: false,
+            showCloseButton: true,
+            timer: 1500,
+            timerProgressBar: true
+          })
+      })
     },
 
     /**

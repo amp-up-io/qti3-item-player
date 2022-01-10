@@ -495,11 +495,19 @@ export default {
     },
 
     computeMaxSelectionsMessage () {
-      this.maxSelectionsMessage = (typeof this.dataMaxSelectionsMessage !== 'undefined') ? this.dataMaxSelectionsMessage : 'You are permitted a maximum of ' + this.maxChoices + ' choice' + (this.maxChoices > 1 ? 's' : '') + ' for this question.<br/><br/>Please unselect one of your choices before making another choice.'
+      if (typeof this.dataMaxSelectionsMessage !== 'undefined') {
+        this.maxSelectionsMessage = this.dataMaxSelectionsMessage
+        return
+      }
+      this.maxSelectionsMessage = (this.maxChoices == 0) ? '' : 'You are permitted a maximum of ' + this.maxChoices + ' choice' + (this.maxChoices > 1 ? 's' : '') + ' for this question.<br/><br/>Please unselect one of your choices before making another choice.'
     },
 
     computeMinSelectionsMessage () {
-      this.minSelectionsMessage = (typeof this.dataMinSelectionsMessage !== 'undefined') ? this.dataMinSelectionsMessage : 'You must make at least ' + this.minChoices + ' choice' + (this.minChoices > 1 ? 's' : '') + 'for this question.'
+      if (typeof this.dataMinSelectionsMessage !== 'undefined') {
+        this.minSelectionsMessage = this.dataMinSelectionsMessage
+        return
+      }
+      this.minSelectionsMessage = (this.minChoices == 0) ? '' : 'You must make at least ' + this.minChoices + ' choice' + (this.minChoices > 1 ? 's' : '') + ' for this question.'
     },
 
     /**
@@ -572,7 +580,7 @@ export default {
             node: this,
             resetValue: this.resetValue,
             isValidResponse: this.getIsValid(),
-            minSelectionsMessage: this.minSelectionsMessage,
+            invalidResponseMessage: this.getInvalidResponseMessage(),
             maxSelectionsMessage: this.maxSelectionsMessage
           })
 

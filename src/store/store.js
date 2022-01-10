@@ -25,7 +25,8 @@ export const store = {
     guid: null,
     pnp: null,
     sc: null, // itemSessionControl
-    state: null
+    state: null,
+    validationMessages: [] // store for validation messages
   },
 
   getResponseDeclarations () {
@@ -189,7 +190,7 @@ export const store = {
     let i = this.state.interactions[interactionIndex]
     i.interactionType = interaction.interactionType
     i.isValidResponse = interaction.isValidResponse
-    i.minSelectionsMessage = interaction.minSelectionsMessage
+    i.invalidResponseMessage = interaction.invalidResponseMessage
     i.maxSelectionsMessage = interaction.maxSelectionsMessage
     i.node = interaction.node
     i.resetValue = interaction.resetValue
@@ -258,6 +259,7 @@ export const store = {
     // Reset itemContext
     this.itemContext.guid = null
     this.itemContext.state = null
+    this.itemContext.validationMessages.splice(0, this.itemContext.validationMessages.length)
     // For now, do not reset pnp and sessionControl
     // this.itemContext.pnp = null
     // this.itemContext.sc = null
@@ -519,6 +521,18 @@ export const store = {
       return declaration
     }
     return null
+  },
+
+  getItemContextValidationMessages () {
+    return this.itemContext.validationMessages
+  },
+
+  addItemContextValidationMessage (validationMessageObject) {
+    this.itemContext.validationMessages.push(validationMessageObject)
+  },
+
+  resetItemContextValidationMessages () {
+    this.itemContext.validationMessages.splice(0, this.itemContext.validationMessages.length)
   },
 
   /**

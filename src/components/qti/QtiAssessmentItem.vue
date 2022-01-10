@@ -72,10 +72,6 @@ export default {
   data () {
     return {
       /*
-       * If responses are required - according to itemSessionControl, then this should be set to true, else false
-       */
-      validateResponses: false,
-      /*
        * If any interactions contain invalid responses then this will be set to false.
        */
       isValidAttempt: true,
@@ -279,10 +275,6 @@ export default {
       console.log('[EvaluateTemplates][Completed]')
     },
 
-    setMustAnswerToContinue (mustAnswerToContinue) {
-      this.mustAnswerToContinue = mustAnswerToContinue
-    },
-
     endAttempt (stateObject) {
       console.log('[EndAttempt][Start][Identifier]', this.identifier)
 
@@ -292,8 +284,9 @@ export default {
       this.updateItemBodyUI(stateObject)
 
       this.getResponses()
-      this.evaluateAttemptValidity()
 
+      // Evaluate response validity if item session control validateResponses=true
+      this.isValidAttempt = this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())
       if (this.isValidAttempt) {
         this.processResponses()
       }
@@ -361,12 +354,16 @@ export default {
       // Update the store's responses and state of response variables
       this.getResponses()
 
+      // Examine session control for validateResponses.
+      this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())
+
       const state = new ItemStateFactory(
         store.getItemContextGuid(),
         this.identifier,
         store.getResponseDeclarations(),
         store.getTemplateDeclarations(),
-        store.getOutcomeDeclarations()
+        store.getOutcomeDeclarations(),
+        store.getItemContextValidationMessages()
       )
 
       this.$parent.$emit('itemStateReady', {
@@ -415,30 +412,37 @@ export default {
       console.log('[ProcessResponses][Completed]')
     },
 
-    evaluateAttemptValidity () {
-      let interactions = store.getInteractions()
-      this.isValidAttempt = (this.validateResponses ? this.checkAttemptValidity(interactions) : true)
+    /**
+     * @description Evaluates an attempt's validity; i.e., do all interactions have a
+     * valid response? Side effect: build a list of validationMessages for any
+     * interactions that are invalid.
+     * @param validateResponses boolean true if we are to validate.  false if no validation.
+     * @return boolean (true if attempt is valid, false if it is not)
+     */
+    evaluateAttemptValidity (validateResponses) {
+      // If we don't have to validate the responses, the attempt is valid.
+      if (!validateResponses) return true
+      store.resetItemContextValidationMessages()
+
+      // Evaluate each interaction's response for validity.
+      return this.evaluateInteractionResponseValidity(store.getInteractions())
     },
 
-    checkAttemptValidity (interactions) {
+    evaluateInteractionResponseValidity (interactions) {
+      let isAttemptValid = true
       interactions.forEach((interaction) => {
         if (!interaction.isValidResponse) {
-          // Notify candidate
-          // $swal is sweet alert
-          this.$swal.fire({
-              toast: true,
-              position: 'top-end',
-              icon: 'warning',
-              html: interaction.minSelectionsMessage,
-              showConfirmButton: false,
-              showCloseButton: true,
-              timer: 1500,
-              timerProgressBar: true
+          // Save interaction's validation message
+          store.addItemContextValidationMessage({
+              identifier: interaction.identifier,
+              message: interaction.invalidResponseMessage
             })
-          return false
+
+          // mark attempt invalid
+          isAttemptValid = false
         }
       })
-      return true
+      return isAttemptValid
     },
 
     /**
