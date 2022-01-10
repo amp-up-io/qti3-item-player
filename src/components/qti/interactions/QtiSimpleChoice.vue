@@ -13,11 +13,11 @@
     <div style="width:100%;">
       <div
         ref="label"
-        class="amp-choice-label">
+        class="qti-choice-label">
       </div>
       <div
         ref="description"
-        class="amp-choice-description">
+        class="qti-choice-description">
         <slot></slot>
       </div>
     </div>
@@ -25,6 +25,10 @@
 </template>
 
 <script>
+import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
+
+const qtiAttributeValidation = new QtiAttributeValidation()
+
 export default {
   name: 'QtiSimpleChoice',
 
@@ -214,8 +218,8 @@ export default {
         return
       }
 
-      // Node does not have an authored id.  Create one using the interaction's responseIdentifier.
-      this.id = 'exp_elem_' + this.$parent.responseIdentifier + '_' + this.identifier
+      // Node does not have an authored id.  Create one.
+      this.id = 'choice_' + qtiAttributeValidation.randomString (5, 'a') + '_' + this.identifier
       this.$refs.choice.setAttribute('id', this.id)
     }
 
@@ -405,23 +409,23 @@ export default {
   box-shadow: var(--rb-default-border-focus-inset);
 }
 
-.amp-choice-label {
+.qti-choice-label {
   display: inline-block;
   vertical-align: top;
   width: 20px;
 }
-.amp-choice-label.qti-hidden {
+.qti-choice-label.qti-hidden {
     display: none;
     width: 0px;
 }
-.amp-choice-description {
+.qti-choice-description {
   display: inline-block;
   vertical-align: top;
   padding-left: 2px;
   width: 80%;
 }
-.control-hidden .amp-choice-label,
-.control-hidden .amp-choice-description {
+.control-hidden .qti-choice-label,
+.control-hidden .qti-choice-description {
   padding-left: 4px;
 }
 </style>
