@@ -128,6 +128,9 @@ export default {
     },
 
     handleGetStateCompleted (data) {
+      // Do not proceed if we have any validationMessages
+      if (data.state.validationMessages.length > 0) return
+      
       switch (data.target) {
         case 'navigateNextItem':
           this.navigateNextItem(data.state)
