@@ -23,6 +23,17 @@ export class SessionControlFactory {
       showFeedback: false,
       showSolution: false,
       timeLimits: this.constants.TIME_LIMITS_DEFAULT,
+      /*
+       * This attribute controls the behaviour of delivery engines when the candidate
+       * submits an invalid response. An invalid response is defined to be a response
+       * which does not satisfy the constraints imposed by the interaction with which
+       * it is associated (see interaction for more information). When validateResponses
+       * is turned on (true) then the candidates are not allowed to submit the item until
+       * they have provided valid responses for all interactions. When turned off (false)
+       * invalid responses may be accepted by the system. The value of this attribute is
+       * only applicable when the item is in a testPart with individual submission mode
+       * (see Navigation and Submission).
+       */
       validateResponses: false
     }
     return sc
