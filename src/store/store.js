@@ -538,7 +538,7 @@ export const store = {
   /**
    * @description Called when the Qti3Player is mounted.  Pass a copy
    * of itself in the playerNode parameter.
-   * @param playerNode - object containing the player (playerNode.player)
+   * @param {Object} playerNode - object containing the player component (playerNode.player)
    */
   NotifyPlayerReady (playerNode) {
     this.player = playerNode.player
@@ -550,7 +550,7 @@ export const store = {
    * called by an item container such as an item or test controller.
    *
    * This calls the endAttempt method exposed by the qti-assessment-item component.
-   * @param stateObject - an object containing any desired state.
+   * @param {Object} stateObject - an object containing any desired state.
    */
   NotifyEndAttempt (stateObject) {
     this.state.item.endAttempt(stateObject)
@@ -563,7 +563,7 @@ export const store = {
    * called by an item container such as an item or test controller.
    *
    * This calls the newTemplate method exposed by the qti-assessment-item component.
-   * @param stateObject - an object containing any desired state.
+   * @param {Object} stateObject - an object containing any desired state.
    */
   NotifyNewTemplate (stateObject) {
     this.state.item.newTemplate(stateObject)
@@ -572,19 +572,24 @@ export const store = {
   /**
    * @description This method should be called after the qti-assessment-item component
    * has been completely loaded and parsed.
-   * @param itemNode - an object containing the qti-assessment-item component itself.
+   * @param {Object} itemNode - an object containing the qti-assessment-item component itself.
    * e.g., { item: (reference to qti-assessment-item component) }
    */
   NotifyItemReady (itemNode) {
     this.setItem(itemNode)
   },
 
+  /**
+   * @description Method called by an interaction when the interaction determines
+   * that its max-choices or max-selections threshold is about to be exceeded.
+   * @param {String} message
+   */
   NotifyInteractionSelectionsLimit(message) {
     const event = {
       icon: 'warning',
       message: message
     }
-    this.player.handleAlertEvent(event)
+    this.player.displayAlertMessage(event)
   }
 }
 

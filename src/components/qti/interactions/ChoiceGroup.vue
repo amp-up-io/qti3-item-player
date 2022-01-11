@@ -88,6 +88,7 @@ export default {
   },
 
   methods: {
+
     validateChildren () {
       this.$slots.default.forEach((slot) => {
         if (qtiAttributeValidation.isValidSlot(slot)) {
@@ -156,7 +157,7 @@ export default {
      * @description When shuffle is true, this builds an ordered array of choice nodes from
      * a prior state (if one exists) or from the shuffleArrayFixed method in the qtiProcessing
      * library.
-     * @return Array of choices in the proper order.
+     * @return {Array} Array of choices in the proper order.
      */
     createShuffleContainer (choices, priorState) {
       let container = []
@@ -188,9 +189,9 @@ export default {
 
     /**
      * @description Utility method for selecting a choice by identifier
-     * @param identifier - the identifier of the choice
-     * @param choices - array of qti-simple-choice nodes
-     * @return choice or an exception if not found
+     * @param {String} identifier - the identifier of the choice
+     * @param {Array} choices - array of qti-simple-choice nodes
+     * @return {Component} choice or an exception if not found
      */
     findChoiceByIdentifier (identifier, choices) {
       for (let i = 0; i < choices.length; i++) {
@@ -215,7 +216,7 @@ export default {
 
     /**
      * @description For screen readers, set the choice group's aria-activedescendant
-     * @param id - the dom id of the currently focused choice
+     * @param {String} id - the dom id of the currently focused choice
      */
     setActiveDescendant (id) {
       this.$refs.choicegroup.setAttribute('aria-activedescendant', id)

@@ -15,6 +15,7 @@
 <script>
 import Vue from 'vue'
 import { store } from '@/store/store'
+import { XmlFilters } from '@/shared/helpers/XmlFilters'
 import Swal from 'sweetalert2'
 import QtiAssessmentItem from '@/components/qti/QtiAssessmentItem'
 
@@ -50,7 +51,7 @@ export default {
     return {
       item: null,  // Set to the qti-assessment-item component
       itemXml: '', // QTI XML string injected into the qti-assessment-item component
-      xmlFilters: new XmlFilters(),
+      xmlFilters: null,
       cssContainerClass: this.containerClass,
       cssColorClass: this.colorClass
     }
@@ -85,8 +86,8 @@ export default {
     /**
      * @description Main item loading method for the Qti3Player.  Accepts
      * a raw QTI 3 xml string and a configuration object.
-     * @param xml - string of qti-assessment-item xml
-     * @param configuration - object of the following schema:
+     * @param {String} xml - string of qti-assessment-item (QTI 3) xml
+     * @param {Object} configuration - object of the following schema:
      * {
      *   guid: string (a tracking guid)
      *   pnp: a PnpFactory object
@@ -101,6 +102,7 @@ export default {
       store.resetAll()
 
       // Step 2: set item player context
+      this.loadItemContextFromConfiguration(configuration)
       if (typeof configuration !== 'undefined') {
         if ('guid' in configuration) {
           store.setItemContextGuid(configuration.guid)
@@ -124,65 +126,122 @@ export default {
       this.itemXml = xml
     },
 
+    /**
+     * @description Event handler for the itemReady Event triggered by
+     * the qti-assessment-item component when the component is loaded.
+     * @param {Object} param - contains an 'item' property (the qti-assessment-item component)
+     */
     handleItemReady (param) {
       console.log('[Qti3Player][ItemReady]', param.item)
+      // Keep a handle on the component.
       this.item = param.item
+      // Notify the store
       store.NotifyItemReady({
           item: this.item
         })
+      // Notify listener that the qti-assessment-item component is loaded and ready.
+      this.$emit('notifyQti3ItemReady', param.item)
     },
 
+    /**
+    * @description Event handler for the itemCompleted Event triggered by
+    * the qti-assessment-item component when an Attempt has reached completion.
+    */
     handleItemCompleted () {
       console.log('[Qti3Player][ItemCompleted]')
+      this.$emit('notifyQti3ItemCompleted')
+    },
+
+    /**
+     * @description Method for controller to get a handle on the item component.
+     * @return {Component} a qti-assessment-item component
+     */
+    getItem () {
+      return this.item
     },
 
     /**
      * @description Initiate a getItemState request in the QtiAssessmentItem
      * component.  When the method completes the Item will trigger the
      * 'itemStateReady' event - handled by the 'handleItemStateReady' method.
-     * @param target
+     * @param {String} target - used for tracking the invoker of this method.
      */
     getItemState (target) {
       console.log('[Qti3Player][getItemState][' + target + ']')
       this.item.getItemState(target)
     },
 
+    loadItemContextFromConfiguration (configuration) {
+      if (typeof configuration === 'undefined') return
+
+      // If the configuration properties exist, Load ItemContext from the configuration.
+      if ('guid' in configuration) this.setItemContextGuid(configuration.guid)
+      if ('pnp' in configuration) this.setItemContextPnp(configuration.pnp)
+      if ('sessionControl' in configuration) this.setItemContextSessionControl(configuration.sessionControl)
+      if ('state' in configuration) this.setItemContextState(configuration.state)
+    },
+
+    /**
+     * @description Method to inject a pnp.
+     * @param {Object} pnp - a pnp object built from a PnpFactory
+     */
+    setItemContextPnp (pnp) {
+      store.setItemContextPnp(pnp)
+
+      // Update the UI if textAppearance.colorStyle modified.
+      const colorStyle = store.getItemContextPnp().getColorStyle()
+      if (this.cssColorClass !== colorStyle) this.cssColorClass = colorStyle
+    },
+
+    /**
+     * @description Method to inject a session control object.
+     * @param {Object} sessionControl - a session control object built
+     *                                  from a SessionControlFactory
+     */
+    setItemContextSessionControl (sessionControl) {
+      store.setItemContextSessionControl(sessionControl)
+    },
+
+    /**
+     * @description Method to inject a test controller's item tracking guid.
+     * @param {String} guid
+     */
+    setItemContextGuid (guid) {
+      store.setItemContextGuid(guid)
+    },
+
+    /**
+     * @description Method to inject a prior item state.
+     * @param {Object} state - a state object built
+     *                         from an ItemStateFactory
+     */
+    setItemContextState (state) {
+      store.setItemContextState(state)
+    },
+
     /**
      * @description event handler for the itemStateReady event.
-     * @param data - an object containing a state property and a target property.
+     * @param {Object} itemState - object containing a 'state' property and a 'target' property.
      */
-    handleItemStateReady (data) {
-      console.log('[Qti3Player][ItemStateReady]', data)
-
-      // Display validation messages if validateResponses=true AND ok to display the messages in the Player.
-      if (store.getItemContextSessionControl().getValidateResponses() && (!this.suppressInvalidResponseMessages)) {
-        this.displayInvalidResponseMessages(data.state.validationMessages)
-      }
-
-      this.$emit('getItemStateCompleted', data)
+    handleItemStateReady (itemState) {
+      //console.log('[Qti3Player][ItemStateReady]', itemState)
+      // Display any response validation messages.
+      this.displayInvalidResponseMessages(itemState.state.validationMessages)
+      // Notify listener that an Item State object is ready.
+      this.$emit('notifyQti3GetItemStateCompleted', itemState)
     },
 
     /**
-     * @description Method for a controller to inject a pnp.
-     * Normally, a pnp is injected via a configuration property
-     * when an item is loaded.
-     * @param pnp - a pnp object built from a PnpFactory
+     * @description Handler for QTI item messages such as max selections messages.
+     * @param {Object} message - object containing an icon property and a message property
      */
-    setPnp (pnp) {
-      store.setItemContextPnp(pnp)
-    },
-
-    /**
-     * @description Handler for QTI item events.
-     * @param event - object containing an icon property and a message property
-     */
-    handleAlertEvent (event) {
+    displayAlertMessage (message) {
       if (!this.suppressAlertMessages) {
         Swal.fire({
           toast: true,
           position: 'top-end',
-          icon: event.icon,
-          html: event.message,
+          icon: message.icon,
+          html: message.message,
           showConfirmButton: false,
           showCloseButton: true,
           timer: 3000,
@@ -190,27 +249,34 @@ export default {
         })
       }
       // Always notify listener
-      this.$emit('notifyItemAlertEvent', event)
-    },
-
-    displayInvalidResponseMessages (messages) {
-      messages.forEach((message) => {
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'error',
-            html: message.message,
-            showConfirmButton: false,
-            showCloseButton: true,
-            timer: 3000,
-            timerProgressBar: true
-          })
-      })
+      this.$emit('notifyQti3ItemAlertEvent', message)
     },
 
     /**
-     * @description After an item is updated, we may need to do some cleanup of the DOM or
-     * perform other post processing.  Do this here.
+     * @description Display validation messages if validateResponses=true AND
+     * ok to display the messages in the Player.
+     * @param {Array} messages - messages to be displayed
+     */
+    displayInvalidResponseMessages (messages) {
+      if (store.getItemContextSessionControl().getValidateResponses() && !this.suppressInvalidResponseMessages) {
+        messages.forEach((message) => {
+          Swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: 'error',
+              html: message.message,
+              showConfirmButton: false,
+              showCloseButton: true,
+              timer: 3000,
+              timerProgressBar: true
+            })
+        })
+      }
+    },
+
+    /**
+     * @description After an item is updated, we may need to do some cleanup of
+     * the DOM or perform other post processing.
      */
     postProcessing () {
       this.$nextTick(() => {
@@ -235,49 +301,20 @@ export default {
   },
 
   created () {
-    // Set up the PnpFactory
+    // Set up the PnpFactory and the Session Control Factory
     store.initializeItemContextPnp()
-    // TODO Set up the sessionControlFactory
+    store.initializeItemContextSessionControl()
+    // Load the filters once.
+    this.xmlFilters = new XmlFilters()
   },
 
   mounted () {
-    console.log('[Qti3Player][Mounted]')
+    console.log('[Qti3Player][Ready]')
     store.NotifyPlayerReady({
         player: this
       })
+    this.$emit('notifyQti3PlayerReady', this)
   }
-}
-
-class XmlFilters {
-  /**
-   * @description Helper Class for transforming the QTI XML
-   */
-  constructor() {
-  }
-
-  /**
-   * @description Remove CDATA from the XML.
-   */
-  filterCdata (xml) {
-    return xml.replace('<![CDATA[', '').replace(']]>', '')
-  }
-
-  /**
-   * @description Transform the <style> element into something
-   * that can be digested more easily by the qti-assessment-item component.
-   */
-  filterStyle (xml) {
-    return xml.replace('<style>','<amp-style>').replace('</style>','</amp-style>')
-  }
-
-  /**
-   * @description Transform an audio element to an amp-audio element which loads
-   * the custom amp-up.io audio player instead of the the default html5 audio player.
-   */
-  filterAudio (xml) {
-    return xml.replace('<audio ','<amp-audio ').replace('</audio>','</amp-audio>')
-  }
-
 }
 </script>
 

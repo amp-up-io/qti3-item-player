@@ -6,8 +6,10 @@
       v-bind:color-class="colorClass"
       suppress-alert-messages
       suppress-invalid-response-messages
-      @getItemStateCompleted="handleGetStateCompleted"
-      @notifyItemAlertEvent="handleItemAlertEvent"
+      @notifyQti3PlayerReady="handlePlayerReady"
+      @notifyQti3ItemReady="handleItemReady"
+      @notifyQti3GetItemStateCompleted="handleGetStateCompleted"
+      @notifyQti3ItemAlertEvent="displayItemAlertEvent"
     />
     <button ref="btnPrev" type="button" @click="handlePrevItem" class="btn btn-sm btn-outline-primary">Prev</button>
     <button ref="btnNext" type="button" @click="handleNextItem" class="btn btn-sm btn-outline-primary">Next</button>
@@ -70,8 +72,6 @@ export default {
   methods: {
 
     initialize () {
-      // Get handle on the player
-      this.qti3Player = this.$refs.qti3player
       // Load pnp
       this.pnp = new PnpFactory()
       // Load sessionControl
@@ -105,11 +105,8 @@ export default {
       this.qti3Player.getItemState('navigateNextItem')
     },
 
-    navigateNextItem (state) {
-      console.log('[NavigateNextItem]', state)
-
-      // Save our state
-      this.setTestStateItemState(state)
+    navigateNextItem () {
+      console.log('[NavigateNextItem]')
 
       this.currentItem += 1
       this.loadItemAtIndex(this.currentItem)
@@ -119,19 +116,23 @@ export default {
       this.qti3Player.getItemState('navigatePrevItem')
     },
 
-    navigatePrevItem (state) {
-      console.log('[NavigatePrevItem]', state)
-
-      // Save our state
-      this.setTestStateItemState(state)
+    navigatePrevItem () {
+      console.log('[NavigatePrevItem]')
 
       this.currentItem -= 1
       this.loadItemAtIndex(this.currentItem)
     },
 
     handleGetStateCompleted (data) {
-      // Do not proceed if we have any validationMessages
-      if (data.state.validationMessages.length > 0) return
+      // Save our state
+      this.setTestStateItemState(data.state)
+
+      if (data.state.validationMessages.length > 0) {
+        // Display validation messages
+        this.displayInvalidResponseMessages(data.state.validationMessages)
+        // Do not proceed if we have any validationMessages
+        return
+      }
 
       switch (data.target) {
         case 'navigateNextItem':
@@ -190,7 +191,7 @@ export default {
       return configuration
     },
 
-    handleItemAlertEvent (event) {
+    displayItemAlertEvent (event) {
       Swal.fire({
         toast: true,
         position: 'top-end',
@@ -202,6 +203,42 @@ export default {
         timerProgressBar: true
       })
     },
+
+    displayInvalidResponseMessages (messages) {
+      messages.forEach((message) => {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            html: message.message,
+            showConfirmButton: false,
+            showCloseButton: true,
+            timer: 3000,
+            timerProgressBar: true
+          })
+      })
+    },
+
+    /**
+     * @description Event handler for the QTI3Player component's 'notifyQti3PlayerReady'
+     * event.  This event is fired upon mounting of the Qti3Player component.
+     *
+     * The Qti3Player is now ready for XML loading.
+     * @param {Component} qti3Player - the Qti3Player component itself
+     */
+    handlePlayerReady (qti3Player) {
+      this.qti3Player = qti3Player
+    },
+
+    /**
+     * @description Event handler for the QTI3Player component's 'notifyQti3ItemReady'
+     * event.  This event is fired upon completion of the qti-assessment-item
+     * component's loading of XML.
+     */
+    handleItemReady () {
+      // NOOP
+    }
+
   },
 
   mounted () {

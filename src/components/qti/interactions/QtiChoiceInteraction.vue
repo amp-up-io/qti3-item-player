@@ -108,7 +108,7 @@ export default {
 
     /**
      * @description Get this interaction's response.
-     * @return response (string or array) - depending on cardinality
+     * @return {String or Array} response - depending on cardinality
      */
     getResponse () {
       return this.response
@@ -116,7 +116,8 @@ export default {
 
     /**
      * @description Set this interaction's response
-     * @param response (string or array depending on cardinality) containing selected choice identifier(s).
+     * @param {String or Array} response - (string or array depending on cardinality)
+     *                                     containing selected choice identifier(s).
      */
     setResponse (response) {
       this.response = response
@@ -124,7 +125,7 @@ export default {
 
     /**
      * @description Get this interaction's state.
-     * @return state (object)
+     * @return {Object} state
      */
     getState () {
       return this.state
@@ -132,31 +133,39 @@ export default {
 
     /**
      * @description Set/restore this interaction's state.
-     * @param state (object)
+     * @param {Object} state
      */
     setState (state) {
       this.state = state
     },
 
     /**
-     * @description Get this interaction's response validity
+     * @description Get this interaction's response validity.
+     * @return {Boolean} isValidResponse
      */
     getIsValid () {
       return this.isValidResponse
     },
 
     /**
-     * @description Set this interaction's response validity
-     * @param isValid boolean
+     * @description Set this interaction's response validity.
+     * @param {Boolean} isValid
      */
     setIsValid (isValid) {
       this.isValidResponse = isValid
     },
 
+    /**
+     * @description Get this interaction's invalid response message.
+     * @return {String} minSelectionsMessage or custom message
+     */
     getInvalidResponseMessage () {
       return this.minSelectionsMessage
     },
 
+    /**
+     * @description Reset this interaction's response and UI.
+     */
     resetValue () {
       console.log('[ResetValue][identifier]', this.responseIdentifier)
       this.choices.forEach((choice) => {
@@ -174,8 +183,9 @@ export default {
     },
 
     /**
-     * @description Restores this interaction's response.
-     * @param response
+     * @description Restores this interaction's response.  Also
+     * restores this interaction's response validity.
+     * @param {String or Array} response
      */
     restoreValue (response) {
       if (response === null) return
@@ -201,7 +211,7 @@ export default {
     },
 
     /**
-     * @description Handles computation of this interaction's cardinality (single, multiple).
+     * @description Computes this interaction's cardinality (single, multiple).
      * Side effect: sets the model's cardinality property.
      */
     getCardinality () {
@@ -213,7 +223,7 @@ export default {
 
     /**
      * @description Iterate through $slots. Finds the first (if any) qti-prompt component.
-     * @param slots
+     * @param {Array} slots
      */
     getPrompt (slots) {
       let prompt = []
@@ -234,8 +244,8 @@ export default {
 
     /**
      * @description Implements checked behavior on radio button and checkbox groups.
-     * @param choice - the choice that is being checked/unchecked.
-     * @param restoring - boolean set to true when restoring
+     * @param {Component} choice - the choice that is being checked/unchecked.
+     * @param {Boolean} restoring - boolean set to true when restoring
      */
     handleSetChecked (choice, restoring=false) {
       this.choices.forEach((simpleChoice) => {
@@ -277,7 +287,7 @@ export default {
     /**
      * @description Find the previous radio choice.  If we are already on the first choice
      * then circle back around to the last choice.
-    * @param identifier - the identifier of the choice that currently has the focus
+     * @param {String} identifier - the identifier of the choice that currently has the focus
      */
     handleSetFocusPreviousChoice (identifier) {
       if (this.isRadio) {
@@ -289,7 +299,7 @@ export default {
     /**
      * @description Find the next radio choice.  If we are already on the last choice
      * then circle back around to the first choice.
-     * @param identifier - the identifier of the choice that currently has the focus.
+     * @param {String} identifier - the identifier of the choice that currently has the focus.
      */
     handleSetFocusNextChoice (identifier) {
       if (this.isRadio) {
@@ -300,12 +310,17 @@ export default {
 
     /**
      * @description For accessibility, set the choice group's activedescendant.
-     * @param id - the id of the active descendant.
+     * @param {String} id - the id of the active descendant.
      */
     handleSetActiveDescendant (id) {
       this.$refs.choicegroup.setActiveDescendant(id)
     },
 
+    /**
+     * @description Focus a choice identified by the identifier parameter.
+     * Also includes the focused choice in the tab order.
+     * @param {String} identifier
+     */
     setFocusChoice (identifier) {
       for (let index = 0; index < this.choices.length; index++) {
         if (this.choices[index].identifier === identifier) {
@@ -319,7 +334,7 @@ export default {
     /**
      * @description Take the choice specified by the
      * identifier param out of the tab order.
-     * @param identifier string
+     * @param {String} identifier
      */
     removeChoiceFromTabOrder (identifier) {
       for (let index = 0; index < this.choices.length; index++) {
@@ -332,6 +347,7 @@ export default {
 
     /**
      * @description Utility method to find the previous choice's identifier.
+     * @param {String} identifier
      */
     findPreviousIdentifier (identifier) {
       if (identifier === this.firstChoice.identifier) {
@@ -347,6 +363,7 @@ export default {
 
     /**
      * @description Utility method to find the next choice's identifier.
+     * @param {String} identifier
      */
     findNextIdentifier (identifier) {
       if (identifier === this.lastChoice.identifier) {
@@ -362,8 +379,8 @@ export default {
 
     /**
      * @description Handler called by ChoiceGroup component.
-     * @param config - an object containing all choice components
-     * nested within the ChoiceGroup.
+     * @param {Object} config - an object containing all choice components
+     *                          nested within the ChoiceGroup.
      */
     handleChoiceGroupReady (config) {
       this.choices = config.choices
@@ -387,6 +404,7 @@ export default {
      * @description Build a response from the array of choices.
      * Single Cardinality: response is an identifier string
      * Multiple Cardinality: response is an array of identifier strings
+     * @return {String or Array} response
      */
     computeResponse () {
       let response = this.isRadio ? null : []
@@ -408,7 +426,7 @@ export default {
      * @description For a choice interaction, the most important part of state
      * is the order of the choices.  Compute the order and save it in an
      * order property.
-     * @return state object
+     * @return {Object} state object
      */
     computeState () {
       const state = {}
@@ -425,7 +443,7 @@ export default {
     /**
      * @description The determines an interaction's validity status based
      * on the min-choices attribute.
-     * @return boolean (true if valid, false if invalid)
+     * @return {Boolean} (true if valid, false if invalid)
      */
     computeIsValid () {
       // If minChoices is 0, there are no constraints
@@ -464,7 +482,7 @@ export default {
 
     /**
      * @description Update the interaction's validity.
-     * @param isValid boolean
+     * @param {Boolean} isValid
      */
     updateValidity (isValid) {
       this.setIsValid(isValid)
@@ -476,7 +494,7 @@ export default {
 
     /**
      * @description This method should be called prior to setting checked=true on a choice.
-     * @return boolean (true if exceeding max-choices, false if not)
+     * @return {Boolean} (true if exceeding max-choices, false if not)
      */
     checkMaxChoicesLimit () {
       // max-choices = 0 means no limit.
@@ -520,7 +538,7 @@ export default {
      *     order: [Array of Strings]
      *   }
      * }
-     * @param identifier - of a response variable
+     * @param {String} identifier - of a response variable
      */
     getPriorState (identifier) {
       const priorState = store.getItemContextStateVariable(identifier)
