@@ -7,6 +7,7 @@
       suppress-alert-messages
       suppress-invalid-response-messages
       @getItemStateCompleted="handleGetStateCompleted"
+      @notifyItemAlertEvent="handleItemAlertEvent"
     />
     <button ref="btnPrev" type="button" @click="handlePrevItem" class="btn btn-sm btn-outline-primary">Prev</button>
     <button ref="btnNext" type="button" @click="handleNextItem" class="btn btn-sm btn-outline-primary">Next</button>
@@ -17,6 +18,7 @@
 import Qti3Player from '@/Qti3Player.vue'
 import { PnpFactory } from '@/shared/helpers/PnpFactory'
 import { SessionControlFactory } from '@/shared/helpers/SessionControlFactory'
+import Swal from 'sweetalert2'
 
 export default {
   name: 'App',
@@ -89,7 +91,6 @@ export default {
         return
       }
 
-      //this.toggleButtonDisabled (this.$refs.btnNext, true)
       this.initiateNavigateNextItem()
     },
 
@@ -97,7 +98,6 @@ export default {
       console.log('[Controller][PrevItem][' + this.currentItem + ']')
       if (this.currentItem === 0) return
 
-      //this.toggleButtonDisabled (this.$refs.btnPrev, true)
       this.initiateNavigatePrevItem()
     },
 
@@ -188,7 +188,20 @@ export default {
       configuration.sessionControl = this.sessionControl.getSessionControl()
 
       return configuration
-    }
+    },
+
+    handleItemAlertEvent (event) {
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: event.icon,
+        html: event.message,
+        showConfirmButton: false,
+        showCloseButton: true,
+        timer: 3000,
+        timerProgressBar: true
+      })
+    },
   },
 
   mounted () {

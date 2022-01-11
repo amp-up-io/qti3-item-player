@@ -189,6 +189,8 @@ export default {
           timerProgressBar: true
         })
       }
+      // Always notify listener
+      this.$emit('notifyItemAlertEvent', event)
     },
 
     displayInvalidResponseMessages (messages) {
