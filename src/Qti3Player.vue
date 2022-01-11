@@ -33,6 +33,16 @@ export default {
       type: String,
       required: false,
       default: 'qti3-player-color-default'
+    },
+    suppressAlertMessages: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    suppressInvalidResponseMessages: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
 
@@ -42,9 +52,7 @@ export default {
       itemXml: '', // QTI XML string injected into the qti-assessment-item component
       xmlFilters: new XmlFilters(),
       cssContainerClass: this.containerClass,
-      cssColorClass: this.colorClass,
-      suppressAlertMessages: false,
-      suppressAlertEvents: false
+      cssColorClass: this.colorClass
     }
   },
 
@@ -147,8 +155,8 @@ export default {
       console.log('[Qti3Player][ItemStateReady]', data)
 
       // Display validation messages if validateResponses=true AND ok to display the messages in the Player.
-      if (store.getItemContextSessionControl().getValidateResponses() && (!this.suppressValidationMessages)) {
-        this.handleValidationEvents(data.state.validationMessages)
+      if (store.getItemContextSessionControl().getValidateResponses() && (!this.suppressInvalidResponseMessages)) {
+        this.displayInvalidResponseMessages(data.state.validationMessages)
       }
 
       this.$emit('getItemStateCompleted', data)
@@ -183,16 +191,16 @@ export default {
       }
     },
 
-    handleValidationEvents (events) {
-      events.forEach((event) => {
+    displayInvalidResponseMessages (messages) {
+      messages.forEach((message) => {
         Swal.fire({
             toast: true,
             position: 'top-end',
-            icon: 'warning',
-            html: event.message,
+            icon: 'error',
+            html: message.message,
             showConfirmButton: false,
             showCloseButton: true,
-            timer: 1500,
+            timer: 3000,
             timerProgressBar: true
           })
       })

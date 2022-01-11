@@ -4,6 +4,8 @@
       ref="qti3player"
       v-bind:container-class="containerClass"
       v-bind:color-class="colorClass"
+      suppress-alert-messages
+      suppress-invalid-response-messages
       @getItemStateCompleted="handleGetStateCompleted"
     />
     <button ref="btnPrev" type="button" @click="handlePrevItem" class="btn btn-sm btn-outline-primary">Prev</button>
@@ -130,7 +132,7 @@ export default {
     handleGetStateCompleted (data) {
       // Do not proceed if we have any validationMessages
       if (data.state.validationMessages.length > 0) return
-      
+
       switch (data.target) {
         case 'navigateNextItem':
           this.navigateNextItem(data.state)
