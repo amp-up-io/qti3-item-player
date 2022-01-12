@@ -503,7 +503,13 @@ export default {
    QTI 3 shared css
    ================*/
 
-/* QTI 3 Display overrides */
+/* =================
+  Display overrides
+  ================= */
+.qti-display-inline {
+  display: inline;
+}
+
 .qti-display-inline-block {
   display: inline-block;
 }
@@ -513,11 +519,35 @@ export default {
 }
 
 .qti-display-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+}
+
+.qti-display-inline-flex {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
 }
 
 .qti-display-grid {
   display: grid;
+}
+
+.qti-display-inline-grid {
+  display: inline-grid;
+}
+
+.qti-display-table {
+  display: table;
+}
+
+.qti-display-table-cell {
+  display: table-cell;
+}
+
+.qti-display-table-row {
+  display: table-row;
 }
 
 .qti-hidden {
@@ -525,7 +555,7 @@ export default {
 }
 
 .qti-visually-hidden {
-  position:fixed !important;
+  position: fixed !important;
   overflow: hidden;
   clip: rect(1px 1px 1px 1px);
   height: 1px;
