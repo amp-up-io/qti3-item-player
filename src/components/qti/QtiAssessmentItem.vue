@@ -564,6 +564,369 @@ export default {
   margin: -1px;
 }
 
+/* =========
+  Margin css
+  ========== */
+
+/**
+ * For margin Top and Bottom and Left and Right
+ */
+.qti-margin-0 {
+  margin: 0 !important;
+}
+.qti-margin-1 {
+  margin: 0.25rem !important;
+}
+.qti-margin-2 {
+  margin: 0.5rem !important;
+}
+.qti-margin-3 {
+  margin: 1rem !important;
+}
+.qti-margin-4 {
+  margin: 1.5rem !important;
+}
+.qti-margin-5 {
+  margin: 3rem !important;
+}
+.qti-margin-auto {
+  margin: auto !important;
+}
+
+/**
+ * For margin Left and Right
+ */
+.qti-margin-x-0 {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}
+.qti-margin-x-1 {
+  margin-right: 0.25rem !important;
+  margin-left: 0.25rem !important;
+}
+.qti-margin-x-2 {
+  margin-right: 0.5rem !important;
+  margin-left: 0.5rem !important;
+}
+.qti-margin-x-3 {
+  margin-right: 1rem !important;
+  margin-left: 1rem !important;
+}
+.qti-margin-x-4 {
+  margin-right: 1.5rem !important;
+  margin-left: 1.5rem !important;
+}
+.qti-margin-x-5 {
+  margin-right: 3rem !important;
+  margin-left: 3rem !important;
+}
+.qti-margin-x-auto {
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+/**
+ * For margin Top and Bottom
+ */
+.qti-margin-y-0 {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.qti-margin-y-1 {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+}
+.qti-margin-y-2 {
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+.qti-margin-y-3 {
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+}
+.qti-margin-y-4 {
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+.qti-margin-y-5 {
+  margin-top: 3rem !important;
+  margin-bottom: 3rem !important;
+}
+.qti-margin-y-auto {
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+}
+
+/**
+ * For margin Top
+ */
+.qti-margin-t-0 {
+  margin-top: 0 !important;
+}
+.qti-margin-t-1 {
+  margin-top: 0.25rem !important;
+}
+.qti-margin-t-2 {
+  margin-top: 0.5rem !important;
+}
+.qti-margin-t-3 {
+  margin-top: 1rem !important;
+}
+.qti-margin-t-4 {
+  margin-top: 1.5rem !important;
+}
+.qti-margin-t-5 {
+  margin-top: 3rem !important;
+}
+.qti-margin-t-auto {
+  margin-top: auto !important;
+}
+
+/**
+ * For margin Bottom
+ */
+.qti-margin-b-0 {
+  margin-bottom: 0 !important;
+}
+.qti-margin-b-1 {
+  margin-bottom: 0.25rem !important;
+}
+.qti-margin-b-2 {
+  margin-bottom: 0.5rem !important;
+}
+.qti-margin-b-3 {
+  margin-bottom: 1rem !important;
+}
+.qti-margin-b-4 {
+  margin-bottom: 1.5rem !important;
+}
+.qti-margin-b-5 {
+  margin-bottom: 3rem !important;
+}
+.qti-margin-b-auto {
+  margin-bottom: auto !important;
+}
+
+/**
+ * For margin Start LTR
+ */
+.qti-margin-s-0 {
+  margin-left: 0 !important;
+}
+.qti-margin-s-1 {
+  margin-left: 0.25rem !important;
+}
+.qti-margin-s-2 {
+  margin-left: 0.5rem !important;
+}
+.qti-margin-s-3 {
+  margin-left: 1rem !important;
+}
+.qti-margin-s-4 {
+  margin-left: 1.5rem !important;
+}
+.qti-margin-s-5 {
+  margin-left: 3rem !important;
+}
+.qti-margin-s-auto {
+  margin-left: auto !important;
+}
+
+/**
+ * For margin End LTR
+ */
+.qti-margin-e-0 {
+  margin-right: 0 !important;
+}
+.qti-margin-e-1 {
+  margin-right: 0.25rem !important;
+}
+.qti-margin-e-2 {
+  margin-right: 0.5rem !important;
+}
+.qti-margin-e-3 {
+  margin-right: 1rem !important;
+}
+.qti-margin-e-4 {
+  margin-right: 1.5rem !important;
+}
+.qti-margin-e-5 {
+  margin-right: 3rem !important;
+}
+.qti-margin-e-auto {
+  margin-right: auto !important;
+}
+
+/* =========
+  Padding css
+  ========== */
+
+/**
+ * For padding Top and Bottom and Left and Right
+ */
+.qti-padding-0 {
+  padding: 0 !important;
+}
+.qti-padding-1 {
+  padding: 0.25rem !important;
+}
+.qti-padding-2 {
+  padding: 0.5rem !important;
+}
+.qti-padding-3 {
+  padding: 1rem !important;
+}
+.qti-padding-4 {
+  padding: 1.5rem !important;
+}
+.qti-padding-5 {
+  padding: 3rem !important;
+}
+
+/**
+ * For padding Left and Right
+ */
+.qti-padding-x-0 {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+.qti-padding-x-1 {
+  padding-right: 0.25rem !important;
+  padding-left: 0.25rem !important;
+}
+.qti-padding-x-2 {
+  padding-right: 0.5rem !important;
+  padding-left: 0.5rem !important;
+}
+.qti-padding-x-3 {
+  padding-right: 1rem !important;
+  padding-left: 1rem !important;
+}
+.qti-padding-x-4 {
+  padding-right: 1.5rem !important;
+  padding-left: 1.5rem !important;
+}
+.qti-padding-x-5 {
+  padding-right: 3rem !important;
+  padding-left: 3rem !important;
+}
+
+/**
+ * For padding Top and Bottom
+ */
+.qti-padding-y-0 {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+.qti-padding-y-1 {
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+}
+.qti-padding-y-2 {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+.qti-padding-y-3 {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+.qti-padding-y-4 {
+  padding-top: 1.5rem !important;
+  padding-bottom: 1.5rem !important;
+}
+.qti-padding-y-5 {
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
+}
+
+/**
+ * For padding Top
+ */
+.qti-padding-t-0 {
+  padding-top: 0 !important;
+}
+.qti-padding-t-1 {
+  padding-top: 0.25rem !important;
+}
+.qti-padding-t-2 {
+  padding-top: 0.5rem !important;
+}
+.qti-padding-t-3 {
+  padding-top: 1rem !important;
+}
+.qti-padding-t-4 {
+  padding-top: 1.5rem !important;
+}
+.qti-padding-t-5 {
+  padding-top: 3rem !important;
+}
+
+/**
+ * For padding Bottom
+ */
+.qti-padding-b-0 {
+  padding-bottom: 0 !important;
+}
+.qti-padding-b-1 {
+  padding-bottom: 0.25rem !important;
+}
+.qti-padding-b-2 {
+  padding-bottom: 0.5rem !important;
+}
+.qti-padding-b-3 {
+  padding-bottom: 1rem !important;
+}
+.qti-padding-b-4 {
+  padding-bottom: 1.5rem !important;
+}
+.qti-padding-b-5 {
+  padding-bottom: 3rem !important;
+}
+
+/**
+ * For padding Start LTR
+ */
+.qti-padding-s-0 {
+  padding-left: 0 !important;
+}
+.qti-padding-s-1 {
+  padding-left: 0.25rem !important;
+}
+.qti-padding-s-2 {
+  padding-left: 0.5rem !important;
+}
+.qti-padding-s-3 {
+  padding-left: 1rem !important;
+}
+.qti-padding-s-4 {
+  padding-left: 1.5rem !important;
+}
+.qti-padding-s-5 {
+  padding-left: 3rem !important;
+}
+
+/**
+ * For padding End LTR
+ */
+.qti-padding-e-0 {
+  padding-right: 0 !important;
+}
+.qti-padding-e-1 {
+  padding-right: 0.25rem !important;
+}
+.qti-padding-e-2 {
+  padding-right: 0.5rem !important;
+}
+.qti-padding-e-3 {
+  padding-right: 1rem !important;
+}
+.qti-padding-e-4 {
+  padding-right: 1.5rem !important;
+}
+.qti-padding-e-5 {
+  padding-right: 3rem !important;
+}
+
 /* QTI 3 Horizontal alignment */
 .qti-align-left {
   text-align: left;
