@@ -15,6 +15,10 @@ export class PnpFactory {
     COLOR_BLACK_WHITE: 'qti3-player-color-blackwhite',
     // High contrast - reverse polarity
     COLOR_WHITE_BLACK: 'qti3-player-color-whiteblack'
+    // Black on Rose - unsupported
+    COLOR_BLACK_ROSE: 'qti3-player-color-blackrose',
+    // Rose on Black - unsupported
+    COLOR_ROSE_BLACK: 'qti3-player-color-roseblack'
   }
 
   defaultPnp () {
@@ -22,7 +26,8 @@ export class PnpFactory {
       textAppearance: {
         colorStyle: this.constants.COLOR_DEFAULT
       },
-      glossaryOnScreen: true
+      glossaryOnScreen: true, // unsupported
+      layoutSingleColumn: false // unsupported
     }
     return pnp
   }
@@ -42,6 +47,10 @@ export class PnpFactory {
 
     if (('glossaryOnScreen' in pnp) && (pnp.glossaryOnScreen !== null)) {
       this.setGlossaryOnScreen(pnp.glossaryOnScreen)
+    }
+
+    if (('layoutSingleColumn' in pnp) && (pnp.layoutSingleColumn !== null)) {
+      this.setLayoutSingleColumn(pnp.layoutSingleColumn)
     }
   }
 
@@ -63,6 +72,14 @@ export class PnpFactory {
 
   setGlossaryOnScreen (glossaryOnScreen) {
     this.pnp.glossaryOnScreen = glossaryOnScreen
+  }
+
+  getLayoutSingleColumn () {
+    return this.pnp.layoutSingleColumn
+  }
+
+  setLayoutSingleColumn (layoutSingleColumn) {
+    this.pnp.layoutSingleColumn = layoutSingleColumn
   }
 
 }
