@@ -9,7 +9,7 @@
  * reference item content that is presented to candidates based on their
  * candidate profile (PNP) requirements.
  */
-import QtiValidationException from '@/shared/qti/exceptions/QtiValidationException'
+import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
 
 export default {
   name: 'QtiCatalogInfo',

@@ -40,6 +40,7 @@ Vue.component('qti-template-block', QtiTemplateBlock)
 Vue.component('qti-printed-variable', QtiPrintedVariable)
 Vue.component('amp-img', Img)
 Vue.component('amp-audio', AmpAudio)
+*/
 Vue.component('amp-style', {
   render: function (createElement) {
     return createElement(
@@ -48,7 +49,6 @@ Vue.component('amp-style', {
     )
   }
 })
-*/
 
 export default {
   name: 'QtiItemBody',
