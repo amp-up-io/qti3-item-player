@@ -7,6 +7,7 @@
       @itemReady="handleItemReady"
       @itemCompleted="handleItemCompleted"
       @itemStateReady="handleItemStateReady"
+      @itemEndAttemptReady="handleEndAttemptReady"
       v-bind:is="processedXml">
     </component>
   </div>
@@ -101,6 +102,9 @@ export default {
       // Step 1: clear out the existing store
       store.resetAll()
 
+      // Step 2: initialize the built-in variables
+      store.initializeBuiltInDeclarations()
+
       // Step 2: set item player context
       this.loadItemContextFromConfiguration(configuration)
       if (typeof configuration !== 'undefined') {
@@ -171,6 +175,11 @@ export default {
       this.item.getItemState(target)
     },
 
+    endAttempt (target) {
+      console.log('[Qti3Player][endAttempt][' + target + ']')
+      this.item.getEndAttempt(target)
+    },
+
     loadItemContextFromConfiguration (configuration) {
       if (typeof configuration === 'undefined') return
 
@@ -224,11 +233,21 @@ export default {
      * @param {Object} itemState - object containing a 'state' property and a 'target' property.
      */
     handleItemStateReady (itemState) {
-      //console.log('[Qti3Player][ItemStateReady]', itemState)
       // Display any response validation messages.
       this.displayInvalidResponseMessages(itemState.state.validationMessages)
       // Notify listener that an Item State object is ready.
       this.$emit('notifyQti3GetItemStateCompleted', itemState)
+    },
+
+    /**
+     * @description event handler for the itemStateReady event.
+     * @param {Object} itemState - object containing a 'state' property and a 'target' property.
+     */
+    handleEndAttemptReady (itemState) {
+      // Display any response validation messages.
+      this.displayInvalidResponseMessages(itemState.state.validationMessages)
+      // Notify listener that an Item State object is ready.
+      this.$emit('notifyQti3EndAttemptCompleted', itemState)
     },
 
     /**

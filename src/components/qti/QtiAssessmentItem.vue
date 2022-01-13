@@ -72,10 +72,6 @@ export default {
   data () {
     return {
       /*
-       * If any interactions contain invalid responses then this will be set to false.
-       */
-      isValidAttempt: true,
-      /*
        * This is set to true if adaptive="true"
        */
       isAdaptive: false,
@@ -251,7 +247,8 @@ export default {
       })
     },
 
-    evaluateFeedbacks () {
+    evaluateFeedbacks (showFeedback) {
+      if (!showFeedback) return
       console.log('[EvaluateFeedback][Started]')
       store.getFeedbacks().forEach((feedback) => {
         feedback.node.evaluate()
@@ -286,10 +283,14 @@ export default {
       this.getResponses()
 
       // Evaluate response validity if item session control validateResponses=true
-      this.isValidAttempt = this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())
-      if (this.isValidAttempt) {
+      if (this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())) {
         this.processResponses()
       }
+
+      let responseVariables = store.getResponseDeclarations()
+      responseVariables.forEach((responseVariable) => {
+        console.log('Diagnostic[ResponseVariable][' + responseVariable.identifier + ']:', responseVariable)
+      })
 
       if (this.isAdaptive) {
         this.evaluateItemCompleted()
@@ -301,8 +302,8 @@ export default {
       if (typeof stateObject === 'undefined') {
         return
       }
-      // This was invoked by an endAttempt interaction.  If this is not a
-      // mxlcontroller end attempt interaction, disable the mxlcontroller if one exists
+      // This was invoked by an endAttempt interaction - such as a Show Hint.  If this is
+      // not a mxlcontroller endAttempt interaction, disable the mxlcontroller if one exists
       // in the item body.
       if (stateObject.interactionSubType !== 'mxlcontroller') {
         // Was not a mxlcontroller end attempt.
@@ -372,6 +373,35 @@ export default {
       })
     },
 
+    /**
+     * @description Call endAttempt, then retrieve all variable declarations, storing them in
+     * an itemState class.
+     * @param target - string which identifies a callback target
+     * @return object with two properties: state which is an itemState class and target
+     */
+    getEndAttempt (target) {
+      // End the attempt.
+      // Evaluate response validity.
+      // Fire response processing.
+      // Evaluate outcomes.
+      // Show feedback (if sessionControl permits it)
+      this.endAttempt()
+
+      const state = new ItemStateFactory(
+        store.getItemContextGuid(),
+        this.identifier,
+        store.getResponseDeclarations(),
+        store.getTemplateDeclarations(),
+        store.getOutcomeDeclarations(),
+        store.getItemContextValidationMessages()
+      )
+
+      this.$parent.$emit('itemEndAttemptReady', {
+        "state": state.getSerializedState(),
+        "target": (typeof target !== 'undefined' ? target : null)
+      })
+    },
+
     evaluateItemCompleted () {
       let outcomeDeclaration = store.getOutcomeDeclaration('completionStatus')
 
@@ -380,18 +410,9 @@ export default {
       }
     },
 
-    incrementNumAttempts () {
-      let numAttempts = store.getResponseDeclaration('numAttempts')
-      let newNumAttemptsValue = numAttempts.value + 1
-      store.setResponseVariableValue({
-          identifier: 'numAttempts',
-          value: newNumAttemptsValue
-        })
-    },
-
     processResponses () {
       console.log('[ProcessResponses][Started]')
-      this.incrementNumAttempts()
+      store.incrementNumAttempts()
 
       console.log('[ProcessResponses][IsAdaptive]', this.isAdaptive)
       if (!this.isAdaptive) {
@@ -407,7 +428,10 @@ export default {
       this.printOutcomeDeclarations()
 
       this.evaluatePrintedVariables()
-      this.evaluateFeedbacks()
+      // Show feedbacks if itemSessionControl.showFeedback=true
+      if (store.getItemContextSessionControl().getShowFeedback()) {
+        this.evaluateFeedbacks()
+      }
 
       console.log('[ProcessResponses][Completed]')
     },
@@ -484,8 +508,6 @@ export default {
 
   created () {
     this.coerceItemAttributes()
-    // Initialize built-in declarations before we do anything else.
-    store.initializeBuiltInDeclarations()
   },
 
   mounted () {

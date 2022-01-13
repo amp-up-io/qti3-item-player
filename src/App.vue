@@ -9,6 +9,7 @@
       @notifyQti3PlayerReady="handlePlayerReady"
       @notifyQti3ItemReady="handleItemReady"
       @notifyQti3GetItemStateCompleted="handleGetStateCompleted"
+      @notifyQti3EndAttemptCompleted="handleEndAttemptCompleted"
       @notifyQti3ItemAlertEvent="displayItemAlertEvent"
     />
     <button ref="btnPrev" type="button" @click="handlePrevItem" class="btn btn-sm btn-outline-primary">Prev</button>
@@ -33,6 +34,16 @@ export default {
       isTestStarted: false,
       currentItem: 0,
       items: [
+        {
+          "identifier": "i9b-response-processing-fixed-template-match-correct-identifier",
+          "guid": "0000-0005-0001",
+          "xml": "<qti-assessment-item xmlns=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd\" identifier=\"i9b-response-processing-fixed-template-match_correct-identifier\" title=\"I9b - Response Processing Fixed Template - Match Correct Identifier\" adaptive=\"false\" time-dependent=\"false\">\n    <qti-response-declaration identifier=\"RESPONSE\" cardinality=\"single\" base-type=\"identifier\"><qti-correct-response><qti-value>choice_a</qti-value></qti-correct-response>\n    </qti-response-declaration>\n    <qti-outcome-declaration identifier=\"SCORE\" cardinality=\"single\" base-type=\"float\"/>\n    <qti-item-body>\n        <qti-choice-interaction response-identifier=\"RESPONSE\" max-choices=\"1\"><qti-prompt>Select a SimpleChoice below or do not select any SimpleChoice, and trigger Response Processing by ending the attempt.</qti-prompt><qti-simple-choice identifier=\"choice_a\">Correct</qti-simple-choice><qti-simple-choice identifier=\"choice_b\">Incorrect</qti-simple-choice>\n        </qti-choice-interaction>\n    </qti-item-body>\n    <qti-response-processing template=\"https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml\"/>\n</qti-assessment-item>"
+        },
+        {
+          "identifier": "i9b-response-processing-fixed-template-map-response-identifier",
+          "guid": "0000-0005-0002",
+          "xml": "<qti-assessment-item xmlns=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd\" identifier=\"i9b-response-processing-fixed-template-map-response-identifier\" title=\"I9b - Response Processing Fixed Template - Map Response Identifier\" adaptive=\"false\" time-dependent=\"false\">\n    <qti-response-declaration identifier=\"RESPONSE\" cardinality=\"multiple\" base-type=\"identifier\"><!-- Optimal Response --><qti-correct-response><qti-value>choice_a</qti-value>\n            <qti-value>choice_b</qti-value>\n            <qti-value>choice_c</qti-value>\n        </qti-correct-response>\n        <qti-mapping lower-bound=\"0\" upper-bound=\"6\" default-value=\"0\"><qti-map-entry map-key=\"choice_a\" mapped-value=\"1\"/><qti-map-entry map-key=\"choice_b\" mapped-value=\"2.0\"/><qti-map-entry map-key=\"choice_c\" mapped-value=\"5\"/><qti-map-entry map-key=\"choice_d\" mapped-value=\"-1\"/><qti-map-entry map-key=\"choice_e\" mapped-value=\"-2.0\"/>\n            <qti-map-entry map-key=\"choice_f\" mapped-value=\"-5\"/>\n        </qti-mapping>\n    </qti-response-declaration><qti-outcome-declaration identifier=\"SCORE\" cardinality=\"single\" base-type=\"float\"/><qti-item-body><qti-choice-interaction response-identifier=\"RESPONSE\" min-choices=\"0\" max-choices=\"6\"><qti-prompt>Select 0 to 6 SimpleChoices below and trigger Response Processing by ending the attempt.</qti-prompt><qti-simple-choice identifier=\"choice_a\">Mapped Value = 1.0</qti-simple-choice>\n            <qti-simple-choice identifier=\"choice_b\">Mapped Value = 2.0</qti-simple-choice><qti-simple-choice identifier=\"choice_c\">Mapped Value = 5.0</qti-simple-choice><qti-simple-choice identifier=\"choice_d\">Mapped Value = -1.0</qti-simple-choice><qti-simple-choice identifier=\"choice_e\">Mapped Value = -2.0</qti-simple-choice><qti-simple-choice identifier=\"choice_f\">Mapped Value = -5.0</qti-simple-choice>\n        </qti-choice-interaction>\n    </qti-item-body>\n    <qti-response-processing template=\"https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/map_response.xml\"/></qti-assessment-item>"
+        },
         {
           "identifier": "i19b-shared-css-vocab-1",
           "guid": "0000-0004-0001",
@@ -70,13 +81,16 @@ export default {
       itemStates: new Map(),
       sessionControl: null,
       pnp: null,
-      qti3Player: null
+      qti3Player: null,
+      performResponseProcessing: false
     }
   },
 
   methods: {
 
     initialize () {
+      // Score when navigating
+      this.performResponseProcessing = true
       // Load pnp
       this.pnp = new PnpFactory()
       // Load sessionControl
@@ -107,7 +121,10 @@ export default {
     },
 
     initiateNavigateNextItem () {
-      this.qti3Player.getItemState('navigateNextItem')
+      if (this.performResponseProcessing)
+        this.qti3Player.endAttempt('navigateNextItem')
+      else
+        this.qti3Player.getItemState('navigateNextItem')
     },
 
     navigateNextItem () {
@@ -118,7 +135,10 @@ export default {
     },
 
     initiateNavigatePrevItem () {
-      this.qti3Player.getItemState('navigatePrevItem')
+      if (this.performResponseProcessing)
+        this.qti3Player.endAttempt('navigatePrevItem')
+      else
+        this.qti3Player.getItemState('navigatePrevItem')
     },
 
     navigatePrevItem () {
@@ -126,6 +146,10 @@ export default {
 
       this.currentItem -= 1
       this.loadItemAtIndex(this.currentItem)
+    },
+
+    handleEndAttemptCompleted (data) {
+      console.log('[EndAttemptCompleted]', data)
     },
 
     handleGetStateCompleted (data) {

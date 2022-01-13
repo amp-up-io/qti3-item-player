@@ -416,6 +416,11 @@ export const store = {
     declaration.value = (declaration.defaultValue !== null ? declaration.defaultValue : null)
   },
 
+  incrementNumAttempts () {
+    let rdIndex = this.state.responseDeclarations.findIndex(rd => rd.identifier == 'numAttempts')
+    this.state.responseDeclarations[rdIndex].value += 1
+  },
+
   setTemplateVariableValue (valueObject) {
     let tdIndex = this.state.templateDeclarations.findIndex(td => td.identifier == valueObject.identifier)
 
