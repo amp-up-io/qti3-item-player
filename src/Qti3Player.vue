@@ -98,34 +98,12 @@ export default {
      */
     loadItemFromXml (xml, configuration) {
       console.log('[Qti3Player][loadItemFromXml][configuration]', configuration)
-
       // Step 1: clear out the existing store
       store.resetAll()
-
       // Step 2: initialize the built-in variables
       store.initializeBuiltInDeclarations()
-
       // Step 2: set item player context
       this.loadItemContextFromConfiguration(configuration)
-      if (typeof configuration !== 'undefined') {
-        if ('guid' in configuration) {
-          store.setItemContextGuid(configuration.guid)
-        }
-        if ('pnp' in configuration) {
-          store.setItemContextPnp(configuration.pnp)
-
-          // Update the UI if textAppearance.colorStyle modified.
-          const colorStyle = store.getItemContextPnp().getColorStyle()
-          if (this.cssColorClass !== colorStyle) this.cssColorClass = colorStyle
-        }
-        if ('sessionControl' in configuration) {
-          store.setItemContextSessionControl(configuration.sessionControl)
-        }
-        if ('state' in configuration) {
-          store.setItemContextState(configuration.state)
-        }
-      }
-
       // Step 3: load the item xml
       this.itemXml = xml
     },
@@ -150,10 +128,33 @@ export default {
     /**
     * @description Event handler for the itemCompleted Event triggered by
     * the qti-assessment-item component when an Attempt has reached completion.
+    * This will occur when an adaptive item reaches completionStatus=completed.
     */
     handleItemCompleted () {
       console.log('[Qti3Player][ItemCompleted]')
       this.$emit('notifyQti3ItemCompleted')
+    },
+
+    /**
+     * @description event handler for the itemStateReady event.
+     * @param {Object} itemState - object containing a 'state' property and a 'target' property.
+     */
+    handleItemStateReady (itemState) {
+      // Display any response validation messages.
+      this.displayInvalidResponseMessages(itemState.state.validationMessages)
+      // Notify listener that an Item State object is ready.
+      this.$emit('notifyQti3GetItemStateCompleted', itemState)
+    },
+
+    /**
+     * @description event handler for the itemStateReady event.
+     * @param {Object} itemState - object containing a 'state' property and a 'target' property.
+     */
+    handleEndAttemptReady (itemState) {
+      // Display any response validation messages.
+      this.displayInvalidResponseMessages(itemState.state.validationMessages)
+      // Notify listener that an Item State object is ready.
+      this.$emit('notifyQti3EndAttemptCompleted', itemState)
     },
 
     /**
@@ -175,6 +176,12 @@ export default {
       this.item.getItemState(target)
     },
 
+    /**
+     * @description  Initiate an getEndAttempt request in the QtiAssessmentItem
+     * component.  When the method completes the Item will trigger the
+     * 'itemEndAttemptReady' event - handled by the 'handleEndAttemptReady' method.
+     * @param {String} target - used for tracking the invoker of this method.
+     */
     endAttempt (target) {
       console.log('[Qti3Player][endAttempt][' + target + ']')
       this.item.getEndAttempt(target)
@@ -226,28 +233,6 @@ export default {
      */
     setItemContextState (state) {
       store.setItemContextState(state)
-    },
-
-    /**
-     * @description event handler for the itemStateReady event.
-     * @param {Object} itemState - object containing a 'state' property and a 'target' property.
-     */
-    handleItemStateReady (itemState) {
-      // Display any response validation messages.
-      this.displayInvalidResponseMessages(itemState.state.validationMessages)
-      // Notify listener that an Item State object is ready.
-      this.$emit('notifyQti3GetItemStateCompleted', itemState)
-    },
-
-    /**
-     * @description event handler for the itemStateReady event.
-     * @param {Object} itemState - object containing a 'state' property and a 'target' property.
-     */
-    handleEndAttemptReady (itemState) {
-      // Display any response validation messages.
-      this.displayInvalidResponseMessages(itemState.state.validationMessages)
-      // Notify listener that an Item State object is ready.
-      this.$emit('notifyQti3EndAttemptCompleted', itemState)
     },
 
     /**

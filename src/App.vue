@@ -150,9 +150,14 @@ export default {
 
     handleEndAttemptCompleted (data) {
       console.log('[EndAttemptCompleted]', data)
+      this.evaluateResults(data)
     },
 
     handleGetStateCompleted (data) {
+      this.evaluateResults(data)
+    },
+
+    evaluateResults (data) {
       // Save our state
       this.setTestStateItemState(data.state)
 
