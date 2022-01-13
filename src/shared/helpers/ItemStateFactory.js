@@ -31,9 +31,6 @@ export class ItemStateFactory {
   serializeResponseVariables (responseVariables) {
     let variableArray = []
     responseVariables.forEach((responseVariable) => {
-      console.log('responseVariable.identifier:', responseVariable.identifier)
-      console.log('responseVariable.value:', responseVariable.value)
-      console.log('responseVariable.state:', responseVariable.state)
       variableArray.push({
         identifier: responseVariable.identifier,
         value: JSON.parse(JSON.stringify(responseVariable.value)),
