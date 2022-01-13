@@ -287,11 +287,6 @@ export default {
         this.processResponses()
       }
 
-      let responseVariables = store.getResponseDeclarations()
-      responseVariables.forEach((responseVariable) => {
-        console.log('Diagnostic[ResponseVariable][' + responseVariable.identifier + ']:', responseVariable)
-      })
-
       if (this.isAdaptive) {
         this.evaluateItemCompleted()
       }
