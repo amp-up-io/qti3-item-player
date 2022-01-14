@@ -343,6 +343,7 @@ export default {
   --green: #11c46e;
   --teal: #008080;
   --cyan: #0db4d6;
+  --rose: #ffd0ff;
   --white: #fff;
   --gray: #7c8a96;
   --gray-dark: #343a40;
@@ -370,24 +371,17 @@ export default {
   --well-bg: #f5f5f5;
   --well-border: 1px solid #e3e3e3;
   --well-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-  --rb-default-border: 1px solid hsl(0, 0%, 66%);
-  --rb-default-border-checked: .1875em solid #fff;
-  --rb-default-bg-image: linear-gradient(to bottom, hsl(300, 3%, 93%), #fff 60%);
-  --rb-default-bg-image-active: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%));
-  --rb-default-bg-image-checked-active:  linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%) 60%);
-  --rb-default-hover: hsl(216, 94%, 65%);
-  --rb-default-border-color-checked: hsl(216, 80%, 50%);
-  --rb-default-bg-checked: hsl(217, 95%, 68%);
-  --rb-default-bg-image-checked: linear-gradient(to bottom, hsl(217, 95%, 68%), hsl(216, 80%, 57%));
-  --cb-default-bg-image-checked: linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%));
-  --cb-default-bg-image-active: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%) 30%);
-  --cb-default-bg-image-checked-active: linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%));
-  /* focus border around the radio or checkbox itself */
-  --rb-default-border-focus: hsl(216, 94%, 73%);
-  /* focus border inset around the radio or checkbox itself */
-  --rb-default-border-focus-inset: inset 0 0 0 1px hsl(216, 80%, 50%);
-  /* overall choice focus border */
-  --choice-default-border-focus: rgba(82, 168, 236, 0.8);
+  /* Overall choice focus border */
+  --choice-focus-border: #86b7fe;
+  /* Default inner background color of the control */
+  --choice-control-bgc: var(--white);
+  /* The pale gray border around the control */
+  --choice-control-border: 1px solid rgba(0, 0, 0, 0.25);
+  --choice-control-checked-bc: #0d6efd;
+  --choice-control-checked-bg: #0d6efd;
+  --choice-control-focus-border: #86b7fe;
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  --choice-control-hover-bc: #86b7fe;
 }
 
 /* Default foreground / background colors */
@@ -395,61 +389,98 @@ export default {
   --foreground: var(--darker);
   --background: var(--white);
 }
+
 /* Default - reverse polarity */
 .qti3-player-color-defaultreverse {
   --foreground: var(--white);
   --background: var(--darker);
   --hr-border: 1px solid rgba(0, 0, 0, 0.1);
   --table-border-color: var(--white);
+  /* Overall choice focus border */
+  --choice-focus-border: var(--white);
+  /* Default inner background color of the control */
+  --choice-control-bgc: var(--white);
+  /* The pale gray border around the control */
+  --choice-control-border: 1px solid var(--white);
+  --choice-control-checked-bc: var(--white);
+  --choice-control-checked-bg: var(--white);
+  --choice-control-focus-border: var(--white);
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
+  --choice-control-hover-bc: var(--white);
 }
+
 /* High Contrast */
 .qti3-player-color-blackwhite {
   --foreground: var(--black);
   --background: var(--white);
   --hr-border: 1px solid var(--black);
-  --rb-default-border: 1px solid hsl(0, 0%, 66%);
-  --rb-default-border-checked: .1875em solid #fff;
-  --rb-default-bg-image: linear-gradient(to bottom, hsl(300, 3%, 93%), #fff 60%);
-  --rb-default-bg-image-active: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%));
-  --rb-default-bg-image-checked-active:  linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%) 60%);
-  --rb-default-hover: hsl(216, 94%, 65%);
-  --rb-default-border-color-checked: hsl(216, 80%, 50%);
-  --rb-default-bg-checked: hsl(217, 95%, 68%);
-  --rb-default-bg-image-checked: linear-gradient(to bottom, hsl(217, 95%, 68%), hsl(216, 80%, 57%));
-  --cb-default-bg-image-checked: linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%));
-  --cb-default-bg-image-active: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%) 30%);
-  --cb-default-bg-image-checked-active: linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%));
-  /* focus border around the radio or checkbox itself */
-  --rb-default-border-focus: hsl(216, 94%, 73%);
-  /* focus border inset around the radio or checkbox itself */
-  --rb-default-border-focus-inset: inset 0 0 0 1px hsl(216, 80%, 50%);
-  /* overall choice focus border */
-  --choice-default-border-focus: rgba(82, 168, 236, 0.8);
+  --table-border-color: var(--black);
+  /* Overall choice focus border */
+  --choice-focus-border: #86b7fe;
+  /* Default inner background color of the control */
+  --choice-control-bgc: var(--white);
+  /* The pale gray border around the control */
+  --choice-control-border: 1px solid rgba(0, 0, 0, 1.0);
+  --choice-control-checked-bc: var(--black);
+  --choice-control-checked-bg: var(--white);
+  --choice-control-focus-border: var(--black);
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  --choice-control-hover-bc: rgba(0, 0, 0, 0.5);
 }
+
 /* High Contrast - reverse polarity */
 .qti3-player-color-whiteblack {
   --foreground: var(--white);
   --background: var(--black);
   --hr-border: 1px solid var(--white);
   --table-border-color: var(--white);
-  --rb-default-border: 1px solid hsl(0, 0%, 66%);
-  --rb-default-border-checked: .1875em solid var(--white);
-  --rb-default-bg-image: linear-gradient(to bottom, hsl(300, 3%, 93%), #fff 60%);
-  --rb-default-bg-image-active: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%));
-  --rb-default-bg-image-checked-active:  linear-gradient(to bottom, hsl(216, 80%, 57%), hsl(217, 95%, 68%) 60%);
-  --rb-default-hover: hsl(216, 94%, 65%);
-  --rb-default-border-color-checked: var(--white);
-  --rb-default-bg-checked: var(--white);
-  --rb-default-bg-image-checked: linear-gradient(to bottom, hsl(217, 95%, 68%), hsl(216, 80%, 57%));
-  --cb-default-bg-image-checked: var(--white);
-  --cb-default-bg-image-active: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%) 30%);
-  --cb-default-bg-image-checked-active: linear-gradient(to bottom, hsl(300, 3%, 73%), hsl(300, 3%, 93%) 30%);
-  /* focus border around the radio or checkbox itself */
-  --rb-default-border-focus: hsl(0,0%,83%);
-  /* focus border inset around the radio or checkbox itself */
-  --rb-default-border-focus-inset: inset 0 0 0 1px hsl(216, 80%, 50%);
-  /* overall choice focus border */
-  --choice-default-border-focus: var(--white); /*rgb(211,211,211)rgba(82, 168, 236, 0.8);*/
+  /* Overall choice focus border */
+  --choice-focus-border: var(--white);
+  /* Default inner background color of the control */
+  --choice-control-bgc: var(--white);
+  /* The pale gray border around the control */
+  --choice-control-border: 1px solid var(--white);
+  --choice-control-checked-bc: var(--white);
+  --choice-control-checked-bg: var(--white);
+  --choice-control-focus-border: var(--white);
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
+  --choice-control-hover-bc: var(--white);
+}
+
+.qti3-player-color-blackrose {
+  --foreground: var(--black);
+  --background: var(--rose);
+  --hr-border: 1px solid var(--black);
+  --table-border-color: var(--black);
+  /* Overall choice focus border */
+  --choice-focus-border: #86b7fe;
+  /* Default inner background color of the control */
+  --choice-control-bgc: var(--rose);
+  /* The pale gray border around the control */
+  --choice-control-border: 1px solid rgba(0, 0, 0, 1.0);
+  --choice-control-checked-bc: var(--black);
+  --choice-control-checked-bg: var(--rose);
+  --choice-control-focus-border: var(--black);
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  --choice-control-hover-bc: rgba(0, 0, 0, 0.5);
+}
+
+.qti3-player-color-roseblack {
+  --foreground: var(--rose);
+  --background: var(--black);
+  --hr-border: 1px solid var(--rose);
+  --table-border-color: var(--rose);
+  /* Overall choice focus border */
+  --choice-focus-border: var(--rose);
+  /* Default inner background color of the control */
+  --choice-control-bgc: var(--rose);
+  /* The pale gray border around the control */
+  --choice-control-border: 1px solid var(--rose);
+  --choice-control-checked-bc: var(--rose);
+  --choice-control-checked-bg: var(--rose);
+  --choice-control-focus-border: var(--rose);
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
+  --choice-control-hover-bc: var(--rose);
 }
 
 .qti3-player-container,

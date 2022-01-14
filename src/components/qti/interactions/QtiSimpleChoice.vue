@@ -263,150 +263,105 @@ export default {
   background-color: #2873BA;
 }
 
+[role="checkbox"]::before,
+[role="checkbox"]::after,
 [role="radio"]::before,
 [role="radio"]::after {
   position: absolute;
-  top: 17px;
-  left: 12px;
+  top: 1.05em;
+  left: .75em;
   transform: translate(-50%, -50%);
   content: '';
+}
+
+[role="checkbox"]:not(.control-hidden)::before,
+[role="radio"]:not(.control-hidden)::before {
+  width: 1em;
+  height: 1em;
+  margin-top: 0;
+  vertical-align: top;
+  /* Default inner color of the control */
+  background-color: var(--choice-control-bgc);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  /* The pale gray border around the control */
+  border: var(--choice-control-border);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-print-color-adjust: exact;
+  color-adjust: exact;
 }
 
 [role="radio"]:not(.control-hidden)::before {
-  width: 16px;
-  height: 16px;
-  border: var(--rb-default-border);
-  border-radius: 100%;
-  background-image: var(--rb-default-bg-image);
-}
-
-[role="radio"]:not(.control-hidden):active::before {
-  background-image: var(--rb-default-bg-image-active)
-}
-
-[role="radio"][aria-checked="true"]:not(.control-hidden)::before {
-  border-color: var(--rb-default-border-color-checked);
-  background: var(--rb-default-bg-checked);
-  background-image: var(--rb-default-bg-image-checked);
-}
-
-[role="radio"][aria-checked="true"]:not(.control-hidden)::after {
-  display: block;
-  border: var(--rb-default-border-checked);
-  border-radius: 100%;
-  transform: translateY(-50%) translateX(-50%);
-}
-
-[role="radio"][aria-checked="mixed"]:not(.control-hidden):active::before,
-[role="radio"][aria-checked="true"]:not(.control-hidden):active::before {
-  background-image: var(--rb-default-bg-image-checked-active);
-}
-
-[role="radio"]:not(.control-hidden):hover::before {
-  border-color: var(--rb-default-hover);
-}
-
-[role="checkbox"]:not(.control-hidden):focus,
-[role="radio"]:not(.control-hidden):focus {
-  border: 1px solid transparent;
-  border-radius: 2px;
-  border-color: var(--choice-default-border-focus);
-  /*
-  IMPORTANT:  causing problems with vertical stacking column wrapping.
-  Try a less-prominent inset.
-  -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075), 0 0 2px rgba(82,168,236,.6);
-  -moz-box-shadow:inset 0 1px 1px rgba(0,0,0,.075), 0 0 2px rgba(82,168,236,.6);
-  box-shadow:inset 0 1px 1px rgba(0,0,0,.075), 0 0 2px rgba(82,168,236,.6);
-  */
-}
-
-[role="checkbox"].control-hidden:focus,
-[role="radio"].control-hidden:focus {
-  border: 1px dashed transparent;
-  border-radius: 3px;
-  border-color: #2871BD;
-}
-
-[role="checkbox"][aria-checked="true"].control-hidden:focus,
-[role="radio"][aria-checked="true"].control-hidden:focus {
-  border: 1px dashed transparent;
-  border-radius: 3px;
-  border-color: #FFF;
-}
-
-[role="radio"]:not(.control-hidden):focus::before {
-  width: 16px;
-  height: 16px;
-  box-sizing: content-box;
-  border-color: var(--rb-default-border-focus);
-  border-width: 3px;
-  border-radius: 100%;
-  box-shadow: var(--rb-default-border-focus-inset);
-}
-
-[role="checkbox"]::before,
-[role="checkbox"]::after {
-  position: absolute;
-  top: 17px;
-  left: 12px;
-  transform: translate(-50%, -50%);
-  content: '';
+  border-radius: 50%;
 }
 
 [role="checkbox"]:not(.control-hidden)::before {
-  width: 16px;
-  height: 16px;
-  border: var(--rb-default-border);
-  border-radius: 0.2em;
-  background-image: var(--rb-default-bg-image);
+  border-radius: 0.25em;
 }
 
-[role="checkbox"]:not(.control-hidden):active::before {
-  background-image: var(--cb-default-bg-image-active);
+[role="checkbox"]:not(.control-hidden):active::before,
+[role="radio"]:not(.control-hidden):active::before {
+  filter: brightness(90%);
 }
 
-[role="checkbox"][aria-checked="mixed"]:not(.control-hidden)::before,
+/* Choice focus */
+[role="checkbox"]:not(.control-hidden):focus,
+[role="radio"]:not(.control-hidden):focus {
+  border: 1px solid transparent;
+  border-radius: 0.15em;
+  border-color: var(--choice-focus-border);
+}
+
+/* Radio/Checkbox control focus */
+[role="checkbox"]:not(.control-hidden):focus::before,
+[role="radio"]:not(.control-hidden):focus::before {
+  border-color: var(--choice-control-focus-border);
+  outline: 0;
+  /* Puts pale blue box shadow around the control */
+  box-shadow: var(--choice-control-focus-shadow);
+}
+
+/* Radio/Checkbox control checked */
+[role="checkbox"][aria-checked="true"]:not(.control-hidden)::before,
+[role="radio"][aria-checked="true"]:not(.control-hidden)::before {
+  background-color: var(--choice-control-checked-bg);
+  border-color: var(--choice-control-checked-bc);
+}
+
+/* Radio control checked */
+[role="radio"][aria-checked="true"]:not(.control-hidden)::before {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='currentColor' /%3e%3c/svg%3e");
+}
+
+/* Radio control checked for default color scheme */
+.qti3-player-color-default [role="radio"][aria-checked="true"]:not(.control-hidden)::before {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff' /%3e%3c/svg%3e");
+}
+
+/* Checkbox control checked */
 [role="checkbox"][aria-checked="true"]:not(.control-hidden)::before {
-  border-color: var(--rb-default-border-color-checked);
-  background: var(--rb-default-bg-checked);
-  background-image: var(--cb-default-bg-image-checked);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
 }
 
-[role="checkbox"][aria-checked="mixed"]:not(.control-hidden)::after {
-  display: block;
-  width: 8px;
-  border-bottom: 0.125em solid var(--foreground);
-  transform: translate(-50%, -50%) rotateZ(45deg);
-  transform-origin: center center;
+/* Checkbox control checked for default color scheme */
+.qti3-player-color-default [role="checkbox"][aria-checked="true"]:not(.control-hidden)::before {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
 }
 
-[role="checkbox"][aria-checked="mixed"]:not(.control-hidden):active::after,
-[role="checkbox"][aria-checked="true"]:not(.control-hidden)::after {
-  display: block;
-  width: 0.25em;
-  height: 0.4em;
-  border: solid var(--background);
-  border-width: 0 0.125em 0.125em 0;
-  transform: translateY(-65%) translateX(-50%) rotate(45deg);
+/* Radio/Checkbox control hover */
+[role="checkbox"]:not(.control-hidden):hover::before,
+[role="radio"]:not(.control-hidden):hover::before {
+  border-color: var(--choice-control-hover-bc);
 }
 
-[role="checkbox"][aria-checked="mixed"]:not(.control-hidden):active::before,
-[role="checkbox"][aria-checked="true"]:not(.control-hidden):active::before {
-  background-image: var(--cb-default-bg-image-checked-active);
-}
-
-[role="checkbox"]:focus {
-  outline: none;
-}
-
-[role="checkbox"]:not(.control-hidden):focus::before {
-  width: 16px;
-  height: 16px;
-  box-sizing: content-box;
-  border-color: var(--rb-default-border-focus);
-  border-width: 3px;
-  border-radius: calc(0.2em + 3px);
-  box-shadow: var(--rb-default-border-focus-inset);
+[role="radio"].disabled,
+[role="checkbox"].disabled {
+  pointer-events: none;
+  filter: none;
+  opacity: 0.5;
 }
 
 .qti-choice-label {
@@ -426,6 +381,6 @@ export default {
 }
 .control-hidden .qti-choice-label,
 .control-hidden .qti-choice-description {
-  padding-left: 4px;
+  padding-left: 0.25em;
 }
 </style>
