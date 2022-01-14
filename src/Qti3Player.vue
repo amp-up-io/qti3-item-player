@@ -376,7 +376,7 @@ export default {
   /* Default inner background color of the control */
   --choice-control-bgc: var(--white);
   /* The pale gray border around the control */
-  --choice-control-border: 1px solid rgba(0, 0, 0, 0.25);
+  --choice-control-border: 1px solid rgba(0, 0, 0, 0.75);
   --choice-control-checked-bc: #0d6efd;
   --choice-control-checked-bg: #0d6efd;
   --choice-control-focus-border: #86b7fe;

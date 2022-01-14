@@ -340,7 +340,7 @@ export default {
 /* Radio/Checkbox control hover */
 [role="checkbox"]:not(.control-hidden):hover::before,
 [role="radio"]:not(.control-hidden):hover::before {
-  border-color: var(--choice-control-hover-bc);
+  /* border: 1px solid var(--choice-control-hover-bc); */
 }
 
 /* =====================
