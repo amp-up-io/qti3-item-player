@@ -382,6 +382,14 @@ export default {
   --choice-control-focus-border: #86b7fe;
   --choice-control-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
   --choice-control-hover-bc: #86b7fe;
+  /* Control Hidden colors */
+  --choice-ctrlh-color: #2871bd;
+  --choice-ctrlh-bgc: var(--light);
+  --choice-ctrlh-checked-color: var(--white);
+  --choice-ctrlh-checked-bgc: #2871bd;
+  --choice-ctrlh-focus-bc: #2871bd;
+  --choice-ctrlh-focus-checked-bc: var(--white);
+  --choice-ctrlh-hover-brightness: brightness(95%);
 }
 
 /* Default foreground / background colors */
@@ -407,6 +415,14 @@ export default {
   --choice-control-focus-border: var(--white);
   --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
   --choice-control-hover-bc: var(--white);
+  /* Control Hidden colors */
+  --choice-ctrlh-color: #2871bd;
+  --choice-ctrlh-bgc: var(--light);
+  --choice-ctrlh-checked-color: var(--white);
+  --choice-ctrlh-checked-bgc: #2871bd;
+  --choice-ctrlh-focus-bc: #2871bd;
+  --choice-ctrlh-focus-checked-bc: var(--white);
+  --choice-ctrlh-hover-brightness: brightness(95%);
 }
 
 /* High Contrast */
@@ -426,6 +442,14 @@ export default {
   --choice-control-focus-border: var(--black);
   --choice-control-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
   --choice-control-hover-bc: rgba(0, 0, 0, 0.5);
+  /* Control Hidden colors */
+  --choice-ctrlh-color: var(--black);
+  --choice-ctrlh-bgc: var(--white);
+  --choice-ctrlh-checked-color: var(--white);
+  --choice-ctrlh-checked-bgc: var(--black);
+  --choice-ctrlh-focus-bc: var(--black);
+  --choice-ctrlh-focus-checked-bc: var(--white);
+  --choice-ctrlh-hover-brightness: brightness(95%);
 }
 
 /* High Contrast - reverse polarity */
@@ -445,6 +469,14 @@ export default {
   --choice-control-focus-border: var(--white);
   --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
   --choice-control-hover-bc: var(--white);
+  /* Control Hidden colors */
+  --choice-ctrlh-color: var(--white);
+  --choice-ctrlh-bgc: var(--black);
+  --choice-ctrlh-checked-color: var(--black);
+  --choice-ctrlh-checked-bgc: var(--white);
+  --choice-ctrlh-focus-bc: var(--white);
+  --choice-ctrlh-focus-checked-bc: var(--white);
+  --choice-ctrlh-hover-brightness: brightness(90%);
 }
 
 .qti3-player-color-blackrose {
@@ -463,6 +495,14 @@ export default {
   --choice-control-focus-border: var(--black);
   --choice-control-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
   --choice-control-hover-bc: rgba(0, 0, 0, 0.5);
+  /* Control Hidden colors */
+  --choice-ctrlh-color: var(--black);
+  --choice-ctrlh-bgc: var(--rose);
+  --choice-ctrlh-checked-color: var(--rose);
+  --choice-ctrlh-checked-bgc: var(--black);
+  --choice-ctrlh-focus-bc: var(--black);
+  --choice-ctrlh-focus-checked-bc: var(--rose);
+  --choice-ctrlh-hover-brightness: brightness(95%);
 }
 
 .qti3-player-color-roseblack {
@@ -481,6 +521,14 @@ export default {
   --choice-control-focus-border: var(--rose);
   --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
   --choice-control-hover-bc: var(--rose);
+  /* Control Hidden colors */
+  --choice-ctrlh-color: var(--rose);
+  --choice-ctrlh-bgc: var(--black);
+  --choice-ctrlh-checked-color: var(--black);
+  --choice-ctrlh-checked-bgc: var(--rose);
+  --choice-ctrlh-focus-bc: var(--rose);
+  --choice-ctrlh-focus-checked-bc: var(--rose);
+  --choice-ctrlh-hover-brightness: brightness(90%);
 }
 
 .qti3-player-container,

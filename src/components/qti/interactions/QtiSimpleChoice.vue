@@ -243,24 +243,10 @@ export default {
   padding: 4px 4px 4px 32px;
   outline: none;
   border: 1px dashed transparent;
-  /* IMPORTANT: Must have following in order to work around Chrome-only column wrapping bug */
+  /* IMPORTANT: Must have following in order to work
+     around Chrome-only column wrapping bug */
   -webkit-column-break-inside: avoid;
   cursor: pointer;
-}
-
-[role="radio"].control-hidden,
-[role="checkbox"].control-hidden {
-  padding-left: 2px;
-  color: #2871BD;
-  background-color: #F6F6F6;
-  border: 1px solid #2871BD;
-  border-radius: 3px;
-}
-
-[role="radio"][aria-checked="true"].control-hidden,
-[role="checkbox"][aria-checked="true"].control-hidden {
-  color: #FFF;
-  background-color: #2873BA;
 }
 
 [role="checkbox"]::before,
@@ -357,28 +343,87 @@ export default {
   border-color: var(--choice-control-hover-bc);
 }
 
+/* =====================
+   Control Hidden styles
+   ===================== */
+
+[role="radio"].control-hidden,
+[role="checkbox"].control-hidden {
+  color: var(--choice-ctrlh-color);
+  background-color: var(--choice-ctrlh-bgc);
+  border: 1px solid var(--choice-ctrlh-color);
+  border-radius: .25em;
+  margin-bottom: .5em;
+  padding-left: .2em;
+}
+
+[role="radio"][aria-checked="true"].control-hidden,
+[role="checkbox"][aria-checked="true"].control-hidden {
+  color: var(--choice-ctrlh-checked-color);
+  background-color: var(--choice-ctrlh-checked-bgc);
+  border: 1px solid var(--choice-ctrlh-checked-bgc);
+}
+
+[role="checkbox"].control-hidden:focus,
+[role="radio"].control-hidden:focus {
+  border: 1px solid transparent;
+  border-color: var(--choice-ctrlh-focus-bc);
+  color: var(--choice-ctrlh-color);
+  box-shadow: var(--choice-control-focus-shadow);
+}
+
+[role="checkbox"][aria-checked="true"].control-hidden:focus,
+[role="radio"][aria-checked="true"].control-hidden:focus {
+  border: 1px solid transparent;
+  border-color: var(--choice-ctrlh-checked-color);
+  color: var(--choice-ctrlh-checked-color);
+}
+
+[role="checkbox"].control-hidden:hover,
+[role="radio"].control-hidden:hover {
+  filter: var(--choice-ctrlh-hover-brightness);
+}
+
+/* ===============
+   Disabled styles
+   ===============*/
+
 [role="radio"].disabled,
 [role="checkbox"].disabled {
   pointer-events: none;
   filter: none;
-  opacity: 0.5;
+  opacity: 0.6;
 }
+
+[role="radio"].control-hidden.disabled,
+[role="checkbox"].control-hidden.disabled {
+  pointer-events: none;
+  filter: none;
+  opacity: 0.75;
+}
+
+/* ============================
+   Label and Description styles
+   ============================ */
 
 .qti-choice-label {
   display: inline-block;
   vertical-align: top;
-  width: 20px;
+  width: 1.25em;
 }
+
 .qti-choice-label.qti-hidden {
     display: none;
     width: 0px;
 }
+
 .qti-choice-description {
   display: inline-block;
   vertical-align: top;
   padding-left: 2px;
   width: 80%;
 }
+
 .control-hidden .qti-choice-label,
 .control-hidden .qti-choice-description {
   padding-left: 0.25em;

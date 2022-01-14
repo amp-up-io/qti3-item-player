@@ -294,7 +294,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 [role="group"],
 [role="radiogroup"] {
   display: block;
