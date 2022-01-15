@@ -323,8 +323,17 @@ export default {
 }
 
 /* Radio control checked for default color scheme */
-.qti3-player-color-default [role="radio"][aria-checked="true"]:not(.control-hidden)::before {
+.qti3-player-color-default [role="radio"][aria-checked="true"]:not(.control-hidden)::before,
+.qti3-player-color-dgraymgray [role="radio"][aria-checked="true"]:not(.control-hidden)::before {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff' /%3e%3c/svg%3e");
+}
+
+.qti3-player-color-blueyellow [role="radio"][aria-checked="true"]:not(.control-hidden)::before {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23ffcc00' /%3e%3c/svg%3e");
+}
+
+.qti3-player-color-yellowblue [role="radio"][aria-checked="true"]:not(.control-hidden)::before {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23003398' /%3e%3c/svg%3e");
 }
 
 /* Checkbox control checked */
@@ -333,8 +342,17 @@ export default {
 }
 
 /* Checkbox control checked for default color scheme */
-.qti3-player-color-default [role="checkbox"][aria-checked="true"]:not(.control-hidden)::before {
+.qti3-player-color-default [role="checkbox"][aria-checked="true"]:not(.control-hidden)::before,
+.qti3-player-color-dgraymgray [role="checkbox"][aria-checked="true"]:not(.control-hidden)::before {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+}
+
+.qti3-player-color-blueyellow [role="checkbox"][aria-checked="true"]:not(.control-hidden)::before {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23ffcc00' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+}
+
+.qti3-player-color-yellowblue [role="checkbox"][aria-checked="true"]:not(.control-hidden)::before {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23003398' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
 }
 
 /* Radio/Checkbox control hover */

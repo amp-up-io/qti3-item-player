@@ -18,7 +18,15 @@ export class PnpFactory {
     // Black on Rose
     COLOR_BLACK_ROSE: 'qti3-player-color-blackrose',
     // Rose on Black
-    COLOR_ROSE_BLACK: 'qti3-player-color-roseblack'
+    COLOR_ROSE_BLACK: 'qti3-player-color-roseblack',
+    // Yellow on Blue
+    COLOR_YELLOW_BLUE: 'qti3-player-color-yellowblue',
+    // Rose on Black
+    COLOR_BLUE_YELLOW: 'qti3-player-color-blueyellow',
+    // Medium Gray on Dark Gray
+    COLOR_MGRAY_DGRAY: 'qti3-player-color-mgraydgray',
+    // Dark Gray on Medium Gray
+    COLOR_DGRAY_MGRAY: 'qti3-player-color-dgraymgray',
   }
 
   defaultPnp () {

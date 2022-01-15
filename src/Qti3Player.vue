@@ -233,6 +233,7 @@ export default {
      */
     setItemContextState (state) {
       store.setItemContextState(state)
+      // TODO perform full restore
     },
 
     /**
@@ -348,7 +349,6 @@ export default {
   --gray: #7c8a96;
   --gray-dark: #343a40;
   --primary: #3d8ef8;
-  --secondary: #7c8a96;
   --success: #11c46e;
   --info: #0db4d6;
   --warning: #f1b44c;
@@ -366,7 +366,9 @@ export default {
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --foreground: var(--darker);
   --background: var(--white);
-  --hr-border: 1px solid rgba(0, 0, 0, 0.1);
+  --secondary: #dbdbdb;
+  --secondary-complement: var(--darker);
+  --hr-border: 1px solid var(--secondary);
   --table-border-color: var(--black);
   --well-bg: #f5f5f5;
   --well-border: 1px solid #e3e3e3;
@@ -402,7 +404,6 @@ export default {
 .qti3-player-color-defaultreverse {
   --foreground: var(--white);
   --background: var(--darker);
-  --hr-border: 1px solid rgba(0, 0, 0, 0.1);
   --table-border-color: var(--white);
   /* Overall choice focus border */
   --choice-focus-border: var(--white);
@@ -429,6 +430,8 @@ export default {
 .qti3-player-color-blackwhite {
   --foreground: var(--black);
   --background: var(--white);
+  --secondary: var(--black);
+  --secondary-complement: var(--white);
   --hr-border: 1px solid var(--black);
   --table-border-color: var(--black);
   /* Overall choice focus border */
@@ -456,6 +459,8 @@ export default {
 .qti3-player-color-whiteblack {
   --foreground: var(--white);
   --background: var(--black);
+  --secondary: var(--white);
+  --secondary-complement: var(--black);
   --hr-border: 1px solid var(--white);
   --table-border-color: var(--white);
   /* Overall choice focus border */
@@ -482,7 +487,9 @@ export default {
 .qti3-player-color-blackrose {
   --foreground: var(--black);
   --background: var(--rose);
-  --hr-border: 1px solid var(--black);
+  --secondary: #c6bcf8;
+  --secondary-complement: var(--black);
+  --hr-border: 1px solid var(--secondary);
   --table-border-color: var(--black);
   /* Overall choice focus border */
   --choice-focus-border: #86b7fe;
@@ -508,7 +515,9 @@ export default {
 .qti3-player-color-roseblack {
   --foreground: var(--rose);
   --background: var(--black);
-  --hr-border: 1px solid var(--rose);
+  --secondary: #c6bcf8;
+  --secondary-complement: var(--black);
+  --hr-border: 1px solid var(--secondary);
   --table-border-color: var(--rose);
   /* Overall choice focus border */
   --choice-focus-border: var(--rose);
@@ -528,6 +537,118 @@ export default {
   --choice-ctrlh-checked-bgc: var(--rose);
   --choice-ctrlh-focus-bc: var(--rose);
   --choice-ctrlh-focus-checked-bc: var(--rose);
+  --choice-ctrlh-hover-brightness: brightness(90%);
+}
+
+.qti3-player-color-mgraydgray {
+  --foreground: #e5e5e5;
+  --background: #666;
+  --secondary: #c8c8c8;
+  --secondary-complement: var(--black);
+  --hr-border: 1px solid var(--secondary);
+  --table-border-color: var(--foreground);
+  /* Overall choice focus border */
+  --choice-focus-border: var(--foreground);
+  /* Default inner background color of the control */
+  --choice-control-bgc: var(--foreground);
+  /* The pale gray border around the control */
+  --choice-control-border: 1px solid var(--foreground);
+  --choice-control-checked-bc: var(--foreground);
+  --choice-control-checked-bg: var(--foreground);
+  --choice-control-focus-border: var(--foreground);
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
+  --choice-control-hover-bc: var(--foreground);
+  /* Control Hidden colors */
+  --choice-ctrlh-color: var(--foreground);
+  --choice-ctrlh-bgc: var(--background);
+  --choice-ctrlh-checked-color: var(--background);
+  --choice-ctrlh-checked-bgc: var(--foreground);
+  --choice-ctrlh-focus-bc: var(--foreground);
+  --choice-ctrlh-focus-checked-bc: var(--foreground);
+  --choice-ctrlh-hover-brightness: brightness(90%);
+}
+
+.qti3-player-color-dgraymgray {
+  --foreground: #666;
+  --background: #e5e5e5;
+  --secondary: #c8c8c8;
+  --secondary-complement: var(--black);
+  --hr-border: 1px solid var(--secondary);
+  --table-border-color: var(--foreground);
+  /* Overall choice focus border */
+  --choice-focus-border: var(--foreground);
+  /* Default inner background color of the control */
+  --choice-control-bgc: var(--foreground);
+  /* The pale gray border around the control */
+  --choice-control-border: 1px solid var(--foreground);
+  --choice-control-checked-bc: var(--foreground);
+  --choice-control-checked-bg: var(--foreground);
+  --choice-control-focus-border: var(--foreground);
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
+  --choice-control-hover-bc: var(--foreground);
+  /* Control Hidden colors */
+  --choice-ctrlh-color: var(--foreground);
+  --choice-ctrlh-bgc: var(--background);
+  --choice-ctrlh-checked-color: var(--background);
+  --choice-ctrlh-checked-bgc: var(--foreground);
+  --choice-ctrlh-focus-bc: var(--foreground);
+  --choice-ctrlh-focus-checked-bc: var(--foreground);
+  --choice-ctrlh-hover-brightness: brightness(90%);
+}
+
+.qti3-player-color-yellowblue {
+  --foreground: #ffcc00;
+  --background: #003398;
+  --secondary: #dbdbdb;
+  --secondary-complement: var(--black);
+  --hr-border: 1px solid var(--secondary);
+  --table-border-color: var(--foreground);
+  /* Overall choice focus border */
+  --choice-focus-border: var(--foreground);
+  /* Default inner background color of the control */
+  --choice-control-bgc: var(--foreground);
+  /* The pale gray border around the control */
+  --choice-control-border: 1px solid var(--foreground);
+  --choice-control-checked-bc: var(--foreground);
+  --choice-control-checked-bg: var(--foreground);
+  --choice-control-focus-border: var(--foreground);
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
+  --choice-control-hover-bc: var(--foreground);
+  /* Control Hidden colors */
+  --choice-ctrlh-color: var(--foreground);
+  --choice-ctrlh-bgc: var(--background);
+  --choice-ctrlh-checked-color: var(--background);
+  --choice-ctrlh-checked-bgc: var(--foreground);
+  --choice-ctrlh-focus-bc: var(--foreground);
+  --choice-ctrlh-focus-checked-bc: var(--foreground);
+  --choice-ctrlh-hover-brightness: brightness(90%);
+}
+
+.qti3-player-color-blueyellow {
+  --foreground: #003398;
+  --background: #ffcc00;
+  --secondary: #dbdbdb;
+  --secondary-complement: var(--black);
+  --hr-border: 1px solid var(--secondary);
+  --table-border-color: var(--foreground);
+  /* Overall choice focus border */
+  --choice-focus-border: var(--foreground);
+  /* Default inner background color of the control */
+  --choice-control-bgc: var(--foreground);
+  /* The pale gray border around the control */
+  --choice-control-border: 1px solid var(--foreground);
+  --choice-control-checked-bc: var(--foreground);
+  --choice-control-checked-bg: var(--foreground);
+  --choice-control-focus-border: var(--foreground);
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
+  --choice-control-hover-bc: var(--foreground);
+  /* Control Hidden colors */
+  --choice-ctrlh-color: var(--foreground);
+  --choice-ctrlh-bgc: var(--background);
+  --choice-ctrlh-checked-color: var(--background);
+  --choice-ctrlh-checked-bgc: var(--foreground);
+  --choice-ctrlh-focus-bc: var(--foreground);
+  --choice-ctrlh-focus-checked-bc: var(--foreground);
   --choice-ctrlh-hover-brightness: brightness(90%);
 }
 
