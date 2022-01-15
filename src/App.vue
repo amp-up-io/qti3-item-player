@@ -35,6 +35,16 @@ export default {
       currentItem: 0,
       items: [
         {
+          "identifier": "sbac-choice-qti3",
+          "guid": "0000-0006-0001",
+          "xml": "<!-- This example adapted from the Smarter Balanced IRP, copyright Smarter Balanced. -->\r\n<qti-assessment-item \r\n  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \r\n  xmlns=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0\" \r\n  xsi:schemaLocation=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd\"  \r\n  identifier=\"sbac-200-183300\" time-dependent=\"false\" title=\"sbac-200-183300a\" xml:lang=\"en\">\r\n  <qti-response-declaration base-type=\"identifier\" cardinality=\"multiple\" identifier=\"RESPONSE\">\r\n    <qti-correct-response>\r\n      <qti-value>D</qti-value>\r\n      <qti-value>E</qti-value>\r\n    </qti-correct-response>\r\n  </qti-response-declaration>\r\n  <qti-outcome-declaration base-type=\"float\" cardinality=\"single\" identifier=\"SCORE\" normal-maximum=\"1.0\" normal-minimum=\"0.0\"><qti-default-value><qti-value>0</qti-value></qti-default-value>\r\n  </qti-outcome-declaration>\r\n  \r\n  <qti-outcome-declaration base-type=\"identifier\" cardinality=\"single\" identifier=\"FEEDBACK\" />\r\n  \r\n  <qti-item-body class=\"sbac sbac-global-item-catalog-ref\" data-catalog-idref=\"item-183300-global\">\r\n    <div class=\"qti-layout-row\">\r\n      <div class=\"qti-layout-col8 qti-layout-offset2\">\r\n        <div class=\"prompt\"><strong>sbac-200-183300</strong><hr /><p>Select <strong>all</strong> values equivalent to <math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mo>-</mo><mfrac bevelled=\"false\"><mi>10</mi><mi>7</mi></mfrac></math>.\r\n          </p>\r\n        </div>\r\n        <qti-choice-interaction class=\"sbac qti-labels-none\" shuffle=\"true\" max-choices=\"5\" min-choices=\"1\" response-identifier=\"RESPONSE\">\r\n          <qti-simple-choice identifier=\"A\">\r\n            <p>\r\n              <math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mfrac bevelled=\"false\"><mrow><mo>-</mo><mi>10</mi></mrow><mrow><mo>-</mo><mi>7</mi></mrow></mfrac></math></p></qti-simple-choice>\r\n          <qti-simple-choice identifier=\"B\">\r\n            <p>\r\n              <math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mo>-</mo><mi>3</mi><mfrac bevelled=\"false\"><mi>1</mi><mi>7</mi></mfrac></math>\r\n            </p>\r\n          </qti-simple-choice><qti-simple-choice identifier=\"C\"><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>1</mi><mfrac bevelled=\"false\"><mi>3</mi><mi>7</mi></mfrac></math></p></qti-simple-choice><qti-simple-choice identifier=\"D\">\r\n            <p>\r\n              <math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mo>-</mo><mfrac bevelled=\"false\"><mrow><mo>-</mo><mi>10</mi></mrow><mrow><mo>-</mo><mi>7</mi></mrow></mfrac></math></p></qti-simple-choice><qti-simple-choice identifier=\"E\"><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mo>-</mo><mi>1</mi><mfrac bevelled=\"false\"><mi>3</mi><mi>7</mi></mfrac></math>\r\n            </p>\r\n          </qti-simple-choice>\r\n        </qti-choice-interaction>\r\n      </div>\r\n    </div>\r\n  </qti-item-body>\r\n  <qti-response-processing>\r\n    <qti-response-condition>\r\n      <qti-response-if>\r\n        <qti-match><qti-variable identifier=\"RESPONSE\"/><qti-correct identifier=\"RESPONSE\"/>\r\n        </qti-match><qti-set-outcome-value identifier=\"SCORE\">\r\n          <qti-base-value base-type=\"float\">\r\n          1\r\n          </qti-base-value>\r\n        </qti-set-outcome-value>\r\n        <qti-set-outcome-value identifier=\"FEEDBACK\">\r\n\t  <qti-base-value base-type=\"identifier\">correct</qti-base-value>\r\n        </qti-set-outcome-value></qti-response-if>\r\n      <qti-response-else>\r\n        <qti-set-outcome-value identifier=\"SCORE\"><qti-base-value base-type=\"float\">\r\n          0\r\n          </qti-base-value>\r\n        </qti-set-outcome-value>\r\n        <qti-set-outcome-value identifier=\"FEEDBACK\">\r\n          <qti-base-value base-type=\"identifier\">incorrect</qti-base-value>\r\n        </qti-set-outcome-value>\r\n      </qti-response-else>\r\n    </qti-response-condition>\r\n  </qti-response-processing><qti-modal-feedback outcome-identifier=\"FEEDBACK\" identifier=\"correct\" show-hide=\"show\"><qti-content-body><div>Well done!</div></qti-content-body>\r\n  </qti-modal-feedback><qti-modal-feedback outcome-identifier=\"FEEDBACK\" identifier=\"incorrect\" show-hide=\"show\">\r\n    <qti-content-body><p>Sorry, your answer is not correct.</p></qti-content-body></qti-modal-feedback></qti-assessment-item>"
+        },
+        {
+          "identifier": "sbac-choice-qti3",
+          "guid": "0000-0006-0002",
+          "xml": "<!-- This example adapted from the Smarter Balanced IRP, copyright Smarter Balanced. -->\r\n<qti-assessment-item \r\n  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \r\n  xmlns=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0\" \r\n  xsi:schemaLocation=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd\"  \r\n  identifier=\"sbac-200-183300\" time-dependent=\"false\" title=\"sbac-200-183300b\" xml:lang=\"en\">\r\n  <qti-response-declaration base-type=\"identifier\" cardinality=\"multiple\" identifier=\"RESPONSE\">\r\n    <qti-correct-response>\r\n      <qti-value>D</qti-value>\r\n      <qti-value>E</qti-value>\r\n    </qti-correct-response>\r\n  </qti-response-declaration>\r\n  <qti-outcome-declaration base-type=\"float\" cardinality=\"single\" identifier=\"SCORE\" normal-maximum=\"1.0\" normal-minimum=\"0.0\"><qti-default-value><qti-value>0</qti-value></qti-default-value>\r\n  </qti-outcome-declaration>\r\n  \r\n  <qti-outcome-declaration base-type=\"identifier\" cardinality=\"single\" identifier=\"FEEDBACK\" />\r\n  \r\n  <qti-item-body class=\"sbac sbac-global-item-catalog-ref\" data-catalog-idref=\"item-183300-global\">\r\n    <div class=\"qti-layout-row\">\r\n      <div class=\"qti-layout-col8 qti-layout-offset2\">\r\n        <div class=\"prompt\"><strong>sbac-200-183300</strong><hr /><p>Select <strong>all</strong> values equivalent to <math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mo>-</mo><mfrac bevelled=\"false\"><mi>10</mi><mi>7</mi></mfrac></math>.\r\n          </p>\r\n        </div>\r\n        <qti-choice-interaction class=\"sbac qti-labels-none\" shuffle=\"true\" max-choices=\"5\" min-choices=\"1\" response-identifier=\"RESPONSE\">\r\n          <qti-simple-choice identifier=\"A\">\r\n            <p>\r\n              <math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mfrac bevelled=\"false\"><mrow><mo>-</mo><mi>10</mi></mrow><mrow><mo>-</mo><mi>7</mi></mrow></mfrac></math></p></qti-simple-choice>\r\n          <qti-simple-choice identifier=\"B\">\r\n            <p>\r\n              <math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mo>-</mo><mi>3</mi><mfrac bevelled=\"false\"><mi>1</mi><mi>7</mi></mfrac></math>\r\n            </p>\r\n          </qti-simple-choice><qti-simple-choice identifier=\"C\"><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>1</mi><mfrac bevelled=\"false\"><mi>3</mi><mi>7</mi></mfrac></math></p></qti-simple-choice><qti-simple-choice identifier=\"D\">\r\n            <p>\r\n              <math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mo>-</mo><mfrac bevelled=\"false\"><mrow><mo>-</mo><mi>10</mi></mrow><mrow><mo>-</mo><mi>7</mi></mrow></mfrac></math></p></qti-simple-choice><qti-simple-choice identifier=\"E\"><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mo>-</mo><mi>1</mi><mfrac bevelled=\"false\"><mi>3</mi><mi>7</mi></mfrac></math>\r\n            </p>\r\n          </qti-simple-choice>\r\n        </qti-choice-interaction>\r\n      </div>\r\n    </div>\r\n  </qti-item-body>\r\n  <qti-response-processing>\r\n    <qti-response-condition>\r\n      <qti-response-if>\r\n        <qti-match><qti-variable identifier=\"RESPONSE\"/><qti-correct identifier=\"RESPONSE\"/>\r\n        </qti-match><qti-set-outcome-value identifier=\"SCORE\">\r\n          <qti-base-value base-type=\"float\">\r\n          1\r\n          </qti-base-value>\r\n        </qti-set-outcome-value>\r\n        <qti-set-outcome-value identifier=\"FEEDBACK\">\r\n\t  <qti-base-value base-type=\"identifier\">correct</qti-base-value>\r\n        </qti-set-outcome-value></qti-response-if>\r\n      <qti-response-else>\r\n        <qti-set-outcome-value identifier=\"SCORE\"><qti-base-value base-type=\"float\">\r\n          0\r\n          </qti-base-value>\r\n        </qti-set-outcome-value>\r\n        <qti-set-outcome-value identifier=\"FEEDBACK\">\r\n          <qti-base-value base-type=\"identifier\">incorrect</qti-base-value>\r\n        </qti-set-outcome-value>\r\n      </qti-response-else>\r\n    </qti-response-condition>\r\n  </qti-response-processing></qti-assessment-item>"
+        },
+        {
           "identifier": "i9b-response-processing-fixed-template-match-correct-identifier",
           "guid": "0000-0005-0001",
           "xml": "<qti-assessment-item xmlns=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd\" identifier=\"i9b-response-processing-fixed-template-match_correct-identifier\" title=\"I9b - Response Processing Fixed Template - Match Correct Identifier\" adaptive=\"false\" time-dependent=\"false\">\n    <qti-response-declaration identifier=\"RESPONSE\" cardinality=\"single\" base-type=\"identifier\"><qti-correct-response><qti-value>choice_a</qti-value></qti-correct-response>\n    </qti-response-declaration>\n    <qti-outcome-declaration identifier=\"SCORE\" cardinality=\"single\" base-type=\"float\"/>\n    <qti-item-body>\n        <qti-choice-interaction response-identifier=\"RESPONSE\" max-choices=\"1\"><qti-prompt>Select a SimpleChoice below or do not select any SimpleChoice, and trigger Response Processing by ending the attempt.</qti-prompt><qti-simple-choice identifier=\"choice_a\">Correct</qti-simple-choice><qti-simple-choice identifier=\"choice_b\">Incorrect</qti-simple-choice>\n        </qti-choice-interaction>\n    </qti-item-body>\n    <qti-response-processing template=\"https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml\"/>\n</qti-assessment-item>"
@@ -82,7 +92,7 @@ export default {
       sessionControl: null,
       pnp: null,
       qti3Player: null,
-      performResponseProcessing: false
+      performResponseProcessing: true
     }
   },
 
@@ -96,6 +106,7 @@ export default {
       // Load sessionControl
       this.sessionControl = new SessionControlFactory()
       this.sessionControl.setValidateResponses(true)
+      this.sessionControl.setShowFeedback(false)
     },
 
     loadFirstItem () {
@@ -149,7 +160,6 @@ export default {
     },
 
     handleEndAttemptCompleted (data) {
-      console.log('[EndAttemptCompleted]', data)
       this.evaluateResults(data)
     },
 
@@ -168,17 +178,21 @@ export default {
         return
       }
 
-      switch (data.target) {
+      this.next(data.target)
+    },
+
+    next (action) {
+      switch (action) {
         case 'navigateNextItem':
-          this.navigateNextItem(data.state)
+          this.navigateNextItem()
           break
 
         case 'navigatePrevItem':
-          this.navigatePrevItem(data.state)
+          this.navigatePrevItem()
           break
 
         default:
-          // Unknown data.target --> NOOP
+          // Unknown action --> NOOP
       }
     },
 
@@ -201,10 +215,12 @@ export default {
     },
 
     setTestStateItemState (state) {
+      console.log('[Controller][SetItemState][' + state.guid + ']', state)
       this.itemStates.set(state.guid, state)
     },
 
     getTestStateItemState (guid) {
+      console.log('[Controller][GetItemState][' + guid + ']', this.itemStates.get(guid))
       return this.itemStates.get(guid)
     },
 
