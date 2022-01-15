@@ -247,8 +247,7 @@ export default {
       })
     },
 
-    evaluateFeedbacks (showFeedback) {
-      if (!showFeedback) return
+    evaluateFeedbacks () {
       console.log('[EvaluateFeedback][Started]')
       store.getFeedbacks().forEach((feedback) => {
         feedback.node.evaluate()
