@@ -1,6 +1,6 @@
 <template>
   <div ref="root" class="qti-modal-feedback">
-    <ModalFeedback ref="modal">
+    <ModalDialog ref="modal">
       <template v-slot:header>
         <h5>{{ modalTitle }}</h5>
       </template>
@@ -10,9 +10,9 @@
       </template>
 
       <template v-slot:footer>
-          <button class="btn btn-primary" @click="$refs.modal.hide()">OK</button>
+          <button class="qti-modal-feedback-ok" @click="$refs.modal.hide()">OK</button>
       </template>
-    </ModalFeedback>
+    </ModalDialog>
   </div>
 </template>
 
@@ -146,7 +146,7 @@ export default {
     },
 
     getTemplateMathVariables () {
-      return this.$store.getters.getTemplateMathParameterVariables()
+      return store.getTemplateMathParameterVariables()
     },
 
     getMathElements () {
@@ -267,8 +267,7 @@ export default {
         this.initializeTemplateMathVariables()
 
         // Notify $store of our new component
-        store.dispatch(
-          'defineFeedback', {
+        store.defineFeedback({
             outcomeIdentifier: this.outcomeIdentifier,
             identifier: this.identifier,
             feedbackType: 'Modal',
@@ -284,3 +283,35 @@ export default {
   }
 }
 </script>
+
+<style>
+button.qti-modal-feedback-ok {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: .47rem .75rem;
+  font-size: .875rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+  -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+  color: var(--foreground);
+  background-color: var(--background);
+  border-color: var(--secondary);
+  cursor: pointer;
+}
+
+button.qti-modal-feedback-ok:hover {
+  color: var(--secondary-complement);
+  background-color: var(--secondary);
+}
+</style>
