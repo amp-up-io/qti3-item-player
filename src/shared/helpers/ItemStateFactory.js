@@ -1,29 +1,27 @@
 export class ItemStateFactory {
 
-  constructor(guid, identifier, responseVars, templateVars, outcomeVars, validationMessages) {
-    this.guid = guid
+  constructor(identifier, store) {
     this.identifier = identifier
-    this.responseVariables = responseVars
-    this.templateVariables = templateVars
-    this.outcomeVariables = outcomeVars
-    this.validationMessages = validationMessages
+    this.guid = store.getItemContextGuid()
+    this.contextVariables = store.getContextDeclarations()
+    this.responseVariables = store.getResponseDeclarations()
+    this.templateVariables = store.getTemplateDeclarations()
+    this.outcomeVariables = store.getOutcomeDeclarations()
+    this.validationMessages = store.getItemContextValidationMessages()
+
     return this
   }
 
   getSerializedState () {
     let state = {
-      guid: this.guid,
       identifier: this.identifier,
-      responseVariables: [],
-      outcomeVariables: [],
-      templateVariables: [],
-      validationMessages: []
+      guid: this.guid,
+      contextVariables: this.serializeVariables(this.contextVariables),
+      responseVariables: this.serializeResponseVariables(this.responseVariables),
+      outcomeVariables: this.serializeVariables(this.outcomeVariables),
+      templateVariables: this.serializeVariables(this.templateVariables),
+      validationMessages: this.serializeValidationMessages(this.validationMessages)
     }
-
-    state.responseVariables = this.serializeResponseVariables(this.responseVariables)
-    state.outcomeVariables = this.serializeVariables(this.outcomeVariables)
-    state.templateVariables = this.serializeVariables(this.templateVariables)
-    state.validationMessages = this.serializeValidationMessages(this.validationMessages)
 
     return state
   }

@@ -352,14 +352,8 @@ export default {
       // Examine session control for validateResponses.
       this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())
 
-      const state = new ItemStateFactory(
-        store.getItemContextGuid(),
-        this.identifier,
-        store.getResponseDeclarations(),
-        store.getTemplateDeclarations(),
-        store.getOutcomeDeclarations(),
-        store.getItemContextValidationMessages()
-      )
+      // Pull state from the store
+      const state = new ItemStateFactory(this.identifier, store)
 
       this.$parent.$emit('itemStateReady', {
         "state": state.getSerializedState(),
@@ -381,15 +375,9 @@ export default {
       // Show feedback (if sessionControl permits it)
       this.endAttempt()
 
-      const state = new ItemStateFactory(
-        store.getItemContextGuid(),
-        this.identifier,
-        store.getResponseDeclarations(),
-        store.getTemplateDeclarations(),
-        store.getOutcomeDeclarations(),
-        store.getItemContextValidationMessages()
-      )
-
+      // Pull state from the store
+      const state = new ItemStateFactory(this.identifier, store)
+      
       this.$parent.$emit('itemEndAttemptReady', {
         "state": state.getSerializedState(),
         "target": (typeof target !== 'undefined' ? target : null)
