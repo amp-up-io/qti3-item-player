@@ -1,6 +1,7 @@
 import { RecordField } from '@/shared/helpers/RecordField'
 import { PnpFactory } from '@/shared/helpers/PnpFactory'
 import { SessionControlFactory } from '@/shared/helpers/SessionControlFactory'
+import { ItemStateFactory } from '@/shared/helpers/ItemStateFactory'
 
 export const store = {
 
@@ -506,7 +507,11 @@ export const store = {
   },
 
   setItemContextState (state) {
-    this.itemContext.state = state
+    const itemStateFactory = new ItemStateFactory()
+    // Copy the state
+    const stateCopy = (state === null) ? state : itemStateFactory.createStateFromState(state)
+    // Set the state to the new copy.
+    this.itemContext.state = stateCopy
   },
 
   getItemContextStateVariable (identifier) {

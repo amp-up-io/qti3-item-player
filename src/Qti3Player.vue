@@ -233,7 +233,6 @@ export default {
      */
     setItemContextState (state) {
       store.setItemContextState(state)
-      // TODO perform full restore
     },
 
     /**

@@ -1,8 +1,10 @@
-//import { RecordField } from '@/shared/helpers/RecordField'
-
 export class ItemStateFactory {
 
   constructor(identifier, store) {
+    // Sometimes we just use a raw constructor in order
+    // to get access to this class's methods.
+    if (typeof identifier === 'undefined') return this
+
     this.identifier = identifier
     this.guid = store.getItemContextGuid()
     this.contextVariables = store.getContextDeclarations()
@@ -10,8 +12,19 @@ export class ItemStateFactory {
     this.templateVariables = store.getTemplateDeclarations()
     this.outcomeVariables = store.getOutcomeDeclarations()
     this.validationMessages = store.getItemContextValidationMessages()
-
     return this
+  }
+
+  createStateFromState (state) {
+    this.identifier = state.identifier
+    this.guid = state.guid
+    this.contextVariables = state.contextVariables
+    this.responseVariables = state.responseVariables
+    this.templateVariables = state.templateVariables
+    this.outcomeVariables = state.outcomeVariables
+    this.validationMessages = state.validationMessages
+
+    return this.getSerializedState()
   }
 
   getSerializedState () {
@@ -33,8 +46,9 @@ export class ItemStateFactory {
     responseVariables.forEach((responseVariable) => {
       variableArray.push({
         identifier: responseVariable.identifier,
+        cardinality: responseVariable.cardinality,
         value: this.serializeVariableValue(responseVariable.cardinality, responseVariable.value),
-        state: JSON.parse(JSON.stringify(responseVariable.state))
+        state: this.serializeVariableState(responseVariable.state)
       })
     })
 
@@ -46,6 +60,7 @@ export class ItemStateFactory {
     variables.forEach((variable) => {
       variableArray.push({
         identifier: variable.identifier,
+        cardinality: variable.cardinality,
         value: this.serializeVariableValue(variable.cardinality, variable.value)
       })
     })
@@ -70,6 +85,10 @@ export class ItemStateFactory {
 
     // Records are Map's - special handling.
     return this.serializeRecordVariableValue(value)
+  }
+
+  serializeVariableState (state) {
+    return JSON.parse(JSON.stringify(state))
   }
 
   serializeRecordVariableValue (value) {
