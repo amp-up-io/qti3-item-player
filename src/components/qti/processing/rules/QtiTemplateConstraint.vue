@@ -27,9 +27,11 @@
  */
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
 import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
+import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
 import QtiTemplateConstraintException from '@/components/qti/exceptions/QtiTemplateConstraintException'
 import QtiProcessing from '@/components/qti/processing/utils/QtiProcessing'
 
+const qtiAttributeValidation = new QtiAttributeValidation()
 const qtiProcessing = new QtiProcessing()
 
 export default {
@@ -61,21 +63,6 @@ export default {
       this.setIterationCount(0)
     },
 
-    isValidSlot (slot) {
-      if (typeof slot.componentOptions !== 'undefined') {
-        return true
-      } else {
-        // check if text is something not empty
-        if ((typeof slot.text !== 'undefined') && (slot.text.trim().length > 0)) {
-          // not an empty text slot.  this is an error.
-          throw new QtiValidationException('Invalid Child Node: "' + slot.text.trim() + '"')
-        } else {
-          // empty text slot.  not a component, but not an error
-          return false
-        }
-      }
-    },
-
     /**
      * Iterate through the child nodes.
      * There should be exactly one expression.
@@ -83,7 +70,7 @@ export default {
     validateChildren () {
       let countExpression = 0
       this.$slots.default.forEach((slot) => {
-        if (this.isValidSlot(slot)) {
+        if (qtiAttributeValidation.isValidSlot(slot)) {
           // Detect an expression
           if (qtiProcessing.isExpressionNode(slot.componentOptions.tag)) {
             if (countExpression === 0) {

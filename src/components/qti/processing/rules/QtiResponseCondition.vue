@@ -16,7 +16,10 @@
  */
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
 import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
+import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
 import QtiExitProcessingException from '@/components/qti/exceptions/QtiExitProcessingException'
+
+const qtiAttributeValidation = new QtiAttributeValidation()
 
 export default {
   name: 'QtiResponseCondition',
@@ -57,7 +60,7 @@ export default {
       // Must not have more than 1
       let countResponseElse = 0
       this.$slots.default.forEach((slot) => {
-        if (this.isValidSlot(slot)) {
+        if (qtiAttributeValidation.isValidSlot(slot)) {
           // detect the slot type from the component tag
           switch (slot.componentOptions.tag) {
             case 'qti-response-if':
