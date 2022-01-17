@@ -1,3 +1,5 @@
+//import { RecordField } from '@/shared/helpers/RecordField'
+
 export class ItemStateFactory {
 
   constructor(identifier, store) {
@@ -31,7 +33,7 @@ export class ItemStateFactory {
     responseVariables.forEach((responseVariable) => {
       variableArray.push({
         identifier: responseVariable.identifier,
-        value: JSON.parse(JSON.stringify(responseVariable.value)),
+        value: this.serializeVariableValue(responseVariable.cardinality, responseVariable.value),
         state: JSON.parse(JSON.stringify(responseVariable.state))
       })
     })
@@ -44,7 +46,7 @@ export class ItemStateFactory {
     variables.forEach((variable) => {
       variableArray.push({
         identifier: variable.identifier,
-        value: JSON.parse(JSON.stringify(variable.value))
+        value: this.serializeVariableValue(variable.cardinality, variable.value)
       })
     })
 
@@ -61,6 +63,44 @@ export class ItemStateFactory {
     })
 
     return messageArray
+  }
+
+  serializeVariableValue (cardinality, value) {
+    if (cardinality !== 'record') return JSON.parse(JSON.stringify(value))
+
+    // Records are Map's - special handling.
+    return this.serializeRecordVariableValue(value)
+  }
+
+  serializeRecordVariableValue (value) {
+    const jsonString = this.strMapToJson(value)
+    return this.jsonToStrMap(jsonString)
+  }
+
+  strMapToJson (stringMap) {
+    return JSON.stringify(this.strMapToObj(stringMap))
+  }
+
+  jsonToStrMap(jsonString) {
+    return this.objToStrMap(JSON.parse(jsonString))
+  }
+
+  strMapToObj (strMap) {
+    let obj = Object.create(null)
+    for (let [k,v] of strMap) {
+      // We don’t escape the key '__proto__'
+      // which can cause problems on older engines
+      obj[k] = v
+    }
+    return obj
+  }
+
+  objToStrMap (obj) {
+    let strMap = new Map()
+    for (let k of Object.keys(obj)) {
+      strMap.set(k, obj[k])
+    }
+    return strMap
   }
 
 }

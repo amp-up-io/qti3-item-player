@@ -1,3 +1,4 @@
+import { RecordField } from '@/shared/helpers/RecordField'
 import { PnpFactory } from '@/shared/helpers/PnpFactory'
 import { SessionControlFactory } from '@/shared/helpers/SessionControlFactory'
 
@@ -596,46 +597,4 @@ export const store = {
     }
     this.player.displayAlertMessage(event)
   }
-}
-
-/**
- * @description Helper Class for initializing default Record Fields.
- */
-class RecordField {
-
-  constructor(identifier, baseType, value) {
-    this.fieldIdentifier = identifier
-    this.value = value
-    this.baseType = baseType
-    this.cardinality = 'single'
-  }
-
-  getValue () {
-    return this.value
-  }
-
-  setValue (value) {
-    this.value = value
-  }
-
-  getBaseType () {
-    return this.baseType
-  }
-
-  setBaseType (baseType) {
-    this.baseType = baseType
-  }
-
-  getCardinality () {
-    return this.cardinality
-  }
-
-  getFieldIdentifier () {
-    return this.fieldIdentifier
-  }
-
-  setFieldIdentifier (identifier) {
-    this.fieldIdentifier = identifier
-  }
-
 }
