@@ -7,13 +7,17 @@
 <script>
 /*
  * Response variables are declared by response declarations and bound to interactions
- * in the itemBody.
+ * in the itemBody.  Unlike all other variable types, Response variables also maintain
+ * a 'state' property in order to persist an interaction's 'state' (in addition to an
+ * interaction's response).
  */
 import Vue from 'vue'
 import { store } from '@/store/store'
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
+import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
 import QtiParseException from '@/components/qti/exceptions/QtiParseException'
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
+import QtiProcessing from '@/components/qti/processing/utils/QtiProcessing'
 import QtiDefaultValue from '@/components/qti/declarations/QtiDefaultValue'
 import QtiCorrectResponse from '@/components/qti/declarations/QtiCorrectResponse'
 import QtiMapping from '@/components/qti/declarations/QtiMapping'
@@ -25,6 +29,7 @@ Vue.component('qti-mapping', QtiMapping)
 Vue.component('qti-area-mapping', QtiAreaMapping)
 
 const qtiAttributeValidation = new QtiAttributeValidation()
+const qtiProcessing = new QtiProcessing()
 
 export default {
   name: 'QtiResponseDeclaration',
@@ -47,8 +52,10 @@ export default {
 
   data () {
     return {
-      // this is the value that is set via defaultValue or an interaction response
+      // This is the value that is set via defaultValue or an interaction response
       value: null,
+      // This is the volue of an interaction's state
+      state: null,
       /* [0-1] multiplicity */
       defaultValue: null,
       /* [0-1] multiplicity */
@@ -76,6 +83,14 @@ export default {
       this.value = value
     },
 
+    getState () {
+      return this.state
+    },
+
+    setState (state) {
+      this.state = state
+    },
+
     isNull () {
       return this.value === null
     },
@@ -86,6 +101,20 @@ export default {
 
     getCardinality () {
       return this.cardinality
+    },
+
+    /**
+     * Utility method to reset value of this variable to default.
+     */
+    initializeValue () {
+      // 1) if has defaultValue, use it
+      if (this.defaultValue !== null) {
+        this.setValue(this.defaultValue)
+        return
+      }
+
+      // 3) null
+      this.setValue(qtiProcessing.nullValue())
     },
 
     /**
@@ -117,6 +146,36 @@ export default {
             throw new QtiValidationException('[' + this.$options.name + '][Unhandled Child Node]: "' + node.$el.className + '"')
         }
       })
+    },
+
+    /**
+     * @description Retrieve this variable's prior state.
+     * When not null, has this schema:
+     * {
+     *   identifier: [String],
+     *   value: [Value saved from last attempt]
+     *   state: [State saved from last attempt]
+     * }
+     * @param {String} identifier - of an outcome variable
+     */
+    getPriorState (identifier) {
+      const priorState = store.getItemContextStateVariable(identifier)
+      console.log('[ResponseDeclaration][' + identifier + '][priorState]', priorState)
+
+      // If priorState is null, we are not restoring anything
+      if (priorState === null) return null
+
+      // Perform basic consistency checking on this priorState
+      if (!('value' in priorState)) {
+        throw new QtiEvaluationException('Variable Restore State Invalid.  "value" property not found.')
+      }
+      if (!('state' in priorState)) {
+        throw new QtiEvaluationException('Variable Restore State Invalid.  "state" property not found.')
+      }
+
+      this.setValue(priorState.value)
+      this.setState(priorState.state)
+      return priorState
     }
   },
 
@@ -133,11 +192,13 @@ export default {
           baseType: this.getBaseType(),
           cardinality: this.getCardinality(),
           value: null,
+          state: null,
           defaultValue: null,
           correctResponse: null,
           mapping: null,
           areaMapping: null
         })
+
     } catch (err) {
       this.isQtiValid = false
       if (err.name === 'QtiValidationException') {
@@ -155,12 +216,18 @@ export default {
       try {
         this.readChildren()
 
+        if (this.getPriorState(this.identifier) === null) {
+          // Initialize a value when no prior state
+          this.initializeValue()
+        }
+
         // Notify store of our updated model.
         store.defineResponseDeclaration({
             identifier: this.identifier,
             baseType: this.getBaseType(),
             cardinality: this.getCardinality(),
             value: this.getValue(),
+            state: this.getState(),
             defaultValue: this.defaultValue,
             correctResponse: this.correctResponse,
             mapping: this.mapping,
@@ -170,7 +237,13 @@ export default {
         console.log('[' + this.$options.name + '][' + this.identifier + '][CorrectResponse]', this.correctResponse, '[Mapping]', this.mapping)
       } catch (err) {
         this.isQtiValid = false
-        throw new QtiValidationException(err.message)
+        if (err.name === 'QtiValidationException') {
+          throw new QtiValidationException(err.message)
+        } else if (err.name === 'QtiEvaluationException') {
+          throw new QtiEvaluationException(err.message)
+        } else {
+          throw new Error(err.message)
+        }
       }
     }
   }

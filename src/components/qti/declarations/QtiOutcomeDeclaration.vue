@@ -20,6 +20,7 @@
 import Vue from 'vue'
 import { store } from '@/store/store'
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
+import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
 import QtiParseException from '@/components/qti/exceptions/QtiParseException'
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
 import QtiProcessing from '@/components/qti/processing/utils/QtiProcessing'
@@ -190,6 +191,31 @@ export default {
             throw new QtiValidationException('[' + this.$options.name + '][Unhandled Child Node]: "' + node.$el.className + '"')
         }
       })
+    },
+
+    /**
+     * @description Retrieve this variable's prior state.
+     * When not null, has this schema:
+     * {
+     *   identifier: [String],
+     *   value: [Value saved from last attempt]
+     * }
+     * @param {String} identifier - of an outcome variable
+     */
+    getPriorState (identifier) {
+      const priorState = store.getItemContextStateVariable(identifier)
+      console.log('[OutcomeDeclaration][' + identifier + '][priorState]', priorState)
+
+      // If priorState is null, we are not restoring anything
+      if (priorState === null) return null
+
+      // Perform basic consistency checking on this priorState
+      if (!('value' in priorState)) {
+        throw new QtiEvaluationException('Variable Restore State Invalid.  "value" property not found.')
+      }
+
+      this.setValue(priorState.value)
+      return priorState
     }
   },
 
@@ -238,8 +264,10 @@ export default {
       try {
         this.readChildren()
 
-        // Initialize a value
-        this.initializeValue()
+        if (this.getPriorState(this.identifier) === null) {
+          // Initialize a value when no prior state
+          this.initializeValue()
+        }
 
         store.defineOutcomeDeclaration({
             identifier: this.identifier,
@@ -263,7 +291,13 @@ export default {
         console.log('[' + this.$options.name + '][' + this.identifier + '][DefaultValue]', this.defaultValue, '[lookupTable]', this.lookupTable)
       } catch (err) {
         this.isQtiValid = false
-        throw new QtiValidationException(err.message)
+        if (err.name === 'QtiValidationException') {
+          throw new QtiValidationException(err.message)
+        } else if (err.name === 'QtiEvaluationException') {
+          throw new QtiEvaluationException(err.message)
+        } else {
+          throw new Error(err.message)
+        }
       }
     }
   }

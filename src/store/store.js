@@ -514,17 +514,17 @@ export const store = {
     if (state === null) return null
 
     let declaration = state.outcomeVariables.find(od => od.identifier === identifier)
-    if (typeof declaration !== 'undefined') {
-      return declaration
-    }
+    if (typeof declaration !== 'undefined') return declaration
+
     declaration = state.responseVariables.find(rd => rd.identifier === identifier)
-    if (typeof declaration !== 'undefined') {
-      return declaration
-    }
+    if (typeof declaration !== 'undefined') return declaration
+
     declaration = state.templateVariables.find(td => td.identifier === identifier)
-    if (typeof declaration !== 'undefined') {
-      return declaration
-    }
+    if (typeof declaration !== 'undefined') return declaration
+
+    declaration = state.contextDeclarations.find(cd => cd.identifier === identifier)
+    if (typeof declaration !== 'undefined') return declaration
+
     return null
   },
 
