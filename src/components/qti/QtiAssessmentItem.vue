@@ -21,7 +21,7 @@ import EventListener from '@/shared/components/EventListener'
 import QtiContextDeclaration from '@/components/qti/declarations/QtiContextDeclaration'
 import QtiResponseDeclaration from '@/components/qti/declarations/QtiResponseDeclaration'
 import QtiTemplateDeclaration from '@/components/qti/declarations/QtiTemplateDeclaration'
-//import QtiTemplateProcessing from '@/components/qti/processing/QtiTemplateProcessing'
+import QtiTemplateProcessing from '@/components/qti/processing/QtiTemplateProcessing'
 import QtiOutcomeDeclaration from '@/components/qti/declarations/QtiOutcomeDeclaration'
 import QtiCompanionMaterialsInfo from '@/components/qti/companionmaterials/QtiCompanionMaterialsInfo'
 import QtiStylesheet from '@/components/qti/general/QtiStylesheet'
@@ -34,7 +34,7 @@ Vue.component('event-listener',EventListener)
 Vue.component('qti-context-declaration', QtiContextDeclaration)
 Vue.component('qti-response-declaration', QtiResponseDeclaration)
 Vue.component('qti-template-declaration', QtiTemplateDeclaration)
-//Vue.component('qti-template-processing', QtiTemplateProcessing)
+Vue.component('qti-template-processing', QtiTemplateProcessing)
 Vue.component('qti-outcome-declaration', QtiOutcomeDeclaration)
 Vue.component('qti-companion-materials-info', QtiCompanionMaterialsInfo)
 Vue.component('qti-stylesheet', QtiStylesheet)
@@ -377,7 +377,7 @@ export default {
 
       // Pull state from the store
       const state = new ItemStateFactory(this.identifier, store)
-      
+
       this.$parent.$emit('itemEndAttemptReady', {
         "state": state.getSerializedState(),
         "target": (typeof target !== 'undefined' ? target : null)
