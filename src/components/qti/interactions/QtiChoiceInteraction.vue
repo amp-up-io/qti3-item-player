@@ -213,6 +213,7 @@ export default {
     /**
      * @description Computes this interaction's cardinality (single, multiple).
      * Side effect: sets the model's cardinality property.
+     * @return {String} - cardinality 'single' or 'multiple'
      */
     getCardinality () {
       let rv = store.getResponseDeclaration(this.responseIdentifier)
@@ -224,6 +225,7 @@ export default {
     /**
      * @description Iterate through $slots. Finds the first (if any) qti-prompt component.
      * @param {Array} slots
+     * @return {Array} prompt component(s)
      */
     getPrompt (slots) {
       let prompt = []
