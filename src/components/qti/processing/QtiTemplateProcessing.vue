@@ -11,6 +11,7 @@
  * form to responseProcessing except that the purpose is to assign values to template variables,
  * not outcome variables.
  */
+import { store } from '@/store/store'
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
 import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
 import QtiProcessing from '@/components/qti/processing/utils/QtiProcessing'
@@ -39,7 +40,7 @@ export default {
      */
     resetTemplateProcessing () {
       // Reset template variables
-      this.$store.dispatch('resetTemplateVariables')
+      store.resetTemplateVariables()
       // Restart the processing
       this.evaluate()
     },

@@ -169,7 +169,6 @@ export default {
      */
     getPriorState (identifier) {
       const priorState = store.getItemContextStateVariable(identifier)
-      console.log('[TemplateDeclaration][' + identifier + '][priorState]', priorState)
 
       // If priorState is null, we are not restoring anything
       if (priorState === null) return null
@@ -226,7 +225,7 @@ export default {
           this.initializeValue()
         }
 
-        // Notify $store of our updated model.
+        // Notify store of our updated model.
         store.defineTemplateDeclaration({
             identifier: this.identifier,
             baseType: this.getBaseType(),
@@ -238,7 +237,7 @@ export default {
             node: this
           })
 
-        console.log('[' + this.$options.name + '][' + this.identifier + '][DefaultValue]', this.defaultValue)
+        console.log('[' + this.$options.name + '][' + this.identifier + '][Value]', this.getValue())
       } catch (err) {
         this.isQtiValid = false
         if (err.name === 'QtiValidationException') {

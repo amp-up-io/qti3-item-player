@@ -101,8 +101,8 @@ export default {
           node: node.templateProcessing
         })
 
-      // Now execute our template processing
-      this.executeTemplateProcessing()
+      // If no prior state, execute our template processing.
+      if (!store.hasItemContextState()) this.executeTemplateProcessing()
     },
 
     /**

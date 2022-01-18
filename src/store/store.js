@@ -432,6 +432,9 @@ export const store = {
     this.state.templateDeclarations[tdIndex].value = valueObject.value
   },
 
+  /**
+   * @description This method can be called by a qti-template-constraint.
+   */
   resetTemplateVariables () {
     this.state.templateDeclarations.forEach((templateDeclaration) => {
       templateDeclaration.node.reset()
@@ -480,9 +483,7 @@ export const store = {
 
   setItemContextPnp (pnp) {
     // Should always be a PnpFactory in itemContext, but check anyway.
-    if (this.itemContext.pnp === null) {
-      this.initializeItemContextPnp()
-    }
+    if (this.itemContext.pnp === null) this.initializeItemContextPnp()
     this.itemContext.pnp.setPnp(pnp)
   },
 
@@ -496,9 +497,7 @@ export const store = {
 
   setItemContextSessionControl (sessionControl) {
     // Should always be a SessionControlFactory in itemContext, but check anyway.
-    if (this.itemContext.sc === null) {
-      this.initializeItemContextSessionControl()
-    }
+    if (this.itemContext.sc === null) this.initializeItemContextSessionControl()
     this.itemContext.sc.setSessionControl(sessionControl)
   },
 
@@ -515,9 +514,9 @@ export const store = {
   },
 
   getItemContextStateVariable (identifier) {
-    const state = this.getItemContextState()
+    if (!this.hasItemContextState()) return null
 
-    if (state === null) return null
+    const state = this.getItemContextState()
 
     let declaration = state.outcomeVariables.find(od => od.identifier === identifier)
     if (typeof declaration !== 'undefined') return declaration
@@ -532,6 +531,10 @@ export const store = {
     if (typeof declaration !== 'undefined') return declaration
 
     return null
+  },
+
+  hasItemContextState () {
+    return (this.getItemContextState() !== null)
   },
 
   getItemContextValidationMessages () {
