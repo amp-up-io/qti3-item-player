@@ -541,12 +541,13 @@ export default {
      *   }
      * }
      * @param {String} identifier - of a response variable
+     * @return {Object} - a prior state or null
      */
     getPriorState (identifier) {
       const priorState = store.getItemContextStateVariable(identifier)
 
       // If priorState is null, we are not restoring anything
-      if (priorState === null) return
+      if (priorState === null) return null
 
       // Perform basic consistency checking on this priorState
       if (!('value' in priorState)) {
@@ -559,7 +560,7 @@ export default {
         throw new QtiEvaluationException('Choice Interaction State Invalid.  "order" property not found.')
       }
 
-      this.priorState = priorState
+      return priorState
     }
   },
 
@@ -568,7 +569,7 @@ export default {
       this.responseDeclaration = qtiAttributeValidation.validateResponseIdentifierAttribute(store, this.responseIdentifier)
 
       // Pull any prior interaction state.
-      this.getPriorState(this.responseIdentifier)
+      this.priorState = this.getPriorState(this.responseIdentifier)
 
       qtiAttributeValidation.validateMaxMinChoices(this.maxChoices, this.minChoices)
       this.cardinality = this.getCardinality()

@@ -185,17 +185,24 @@ export default {
       this.isValidResponse = isValid
     },
 
+    /**
+     * @description Get this interaction's invalid response message.
+     * @return {String} minSelectionsMessage or custom message
+     */
+    getInvalidResponseMessage () {
+      return this.minSelectionsMessage
+    },
+
+    /**
+     * @description Reset this interaction's response and UI.
+     */
     resetValue () {
       console.log('[ResetValue][identifier]', this.responseIdentifier)
-
       // Clear out any current UI state
       let options = this.$refs.listbox.querySelectorAll('[role="option"]')
       options.forEach((option) => {
           this.defocusOption(option)
         }, this)
-
-      this.setResponse(null)
-      this.setIsValid(false)
 
       // Rebuild the UI
       this.processGroupUI()
@@ -237,13 +244,13 @@ export default {
     /**
      * @description Build a response from the array of choices.
      * Single Cardinality: response is an identifier string
+     * @param {String} identifier - may be null, or empty string, or an identifier
      * @return {String} response
      */
     computeResponse (identifier) {
-      if ((identifier !== null) && (identifier.length > 0)) {
-        return identifier
-      }
-      return null
+      if (identifier === null) return null
+      if (identifier.length === 0) return null
+      return identifier
     },
 
     /**
@@ -314,7 +321,10 @@ export default {
         this.minSelectionsMessage = this.dataMinSelectionsMessage
         return
       }
-      this.minSelectionsMessage = (this.minChoices == 0) ? '' : 'You must make at least 1 choice for this question.'
+      // If minChoices is 0 then there are no validity constraints.
+      if ((this.minChoices*1) === 0) return
+      // There are validity constraints.
+      this.minSelectionsMessage = 'You must make at least 1 choice for this question.'
     },
 
     handleButtonClick () {
@@ -616,8 +626,9 @@ export default {
         this.processShuffle()
       }
 
-      // Save our choices in state.
+      this.setResponse(null)
       this.setState(this.computeState())
+      this.setIsValid(this.computeIsValid())
 
       // Initialize aria-active-descendant
       this.setActiveDescendant('')
@@ -714,12 +725,13 @@ export default {
      *   }
      * }
      * @param {String} identifier - of a response variable
+     * @return {Object} - a prior state or null
      */
     getPriorState (identifier) {
       const priorState = store.getItemContextStateVariable(identifier)
 
       // If priorState is null, we are not restoring anything
-      if (priorState === null) return
+      if (priorState === null) return null
 
       // Perform basic consistency checking on this priorState
       if (!('value' in priorState)) {
@@ -732,9 +744,8 @@ export default {
         throw new QtiEvaluationException('Choice Interaction State Invalid.  "order" property not found.')
       }
 
-      this.priorState = priorState
+      return priorState
     }
-
   },
 
   created () {
@@ -742,7 +753,7 @@ export default {
       this.responseDeclaration = qtiAttributeValidation.validateResponseIdentifierAttribute(store, this.responseIdentifier)
 
       // Pull any prior interaction state.
-      this.getPriorState(this.responseIdentifier)
+      this.priorState = this.getPriorState(this.responseIdentifier)
 
       qtiAttributeValidation.validateMaxMinChoices(this.maxChoices, this.minChoices)
       if (this.minChoices > 1) {
@@ -776,7 +787,7 @@ export default {
             node: this,
             resetValue: this.resetValue,
             isValidResponse: this.isValidResponse,
-            minSelectionsMessage: this.minSelectionsMessage,
+            invalidResponseMessage: this.getInvalidResponseMessage(),
             maxSelectionsMessage: null
           })
 

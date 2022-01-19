@@ -54,39 +54,38 @@ export class SessionControlFactory {
       this.setAllowReview(sc.allow_review)
     }
 
-    if (('allowSkipping' in sc) && (sc.allow_skipping !== null)) {
+    if (('allow_skipping' in sc) && (sc.allow_skipping !== null)) {
       this.setAllowSkipping(sc.allow_skipping)
     }
 
-    if (('maxAttempts' in sc) && (sc.max_attempts !== null)) {
+    if (('max_attempts' in sc) && (sc.max_attempts !== null)) {
       this.setMaxAttempts(sc.max_attempts)
     }
 
-    if (('showFeedback' in sc) && (sc.show_feedback !== null)) {
+    if (('show_feedback' in sc) && (sc.show_feedback !== null)) {
       this.setShowFeedback(sc.show_feedback)
     }
 
-    if (('showSolution' in sc) && (sc.show_solution !== null)) {
+    if (('show_solution' in sc) && (sc.show_solution !== null)) {
       this.setShowSolution(sc.show_solution)
     }
 
-    if (('timeLimits' in sc) && (sc.time_limits !== null)) {
+    if (('time_limits' in sc) && (sc.time_limits !== null)) {
       if ('min_time' in sc.time_limits) {
         this.setTimeLimitsMinTime(sc.time_limits.min_time)
       }
-      if ('maxTime' in sc.time_limits) {
+      if ('max_time' in sc.time_limits) {
         this.setTimeLimitsMaxTime(sc.time_limits.max_time)
       }
-      if ('allowLateSubmission' in sc.time_limits) {
+      if ('allow_late_submission' in sc.time_limits) {
         this.setTimeLimitsAllowLateSubmission(sc.time_limits.allow_late_submission)
       }
     }
 
-    if (('validateResponses' in sc) && (sc.validate_responses !== null)) {
+    if (('validate_responses' in sc) && (sc.validate_responses !== null)) {
       this.setValidateResponses(sc.validate_responses)
     }
   }
-
 
   getSessionControl () {
     let sc = {
@@ -143,7 +142,7 @@ export class SessionControlFactory {
   }
 
   getShowSolution () {
-    return this.sc.showSolution
+    return this.sc.show_solution
   }
 
   setShowSolution (show_solution) {
