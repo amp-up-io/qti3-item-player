@@ -391,6 +391,8 @@ export default {
   --choice-ctrlh-focus-bc: #2871bd;
   --choice-ctrlh-focus-checked-bc: var(--white);
   --choice-ctrlh-hover-brightness: brightness(95%);
+  /* Inline Choice colors */
+  --ic-focus-bg: #bde4ff;
 }
 
 /* Default foreground / background colors */

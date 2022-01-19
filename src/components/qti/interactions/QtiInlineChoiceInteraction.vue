@@ -817,9 +817,9 @@ div.inline-choice-wrapper {
   color: var(--foreground);
   width: 9rem;
   vertical-align: inherit;
-  background: var(--background) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3E%3Cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E") no-repeat right .4rem center/8px 10px;
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23fff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat right .4rem center/8px 10px;
   border-width: 1px;
-  border-color: hsl(216, 94%, 73%);
+  border-color: var(--choice-control-focus-border);
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -828,6 +828,19 @@ div.inline-choice-wrapper {
   cursor: pointer;
 }
 
+.qti3-player-color-default .inline-choice-select {
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23212529' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat right .4rem center/8px 10px;
+}
+
+.qti3-player-color-defaultreverse .inline-choice-select {
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23fff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat right .4rem center/8px 10px;
+}
+/*
+.qti3-player-color-defaultreverse .inline-choice-select,
+.qti3-player-color-whiteblack .inline-choice-select {
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23fff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3c%3c/svg%3E") no-repeat right .4rem center/8px 10px;
+}
+*/
 .inline-choice-select-prompt {
   display: inline-block;
   position: relative;
@@ -840,13 +853,10 @@ div.inline-choice-wrapper {
 
 .inline-choice-select:focus,
 .inline-choice-select[aria-expanded="true"] {
-  color: #212529;
+  color: var(--foreground);
   background-color: var(--background);
   border-color: var(--choice-control-focus-border);
   outline: 0;
-  /*
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-  */
   box-shadow: var(--choice-control-focus-shadow);
 }
 
@@ -857,7 +867,7 @@ ul.inline-choice-select-listbox {
   margin: 0 2px;
   padding: 0;
   background: var(--background);
-  border: 2px solid black;
+  border: 2px solid var(--foreground);
   border-radius: .25em;
   z-index: 9;
 }
@@ -875,7 +885,13 @@ ul.inline-choice-select-listbox {
 }
 
 [role="option"].focused {
-  background: #bde4ff;
+  color: var(--foreground);
+  background: var(--ic-focus-bg);
+}
+
+.qti3-player-color-defaultreverse [role="option"].focused {
+  color: var(--background);
+  background: var(--ic-focus-bg);
 }
 
 [role="option"][aria-selected="true"]::before {
@@ -884,63 +900,146 @@ ul.inline-choice-select-listbox {
   left: 0.5em;
 }
 
+[role="option"]:hover {
+  color: var(--foreground);
+  background: var(--ic-focus-bg);
+}
+
+.qti3-player-color-defaultreverse [role="option"]:hover {
+  color: var(--background);
+  background: var(--ic-focus-bg);
+}
+
 .inline-choice-select-listbox-hidden {
   display: none;
 }
 
-.qti-input-width-1 .inline-choice-select{
+.qti-input-width-1 .inline-choice-select {
   width: 2.5rem;
 }
 
-.qti-input-width-1 .inline-choice-select-prompt{
+.qti-input-width-1 .inline-choice-select-prompt {
   width: 1.0rem;
 }
 
-.qti-input-width-2 .inline-choice-select{
+.qti-input-width-2 .inline-choice-select {
   width: 3.5rem;
 }
 
-.qti-input-width-2 .inline-choice-select-prompt{
+.qti-input-width-2 .inline-choice-select-prompt {
   width: 2.0rem;
 }
 
-.qti-input-width-3 .inline-choice-select{
+.qti-input-width-3 .inline-choice-select {
   width: 4.8rem;
 }
 
-.qti-input-width-3 .inline-choice-select-prompt{width:3.0rem;}
-.qti-input-width-4 .inline-choice-select{width:5.5rem;}
-.qti-input-width-4 .inline-choice-select-prompt{width:4.0rem;}
-.qti-input-width-5 .inline-choice-select{width:6.5rem;}
-.qti-input-width-5 .inline-choice-select-prompt{width:5.0rem;}
-.qti-input-width-6 .inline-choice-select{width:7.5rem;}
-.qti-input-width-6 .inline-choice-select-prompt{width:6.0rem;}
-.qti-input-width-10 .inline-choice-select{width:11.5rem;}
-.qti-input-width-10 .inline-choice-select-prompt{width:9.5rem;}
-.qti-input-width-15 .inline-choice-select{width:16.0rem;}
-.qti-input-width-15 .inline-choice-select-prompt{width:14.5rem;}
-.qti-input-width-20 .inline-choice-select{width:20.5rem;}
-.qti-input-width-20 .inline-choice-select-prompt{width:19.0rem;}
-.qti-input-width-25 .inline-choice-select{width:25.0rem;}
-.qti-input-width-25 .inline-choice-select-prompt{width:23.5rem;}
-.qti-input-width-30 .inline-choice-select{width:29.5rem;}
-.qti-input-width-30 .inline-choice-select-prompt{width:28.0rem;}
-.qti-input-width-35 .inline-choice-select{width:34.0rem;}
-.qti-input-width-35 .inline-choice-select-prompt{width:32.5rem;}
-.qti-input-width-40 .inline-choice-select{width:38.5rem;}
-.qti-input-width-40 .inline-choice-select-prompt{width:37.0rem;}
-.qti-input-width-45 .inline-choice-select{width:43.0rem;}
-.qti-input-width-45 .inline-choice-select-prompt{width:41.5rem;}
-.qti-input-width-50 .inline-choice-select{width:47.5rem;}
-.qti-input-width-50 .inline-choice-select-prompt{width:46.0rem;}
+.qti-input-width-3 .inline-choice-select-prompt {
+  width: 3.0rem;
+}
+
+.qti-input-width-4 .inline-choice-select {
+  width: 5.5rem;
+}
+
+.qti-input-width-4 .inline-choice-select-prompt {
+  width: 4.0rem;
+}
+
+.qti-input-width-5 .inline-choice-select {
+  width: 6.5rem;
+}
+
+.qti-input-width-5 .inline-choice-select-prompt {
+  width: 5.0rem;
+}
+
+.qti-input-width-6 .inline-choice-select {
+  width: 7.5rem;
+}
+
+.qti-input-width-6 .inline-choice-select-prompt {
+  width: 6.0rem;
+}
+
+.qti-input-width-10 .inline-choice-select {
+  width: 11.5rem;
+}
+
+.qti-input-width-10 .inline-choice-select-prompt {
+  width: 9.5rem;
+}
+
+.qti-input-width-15 .inline-choice-select {
+  width: 16.0rem;
+}
+
+.qti-input-width-15 .inline-choice-select-prompt {
+  width: 14.5rem;
+}
+
+.qti-input-width-20 .inline-choice-select {
+  width: 20.5rem;
+}
+.qti-input-width-20 .inline-choice-select-prompt {
+  width: 19.0rem;
+}
+
+.qti-input-width-25 .inline-choice-select {
+  width: 25.0rem;
+}
+
+.qti-input-width-25 .inline-choice-select-prompt {
+  width: 23.5rem;
+}
+
+.qti-input-width-30 .inline-choice-select {
+  width: 29.5rem;
+}
+
+.qti-input-width-30 .inline-choice-select-prompt {
+  width: 28.0rem;
+}
+
+.qti-input-width-35 .inline-choice-select {
+  width: 34.0rem;
+}
+
+.qti-input-width-35 .inline-choice-select-prompt {
+  width: 32.5rem;
+}
+
+.qti-input-width-40 .inline-choice-select {
+  width: 38.5rem;
+}
+
+.qti-input-width-40 .inline-choice-select-prompt {
+  width: 37.0rem;
+}
+
+.qti-input-width-45 .inline-choice-select {
+  width: 43.0rem;
+}
+
+.qti-input-width-45 .inline-choice-select-prompt {
+  width: 41.5rem;
+}
+
+.qti-input-width-50 .inline-choice-select {
+  width: 47.5rem;
+}
+
+.qti-input-width-50 .inline-choice-select-prompt {
+  width: 46.0rem;
+}
 
 div.qti-inline-choice-interaction.qti-input-width-72,
 .qti-input-width-72 div.inline-choice-wrapper,
-.qti-input-width-72 .inline-choice-select{
+.qti-input-width-72 .inline-choice-select {
   width: 100%;
 }
 
-.qti-input-width-72 .inline-choice-select-prompt{
+.qti-input-width-72 .inline-choice-select-prompt {
   width: 96%;
 }
 </style>
