@@ -6,7 +6,7 @@
       ref="item"
       @itemReady="handleItemReady"
       @itemCompleted="handleItemCompleted"
-      @itemStateReady="handleItemStateReady"
+      @itemSuspendAttemptReady="handleSuspendAttemptReady"
       @itemEndAttemptReady="handleEndAttemptReady"
       v-bind:is="processedXml">
     </component>
@@ -97,7 +97,7 @@ export default {
      * }
      */
     loadItemFromXml (xml, configuration) {
-      console.log('[Qti3Player][loadItemFromXml][configuration]', configuration)
+      console.log('[Qti3Player][LoadItemFromXml][configuration]', configuration)
       // Step 1: clear out the existing store
       store.resetAll()
       // Step 2: initialize the built-in variables
@@ -106,6 +106,28 @@ export default {
       this.loadItemContextFromConfiguration(configuration)
       // Step 3: load the item xml
       this.itemXml = xml
+    },
+
+    /**
+     * @description  Initiate an getEndAttempt request in the QtiAssessmentItem
+     * component.  When the method completes the Item will trigger the
+     * 'itemEndAttemptReady' event - handled by the 'handleEndAttemptReady' method.
+     * @param {String} target - used for tracking the invoker of this method.
+     */
+    endAttempt (target) {
+      console.log('[Qti3Player][EndAttempt][' + target + ']')
+      this.item.getEndAttempt(target)
+    },
+
+    /**
+     * @description Initiate a getSuspendAttempt request in the QtiAssessmentItem
+     * component.  When the method completes the Item will trigger the
+     * 'itemSuspendAttemptReady' event - handled by the 'handleSuspendAttemptReady' method.
+     * @param {String} target - used for tracking the invoker of this method.
+     */
+    suspendAttempt (target) {
+      console.log('[Qti3Player][SuspendAttempt][' + target + ']')
+      this.item.getSuspendAttempt(target)
     },
 
     /**
@@ -136,18 +158,18 @@ export default {
     },
 
     /**
-     * @description event handler for the itemStateReady event.
+     * @description event handler for the suspendAttemptReady event.
      * @param {Object} itemState - object containing a 'state' property and a 'target' property.
      */
-    handleItemStateReady (itemState) {
+    handleSuspendAttemptReady (itemState) {
       // Display any response validation messages.
       this.displayInvalidResponseMessages(itemState.state.validationMessages)
       // Notify listener that an Item State object is ready.
-      this.$emit('notifyQti3GetItemStateCompleted', itemState)
+      this.$emit('notifyQti3SuspendAttemptCompleted', itemState)
     },
 
     /**
-     * @description event handler for the itemStateReady event.
+     * @description event handler for the endAttemptReady event.
      * @param {Object} itemState - object containing a 'state' property and a 'target' property.
      */
     handleEndAttemptReady (itemState) {
@@ -163,28 +185,6 @@ export default {
      */
     getItem () {
       return this.item
-    },
-
-    /**
-     * @description Initiate a getItemState request in the QtiAssessmentItem
-     * component.  When the method completes the Item will trigger the
-     * 'itemStateReady' event - handled by the 'handleItemStateReady' method.
-     * @param {String} target - used for tracking the invoker of this method.
-     */
-    getItemState (target) {
-      console.log('[Qti3Player][getItemState][' + target + ']')
-      this.item.getItemState(target)
-    },
-
-    /**
-     * @description  Initiate an getEndAttempt request in the QtiAssessmentItem
-     * component.  When the method completes the Item will trigger the
-     * 'itemEndAttemptReady' event - handled by the 'handleEndAttemptReady' method.
-     * @param {String} target - used for tracking the invoker of this method.
-     */
-    endAttempt (target) {
-      console.log('[Qti3Player][endAttempt][' + target + ']')
-      this.item.getEndAttempt(target)
     },
 
     loadItemContextFromConfiguration (configuration) {

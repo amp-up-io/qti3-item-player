@@ -89,6 +89,50 @@ export default {
   methods: {
 
     /**
+     * @description Call endAttempt, then retrieve all variable declarations, storing them in
+     * an itemState class.
+     * @param target - string which identifies a callback target
+     * @return object with two properties: state which is an itemState class and target
+     */
+    getEndAttempt (target) {
+      // End the attempt.
+      // Evaluate response validity.
+      // Fire response processing.
+      // Evaluate outcomes.
+      // Show feedback (if sessionControl permits it)
+      this.endAttempt()
+
+      // Pull state from the store
+      const state = new ItemStateFactory(this.identifier, store)
+
+      this.$parent.$emit('itemEndAttemptReady', {
+        "state": state.getSerializedState(),
+        "target": (typeof target !== 'undefined' ? target : null)
+      })
+    },
+
+    /**
+     * @description Retrieve all variable declarations, storing them in an itemState class.
+     * @param target - string which identifies a callback target
+     * @return object with two properties: state which is an itemState class and target
+     */
+    getSuspendAttempt (target) {
+      // Update the store's responses and state of response variables
+      this.getResponses()
+
+      // Examine session control for validateResponses.
+      this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())
+
+      // Pull state from the store
+      const state = new ItemStateFactory(this.identifier, store)
+
+      this.$parent.$emit('itemSuspendAttemptReady', {
+        "state": state.getSerializedState(),
+        "target": (typeof target !== 'undefined' ? target : null)
+      })
+    },
+
+    /**
      * @description This executes immediately upon completion
      * of an item's qti-template-processing $mount
      * @param node - an object containing a templateProcessing node
@@ -338,50 +382,6 @@ export default {
         }
       })
       console.log('[GetResponses][Complete]')
-    },
-
-    /**
-     * @description Retrieve all variable declarations, storing them in an itemState class.
-     * @param target - string which identifies a callback target
-     * @return object with two properties: state which is an itemState class and target
-     */
-    getItemState (target) {
-      // Update the store's responses and state of response variables
-      this.getResponses()
-
-      // Examine session control for validateResponses.
-      this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())
-
-      // Pull state from the store
-      const state = new ItemStateFactory(this.identifier, store)
-
-      this.$parent.$emit('itemStateReady', {
-        "state": state.getSerializedState(),
-        "target": (typeof target !== 'undefined' ? target : null)
-      })
-    },
-
-    /**
-     * @description Call endAttempt, then retrieve all variable declarations, storing them in
-     * an itemState class.
-     * @param target - string which identifies a callback target
-     * @return object with two properties: state which is an itemState class and target
-     */
-    getEndAttempt (target) {
-      // End the attempt.
-      // Evaluate response validity.
-      // Fire response processing.
-      // Evaluate outcomes.
-      // Show feedback (if sessionControl permits it)
-      this.endAttempt()
-
-      // Pull state from the store
-      const state = new ItemStateFactory(this.identifier, store)
-
-      this.$parent.$emit('itemEndAttemptReady', {
-        "state": state.getSerializedState(),
-        "target": (typeof target !== 'undefined' ? target : null)
-      })
     },
 
     evaluateItemCompleted () {
