@@ -392,7 +392,8 @@ export default {
   --choice-ctrlh-focus-checked-bc: var(--white);
   --choice-ctrlh-hover-brightness: brightness(95%);
   /* Inline Choice colors */
-  --ic-focus-bg: #bde4ff;
+  --ic-focus-fc: var(--foreground);
+  --ic-focus-bc: #bde4ff;
 }
 
 /* Default foreground / background colors */
@@ -425,6 +426,9 @@ export default {
   --choice-ctrlh-focus-bc: #2871bd;
   --choice-ctrlh-focus-checked-bc: var(--white);
   --choice-ctrlh-hover-brightness: brightness(95%);
+  /* Inline Choice colors */
+  --ic-focus-fc: var(--background);
+  --ic-focus-bc: #bde4ff;
 }
 
 /* High Contrast */
@@ -454,6 +458,9 @@ export default {
   --choice-ctrlh-focus-bc: var(--black);
   --choice-ctrlh-focus-checked-bc: var(--white);
   --choice-ctrlh-hover-brightness: brightness(95%);
+  /* Inline Choice colors */
+  --ic-focus-fc: var(--white);
+  --ic-focus-bc: var(--black);
 }
 
 /* High Contrast - reverse polarity */
@@ -483,6 +490,9 @@ export default {
   --choice-ctrlh-focus-bc: var(--white);
   --choice-ctrlh-focus-checked-bc: var(--white);
   --choice-ctrlh-hover-brightness: brightness(90%);
+  /* Inline Choice colors */
+  --ic-focus-fc: var(--secondary-complement);
+  --ic-focus-bc: var(--secondary);
 }
 
 .qti3-player-color-blackrose {
@@ -511,6 +521,9 @@ export default {
   --choice-ctrlh-focus-bc: var(--black);
   --choice-ctrlh-focus-checked-bc: var(--rose);
   --choice-ctrlh-hover-brightness: brightness(95%);
+  /* Inline Choice colors */
+  --ic-focus-fc: var(--secondary-complement);
+  --ic-focus-bc: var(--secondary);
 }
 
 .qti3-player-color-roseblack {
@@ -539,6 +552,9 @@ export default {
   --choice-ctrlh-focus-bc: var(--rose);
   --choice-ctrlh-focus-checked-bc: var(--rose);
   --choice-ctrlh-hover-brightness: brightness(90%);
+  /* Inline Choice colors */
+  --ic-focus-fc: var(--secondary-complement);
+  --ic-focus-bc: var(--secondary);
 }
 
 .qti3-player-color-mgraydgray {
@@ -567,6 +583,9 @@ export default {
   --choice-ctrlh-focus-bc: var(--foreground);
   --choice-ctrlh-focus-checked-bc: var(--foreground);
   --choice-ctrlh-hover-brightness: brightness(90%);
+  /* Inline Choice colors */
+  --ic-focus-fc: var(--secondary-complement);
+  --ic-focus-bc: var(--secondary);
 }
 
 .qti3-player-color-dgraymgray {
@@ -595,6 +614,9 @@ export default {
   --choice-ctrlh-focus-bc: var(--foreground);
   --choice-ctrlh-focus-checked-bc: var(--foreground);
   --choice-ctrlh-hover-brightness: brightness(90%);
+  /* Inline Choice colors */
+  --ic-focus-fc: var(--secondary-complement);
+  --ic-focus-bc: var(--secondary);
 }
 
 .qti3-player-color-yellowblue {
@@ -623,6 +645,9 @@ export default {
   --choice-ctrlh-focus-bc: var(--foreground);
   --choice-ctrlh-focus-checked-bc: var(--foreground);
   --choice-ctrlh-hover-brightness: brightness(90%);
+  /* Inline Choice colors */
+  --ic-focus-fc: var(--secondary-complement);
+  --ic-focus-bc: var(--secondary);
 }
 
 .qti3-player-color-blueyellow {
@@ -651,6 +676,9 @@ export default {
   --choice-ctrlh-focus-bc: var(--foreground);
   --choice-ctrlh-focus-checked-bc: var(--foreground);
   --choice-ctrlh-hover-brightness: brightness(90%);
+  /* Inline Choice colors */
+  --ic-focus-fc: var(--secondary-complement);
+  --ic-focus-bc: var(--secondary);
 }
 
 .qti3-player-container,
