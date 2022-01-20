@@ -26,7 +26,7 @@
     <template v-else>
       <button
         ref="endattempt"
-        class="qti-end-attempt-interaction btn btn-secondary"
+        class="qti-end-attempt-interaction"
         @click.prevent="handleEndAttempt"
         type="button"
         v-bind="$attrs">
@@ -239,6 +239,10 @@ export default {
       this.disableButton()
     },
 
+    enable () {
+      this.enableButton()
+    },
+
     getStep () {
       return this.step
     },
@@ -257,7 +261,7 @@ export default {
       this.toggleEndAttemptDisabled()
       // 2) Set response to true
       this.setResponse(true)
-      // 3) Notify $store - should invoke response processing
+      // 3) Notify store - should invoke response processing
       this.notifyEndAttempt()
     },
 
@@ -378,7 +382,7 @@ export default {
 
   created () {
     try {
-      this.responseDeclaration = qtiAttributeValidation.validateResponseIdentifierAttribute(this.$store, this.responseIdentifier)
+      this.responseDeclaration = qtiAttributeValidation.validateResponseIdentifierAttribute(store, this.responseIdentifier)
     } catch (err) {
       this.isQtiValid = false
       if (err.name === 'QtiValidationException') {
@@ -408,6 +412,7 @@ export default {
             node: this,
             resetValue: this.resetValue,
             disable: this.disable,
+            enable: this.enable,
             isValidResponse: this.isValidResponse,
             invalidResponseMessage: this.getInvalidResponseMessage()
         })
@@ -424,6 +429,73 @@ export default {
 </script>
 
 <style scoped>
+
+button.qti-end-attempt-interaction {
+  display: inline-block;
+  margin: 0;
+  font-family: inherit;
+  font-size: .875rem;
+  line-height: inherit;
+  font-weight: 400;
+  text-transform: none;
+  -webkit-appearance: button;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: .47rem .75rem;
+  border-radius: .25rem;
+  outline: 0!important;
+  border-color: var(--ea-button-secondary-bc);
+  -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+}
+
+button.qti-end-attempt-interaction:focus {
+  border-color: var(--choice-focus-border);
+  -webkit-box-shadow: 0 0 0 .15rem var(--choice-focus-border);
+  box-shadow: 0 0 0 .15rem var(--choice-focus-border);
+}
+
+button.qti-end-attempt-interaction:not(:disabled) {
+  cursor: pointer;
+}
+
+button.qti-end-attempt-interaction:disabled {
+  pointer-events: none;
+}
+
+.qti-color-secondary button.qti-end-attempt-interaction {
+  color: var(--ea-button-secondary-color);
+  background-color: var(--ea-button-secondary-bgc);
+  border-color: var(--ea-button-secondary-bc);
+}
+
+.qti-color-secondary button.qti-end-attempt-interaction:focus {
+  color: var(--ea-button-secondary-color);
+  background-color: var(--ea-button-secondary-bgc);
+  border-color: var(--choice-focus-border);
+  -webkit-box-shadow: 0 0 0 .15rem var(--choice-focus-border);
+  box-shadow: 0 0 0 .15rem var(--choice-focus-border);
+}
+
+.qti-color-secondary button.qti-end-attempt-interaction:hover {
+  color: var(--ea-button-secondary-hover-color);
+  background-color: var(--ea-button-secondary-hover-bgc);
+}
+
+.qti-color-secondary button.qti-end-attempt-interaction:disabled {
+  color: var(--gray);
+  background-color: var(--light);
+  border-color: var(--light);
+  filter: brightness(90%);
+}
+
 .mxl-controller {
   position: absolute;
   bottom: 0px;

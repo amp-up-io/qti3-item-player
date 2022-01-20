@@ -318,11 +318,6 @@ export default {
     endAttempt (stateObject) {
       console.log('[EndAttempt][Start][Identifier]', this.identifier)
 
-      // End attempt can be invoked from several different places.  In the event
-      // that this was invoked by a Show Feedback end attempt interaction, this
-      // will disable various parts of the UI.
-      this.updateItemBodyUI(stateObject)
-
       this.getResponses()
 
       // Evaluate response validity if item session control validateResponses=true
@@ -333,23 +328,41 @@ export default {
       if (this.isAdaptive) {
         this.evaluateItemCompleted()
       }
+
+      // End attempt can be invoked from several different places.  In the event
+      // that this was invoked by a Show Feedback end attempt interaction, this
+      // will disable or enable other end attempt interactions in the UI.
+      this.updateItemBodyUI(stateObject)
+
       console.log('[EndAttempt][Complete][Identifier]', this.identifier)
     },
 
     updateItemBodyUI (stateObject) {
-      if (typeof stateObject === 'undefined') {
-        return
-      }
+      // If the stateObject is undefined, this indicates that the endAttempt
+      // was NOT invoked by an end attempt interaction.  In this case, bail.
+      if (typeof stateObject === 'undefined') return
+
       // This was invoked by an endAttempt interaction - such as a Show Hint.  If this is
       // not a mxlcontroller endAttempt interaction, disable the mxlcontroller if one exists
       // in the item body.
+      // By default, ALL end attempt interaction's are disabled when clicked.
       if (stateObject.interactionSubType !== 'mxlcontroller') {
         // Was not a mxlcontroller end attempt.
         store.getInteractions().forEach((interaction) => {
-          if ((interaction.interactionType === 'EndAttemptInteraction') &&
-            (interaction.interactionSubType === 'mxlcontroller')) {
-            interaction.disable()
-            return
+          if (interaction.interactionType === 'EndAttemptInteraction') {
+
+            if (interaction.interactionSubType === 'mxlcontroller') {
+              interaction.disable()
+              return
+            }
+
+            if (this.isAdaptive) {
+              // In an adaptive item we don't want to enable any qti-end-attempt-interaction's
+              // once completionStatus is 'completed'.
+              if (this.isAdaptiveItemCompleted()) return
+              // This is adaptive and we still are not complete.  Re-enable the interaction.
+              interaction.enable()
+            }
           }
         })
       }
@@ -372,7 +385,8 @@ export default {
         }
 
         // Response variable that is not bound to an interaction.
-        // Set this to a default value (if one exists) or NULL - unless the response is numAttempts or duration
+        // Set this to a default value (if one exists) or NULL - unless
+        // the response is numAttempts or duration
         if ((responseVariable.identifier !== 'numAttempts' ) && (responseVariable.identifier !== 'duration')) {
           store.resetResponseVariableValue({
               identifier: responseVariable.identifier,
@@ -385,11 +399,16 @@ export default {
     },
 
     evaluateItemCompleted () {
-      let outcomeDeclaration = store.getOutcomeDeclaration('completionStatus')
-
-      if (outcomeDeclaration.value === 'completed') {
+      if (this.isAdaptiveItemCompleted()) {
         this.$parent.$emit('itemCompleted')
       }
+    },
+
+    isAdaptiveItemCompleted () {
+
+      let outcomeDeclaration = store.getOutcomeDeclaration('completionStatus')
+      console.log('completionStatus, value:', outcomeDeclaration.value)
+      return outcomeDeclaration.value === 'completed'
     },
 
     processResponses () {
