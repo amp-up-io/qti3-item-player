@@ -394,6 +394,12 @@ export default {
   /* Inline Choice colors */
   --ic-focus-fc: var(--foreground);
   --ic-focus-bc: #bde4ff;
+  /* End Attempt Button colors */
+  --ea-button-secondary-color: var(--background);
+  --ea-button-secondary-bgc: var(--gray);
+  --ea-button-secondary-bc: var(--secondary-complement);
+  --ea-button-secondary-hover-color: var(--gray-dark);
+  --ea-button-secondary-hover-bgc: var(--background);
 }
 
 /* Default foreground / background colors */
