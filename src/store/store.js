@@ -339,6 +339,38 @@ export const store = {
     console.log('[QtiAssessmentItem][duration] initialized')
   },
 
+  restoreContextVariables () {
+    if (!this.hasItemContextState()) return null
+
+    const itemContextState = this.getItemContextState()
+    if (!('contextVariables' in itemContextState)) return
+    if (itemContextState.contextVariables === null) return
+
+    itemContextState.contextVariables.forEach((contextVariable) => {
+      let cdIndex = this.state.contextDeclarations.findIndex(cd => cd.identifier == contextVariable.identifier)
+
+      if (cdIndex < 0) return
+
+      // Found the context variable, set its value
+      this.state.contextDeclarations[cdIndex].value = contextVariable.value
+    }, this)
+  },
+
+  restoreOutcomeVariables () {
+    if (!this.hasItemContextState()) return null
+
+    const itemContextState = this.getItemContextState()
+    if (!('outcomeVariables' in itemContextState)) return
+    if (itemContextState.outcomeVariables === null) return
+
+    itemContextState.outcomeVariables.forEach((outcomeVariable) => {
+      this.setOutcomeVariableValue({
+        identifier: outcomeVariable.identifier,
+        value: outcomeVariable.value
+      })
+    }, this)
+  },
+
   setOutcomeVariableValue (valueObject) {
     let odIndex = this.state.outcomeDeclarations.findIndex(od => od.identifier == valueObject.identifier)
 
@@ -395,6 +427,22 @@ export const store = {
 
     // Found the interaction, update its isValidResponse property
     this.state.interactions[interactionIndex].isValidResponse = validityObject.isValidResponse
+  },
+
+  restoreResponseVariables () {
+    if (!this.hasItemContextState()) return null
+
+    const itemContextState = this.getItemContextState()
+    if (!('responseVariables' in itemContextState)) return
+    if (itemContextState.responseVariables === null) return
+
+    itemContextState.responseVariables.forEach((responseVariable) => {
+      this.setResponseVariableValue({
+        identifier: responseVariable.identifier,
+        value: responseVariable.value,
+        state: responseVariable.state
+      })
+    }, this)
   },
 
   setResponseVariableValue (valueObject) {
