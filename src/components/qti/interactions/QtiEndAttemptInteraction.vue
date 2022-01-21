@@ -233,15 +233,18 @@ export default {
 
     initializeValue () {
       this.setResponse(false)
+      this.enableButton()
       this.setStep(1)
       this.setState(this.computeState())
       this.setIsValid(true)
-      this.enableButton()
     },
 
     resetValue () {
       console.log('[ResetValue][identifier]', this.responseIdentifier)
-      this.initializeValue()
+      this.setResponse(false)
+      this.enableButton()
+      this.setState(this.computeState())
+      this.setIsValid(true)
     },
 
     /**
@@ -287,18 +290,22 @@ export default {
      * @return {Object} state object
      */
     computeState () {
-      const state = {}
-      state.step = this.getStep()
-      state.isBtnDisabled = this.getIsBtnDisabled()
+      const state = {
+        step: this.getStep(),
+        isBtnDisabled: this.getIsBtnDisabled()
+      }
       return state
     },
 
     disable () {
       this.disableButton()
+      this.setState(this.computeState())
     },
 
     enable () {
       this.enableButton()
+      this.setResponse(false)
+      this.setState(this.computeState())
     },
 
     getStep () {
@@ -354,10 +361,7 @@ export default {
     },
 
     toggleEndAttemptDisabled () {
-      if (this.interactionSubType === '') {
-        this.$refs.endattempt.toggleAttribute('disabled')
-        this.setIsBtnDisabled(true)
-      }
+      if (this.interactionSubType === '') this.toggleButtonDisabled(this.$refs.endattempt, true)
     },
 
     /**
@@ -573,6 +577,11 @@ button.qti-end-attempt-interaction:focus {
   border-color: var(--choice-focus-border);
   -webkit-box-shadow: 0 0 0 .15rem var(--choice-focus-border);
   box-shadow: 0 0 0 .15rem var(--choice-focus-border);
+}
+
+button.qti-end-attempt-interaction:hover {
+  color: var(--ea-button-secondary-hover-color);
+  background-color: var(--ea-button-secondary-hover-bgc);
 }
 
 button.qti-end-attempt-interaction:not(:disabled) {
