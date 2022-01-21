@@ -405,9 +405,7 @@ export default {
     },
 
     isAdaptiveItemCompleted () {
-
       let outcomeDeclaration = store.getOutcomeDeclaration('completionStatus')
-      console.log('completionStatus, value:', outcomeDeclaration.value)
       return outcomeDeclaration.value === 'completed'
     },
 
