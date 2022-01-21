@@ -50,6 +50,7 @@
  */
 import { store } from '@/store/store'
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
+import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
 import QtiParseException from '@/components/qti/exceptions/QtiParseException'
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
 
@@ -118,9 +119,12 @@ export default {
       responseDeclaration: null,
       interactionSubType: '',
       step: 1,  // For adaptive items, this permits us to display completion percentage
+      isBtnDisabled: false,
       isValidResponse: true,
       invalidResponseMessage: '',
-      isQtiValid: true
+      isQtiValid: true,
+      // If we are restoring, this is where we save the prior variable state
+      priorState: null
     }
   },
 
@@ -227,12 +231,66 @@ export default {
       return this.cardinality
     },
 
-    resetValue () {
-      console.log('[ResetValue][identifier]', this.responseIdentifier)
+    initializeValue () {
       this.setResponse(false)
-      this.setState(null)
+      this.setStep(1)
+      this.setState(this.computeState())
       this.setIsValid(true)
       this.enableButton()
+    },
+
+    resetValue () {
+      console.log('[ResetValue][identifier]', this.responseIdentifier)
+      this.initializeValue()
+    },
+
+    /**
+     * @description Restores this interaction's response and state.
+     * Also restores this interaction's response validity.
+     * @param {Object} state
+     * When not null, has this schema:
+     * {
+     *   identifier: [String],
+     *   value: [Boolean]
+     *   state: {
+     *     step: [Number],
+     *     isBtnDisabled: [Boolean]
+     *   }
+     * }
+     */
+    restoreValue (state) {
+      this.setStep(state.state.step)
+
+      if (state.state.isBtnDisabled)
+        this.disableButton()
+      else
+        this.enableButton()
+
+      this.setState(this.computeState())
+      this.setResponse(this.computeResponse(state.value))
+      this.setIsValid(true)
+    },
+
+    /**
+     * @description Build a response from the value.
+     * @param {Boolean} value - may be null or a boolean
+     * @return {Boolean} response
+     */
+    computeResponse (value) {
+      if (value === null) return false
+      return value
+    },
+
+    /**
+     * @description For an end attempt interaction, we track
+     * 'step' and 'isBtnDisabled'
+     * @return {Object} state object
+     */
+    computeState () {
+      const state = {}
+      state.step = this.getStep()
+      state.isBtnDisabled = this.getIsBtnDisabled()
+      return state
     },
 
     disable () {
@@ -251,6 +309,14 @@ export default {
       this.step = step
     },
 
+    getIsBtnDisabled () {
+      return this.isBtnDisabled
+    },
+
+    setIsBtnDisabled (isBtnDisabled) {
+      this.isBtnDisabled = isBtnDisabled
+    },
+
     /**
      * @description If the candidate invokes response processing using an
      * endAttemptInteraction then the associated response variable is
@@ -261,7 +327,9 @@ export default {
       this.toggleEndAttemptDisabled()
       // 2) Set response to true
       this.setResponse(true)
-      // 3) Notify store - should invoke response processing
+      // 3) Set state
+      this.setState(this.computeState())
+      // 4) Notify store - should invoke response processing
       this.notifyEndAttempt()
     },
 
@@ -288,6 +356,7 @@ export default {
     toggleEndAttemptDisabled () {
       if (this.interactionSubType === '') {
         this.$refs.endattempt.toggleAttribute('disabled')
+        this.setIsBtnDisabled(true)
       }
     },
 
@@ -300,11 +369,12 @@ export default {
     },
 
     toggleButtonDisabled (buttonRef, disable) {
-      if (disable) {
+      if (disable)
         buttonRef.setAttribute('disabled', '')
-      } else {
+      else
         buttonRef.removeAttribute('disabled')
-      }
+
+      this.setIsBtnDisabled(disable)
     },
 
     updateCheckAnswerState () {
@@ -329,13 +399,13 @@ export default {
       // Setting response to 'true' communicates that the item is complete.
       this.setResponse(true)
       // Disable the checkanswer button
-      this.toggleButtonDisabled (this.$refs.checkanswer, true)
+      this.toggleButtonDisabled(this.$refs.checkanswer, true)
       return true
     },
 
     resetCheckAnswerState () {
       this.setStep(1)
-      this.toggleButtonDisabled (this.$refs.checkanswer, false)
+      this.toggleButtonDisabled(this.$refs.checkanswer, false)
     },
 
     /**
@@ -345,9 +415,8 @@ export default {
      */
     getInteractionSubType (classList) {
       // Detect a supported custom interaction type
-      if (classList.contains('mxl-controller-bar')) {
-        return 'mxlcontroller'
-      }
+      if (classList.contains('mxl-controller-bar')) return 'mxlcontroller'
+
       return ''
     },
 
@@ -376,6 +445,43 @@ export default {
     handleMxlCheckAnswer () {
       this.updateCheckAnswerState()
       this.notifyEndAttempt()
+    },
+
+    /**
+     * @description Retrieve this interaction's prior state.
+     * When not null, has this schema:
+     * {
+     *   identifier: [String],
+     *   value: [Boolean]
+     *   state: {
+     *     step: [Number],
+     *     isBtnDisabled: [Boolean]
+     *   }
+     * }
+     * @param {String} identifier - of a response variable
+     * @return {Object} - a prior state or null
+     */
+    getPriorState (identifier) {
+      const priorState = store.getItemContextStateVariable(identifier)
+
+      // If priorState is null, we are not restoring anything
+      if (priorState === null) return null
+
+      // Perform basic consistency checking on this priorState
+      if (!('value' in priorState)) {
+        throw new QtiEvaluationException('End Attempt Interaction State Invalid.  "value" property not found.')
+      }
+      if (!('state' in priorState)) {
+        throw new QtiEvaluationException('End Attempt Interaction State Invalid.  "state" property not found.')
+      }
+      if (!('step' in priorState.state)) {
+        throw new QtiEvaluationException('End Attempt Interaction State Invalid.  "step" property not found.')
+      }
+      if (!('isBtnDisabled' in priorState.state)) {
+        throw new QtiEvaluationException('End Attempt Interaction State Invalid.  "isBtnDisabled" property not found.')
+      }
+
+      return priorState
     }
 
   },
@@ -383,6 +489,10 @@ export default {
   created () {
     try {
       this.responseDeclaration = qtiAttributeValidation.validateResponseIdentifierAttribute(store, this.responseIdentifier)
+
+      // Pull any prior interaction state.
+      this.priorState = this.getPriorState(this.responseIdentifier)
+
     } catch (err) {
       this.isQtiValid = false
       if (err.name === 'QtiValidationException') {
@@ -398,8 +508,11 @@ export default {
   mounted () {
     if (this.isQtiValid) {
       try {
-        // Ignore default value.  Always initialize this to false.
-        this.setResponse(false)
+
+        if (this.priorState === null)
+          this.initializeValue()
+        else
+          this.restoreValue(this.priorState)
 
         // Switch template based on detected subtype in the classList
         this.interactionSubType = this.getInteractionSubType(this.$el.classList)
