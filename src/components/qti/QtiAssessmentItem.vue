@@ -82,7 +82,8 @@ export default {
       /*
        * Try to parse this from xml:lang
        */
-      locale: null
+      locale: null,
+      restored: false
     }
   },
 
@@ -157,13 +158,16 @@ export default {
     handleItemBodyReady (node) {
       console.log('[QtiAssessmentItem][ItemBodyReady][Adaptive=' + this.isAdaptive + ']', node)
 
-      // Save the itemBody node in the $store
+      // Save the itemBody node in the store
       store.defineItemBody({
           node: node.itemBody
         })
 
       if (this.isAdaptive) {
-        this.resetOutcomeDeclarations()
+        if (!store.hasItemContextState() && !this.restoring) {
+          this.resetOutcomeDeclarations()
+          this.restoring = true
+        }
         this.evaluateFeedbacks()
       }
     },
