@@ -194,7 +194,11 @@ export default {
       if ('guid' in configuration) this.setItemContextGuid(configuration.guid)
       if ('pnp' in configuration) this.setItemContextPnp(configuration.pnp)
       if ('sessionControl' in configuration) this.setItemContextSessionControl(configuration.sessionControl)
-      if ('state' in configuration) this.setItemContextState(configuration.state)
+      if ('state' in configuration) {
+        this.setItemContextState(configuration.state)
+        // This sets QTI_CONTEXT - if provided - to override the built-in declaration.
+        store.restoreContextVariables()
+      }
     },
 
     /**

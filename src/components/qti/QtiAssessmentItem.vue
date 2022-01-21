@@ -82,8 +82,7 @@ export default {
       /*
        * Try to parse this from xml:lang
        */
-      locale: null,
-      restored: false
+      locale: null
     }
   },
 
@@ -163,11 +162,10 @@ export default {
           node: node.itemBody
         })
 
+      this.initializeResponseDeclarations(store.hasItemContextState())
+      this.initializeOutcomeDeclarations(store.hasItemContextState())
+
       if (this.isAdaptive) {
-        if (!store.hasItemContextState() && !this.restoring) {
-          this.resetOutcomeDeclarations()
-          this.restoring = true
-        }
         this.evaluateFeedbacks()
       }
     },
@@ -252,6 +250,15 @@ export default {
       }
     },
 
+    initializeOutcomeDeclarations (hasPriorState) {
+      if (hasPriorState)
+        // restore from State
+        store.restoreOutcomeVariables()
+      else
+        // initialize to default values
+        this.resetOutcomeDeclarations()
+    },
+
     resetOutcomeDeclarations () {
       store.getOutcomeDeclarations().forEach((od) => {
         this.resetOutcomeDeclaration(od)
@@ -270,6 +277,15 @@ export default {
           identifier: declaration.identifier,
           value: declaration.defaultValue
         })
+    },
+
+    initializeResponseDeclarations (hasPriorState) {
+      if (hasPriorState)
+        // restore from State
+        store.restoreResponseVariables()
+      else
+        // initialize to default values
+        this.resetResponseDeclarations()
     },
 
     resetResponseDeclarations () {
