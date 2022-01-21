@@ -489,7 +489,7 @@ button.qti-end-attempt-interaction:disabled {
   background-color: var(--ea-button-secondary-hover-bgc);
 }
 
-.qti-color-secondary button.qti-end-attempt-interaction:disabled {
+button.qti-end-attempt-interaction:disabled {
   color: var(--gray);
   background-color: var(--light);
   border-color: var(--light);
