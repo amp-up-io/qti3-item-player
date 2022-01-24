@@ -6,7 +6,7 @@
         <div class="modal-content">
           <header class="modal-header">
             <slot name="header"/>
-            <button type="button" class="close"  aria-label="Close"  @click="hide()">×</button>
+            <button type="button" class="close" aria-label="Close" @click="hide()">×</button>
           </header>
 
           <div class="modal-body">
@@ -181,7 +181,7 @@ button.close {
   -webkit-appearance: button;
   padding: 0;
   background-color: transparent;
-  border: 0;
+  border: 1px solid transparent;
 }
 
 .close {
@@ -194,9 +194,11 @@ button.close {
   opacity: .75;
 }
 
+.close:focus {
+  border-color: var(--foreground);
+}
+
 .modal-header .close {
-  padding: 1rem 1rem;
-  margin: -1rem -1rem -1rem auto;
   cursor: pointer;
 }
 
