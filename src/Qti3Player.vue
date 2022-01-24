@@ -399,11 +399,12 @@ export default {
   --ic-focus-fc: var(--foreground);
   --ic-focus-bc: #bde4ff;
   /* End Attempt Button colors */
+  --ea-button-default-color: var(--foreground);
+  --ea-button-default-bgc: var(--light);
   --ea-button-secondary-color: var(--background);
   --ea-button-secondary-bgc: var(--gray);
   --ea-button-secondary-bc: var(--secondary-complement);
-  --ea-button-secondary-hover-color: var(--gray-dark);
-  --ea-button-secondary-hover-bgc: var(--background);
+  --ea-button-hover-brightness: brightness(95%);
 }
 
 /* Default foreground / background colors */
@@ -439,6 +440,12 @@ export default {
   /* Inline Choice colors */
   --ic-focus-fc: var(--background);
   --ic-focus-bc: #bde4ff;
+  /* End Attempt Button colors */
+  --ea-button-default-color: var(--background);
+  --ea-button-default-bgc: var(--light);
+  --ea-button-secondary-color: var(--background);
+  --ea-button-secondary-bgc: var(--gray);
+  --ea-button-secondary-bc: var(--secondary-complement);
 }
 
 /* High Contrast */
@@ -471,6 +478,12 @@ export default {
   /* Inline Choice colors */
   --ic-focus-fc: var(--white);
   --ic-focus-bc: var(--black);
+  /* End Attempt Button colors */
+  --ea-button-default-color: var(--background);
+  --ea-button-default-bgc: var(--foreground);
+  --ea-button-secondary-color: var(--background);
+  --ea-button-secondary-bgc: var(--foreground);
+  --ea-button-secondary-bc: var(--secondary-complement);
 }
 
 /* High Contrast - reverse polarity */
@@ -503,6 +516,12 @@ export default {
   /* Inline Choice colors */
   --ic-focus-fc: var(--secondary-complement);
   --ic-focus-bc: var(--secondary);
+  /* End Attempt Button colors */
+  --ea-button-default-color: var(--background);
+  --ea-button-default-bgc: var(--foreground);
+  --ea-button-secondary-color: var(--background);
+  --ea-button-secondary-bgc: var(--foreground);
+  --ea-button-secondary-bc: var(--secondary-complement);
 }
 
 .qti3-player-color-blackrose {
@@ -534,6 +553,12 @@ export default {
   /* Inline Choice colors */
   --ic-focus-fc: var(--secondary-complement);
   --ic-focus-bc: var(--secondary);
+  /* End Attempt Button colors */
+  --ea-button-default-color: var(--background);
+  --ea-button-default-bgc: var(--foreground);
+  --ea-button-secondary-color: var(--secondary-complement);
+  --ea-button-secondary-bgc: var(--secondary);
+  --ea-button-secondary-bc: var(--secondary-complement);
 }
 
 .qti3-player-color-roseblack {
@@ -565,6 +590,12 @@ export default {
   /* Inline Choice colors */
   --ic-focus-fc: var(--secondary-complement);
   --ic-focus-bc: var(--secondary);
+  /* End Attempt Button colors */
+  --ea-button-default-color: var(--background);
+  --ea-button-default-bgc: var(--foreground);
+  --ea-button-secondary-color: var(--secondary-complement);
+  --ea-button-secondary-bgc: var(--secondary);
+  --ea-button-secondary-bc: var(--secondary-complement);
 }
 
 .qti3-player-color-mgraydgray {
@@ -596,6 +627,12 @@ export default {
   /* Inline Choice colors */
   --ic-focus-fc: var(--secondary-complement);
   --ic-focus-bc: var(--secondary);
+  /* End Attempt Button colors */
+  --ea-button-default-color: var(--background);
+  --ea-button-default-bgc: var(--foreground);
+  --ea-button-secondary-color: var(--secondary-complement);
+  --ea-button-secondary-bgc: var(--secondary);
+  --ea-button-secondary-bc: var(--secondary-complement);
 }
 
 .qti3-player-color-dgraymgray {
@@ -627,6 +664,12 @@ export default {
   /* Inline Choice colors */
   --ic-focus-fc: var(--secondary-complement);
   --ic-focus-bc: var(--secondary);
+  /* End Attempt Button colors */
+  --ea-button-default-color: var(--background);
+  --ea-button-default-bgc: var(--foreground);
+  --ea-button-secondary-color: var(--secondary-complement);
+  --ea-button-secondary-bgc: var(--secondary);
+  --ea-button-secondary-bc: var(--secondary-complement);
 }
 
 .qti3-player-color-yellowblue {
@@ -658,6 +701,12 @@ export default {
   /* Inline Choice colors */
   --ic-focus-fc: var(--secondary-complement);
   --ic-focus-bc: var(--secondary);
+  /* End Attempt Button colors */
+  --ea-button-default-color: var(--background);
+  --ea-button-default-bgc: var(--foreground);
+  --ea-button-secondary-color: var(--secondary-complement);
+  --ea-button-secondary-bgc: var(--secondary);
+  --ea-button-secondary-bc: var(--secondary-complement);
 }
 
 .qti3-player-color-blueyellow {
@@ -689,6 +738,12 @@ export default {
   /* Inline Choice colors */
   --ic-focus-fc: var(--secondary-complement);
   --ic-focus-bc: var(--secondary);
+  /* End Attempt Button colors */
+  --ea-button-default-color: var(--background);
+  --ea-button-default-bgc: var(--foreground);
+  --ea-button-secondary-color: var(--secondary-complement);
+  --ea-button-secondary-bgc: var(--secondary);
+  --ea-button-secondary-bc: var(--secondary-complement);
 }
 
 .qti3-player-container,

@@ -566,6 +566,8 @@ button.qti-end-attempt-interaction {
   padding: .47rem .75rem;
   border-radius: .25rem;
   outline: 0!important;
+  color: var(--ea-button-default-color);
+  background-color: var(--ea-button-default-bgc);
   border-color: var(--ea-button-secondary-bc);
   -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
@@ -574,14 +576,12 @@ button.qti-end-attempt-interaction {
 }
 
 button.qti-end-attempt-interaction:focus {
-  border-color: var(--choice-focus-border);
-  -webkit-box-shadow: 0 0 0 .15rem var(--choice-focus-border);
-  box-shadow: 0 0 0 .15rem var(--choice-focus-border);
+  border-color: var(--choice-ctrlh-focus-bc);
+  box-shadow: var(--choice-control-focus-shadow);
 }
 
 button.qti-end-attempt-interaction:hover {
-  color: var(--ea-button-secondary-hover-color);
-  background-color: var(--ea-button-secondary-hover-bgc);
+  filter: var(--ea-button-hover-brightness);
 }
 
 button.qti-end-attempt-interaction:not(:disabled) {
@@ -601,14 +601,12 @@ button.qti-end-attempt-interaction:disabled {
 .qti-color-secondary button.qti-end-attempt-interaction:focus {
   color: var(--ea-button-secondary-color);
   background-color: var(--ea-button-secondary-bgc);
-  border-color: var(--choice-focus-border);
-  -webkit-box-shadow: 0 0 0 .15rem var(--choice-focus-border);
-  box-shadow: 0 0 0 .15rem var(--choice-focus-border);
+  border-color: var(--choice-ctrlh-focus-bc);
+  box-shadow: var(--choice-control-focus-shadow);
 }
 
-.qti-color-secondary button.qti-end-attempt-interaction:hover {
-  color: var(--ea-button-secondary-hover-color);
-  background-color: var(--ea-button-secondary-hover-bgc);
+.qti-color-secondary button.qti-end-attempt-interaction:not(:disabled):hover {
+  filter: var(--ea-button-hover-brightness);
 }
 
 button.qti-end-attempt-interaction:disabled {
