@@ -253,8 +253,7 @@ export default {
      * @return {Object} state object
      */
     computeState () {
-      const state = {
-      }
+      const state = {}
       return state
     },
 
