@@ -28,10 +28,12 @@
 <script>
 export default {
   name: 'ModalDialog',
+
   data() {
     return {
     }
   },
+
   methods: {
 
     hide () {
@@ -45,9 +47,8 @@ export default {
       document.querySelector('body').classList.add('modal-open')
     }
   }
-};
+}
 </script>
-
 
 <style scoped>
 /*
