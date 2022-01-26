@@ -10,8 +10,8 @@ import { store } from '@/store/store'
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
 import QtiChoiceInteraction from '@/components/qti/interactions/QtiChoiceInteraction'
 import QtiInlineChoiceInteraction from '@/components/qti/interactions/QtiInlineChoiceInteraction'
-/*
 import QtiTextEntryInteraction from '@/components/qti/interactions/QtiTextEntryInteraction'
+/*
 import QtiCustomInteraction from '@/components/qti/interactions/QtiCustomInteraction'
 */
 import QtiEndAttemptInteraction from '@/components/qti/interactions/QtiEndAttemptInteraction'
@@ -33,8 +33,8 @@ const qtiAttributeValidation = new QtiAttributeValidation()
 
 Vue.component('qti-choice-interaction', QtiChoiceInteraction)
 Vue.component('qti-inline-choice-interaction', QtiInlineChoiceInteraction)
-/*
 Vue.component('qti-text-entry-interaction', QtiTextEntryInteraction)
+/*
 Vue.component('qti-custom-interaction', QtiCustomInteraction)
 */
 Vue.component('qti-end-attempt-interaction', QtiEndAttemptInteraction)
