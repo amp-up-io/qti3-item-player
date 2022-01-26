@@ -155,9 +155,8 @@ export default {
     if (this.isQtiValid) {
       try {
 
-        // Notify $store of our new component
-        store.dispatch(
-          'definePrintedVariable', {
+        // Notify store of our new component
+        store.definePrintedVariable({
             node: this
           })
 
