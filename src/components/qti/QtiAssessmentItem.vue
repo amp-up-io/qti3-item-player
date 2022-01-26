@@ -377,10 +377,15 @@ export default {
             }
 
             if (this.isAdaptive) {
-              // In an adaptive item we don't want to enable any qti-end-attempt-interaction's
+              // In an adaptive item we want to disable any qti-end-attempt-interaction's
               // once completionStatus is 'completed'.
-              if (this.isAdaptiveItemCompleted()) return
-              // This is adaptive and we still are not complete.  Re-enable the interaction.
+              if (this.isAdaptiveItemCompleted()) {
+                interaction.disable()
+                return
+              }
+
+              // adaptive=true and completionStatus is not 'completed'.
+              // Re-enable the qti-end-attempt-interaction.
               interaction.enable()
             }
           }
