@@ -17,7 +17,7 @@
             </div>
           </div>
           <div class="col-auto">
-            <button v-if="hasTemplates" id="btnTryAnother" @click.prevent="handleMxlTryAnother" type="button" class="btn btn-secondary btn-rounded">{{ $t('interactions.endAttempt.tryanother') }}</button>
+            <button v-if="hasTemplates" id="btnTryAnother" @click.prevent="handleMxlTryAnother" type="button" class="btn btn-secondary btn-rounded">Try Another</button>
             <button ref="checkanswer" id="btnCheckAnswer" @click.prevent="handleMxlCheckAnswer" type="button" class="btn btn-primary btn-rounded">{{ title }}</button>
           </div>
         </div>
