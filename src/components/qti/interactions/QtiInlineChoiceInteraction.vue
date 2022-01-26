@@ -819,7 +819,7 @@ div.inline-choice-wrapper {
   text-align: left;
   overflow: hidden;
   white-space: nowrap;
-  margin: 0 0.15em;
+  margin: 0 0.15rem;
   min-height: calc(1.6rem + .35rem);
   padding: 0 1.5rem 0 .3rem;
   font-size: 1rem;
