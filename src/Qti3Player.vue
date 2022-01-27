@@ -605,6 +605,9 @@ export default {
   --secondary-complement: var(--black);
   --hr-border: 1px solid var(--secondary);
   --table-border-color: var(--foreground);
+  --well-bg: #585858;
+  --well-border: 1px solid #e3e3e3;
+  --well-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
   /* Overall choice focus border */
   --choice-focus-border: var(--foreground);
   /* Default inner background color of the control */
@@ -642,6 +645,9 @@ export default {
   --secondary-complement: var(--black);
   --hr-border: 1px solid var(--secondary);
   --table-border-color: var(--foreground);
+  --well-bg: #ccc;
+  --well-border: 1px solid #e3e3e3;
+  --well-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
   /* Overall choice focus border */
   --choice-focus-border: var(--foreground);
   /* Default inner background color of the control */
@@ -679,6 +685,9 @@ export default {
   --secondary-complement: var(--black);
   --hr-border: 1px solid var(--secondary);
   --table-border-color: var(--foreground);
+  --well-bg: #00008C;
+  --well-border: 1px solid rgba(0, 0, 128, 1);
+  --well-box-shadow: inset 0 1px 1px rgba(0, 0, 128, 1);
   /* Overall choice focus border */
   --choice-focus-border: var(--foreground);
   /* Default inner background color of the control */
@@ -716,6 +725,9 @@ export default {
   --secondary-complement: var(--black);
   --hr-border: 1px solid var(--secondary);
   --table-border-color: var(--foreground);
+  --well-bg: #ffbb00;  /* #ffbb00; */
+  --well-border: 1px solid rgba(255, 175, 0, 1);
+  --well-box-shadow: inset 0 1px 1px rgba(255, 175, 0, 1);
   /* Overall choice focus border */
   --choice-focus-border: var(--foreground);
   /* Default inner background color of the control */
