@@ -596,6 +596,10 @@ export default {
   display: table-row;
 }
 
+.qti-display-inherit {
+  display: inherit;
+}
+
 .qti-hidden {
   display: none;
 }
