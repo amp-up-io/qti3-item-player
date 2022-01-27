@@ -1,7 +1,7 @@
 <template>
   <div
     ref="player"
-    v-bind:class="[cssContainerClass, cssColorClass]">
+    v-bind:class="[cssContainerClass, cssContainerPaddingClass, cssColorClass]">
     <component
       ref="item"
       @itemReady="handleItemReady"
@@ -31,6 +31,11 @@ export default {
       required: false,
       default: 'qti3-player-container-fluid'
     },
+    containerPaddingClass: {
+      type: String,
+      required: false,
+      default: 'qti3-player-container-padding-0'
+    },
     colorClass: {
       type: String,
       required: false,
@@ -54,6 +59,7 @@ export default {
       itemXml: '', // QTI XML string injected into the qti-assessment-item component
       xmlFilters: null,
       cssContainerClass: this.containerClass,
+      cssContainerPaddingClass: this.containerPaddingClass,
       cssColorClass: this.colorClass
     }
   },
@@ -776,7 +782,7 @@ export default {
 .qti3-player-container,
 .qti3-player-container-fluid {
   margin: 0;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 400;
   line-height: 1.6;
   font-family: "Roboto", sans-serif;
@@ -789,6 +795,7 @@ export default {
    screen resolution above 1024 pixels (iPad in landscape) and below 1200 pixels */
 .qti3-player-container {
   width: 940px;
+  padding: 0;
   margin-right: auto;
   margin-left: auto;
   *zoom:1;
@@ -796,10 +803,39 @@ export default {
 
 .qti3-player-container-fluid {
   width: 100%;
-  padding-right: 12px;
-  padding-left: 12px;
+  padding: 0;
   margin-right: auto;
   margin-left: auto;
+}
+
+.qti3-player-container.qti3-player-container-padding-0,
+.qti3-player-container-fluid.qti3-player-container-padding-0 {
+  padding: 0;
+}
+
+.qti3-player-container.qti3-player-container-padding-1,
+.qti3-player-container-fluid.qti3-player-container-padding-1 {
+  padding: 0.25rem;
+}
+
+.qti3-player-container.qti3-player-container-padding-2,
+.qti3-player-container-fluid.qti3-player-container-padding-2  {
+  padding: 0.5rem;
+}
+
+.qti3-player-container.qti3-player-container-padding-3,
+.qti3-player-container-fluid.qti3-player-container-padding-3 {
+  padding: 1rem;
+}
+
+.qti3-player-container.qti3-player-container-padding-4,
+.qti3-player-container-fluid.qti3-player-container-padding-4 {
+  padding: 1.5rem;
+}
+
+.qti3-player-container.qti3-player-container-padding-5,
+.qti3-player-container-fluid.qti3-player-container-padding-5  {
+  padding: 3rem;
 }
 
 .qti3-player-container:before,
