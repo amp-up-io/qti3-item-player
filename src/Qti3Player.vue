@@ -606,7 +606,7 @@ export default {
   --hr-border: 1px solid var(--secondary);
   --table-border-color: var(--foreground);
   --well-bg: #585858;
-  --well-border: 1px solid #e3e3e3;
+  --well-border: 1px solid #444;
   --well-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
   /* Overall choice focus border */
   --choice-focus-border: var(--foreground);
