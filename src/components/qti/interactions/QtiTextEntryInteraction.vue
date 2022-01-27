@@ -427,7 +427,7 @@ export default {
 
 <style>
 input[type="text"] {
-  margin: 0 0.15rem;
+  margin: 0;
   vertical-align:inherit;
   padding: 0 .3rem;
   font-size: 1rem;
@@ -533,7 +533,6 @@ input[type="text"]::placeholder {
 }
 
 .qti-input-width-72 .text-entry-input {
-  margin: 0;
   width: 100%;
 }
 </style>
