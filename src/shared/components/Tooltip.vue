@@ -1,5 +1,5 @@
 <template>
-  <div ref="template" aria-hidden="true" style="display: none;">
+  <div ref="template" style="display: none;">
     <span :class="tooltipStyle">{{message}}</span>
   </div>
 </template>
