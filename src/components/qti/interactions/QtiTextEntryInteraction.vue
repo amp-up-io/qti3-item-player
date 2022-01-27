@@ -533,6 +533,7 @@ input[type="text"]::placeholder {
 }
 
 .qti-input-width-72 .text-entry-input {
+  margin: 0;
   width: 100%;
 }
 </style>
