@@ -545,13 +545,21 @@ export default {
 
 <style>
 
-/* ================
+/* ========================================
    QTI 3 shared css
-   ================*/
+   1. Display
+   2. Special Flex styles
+   3. Margin
+   4. Padding
+   5. Width
+   6. Height
+   7. Layout
+   8. QtiAssessmentItem component utilities
+   ======================================== */
 
-/* =================
-  Display overrides
-  ================= */
+/* ==========
+  Display css
+  =========== */
 .qti-display-inline {
   display: inline;
 }
@@ -612,6 +620,25 @@ export default {
   width: 1px;
   border: 0;
   margin: -1px;
+}
+
+/* =============================
+   Special flex styles
+   ============================= */
+.qti-flex-direction-column {
+  flex-direction: column;
+}
+
+.qti-flex-direction-row {
+  flex-direction: row;
+}
+
+.qti-flex-grow-1 {
+  flex-grow: 1;
+}
+
+.qti-flex-grow-0 {
+  flex-grow: 0;
 }
 
 /* =========
@@ -977,7 +1004,9 @@ export default {
   padding-right: 3rem !important;
 }
 
-/* QTI 3 Horizontal alignment */
+/* ====================
+   Horizontal alignment
+   ==================== */
 .qti-align-left {
   text-align: left;
 }
@@ -990,7 +1019,9 @@ export default {
   text-align: right;
 }
 
-/* QTI 3 Vertical alignment */
+/* ==================
+   Vertical alignment
+   ================== */
 .qti-valign-top {
   vertical-align: top;
 }
@@ -1007,11 +1038,9 @@ export default {
   vertical-align: bottom;
 }
 
-/* QTI 3 utility classes */
-.qti-fullwidth {
-  width: 100%;
-}
-
+/* =====================
+   Other QTI 3 Utilities
+   ===================== */
 .qti-bordered {
   border: 1px solid var(--table-border-color);
   padding: 2px;
@@ -1035,154 +1064,128 @@ export default {
   border-radius:4px;box-shadow: var(--well-box-shadow);
 }
 
-/* ===========================================
-   QtiAssessmentItem component utility classes
-   not part of QTI 3 Best Practices
-   =========================================== */
+/* =============
+   Height styles
+   ============= */
+.qti-height-0 { height: 0px; }
+.qti-height-px { height: 1px; }
+.qti-height-0.5 { height: 0.125rem; }
+.qti-height-1 { height: 0.25rem; }
+.qti-height-1.5 { height: 0.375rem; }
+.qti-height-2 { height: 0.5rem; }
+.qti-height-2.5 { height: 0.625rem; }
+.qti-height-3 { height: 0.75rem; }
+.qti-height-3.5 { height: 0.875rem; }
+.qti-height-4 { height: 1rem; }
+.qti-height-5 { height: 1.25rem; }
+.qti-height-6 { height: 1.5rem; }
+.qti-height-7 { height: 1.75rem; }
+.qti-height-8 { height: 2rem; }
+.qti-height-9 { height: 2.25rem; }
+.qti-height-10 { height: 2.5rem; }
+.qti-height-11 {height: 2.75rem; }
+.qti-height-12 { height: 3rem; }
+.qti-height-14 { height: 3.5rem; }
+.qti-height-16 { height: 4rem; }
+.qti-height-20 { height: 5rem; }
+.qti-height-24 { height: 6rem; }
+.qti-height-28 { height: 7rem; }
+.qti-height-32 { height: 8rem; }
+.qti-height-36 { height: 9rem; }
+.qti-height-40 { height: 10rem; }
+.qti-height-44 {height: 11rem; }
+.qti-height-48 { height: 12rem; }
+.qti-height-52 { height: 13rem; }
+.qti-height-56 { height: 14rem; }
+.qti-height-60 { height: 15rem; }
+.qti-height-64 { height: 16rem; }
+.qti-height-72 { height: 18rem; }
+.qti-height-80 { height: 20rem; }
+.qti-height-96 { height: 24rem; }
+.qti-height-auto { height: auto; }
+.qti-height-full { height: 100%; }
+.qti-height-1-2 { height: 50%; }
+.qti-height-1-3 { height: 33.333333%; }
+.qti-height-2-3 { height: 66.666667%; }
+.qti-height-1-4 { height: 25%; }
+.qti-height-2-4 { height: 50%; }
+.qti-height-3-4 { height: 75%; }
+.qti-height-1-5 { height: 20%; }
+.qti-height-2-5 { height: 40%; }
+.qti-height-3-5 { height: 60%; }
+.qti-height-4-5 { height: 80%; }
+.qti-height-1-6 { height: 16.666667%; }
+.qti-height-2-6 { height: 33.333333%; }
+.qti-height-3-6 { height: 50%; }
+.qti-height-4-6 { height: 66.666667%; }
+.qti-height-5-6 { height: 83.333333%; }
 
-/* Overrides to improve appearance of visual header tags */
-h2 {
-  font-size: 1.3rem;
-}
-
-h3 {
-  font-size: 1.2rem;
-}
-
-h4 {
-  font-size: 1.1rem;
-}
-
-h5 {
-  font-size: 1rem;
-}
-
-h2, h3, h4, h5, h6 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-}
-
-p {
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
-article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
-  display: block;
-}
-
-ol, ul, dl {
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
-
-ol ol, ul ul, ol ul, ul ol {
-  margin-bottom: 0;
-}
-
-dt {
-  font-weight: 500;
-}
-
-dd {
-  margin-bottom: .5rem;
-  margin-left: 0;
-}
-
-blockquote {
-   margin: 0 0 1rem;
-}
-
-b, strong {
-  font-weight: bolder;
-}
-
-small {
-  font-size: 80%;
-}
-
-sub, sup {
-  position: relative;
-  font-size: 75%;
-  line-height: 0;
-  vertical-align: baseline;
-}
-
-sub {
-  bottom: -.25em;
-}
-
-sup {
-  top: -.5em;
-}
-
-figure {
-  margin: 0 0 1rem;
-}
-
-img {
-  vertical-align: middle;
-  border-style: none;
-}
-
-svg {
-  overflow: hidden;
-  vertical-align: middle;
-}
-
-hr {
-  -webkit-box-sizing: content-box;
-  box-sizing: content-box;
-  height: 0;
-  overflow: visible;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  border: 0;
-  border-top: var(--hr-border);
-}
-
-/* Table classes */
-.table {
-  width: 100%;
-  margin-bottom: 4px;
-  color: var(--foreground);
-  background-color: transparent;
-}
-
-.table th {
-  font-weight: 400;
-}
-
-.table  th,
-.table  td {
-  padding: 4px;
-  vertical-align: top;
-  border-top: 1px solid;
-  border-color: inherit;
-}
-
-.table-bordered {
-    border: 1px solid var(--table-border-color);
-}
-
-.table-bordered thead th {
-    border-bottom: 1px solid var(--table-border-color);
-}
-
-.table-bordered tbody:first-child tr:first-child th,
-.table-bordered tbody:first-child tr:first-child td {
-  border-top: 0;
-}
-
-.table-bordered tbody tr th,
-.table-bordered tbody tr td {
-  border-bottom: 0;
-}
-
-.table-bordered th,
-.table-bordered td {
-  border-left: 1px solid;
-  border-color: inherit;
-}
+/* ============
+   Width styles
+   ============ */
+.qti-width-0	{ width: 0px; }
+.qti-width-px { width: 1px; }
+.qti-width-0.5 { width: 0.125rem; }
+.qti-width-1	{ width: 0.25rem; }
+.qti-width-1.5 { width: 0.375rem; }
+.qti-width-2	{ width: 0.5rem; }
+.qti-width-2.5 { width: 0.625rem; }
+.qti-width-3	{ width: 0.75rem; }
+.qti-width-3.5 { width: 0.875rem; }
+.qti-width-4	{ width: 1rem; }
+.qti-width-5	{ width: 1.25rem; }
+.qti-width-6	{width: 1.5rem; }
+.qti-width-7	{ width: 1.75rem; }
+.qti-width-8	{ width: 2rem; }
+.qti-width-9	{ width: 2.25rem; }
+.qti-width-10 { width: 2.5rem; }
+.qti-width-11 { width: 2.75rem; }
+.qti-width-12 { width: 3rem; }
+.qti-width-14 { width: 3.5rem; }
+.qti-width-16 { width: 4rem; }
+.qti-width-20 { width: 5rem; }
+.qti-width-24 { width: 6rem; }
+.qti-width-28 { width: 7rem; }
+.qti-width-32 { width: 8rem; }
+.qti-width-36 { width: 9rem; }
+.qti-width-40 { width: 10rem; }
+.qti-width-44 { width: 11rem; }
+.qti-width-48 { width: 12rem; }
+.qti-width-52 { width: 13rem; }
+.qti-width-56 { width: 14rem; }
+.qti-width-60 { width: 15rem; }
+.qti-width-64 { width: 16rem; }
+.qti-width-72 { width: 18rem; }
+.qti-width-80 { width: 20rem; }
+.qti-width-96 { width: 24rem; }
+.qti-width-auto { width: auto; }
+.qti-width-1-2 { width: 50%; }
+.qti-width-1-3 { width: 33.333333%; }
+.qti-width-2-3 { width: 66.666667%; }
+.qti-width-1-4 { width: 25%; }
+.qti-width-2-4 { width: 50%; }
+.qti-width-3-4 { width: 75%; }
+.qti-width-1-5 { width: 20%; }
+.qti-width-2-5 { width: 40%; }
+.qti-width-3-5 { width: 60%; }
+.qti-width-4-5 { width: 80%; }
+.qti-width-1-6 { width: 16.666667%; }
+.qti-width-2-6 { width: 33.333333%; }
+.qti-width-3-6 { width: 50%; }
+.qti-width-4-6 { width: 66.666667%; }
+.qti-width-5-6 { width: 83.333333%; }
+.qti-width-1-12 { width: 8.333333%; }
+.qti-width-2-12 { width: 16.666667%; }
+.qti-width-3-12 { width: 25%; }
+.qti-width-4-12 { width: 33.333333%; }
+.qti-width-5-12 { width: 41.666667%; }
+.qti-width-6-12 { width: 50%; }
+.qti-width-7-12 { width: 58.333333%; }
+.qti-width-8-12 { width: 66.666667%; }
+.qti-width-9-12 { width: 75%; }
+.qti-width-10-12	{ width: 83.333333%; }
+.qti-width-11-12 { width: 91.666667%; }
+.qti-width-full, .qti-fullwidth { width: 100%; }
 
 /* ========================================================================================
    ======================= Begin Layout Row and Column Definitions ========================
@@ -1244,7 +1247,6 @@ hr {
 /* =============================
    Base FLUID qti-layout-row css
    ============================= */
-
 .qti3-player-container-fluid .qti-layout-row {
   margin-left: 0
 }
@@ -1267,7 +1269,6 @@ hr {
 /* =============================
    Base FLUID qti-layout-col css
    ============================= */
-
 .qti3-player-container-fluid .qti-layout-row [class*="qti-layout-col"] {
   display: block;
   width: 100%;
@@ -1471,8 +1472,7 @@ hr {
     margin-left:0;
   }
 
-  [class*="qti-layout-col"],
-  .amp-item-container-fluid .qti-layout-row [class*="qti-layout-col"] {
+  [class*="qti-layout-col"] {
     float: none;
     display: block;
     width: 100%;
@@ -2002,5 +2002,154 @@ hr {
     margin-left: 8.547008547008547%;
     *margin-left: 8.440625568285142%;
   }
+}
+
+/* ===========================================
+   QtiAssessmentItem component utility classes
+   not part of QTI 3 Best Practices
+   =========================================== */
+
+/* Overrides to improve appearance of visual header tags */
+h2 {
+  font-size: 1.3rem;
+}
+
+h3 {
+  font-size: 1.2rem;
+}
+
+h4 {
+  font-size: 1.1rem;
+}
+
+h5 {
+  font-size: 1rem;
+}
+
+h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
+  display: block;
+}
+
+ol, ul, dl {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+ol ol, ul ul, ol ul, ul ol {
+  margin-bottom: 0;
+}
+
+dt {
+  font-weight: 500;
+}
+
+dd {
+  margin-bottom: .5rem;
+  margin-left: 0;
+}
+
+blockquote {
+   margin: 0 0 1rem;
+}
+
+b, strong {
+  font-weight: bolder;
+}
+
+small {
+  font-size: 80%;
+}
+
+sub, sup {
+  position: relative;
+  font-size: 75%;
+  line-height: 0;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -.25em;
+}
+
+sup {
+  top: -.5em;
+}
+
+figure {
+  margin: 0 0 1rem;
+}
+
+img {
+  vertical-align: middle;
+  border-style: none;
+}
+
+svg {
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+hr {
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+  overflow: visible;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-top: var(--hr-border);
+}
+
+/* Table classes */
+.table {
+  width: 100%;
+  margin-bottom: 4px;
+  color: var(--foreground);
+  background-color: transparent;
+}
+
+.table th {
+  font-weight: 400;
+}
+
+.table  th,
+.table  td {
+  padding: 4px;
+  vertical-align: top;
+  border-top: 1px solid;
+  border-color: inherit;
+}
+
+.table-bordered {
+    border: 1px solid var(--table-border-color);
+}
+
+.table-bordered thead th {
+    border-bottom: 1px solid var(--table-border-color);
+}
+
+.table-bordered tbody:first-child tr:first-child th,
+.table-bordered tbody:first-child tr:first-child td {
+  border-top: 0;
+}
+
+.table-bordered tbody tr th,
+.table-bordered tbody tr td {
+  border-bottom: 0;
+}
+
+.table-bordered th,
+.table-bordered td {
+  border-left: 1px solid;
+  border-color: inherit;
 }
 </style>
