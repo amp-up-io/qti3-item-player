@@ -2162,10 +2162,12 @@ hr {
 }
 
 .qti3-player-item-card-body {
-  flex: 1 1 auto;
+  flex-grow: 1 1 auto;
   overflow: auto;
-  /* VERY IMPORTANT that this is height and not min-height */
-  height: 28em;
+  /* VERY IMPORTANT.  Setting height will result in the card body
+     being scrollable.  Setting min-height avoids this.
+  */
+  min-height: 28em;
   width: 100%;
 }
 
