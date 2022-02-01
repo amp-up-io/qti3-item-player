@@ -879,7 +879,7 @@ export default {
 
 /* Typical desktop or chromebook */
 @media (min-width:1200px) {
-  .qti3-player-container { max-width: 1170px; }
+  .qti3-player-container { width: 1170px; }
 }
 
 /* Sweet Alert should use same font-family as player */
