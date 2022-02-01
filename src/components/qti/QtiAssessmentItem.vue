@@ -1043,7 +1043,6 @@ export default {
    ===================== */
 .qti-bordered {
   border: 1px solid var(--table-border-color);
-  padding: 2px;
 }
 
 .qti-underline {
