@@ -2152,4 +2152,37 @@ hr {
   border-left: 1px solid;
   border-color: inherit;
 }
+
+.qti3-player-item-card {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  border: 1px solid var(--item-card-panel-bc);
+}
+
+.qti3-player-item-card-body {
+  flex: 1 1 auto;
+  overflow: auto;
+  /* VERY IMPORTANT that this is height and not min-height */
+  height: 28em;
+  width: 100%;
+}
+
+.qti3-player-item-card-header {
+  display: -webkit-flex;
+  display: flex;
+  margin-bottom: 0;
+  background-color: var(--item-card-panel-bgc);
+  border-bottom: 1px solid var(--item-card-panel-bc);
+}
+
+.qti3-player-item-card-footer {
+  display: -webkit-flex;
+  display: flex;
+  margin-top: 0;
+  background-color: var(--item-card-panel-bgc);
+  border-top: 1px solid var(--item-card-panel-bc);
+}
 </style>

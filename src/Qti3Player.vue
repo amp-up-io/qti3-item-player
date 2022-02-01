@@ -382,6 +382,9 @@ export default {
   --well-bg: #f5f5f5;
   --well-border: 1px solid #e3e3e3;
   --well-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  /* Item Card */
+  --item-card-panel-bgc: rgba(0,0,0,.05);
+  --item-card-panel-bc: rgba(0,0,0,.3);
   /* Overall choice focus border */
   --choice-focus-border: #86b7fe;
   /* Default inner background color of the control */
@@ -427,6 +430,9 @@ export default {
   --well-bg: #444;
   --well-border: 1px solid #222;
   --well-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5);
+  /* Item Card */
+  --item-card-panel-bgc: rgba(255, 255, 255, .05);
+  --item-card-panel-bc: rgba(255, 255, 255, .3);
   /* Overall choice focus border */
   --choice-focus-border: var(--white);
   /* Default inner background color of the control */
@@ -509,6 +515,9 @@ export default {
   --well-bg: var(--darker);
   --well-border: 1px solid #111;
   --well-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5);
+  /* Item Card */
+  --item-card-panel-bgc: rgba(255, 255, 255, .25);
+  --item-card-panel-bc: rgba(255, 255, 255, .25);
   /* Overall choice focus border */
   --choice-focus-border: var(--white);
   /* Default inner background color of the control */
@@ -589,6 +598,9 @@ export default {
   --well-bg: #333;
   --well-border: 1px solid #222;
   --well-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5);
+  /* Item Card */
+  --item-card-panel-bgc: rgba(255, 255, 255, .25);
+  --item-card-panel-bc: rgba(255, 255, 255, .25);
   /* Overall choice focus border */
   --choice-focus-border: var(--rose);
   /* Default inner background color of the control */
@@ -709,6 +721,9 @@ export default {
   --well-bg: #00008C;
   --well-border: 1px solid rgba(0, 0, 128, 1);
   --well-box-shadow: inset 0 1px 1px rgba(0, 0, 128, 1);
+  /* Item Card */
+  --item-card-panel-bgc: rgba(0,0,0,.1);
+  --item-card-panel-bc: rgba(0,0,0,.4);
   /* Overall choice focus border */
   --choice-focus-border: var(--foreground);
   /* Default inner background color of the control */
