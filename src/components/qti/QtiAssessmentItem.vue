@@ -2159,7 +2159,6 @@ hr {
   flex-direction: column;
   height: 100%;
   width: 100%;
-  border: 1px solid var(--item-card-panel-bc);
 }
 
 .qti3-player-item-card-body {
