@@ -299,7 +299,7 @@ export default {
 [role="radiogroup"] {
   display: block;
   padding: 0;
-  margin: 8px 0;
+  margin: .5rem 0;
   list-style: none;
   width: 100%;
 }
@@ -313,7 +313,8 @@ export default {
 [role="radiogroup"] > li {
   display: inline-block;
   width: 100%;
-  margin: 0 0 4px;
+  margin: 0 0 .25rem;
+  overflow-wrap: break-word;
 }
 
 /*
@@ -363,8 +364,8 @@ export default {
 
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-4 > li {
   display:inline-block;
-  width: 24.0%;
-  margin-right: 1rem;
+  width: 24.4%;
+  margin-right: 0.25%;
   vertical-align: top;
 }
 
@@ -383,7 +384,6 @@ export default {
   width: 19.4%;
   margin-right: 0.25%;
   vertical-align: top;
-  overflow-wrap: break-word;
 }
 
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-5 > li:nth-child(5n) {
@@ -394,6 +394,11 @@ export default {
    Overrides for narrower than iPad in portrait
    ============================================ */
 @media (max-width:767px) {
+
+  .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-4 > li {
+    width: 23.3%;
+    margin-right: 0.1%;
+  }
 
   .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-5 > li {
     width: 18.4%;
@@ -407,8 +412,12 @@ export default {
    ==================================================== */
 @media (min-width:768px) and (max-width:979px) {
 
+  .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-4 > li {
+    width: 23.5%;
+    margin-right: 0.1%;
+  }
+
   .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-5 > li {
-    /*width: 19.1489361702127645%;*/
     width: 19.4%;
     margin-right: 0.1%;
   }
