@@ -240,7 +240,7 @@ export default {
 [role="checkbox"] {
   display: inline-block;
   position: relative;
-  padding: 4px 4px 4px 32px;
+  padding: 0.25rem 0.25rem 0.25rem 1.8rem;
   outline: none;
   border: 1px dashed transparent;
   /* IMPORTANT: Must have following in order to work
@@ -254,16 +254,16 @@ export default {
 [role="radio"]::before,
 [role="radio"]::after {
   position: absolute;
-  top: 1.05em;
-  left: .75em;
+  top: 1.05rem;
+  left: .70rem;
   transform: translate(-50%, -50%);
   content: '';
 }
 
 [role="checkbox"]:not(.control-hidden)::before,
 [role="radio"]:not(.control-hidden)::before {
-  width: 1em;
-  height: 1em;
+  width: 1rem;
+  height: 1rem;
   margin-top: 0;
   vertical-align: top;
   /* Default inner color of the control */
@@ -280,12 +280,24 @@ export default {
   color-adjust: exact;
 }
 
+/* ============================================
+   Overrides for narrower than iPad in portrait
+   ============================================ */
+@media (max-width:767px) {
+
+  [role="radio"],
+  [role="checkbox"] {
+    padding: 0.25rem 0.25rem 0.25rem 1.5rem;
+  }
+
+}
+
 [role="radio"]:not(.control-hidden)::before {
   border-radius: 50%;
 }
 
 [role="checkbox"]:not(.control-hidden)::before {
-  border-radius: 0.25em;
+  border-radius: 0.25rem;
 }
 
 [role="checkbox"]:not(.control-hidden):active::before,
@@ -297,7 +309,7 @@ export default {
 [role="checkbox"]:not(.control-hidden):focus,
 [role="radio"]:not(.control-hidden):focus {
   border: 1px solid transparent;
-  border-radius: 0.15em;
+  border-radius: 0.15rem;
   border-color: var(--choice-focus-border);
 }
 
@@ -370,9 +382,9 @@ export default {
   color: var(--choice-ctrlh-color);
   background-color: var(--choice-ctrlh-bgc);
   border: 1px solid var(--choice-ctrlh-color);
-  border-radius: .25em;
-  margin-bottom: .5em;
-  padding-left: .2em;
+  border-radius: .25rem;
+  margin-bottom: .5rem;
+  padding-left: .2rem;
 }
 
 [role="radio"][aria-checked="true"].control-hidden,
@@ -427,23 +439,22 @@ export default {
 .qti-choice-label {
   display: inline-block;
   vertical-align: top;
-  width: 1.25em;
+  width: 1.25rem;
 }
 
 .qti-choice-label.qti-hidden {
-    display: none;
-    width: 0px;
+  display: none;
+  width: 0px;
 }
 
 .qti-choice-description {
   display: inline-block;
   vertical-align: top;
-  padding-left: 2px;
   width: 80%;
 }
 
 .control-hidden .qti-choice-label,
 .control-hidden .qti-choice-description {
-  padding-left: 0.25em;
+  padding-left: 0.25rem;
 }
 </style>

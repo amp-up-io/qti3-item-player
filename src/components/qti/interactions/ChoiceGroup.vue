@@ -330,7 +330,7 @@ export default {
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-2 > li {
   display:inline-block;
   width: 48%;
-  margin-rigth: 1rem;
+  margin-right: 1rem;
   vertical-align: top;
 }
 
@@ -347,7 +347,7 @@ export default {
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-3 > li {
   display:inline-block;
   width: 31.5%;
-  margin-rigth: 1rem;
+  margin-right: 1rem;
   vertical-align: top;
 }
 
@@ -364,7 +364,7 @@ export default {
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-4 > li {
   display:inline-block;
   width: 24.0%;
-  margin-rigth: 1rem;
+  margin-right: 1rem;
   vertical-align: top;
 }
 
@@ -380,12 +380,38 @@ export default {
 
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-5 > li {
   display:inline-block;
-  width: 18.0%;
-  margin-right: 1rem;
+  width: 19.4%;
+  margin-right: 0.25%;
   vertical-align: top;
+  overflow-wrap: break-word;
 }
 
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-5 > li:nth-child(5n) {
   margin-right: 0;
+}
+
+/* ============================================
+   Overrides for narrower than iPad in portrait
+   ============================================ */
+@media (max-width:767px) {
+
+  .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-5 > li {
+    width: 18.4%;
+    margin-right: 0.1%;
+  }
+
+}
+
+/* ====================================================
+   Overrides for between iPad in portrait and landscape
+   ==================================================== */
+@media (min-width:768px) and (max-width:979px) {
+
+  .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-5 > li {
+    /*width: 19.1489361702127645%;*/
+    width: 19.4%;
+    margin-right: 0.1%;
+  }
+
 }
 </style>
