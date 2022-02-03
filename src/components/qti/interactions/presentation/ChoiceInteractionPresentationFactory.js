@@ -33,6 +33,9 @@ class ChoicePresentationFactory {
       // Hide the input control (radio or checkbox)
       QTI_INPUT_CONTROL_HIDDEN: 'qti-input-control-hidden',
 
+      // Sbac
+      SBAC_PRESENTATION: 'sbac',
+
       // Stacking options
       QTI_CHOICES_STACKING_1: 'qti-choices-stacking-1',
       QTI_CHOICES_STACKING_2: 'qti-choices-stacking-2',
@@ -52,6 +55,7 @@ class ChoicePresentationFactory {
     this.presentation_HideLabels = false
     this.presentation_Labels = this.constants.LABELS_UPPER_ALPHA
     this.presentation_LabelsSuffix = this.constants.LABELS_SUFFIX_PERIOD
+    this.presentation_Sbac = false
     this.presentation_IsInputControlHidden = false
     this.presentation_IsOrientationVertical = false
     this.presentation_IsOrientationHorizontal =  false
@@ -149,6 +153,10 @@ class ChoicePresentationFactory {
             this.presentation_IsInputControlHidden = true
             break
 
+          case this.constants.SBAC_PRESENTATION:
+            this.presentation_Sbac = true
+            break
+
           default:
             break
         } // end switch
@@ -217,6 +225,8 @@ class ChoicePresentationFactory {
       // Update Labels
       if (this.presentation_HideLabels) {
         this.choices[index].hideLabel()
+      } else if (this.presentation_Sbac) {
+        this.choices[index].setLabelSbac(this.presentation_Labels[index])
       } else {
         this.choices[index].setLabel(this.presentation_Labels[index] + this.presentation_LabelsSuffix)
       }

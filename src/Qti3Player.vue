@@ -396,6 +396,12 @@ export default {
   --choice-control-focus-border: #86b7fe;
   --choice-control-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
   --choice-control-hover-bc: #86b7fe;
+  /* Sbac colors */
+  --choice-sbac-checked-color: var(--background);
+  --choice-sbac-unchecked-color: var(--foreground);
+  --choice-sbac-control-checked-bc: #0d6efd;
+  --choice-sbac-control-checked-bg: #0d6efd;
+  --choice-sbac-control-unchecked-bg: var(--white);
   /* Control Hidden colors */
   --choice-ctrlh-color: #2871bd;
   --choice-ctrlh-bgc: var(--light);
@@ -436,14 +442,20 @@ export default {
   /* Overall choice focus border */
   --choice-focus-border: var(--white);
   /* Default inner background color of the control */
-  --choice-control-bgc: var(--white);
+  --choice-control-bgc: var(--darker);
   /* The pale gray border around the control */
   --choice-control-border: 1px solid var(--white);
-  --choice-control-checked-bc: var(--white);
-  --choice-control-checked-bg: var(--white);
+  --choice-control-checked-bc: #0d6efd;
+  --choice-control-checked-bg: #0d6efd;
   --choice-control-focus-border: var(--white);
   --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
   --choice-control-hover-bc: var(--white);
+  /* Sbac colors */
+  --choice-sbac-checked-color: var(--foreground);
+  --choice-sbac-unchecked-color: var(--background);
+  --choice-sbac-control-checked-bc: #0d6efd;
+  --choice-sbac-control-checked-bg: #0d6efd;
+  --choice-sbac-control-unchecked-bg: var(--darker);
   /* Control Hidden colors */
   --choice-ctrlh-color: #2871bd;
   --choice-ctrlh-bgc: var(--light);
@@ -481,10 +493,17 @@ export default {
   /* The pale gray border around the control */
   --choice-control-border: 1px solid rgba(0, 0, 0, 1.0);
   --choice-control-checked-bc: var(--black);
-  --choice-control-checked-bg: var(--white);
+  --choice-control-checked-bg: var(--black);
   --choice-control-focus-border: var(--black);
   --choice-control-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
   --choice-control-hover-bc: rgba(0, 0, 0, 0.5);
+  /* Sbac colors */
+  --choice-sbac-checked-color: var(--white);
+  --choice-sbac-unchecked-color: var(--foreground);
+  --choice-sbac-control-checked-bc: var(--black);
+  --choice-sbac-control-checked-bg: var(--black);
+  --choice-sbac-control-unchecked-bc: var(--black);
+  --choice-sbac-control-unchecked-bg: var(--white);
   /* Control Hidden colors */
   --choice-ctrlh-color: var(--black);
   --choice-ctrlh-bgc: var(--white);
@@ -521,7 +540,7 @@ export default {
   /* Overall choice focus border */
   --choice-focus-border: var(--white);
   /* Default inner background color of the control */
-  --choice-control-bgc: var(--white);
+  --choice-control-bgc: var(--black);
   /* The pale gray border around the control */
   --choice-control-border: 1px solid var(--white);
   --choice-control-checked-bc: var(--white);
@@ -529,6 +548,13 @@ export default {
   --choice-control-focus-border: var(--white);
   --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
   --choice-control-hover-bc: var(--white);
+  /* Sbac colors */
+  --choice-sbac-checked-color: var(--black);
+  --choice-sbac-unchecked-color: var(--white);
+  --choice-sbac-control-checked-bc: var(--white);
+  --choice-sbac-control-checked-bg: var(--white);
+  --choice-sbac-control-unchecked-bc: var(--white);
+  --choice-sbac-control-unchecked-bg: var(--black);
   /* Control Hidden colors */
   --choice-ctrlh-color: var(--white);
   --choice-ctrlh-bgc: var(--black);
@@ -565,10 +591,17 @@ export default {
   /* The pale gray border around the control */
   --choice-control-border: 1px solid rgba(0, 0, 0, 1.0);
   --choice-control-checked-bc: var(--black);
-  --choice-control-checked-bg: var(--rose);
+  --choice-control-checked-bg: var(--black);
   --choice-control-focus-border: var(--black);
   --choice-control-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
   --choice-control-hover-bc: rgba(0, 0, 0, 0.5);
+  /* Sbac colors */
+  --choice-sbac-checked-color: var(--rose);
+  --choice-sbac-unchecked-color: var(--black);
+  --choice-sbac-control-checked-bc: var(--black);
+  --choice-sbac-control-checked-bg: var(--black);
+  --choice-sbac-control-unchecked-bc: var(--black);
+  --choice-sbac-control-unchecked-bg: var(--rose);
   /* Control Hidden colors */
   --choice-ctrlh-color: var(--black);
   --choice-ctrlh-bgc: var(--rose);
@@ -604,7 +637,14 @@ export default {
   /* Overall choice focus border */
   --choice-focus-border: var(--rose);
   /* Default inner background color of the control */
-  --choice-control-bgc: var(--rose);
+  --choice-control-bgc: var(--black);
+  /* Sbac colors */
+  --choice-sbac-checked-color: var(--black);
+  --choice-sbac-unchecked-color: var(--rose);
+  --choice-sbac-control-checked-bc: var(--rose);
+  --choice-sbac-control-checked-bg: var(--rose);
+  --choice-sbac-control-unchecked-bc: var(--rose);
+  --choice-sbac-control-unchecked-bg: var(--black);
   /* The pale gray border around the control */
   --choice-control-border: 1px solid var(--rose);
   --choice-control-checked-bc: var(--rose);
@@ -644,7 +684,7 @@ export default {
   /* Overall choice focus border */
   --choice-focus-border: var(--foreground);
   /* Default inner background color of the control */
-  --choice-control-bgc: var(--foreground);
+  --choice-control-bgc: var(--background);
   /* The pale gray border around the control */
   --choice-control-border: 1px solid var(--foreground);
   --choice-control-checked-bc: var(--foreground);
@@ -652,6 +692,13 @@ export default {
   --choice-control-focus-border: var(--foreground);
   --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
   --choice-control-hover-bc: var(--foreground);
+  /* Sbac colors */
+  --choice-sbac-checked-color: var(--background);
+  --choice-sbac-unchecked-color: var(--foreground);
+  --choice-sbac-control-checked-bc: var(--foreground);
+  --choice-sbac-control-checked-bg: var(--foreground);
+  --choice-sbac-control-unchecked-bc: var(--foreground);
+  --choice-sbac-control-unchecked-bg: var(--background);
   /* Control Hidden colors */
   --choice-ctrlh-color: var(--foreground);
   --choice-ctrlh-bgc: var(--background);
@@ -684,7 +731,7 @@ export default {
   /* Overall choice focus border */
   --choice-focus-border: var(--foreground);
   /* Default inner background color of the control */
-  --choice-control-bgc: var(--foreground);
+  --choice-control-bgc: var(--background);
   /* The pale gray border around the control */
   --choice-control-border: 1px solid var(--foreground);
   --choice-control-checked-bc: var(--foreground);
@@ -692,6 +739,13 @@ export default {
   --choice-control-focus-border: var(--foreground);
   --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
   --choice-control-hover-bc: var(--foreground);
+  /* Sbac colors */
+  --choice-sbac-checked-color: var(--background);
+  --choice-sbac-unchecked-color: var(--foreground);
+  --choice-sbac-control-checked-bc: var(--foreground);
+  --choice-sbac-control-checked-bg: var(--foreground);
+  --choice-sbac-control-unchecked-bc: var(--foreground);
+  --choice-sbac-control-unchecked-bg: var(--background);
   /* Control Hidden colors */
   --choice-ctrlh-color: var(--foreground);
   --choice-ctrlh-bgc: var(--background);
@@ -727,7 +781,7 @@ export default {
   /* Overall choice focus border */
   --choice-focus-border: var(--foreground);
   /* Default inner background color of the control */
-  --choice-control-bgc: var(--foreground);
+  --choice-control-bgc: var(--background);
   /* The pale gray border around the control */
   --choice-control-border: 1px solid var(--foreground);
   --choice-control-checked-bc: var(--foreground);
@@ -735,6 +789,13 @@ export default {
   --choice-control-focus-border: var(--foreground);
   --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
   --choice-control-hover-bc: var(--foreground);
+  /* Sbac colors */
+  --choice-sbac-checked-color: var(--background);
+  --choice-sbac-unchecked-color: var(--foreground);
+  --choice-sbac-control-checked-bc: var(--foreground);
+  --choice-sbac-control-checked-bg: var(--foreground);
+  --choice-sbac-control-unchecked-bc: var(--foreground);
+  --choice-sbac-control-unchecked-bg: var(--background);
   /* Control Hidden colors */
   --choice-ctrlh-color: var(--foreground);
   --choice-ctrlh-bgc: var(--background);
@@ -767,7 +828,7 @@ export default {
   /* Overall choice focus border */
   --choice-focus-border: var(--foreground);
   /* Default inner background color of the control */
-  --choice-control-bgc: var(--foreground);
+  --choice-control-bgc: var(--background);
   /* The pale gray border around the control */
   --choice-control-border: 1px solid var(--foreground);
   --choice-control-checked-bc: var(--foreground);
@@ -775,6 +836,13 @@ export default {
   --choice-control-focus-border: var(--foreground);
   --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
   --choice-control-hover-bc: var(--foreground);
+  /* Sbac colors */
+  --choice-sbac-checked-color: var(--background);
+  --choice-sbac-unchecked-color: var(--foreground);
+  --choice-sbac-control-checked-bc: var(--foreground);
+  --choice-sbac-control-checked-bg: var(--foreground);
+  --choice-sbac-control-unchecked-bc: var(--foreground);
+  --choice-sbac-control-unchecked-bg: var(--background);
   /* Control Hidden colors */
   --choice-ctrlh-color: var(--foreground);
   --choice-ctrlh-bgc: var(--background);
