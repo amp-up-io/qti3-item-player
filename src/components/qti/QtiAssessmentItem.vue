@@ -2049,8 +2049,7 @@ hr {
 }
 
 .qti3-player-item-card-footer {
-  display: -webkit-flex;
-  display: flex;
+  display: grid;
   margin-top: 0;
   background-color: var(--item-card-panel-bgc);
   border-top: 1px solid var(--item-card-panel-bc);
