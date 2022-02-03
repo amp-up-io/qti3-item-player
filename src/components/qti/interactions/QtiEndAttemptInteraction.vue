@@ -3,23 +3,20 @@
     <template v-if="interactionSubType === 'mxlcontroller'">
       <div
         ref="mxlcontroller"
-        class="mxl-controller"
+        class="tdx-controller"
         v-bind="$attrs">
-        <div class="row">
-          <div class="col">
-            <div id="msgPanel">
-              <div v-bind:class="progressClass">
-                <div id="msgNotes">{{ progressMessage }}</div>
-                <div class="progress">
-                  <div class="progress-bar" :style="{ width: progressActiveWidth + '%' }" role="progressbar" :aria-valuenow="progressActiveWidth" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-              </div>
+        <div id="msgPanel" class="tdx-controller-progress">
+          <div v-bind:class="progressClass">
+            <div id="msgNotes">{{ progressMessage }}</div>
+            <div class="progress">
+              <div class="progress-bar" :style="{ width: progressActiveWidth + '%' }" role="progressbar" :aria-valuenow="progressActiveWidth" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
           </div>
-          <div class="col-auto">
-            <button v-if="hasTemplates" id="btnTryAnother" @click.prevent="handleMxlTryAnother" type="button" class="btn btn-secondary btn-rounded">Try Another</button>
-            <button ref="checkanswer" id="btnCheckAnswer" @click.prevent="handleMxlCheckAnswer" type="button" class="btn btn-primary btn-rounded">{{ title }}</button>
-          </div>
+        </div>
+        <div class="filler"></div>
+        <div class="tdx-controller-buttons">
+          <button v-if="hasTemplates" id="btnTryAnother" @click.prevent="handleMxlTryAnother" type="button" class="tdx-btn tdx-btn-secondary ">Try Another</button>
+          <button ref="checkanswer" id="btnCheckAnswer" @click.prevent="handleMxlCheckAnswer" type="button" class="tdx-btn tdx-btn-primary ">{{ title }}</button>
         </div>
       </div>
     </template>
@@ -616,28 +613,32 @@ button.qti-end-attempt-interaction:disabled {
   filter: brightness(90%);
 }
 
-.mxl-controller {
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  height: 60px;
-  width: 100%;
-	padding: 10px 10px 5px;
-  border-radius: 0 0 2px 2px;
-  border-top: 1px solid #eee;
-  background-color: #eff2f7;
-  border-top: 1px solid rgba(0,0,0,.125);
+.tdx-controller {
+  display: flex;
+  justify-content: space-between;
 }
 
-.mxl-controller #btnCheckAnswer,
-.mxl-controller #btnTryAnother {
-  margin-left:5px;
+.tdx-controller-progress {
 }
 
-.mxl-controller #msgPanel {
+.tdx-controller-buttons {
+}
+
+.tdx-controller-filler {
+  flex-grow: 1;
+}
+
+
+.tdx-controller #btnCheckAnswer,
+.tdx-controller #btnTryAnother {
+  margin-left: .25rem;
+}
+
+.tdx-controller #msgPanel {
 	width: 160px;
   float: left;
-  margin-left: 32px;
+  margin-left: 2rem;
+  text-align: center;
 }
 
 .progress {
@@ -648,16 +649,58 @@ button.qti-end-attempt-interaction:disabled {
 }
 
 .progress-bar {
-  border-radiums: .25rem;
+  border-radius: .25rem;
 }
 
-.mxl-progress-panel {
+.tdx-progress-panel {
   margin-top: -2px;
   line-height: 28px;
   font-weight: normal;
   text-align: center;
 }
-.mxl-progress-panel.progress-hidden {
+
+.tdx-progress-panel.progress-hidden {
   display: none;
+}
+
+.tdx-btn {
+  display: inline-block;
+  font-weight: 400;
+  color: #505d69;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: .47rem .75rem;
+  font-size: .875rem;
+  line-height: 1.5;
+  border-radius: 30px;
+  -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+}
+
+.tdx-btn-secondary {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.tdx-btn-primary {
+  color: #fff;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.tdx-btn-primary.disabled,
+.tdx-btn-primary:disabled {
+  color: #fff;
+  background-color: #3d8ef8;
+  border-color: #3d8ef8;
 }
 </style>
