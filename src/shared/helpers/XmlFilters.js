@@ -9,7 +9,7 @@ export class XmlFilters {
    * @description Remove CDATA from the XML.
    */
   filterCdata (xml) {
-    return xml.replace('<![CDATA[', '').replace(']]>', '')
+    return xml.replaceAll('<![CDATA[', '').replaceAll(']]>', '')
   }
 
   /**
@@ -17,7 +17,7 @@ export class XmlFilters {
    * that can be digested more easily by the qti-assessment-item component.
    */
   filterStyle (xml) {
-    return xml.replace('<style>','<amp-style>').replace('</style>','</amp-style>')
+    return xml.replaceAll('<style>','<amp-style>').replaceAll('</style>','</amp-style>')
   }
 
   /**
@@ -25,7 +25,7 @@ export class XmlFilters {
    * the custom amp-up.io audio player instead of the the default html5 audio player.
    */
   filterAudio (xml) {
-    return xml.replace('<audio ','<amp-audio ').replace('</audio>','</amp-audio>')
+    return xml.replaceAll('<audio ','<amp-audio ').replaceAll('</audio>','</amp-audio>')
   }
 
 }
