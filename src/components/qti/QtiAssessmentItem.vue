@@ -1068,13 +1068,13 @@ export default {
    ============= */
 .qti-height-0 { height: 0px; }
 .qti-height-px { height: 1px; }
-.qti-height-0.5 { height: 0.125rem; }
+.qti-height-0p5 { height: 0.125rem; }
 .qti-height-1 { height: 0.25rem; }
-.qti-height-1.5 { height: 0.375rem; }
+.qti-height-1p5 { height: 0.375rem; }
 .qti-height-2 { height: 0.5rem; }
-.qti-height-2.5 { height: 0.625rem; }
+.qti-height-2p5 { height: 0.625rem; }
 .qti-height-3 { height: 0.75rem; }
-.qti-height-3.5 { height: 0.875rem; }
+.qti-height-3p5 { height: 0.875rem; }
 .qti-height-4 { height: 1rem; }
 .qti-height-5 { height: 1.25rem; }
 .qti-height-6 { height: 1.5rem; }
@@ -1101,8 +1101,6 @@ export default {
 .qti-height-72 { height: 18rem; }
 .qti-height-80 { height: 20rem; }
 .qti-height-96 { height: 24rem; }
-.qti-height-auto { height: auto; }
-.qti-height-full { height: 100%; }
 .qti-height-1-2 { height: 50%; }
 .qti-height-1-3 { height: 33.333333%; }
 .qti-height-2-3 { height: 66.666667%; }
@@ -1118,19 +1116,21 @@ export default {
 .qti-height-3-6 { height: 50%; }
 .qti-height-4-6 { height: 66.666667%; }
 .qti-height-5-6 { height: 83.333333%; }
+.qti-height-auto { height: auto; }
+.qti-height-full { height: 100%; }
 
 /* ============
    Width styles
    ============ */
 .qti-width-0	{ width: 0px; }
 .qti-width-px { width: 1px; }
-.qti-width-0.5 { width: 0.125rem; }
+.qti-width-0p5 { width: 0.125rem; }
 .qti-width-1	{ width: 0.25rem; }
-.qti-width-1.5 { width: 0.375rem; }
+.qti-width-1p5 { width: 0.375rem; }
 .qti-width-2	{ width: 0.5rem; }
-.qti-width-2.5 { width: 0.625rem; }
+.qti-width-2p5 { width: 0.625rem; }
 .qti-width-3	{ width: 0.75rem; }
-.qti-width-3.5 { width: 0.875rem; }
+.qti-width-3p5 { width: 0.875rem; }
 .qti-width-4	{ width: 1rem; }
 .qti-width-5	{ width: 1.25rem; }
 .qti-width-6	{width: 1.5rem; }
@@ -2055,8 +2055,21 @@ hr {
   border-top: 1px solid var(--item-card-panel-bc);
 }
 
+.qti3-player-item-card-bordered {
+  border: 1px solid var(--item-card-panel-bc);
+}
+
+.qti3-player-item-card-bordered-rounded {
+  border-radius: 4px;
+  border: 1px solid var(--item-card-panel-bc);
+}
+
 .qti3-player-item-card-raised {
-  border-radius: 2px;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12),0 1px 5px 0 rgba(0,0,0,.2);
+}
+
+.qti3-player-item-card-raised-rounded {
+  border-radius: 4px;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12),0 1px 5px 0 rgba(0,0,0,.2);
 }
 </style>
