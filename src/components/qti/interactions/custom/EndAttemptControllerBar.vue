@@ -197,13 +197,18 @@ export default {
     updateControllerState () {
       console.log('updateControllerState, controllerType:', this.dataControllerType)
       switch (this.dataControllerType) {
-/*
         case 'showexample':
         case 'solve':
+          // Requires one extra step vs. generic
           this.incrementStep()
-          this.finalizeCheckAnswerState()
+          if (this.getStep() < this.progressMaximumSteps) {
+            this.response = false
+            this.enable()
+          } else {
+            this.response = true
+            this.disable()
+          }
           break
-          */
         case 'generic':
         default:
           if (this.getStep() < this.progressMaximumSteps) {
@@ -213,7 +218,6 @@ export default {
           } else {
             this.response = true
             this.disable()
-            console.log('controller bar disabling button!')
           }
       }
     }
