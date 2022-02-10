@@ -304,19 +304,15 @@ export default {
      * set to true.
      */
     handleEndAttempt (data) {
-      console.log('got end attempt, data:', data)
       // 1) Set response to true
       this.setResponse(data.response)
-      // 2) Disable the button
-      this.disableButton()
-      // 3) Set state
+      // 2) Set state
       this.updateState()
-      // 4) Notify store - invoke response processing
+      // 3) Notify store - invoke response processing
       this.notifyEndAttempt()
     },
 
     handleUpdateState () {
-      console.log('got update state')
       this.updateState()
     },
 
@@ -364,7 +360,7 @@ export default {
           identifier: this.responseIdentifier,
           step: this.getStep(),
           maximumSteps: (typeof this.dataSteps !== 'undefined') ? (this.dataSteps*1) : 1,
-          interactionSubType: this.interactionSubType
+          interactionSubType: this.getInteractionSubType()
         })
     },
 
