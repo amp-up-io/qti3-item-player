@@ -1,35 +1,12 @@
 <template>
   <div ref="root">
-    <template v-if="interactionSubType === 'mxlcontroller'">
-      <div
-        ref="mxlcontroller"
-        class="tdx-controller"
-        v-bind="$attrs">
-        <div id="msgPanel" class="tdx-controller-progress">
-          <div v-bind:class="progressClass">
-            <div id="msgNotes">{{ progressMessage }}</div>
-            <div class="progress">
-              <div class="progress-bar" :style="{ width: progressActiveWidth + '%' }" role="progressbar" :aria-valuenow="progressActiveWidth" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-          </div>
-        </div>
-        <div class="filler"></div>
-        <div class="tdx-controller-buttons">
-          <button v-if="hasTemplates" id="btnTryAnother" @click.prevent="handleMxlTryAnother" type="button" class="tdx-btn tdx-btn-secondary ">Try Another</button>
-          <button ref="checkanswer" id="btnCheckAnswer" @click.prevent="handleMxlCheckAnswer" type="button" class="tdx-btn tdx-btn-primary ">{{ title }}</button>
-        </div>
-      </div>
-    </template>
-    <template v-else>
-      <button
-        ref="endattempt"
-        class="qti-end-attempt-interaction"
-        @click.prevent="handleEndAttempt"
-        type="button"
-        v-bind="$attrs">
-        {{ title }}
-      </button>
-    </template>
+    <component
+      ref="endattempt"
+      :is="interactionTemplate"
+      v-on:endAttempt="handleEndAttempt"
+      v-on:updateState="handleUpdateState"
+      v-on:endAttemptReady="handleEndAttemptReady"
+      v-bind="$attrs" />
   </div>
 </template>
 
@@ -50,6 +27,7 @@ import QtiValidationException from '@/components/qti/exceptions/QtiValidationExc
 import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
 import QtiParseException from '@/components/qti/exceptions/QtiParseException'
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
+import { getEndAttemptInteractionSubType, endAttemptInteractionAdapter } from './adapters/endattempt-interaction-adapter'
 
 const qtiAttributeValidation = new QtiAttributeValidation()
 
@@ -72,7 +50,8 @@ export default {
       type: String
     },
     /*
-     * Extension point for specifying the max number of steps for an item.
+     * Extension point for specifying the max number of steps for an
+     * endattempt-controller-bar.
      * String that evaluates to a positive integer (1..n)
      */
     dataSteps: {
@@ -80,15 +59,15 @@ export default {
       type: String
     },
     /*
-     * Extension point for specifying that this end attempt interaction should display
-     * a Try Another button: { "true" | "false" }
+     * Extension point for specifying that an endattempt-controller-bar
+     * should display a New Question button: { "true" | "false" }
      */
     dataHastemplates: {
       required: false,
       type: String
     },
     /*
-     * Extension point for specifying subtypes of mxl-controller-bar:
+     * Extension point for specifying subtypes of an endattempt-controller-bar:
      * { "generic" | "solve" | "showexample" }
      */
     dataControllerType: {
@@ -97,7 +76,7 @@ export default {
     },
     /*
      * Extension point for specifying whether or not to display
-     * the mxl-progress-panel: { "true" | "false" }
+     * the endattempt-controller-bar progress panel: { "true" | "false" }
      */
     dataHideprogress: {
       required: false,
@@ -111,52 +90,34 @@ export default {
     return {
       response: false,
       state: null,
-      baseType: null,
-      cardinality: null,
+      cardinality: 'single',
       responseDeclaration: null,
+      /*
+       * May be one of '' | 'endattempt-controller-bar'
+       */
       interactionSubType: '',
-      step: 1,  // For adaptive items, this permits us to display completion percentage
       isBtnDisabled: false,
       isValidResponse: true,
       invalidResponseMessage: '',
       isQtiValid: true,
-      // If we are restoring, this is where we save the prior variable state
+      /*
+       * Reference to the sub-component
+       */
+      node: null,
+      /*
+       * When restoring, this is where we save the prior variable state.
+       */
       priorState: null
     }
   },
 
   computed: {
 
-    progressMaximumSteps () {
-      return (typeof this.dataSteps === 'undefined') ? 1 : (this.dataSteps*1)
-    },
-
-    progressActiveWidth () {
-      let max = this.progressMaximumSteps
-      max = this.step > max ? this.step : max
-      return Math.floor(100 * (this.step / max))
-    },
-
-    progressMessage () {
-      if (this.step === this.progressMaximumSteps) {
-        return 'All Parts Showing'
-      }
-      return 'Step ' + this.step + ' of ' + this.progressMaximumSteps
-    },
-
-    hasTemplates () {
-      return (typeof this.dataHastemplates !== 'undefined') ? this.dataHastemplates === 'true' : false
-    },
-
-    controllerType () {
-      return (typeof this.dataControllerType !== 'undefined') ? this.dataControllerType : 'generic'
-    },
-
-    progressClass () {
-      return {
-        'mxl-progress-panel': true,
-        'progress-hidden': (typeof this.dataHideprogress !== 'undefined') ? this.dataHideprogress === 'true' : false
-      }
+    /**
+     * @description Compute a template/component according to the interactionSubType.
+     */
+    interactionTemplate () {
+      return endAttemptInteractionAdapter(this.interactionSubType, this.createComponentProperties())
     }
 
   },
@@ -165,7 +126,7 @@ export default {
 
     /**
      * @description Get this interaction's response.
-     * @return {String or Array} response - depending on cardinality
+     * @return {Boolean} response
      */
     getResponse () {
       return this.response
@@ -173,8 +134,7 @@ export default {
 
     /**
      * @description Set this interaction's response
-     * @param {String or Array} response - (string or array depending on cardinality)
-     *                                     containing selected choice identifier(s).
+     * @param {Boolean} response
      */
     setResponse (response) {
       this.response = response
@@ -194,6 +154,13 @@ export default {
      */
     setState (state) {
       this.state = state
+    },
+
+    /**
+     * @description Utility method to compute and update state.
+     */
+    updateState () {
+      this.setState(this.computeState())
     },
 
     /**
@@ -228,20 +195,30 @@ export default {
       return this.cardinality
     },
 
+    getStep () {
+      if (this.interactionSubType === 'endattempt-controller-bar') {
+        return this.node.getStep()
+      }
+      return 1
+    },
+
+    setStep (step) {
+      if (this.interactionSubType === 'endattempt-controller-bar') {
+        this.node.setStep(step)
+      }
+    },
+
     initializeValue () {
-      this.setResponse(false)
       this.enableButton()
       this.setStep(1)
-      this.setState(this.computeState())
+      this.updateState()
+      this.setResponse(false)
       this.setIsValid(true)
     },
 
     resetValue () {
       console.log('[ResetValue][identifier]', this.responseIdentifier)
-      this.setResponse(false)
-      this.enableButton()
-      this.setState(this.computeState())
-      this.setIsValid(true)
+      this.initializeValue()
     },
 
     /**
@@ -259,13 +236,12 @@ export default {
      * }
      */
     restoreValue (state) {
-      this.setStep(state.state.step)
-
       if (state.state.isBtnDisabled)
         this.disableButton()
       else
         this.enableButton()
 
+      this.setStep(state.state.step)
       this.setState(this.computeState())
       this.setResponse(this.computeResponse(state.value))
       this.setIsValid(true)
@@ -289,36 +265,37 @@ export default {
     computeState () {
       const state = {
         step: this.getStep(),
-        isBtnDisabled: this.getIsBtnDisabled()
+        isBtnDisabled: this.getIsBtnDisabled(),
+        interactionSubType: this.getInteractionSubType()
       }
       return state
     },
 
     disable () {
       this.disableButton()
-      this.setState(this.computeState())
+      this.updateState()
     },
 
     enable () {
       this.enableButton()
       this.setResponse(false)
-      this.setState(this.computeState())
-    },
-
-    getStep () {
-      return this.step
-    },
-
-    setStep (step) {
-      this.step = step
+      this.updateState()
     },
 
     getIsBtnDisabled () {
-      return this.isBtnDisabled
+      return this.node.getIsBtnDisabled()
     },
 
     setIsBtnDisabled (isBtnDisabled) {
-      this.isBtnDisabled = isBtnDisabled
+      this.node.setIsBtnDisabled(isBtnDisabled)
+    },
+
+    setInteractionSubType (interactionSubType) {
+      this.interactionSubType = interactionSubType
+    },
+
+    getInteractionSubType () {
+      return this.interactionSubType
     },
 
     /**
@@ -326,126 +303,69 @@ export default {
      * endAttemptInteraction then the associated response variable is
      * set to true.
      */
-    handleEndAttempt () {
-      // 1) Disable the button if this is a plain qti-end-attempt-interaction
-      this.toggleEndAttemptDisabled()
-      // 2) Set response to true
-      this.setResponse(true)
+    handleEndAttempt (data) {
+      console.log('got end attempt, data:', data)
+      // 1) Set response to true
+      this.setResponse(data.response)
+      // 2) Disable the button
+      this.disableButton()
       // 3) Set state
-      this.setState(this.computeState())
-      // 4) Notify store - should invoke response processing
+      this.updateState()
+      // 4) Notify store - invoke response processing
       this.notifyEndAttempt()
     },
 
+    handleUpdateState () {
+      console.log('got update state')
+      this.updateState()
+    },
+
     enableButton () {
-      switch (this.interactionSubType) {
-        case 'mxlcontroller':
-          this.toggleButtonDisabled(this.$refs.mxlcontroller, false)
-          break
-        default:
-          this.toggleButtonDisabled(this.$refs.endattempt, false)
-      }
+      this.node.enable()
+
     },
 
     disableButton () {
-      switch (this.interactionSubType) {
-        case 'mxlcontroller':
-          this.toggleButtonDisabled (this.$refs.checkanswer, true)
-          break
-        default:
-          this.toggleButtonDisabled(this.$refs.endattempt, true)
-      }
-    },
-
-    toggleEndAttemptDisabled () {
-      if (this.interactionSubType === '') this.toggleButtonDisabled(this.$refs.endattempt, true)
+      this.node.disable()
     },
 
     /**
-     * @description Utility method to increment the
-     * current step state (saved in the 'step' data property)
+     * @description attempt to parse the interaction component
+     * from the staticClass property of this $vnode.
+     * Throws an exception if none found.
+     * @param staticClass property of the $vnode.data object
      */
-    incrementStep () {
-      this.setStep(this.getStep() + 1)
+    detectInteractionSubType (staticClass) {
+      return getEndAttemptInteractionSubType(staticClass)
     },
 
-    toggleButtonDisabled (buttonRef, disable) {
-      if (disable)
-        buttonRef.setAttribute('disabled', '')
-      else
-        buttonRef.removeAttribute('disabled')
-
-      this.setIsBtnDisabled(disable)
-    },
-
-    updateCheckAnswerState () {
-      switch (this.controllerType) {
-        case 'generic':
-          if (!this.finalizeCheckAnswerState()) this.incrementStep()
-          break
-        case 'showexample':
-        case 'solve':
-          this.incrementStep()
-          this.finalizeCheckAnswerState()
-          break
-        default:
+    createComponentProperties () {
+      // Create default properties
+      let properties = {
+        responseIdentifier: this.responseIdentifier,
+        title: this.title
       }
+
+      // Add additional props used in an endattempt-controller-bar
+      properties.dataSteps        = (typeof this.dataSteps !== 'undefined') ? this.dataSteps : '1'
+      properties.dataHastemplates = (typeof this.dataHastemplates !== 'undefined') ? this.dataHastemplates === 'true' : false
+      properties.dataHideprogress = (typeof this.dataHideprogress !== 'undefined') ? this.dataHideprogress === 'true' : false
+      properties.dataControllerType = (typeof this.dataControllerType !== 'undefined') ? this.dataControllerType : 'generic'
+
+      return properties
     },
 
-    finalizeCheckAnswerState () {
-      // Step < Max means we are not final.
-      if (this.step < this.progressMaximumSteps)  return false
-
-      // Step >= MaxSteps and we are final.
-      // Setting response to 'true' communicates that the item is complete.
-      this.setResponse(true)
-      // Disable the checkanswer button
-      this.toggleButtonDisabled(this.$refs.checkanswer, true)
-      return true
-    },
-
-    resetCheckAnswerState () {
-      this.setStep(1)
-      this.toggleButtonDisabled(this.$refs.checkanswer, false)
-    },
-
-    /**
-     * @description Handles computation of this interaction's subtype.
-     * @param {Nodelist} classList - this component's classList
-     * @return {String} interaction sub type
-     */
-    getInteractionSubType (classList) {
-      // Detect a supported custom interaction type
-      if (classList.contains('mxl-controller-bar')) return 'mxlcontroller'
-
-      return ''
+    handleEndAttemptReady (node) {
+      this.node = node.node
     },
 
     notifyEndAttempt () {
       store.NotifyEndAttempt({
           identifier: this.responseIdentifier,
-          step: this.step,
-          maximumSteps: this.progressMaximumSteps,
+          step: this.getStep(),
+          maximumSteps: (typeof this.dataSteps !== 'undefined') ? (this.dataSteps*1) : 1,
           interactionSubType: this.interactionSubType
         })
-    },
-
-    handleNewTemplate () {
-      store.NotifyNewTemplate({
-          identifier: this.responseIdentifier,
-          step: this.step,
-          maximumSteps: this.progressMaximumSteps
-        })
-    },
-
-    handleMxlTryAnother () {
-      this.resetCheckAnswerState()
-      this.handleNewTemplate()
-    },
-
-    handleMxlCheckAnswer () {
-      this.updateCheckAnswerState()
-      this.notifyEndAttempt()
     },
 
     /**
@@ -490,6 +410,7 @@ export default {
   created () {
     try {
       this.responseDeclaration = qtiAttributeValidation.validateResponseIdentifierAttribute(store, this.responseIdentifier)
+      this.setInteractionSubType(this.detectInteractionSubType(this.$vnode.data.staticClass))
 
       // Pull any prior interaction state.
       this.priorState = this.getPriorState(this.responseIdentifier)
@@ -515,9 +436,6 @@ export default {
         else
           this.restoreValue(this.priorState)
 
-        // Switch template based on detected subtype in the classList
-        this.interactionSubType = this.getInteractionSubType(this.$el.classList)
-
         // Notify store of our new component
         store.defineInteraction({
             identifier: this.responseIdentifier,
@@ -542,165 +460,5 @@ export default {
 }
 </script>
 
-<style scoped>
-
-button.qti-end-attempt-interaction {
-  display: inline-block;
-  margin: 0;
-  font-family: inherit;
-  font-size: .875rem;
-  line-height: inherit;
-  font-weight: 400;
-  text-transform: none;
-  -webkit-appearance: button;
-  text-align: center;
-  vertical-align: middle;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  border: 1px solid transparent;
-  padding: .47rem .75rem;
-  border-radius: .25rem;
-  outline: 0!important;
-  color: var(--ea-button-default-color);
-  background-color: var(--ea-button-default-bgc);
-  border-color: var(--ea-button-secondary-bc);
-  -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-}
-
-button.qti-end-attempt-interaction:focus {
-  border-color: var(--choice-ctrlh-focus-bc);
-  box-shadow: var(--choice-control-focus-shadow);
-}
-
-button.qti-end-attempt-interaction:hover {
-  filter: var(--ea-button-hover-brightness);
-}
-
-button.qti-end-attempt-interaction:not(:disabled) {
-  cursor: pointer;
-}
-
-button.qti-end-attempt-interaction:disabled {
-  pointer-events: none;
-}
-
-.qti-color-secondary button.qti-end-attempt-interaction {
-  color: var(--ea-button-secondary-color);
-  background-color: var(--ea-button-secondary-bgc);
-  border-color: var(--ea-button-secondary-bc);
-}
-
-.qti-color-secondary button.qti-end-attempt-interaction:focus {
-  color: var(--ea-button-secondary-color);
-  background-color: var(--ea-button-secondary-bgc);
-  border-color: var(--choice-ctrlh-focus-bc);
-  box-shadow: var(--choice-control-focus-shadow);
-}
-
-.qti-color-secondary button.qti-end-attempt-interaction:not(:disabled):hover {
-  filter: var(--ea-button-hover-brightness);
-}
-
-button.qti-end-attempt-interaction:disabled {
-  color: var(--gray);
-  background-color: var(--light);
-  border-color: var(--light);
-  filter: brightness(90%);
-}
-
-.tdx-controller {
-  display: flex;
-  justify-content: space-between;
-}
-
-.tdx-controller-progress {
-}
-
-.tdx-controller-buttons {
-}
-
-.tdx-controller-filler {
-  flex-grow: 1;
-}
-
-
-.tdx-controller #btnCheckAnswer,
-.tdx-controller #btnTryAnother {
-  margin-left: .25rem;
-}
-
-.tdx-controller #msgPanel {
-	width: 160px;
-  float: left;
-  margin-left: 2rem;
-  text-align: center;
-}
-
-.progress {
-  width: 160px;
-  height: 10px;
-  background-color: #bbb;
-  border-radius: .25rem;
-}
-
-.progress-bar {
-  border-radius: .25rem;
-}
-
-.tdx-progress-panel {
-  margin-top: -2px;
-  line-height: 28px;
-  font-weight: normal;
-  text-align: center;
-}
-
-.tdx-progress-panel.progress-hidden {
-  display: none;
-}
-
-.tdx-btn {
-  display: inline-block;
-  font-weight: 400;
-  color: #505d69;
-  text-align: center;
-  vertical-align: middle;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  background-color: transparent;
-  border: 1px solid transparent;
-  padding: .47rem .75rem;
-  font-size: .875rem;
-  line-height: 1.5;
-  border-radius: 30px;
-  -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-}
-
-.tdx-btn-secondary {
-  color: #fff;
-  background-color: #6c757d;
-  border-color: #6c757d;
-}
-
-.tdx-btn-primary {
-  color: #fff;
-  background-color: #0d6efd;
-  border-color: #0d6efd;
-}
-
-.tdx-btn-primary.disabled,
-.tdx-btn-primary:disabled {
-  color: #fff;
-  background-color: #3d8ef8;
-  border-color: #3d8ef8;
-}
+<style>
 </style>

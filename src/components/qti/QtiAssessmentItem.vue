@@ -363,15 +363,15 @@ export default {
       if (typeof stateObject === 'undefined') return
 
       // This was invoked by an endAttempt interaction - such as a Show Hint.  If this is
-      // not a mxlcontroller endAttempt interaction, disable the mxlcontroller if one exists
-      // in the item body.
+      // not a endattempt-controller-bar endAttempt interaction, disable the
+      // endattempt-controller-bar if any exist in the item body.
       // By default, ALL end attempt interaction's are disabled when clicked.
-      if (stateObject.interactionSubType !== 'mxlcontroller') {
-        // Was not a mxlcontroller end attempt.
+      if (stateObject.interactionSubType !== 'endattempt-controller-bar') {
+        // Was not a controller bar end attempt.
         store.getInteractions().forEach((interaction) => {
           if (interaction.interactionType === 'EndAttemptInteraction') {
 
-            if (interaction.interactionSubType === 'mxlcontroller') {
+            if (interaction.interactionSubType === 'endattempt-controller-bar') {
               interaction.disable()
               return
             }
