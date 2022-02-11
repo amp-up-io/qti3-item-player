@@ -2040,6 +2040,16 @@ hr {
   width: 100%;
 }
 
+.qti3-player-item-card-body-scrollable {
+  flex-grow: 1 1 auto;
+  overflow: auto;
+  /* VERY IMPORTANT.  Setting height will result in the card body
+     being scrollable.  Setting min-height avoids this.
+  */
+  height: 28em;
+  width: 100%;
+}
+
 .qti3-player-item-card-header {
   display: -webkit-flex;
   display: flex;
