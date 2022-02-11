@@ -87,6 +87,7 @@ button.qti-end-attempt-interaction {
   color: #505d69;
   text-align: center;
   vertical-align: middle;
+  -webkit-appearance: auto;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
