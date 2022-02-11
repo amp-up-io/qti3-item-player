@@ -604,6 +604,10 @@ export default {
   display: table-row;
 }
 
+.qti-display-list-item {
+  display: list-item;
+}
+
 .qti-display-inherit {
   display: inherit;
 }
