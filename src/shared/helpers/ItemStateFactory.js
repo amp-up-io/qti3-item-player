@@ -44,12 +44,19 @@ export class ItemStateFactory {
   serializeResponseVariables (responseVariables) {
     let variableArray = []
     responseVariables.forEach((responseVariable) => {
-      variableArray.push({
+      let obj = {
         identifier: responseVariable.identifier,
         cardinality: responseVariable.cardinality,
         value: this.serializeVariableValue(responseVariable.cardinality, responseVariable.value),
         state: this.serializeVariableState(responseVariable.state)
-      })
+      }
+
+      // Response variable may have an optional correct.
+      if ('correctResponse' in responseVariable) {
+        obj.correctResponse = this.serializeVariableValue(responseVariable.cardinality, responseVariable.correctResponse)
+      }
+
+      variableArray.push(obj)
     })
 
     return variableArray

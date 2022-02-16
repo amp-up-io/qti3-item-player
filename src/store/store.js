@@ -442,6 +442,15 @@ export const store = {
         value: responseVariable.value,
         state: responseVariable.state
       })
+
+      // Response variable may have an optional correct.
+      if ('correctResponse' in responseVariable) {
+        this.setResponseVariableCorrectResponse({
+          identifier: responseVariable.identifier,
+          value: responseVariable.correctResponse
+        })
+      }
+
     }, this)
   },
 
