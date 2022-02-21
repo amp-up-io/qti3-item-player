@@ -11,6 +11,7 @@ import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeVali
 import QtiChoiceInteraction from '@/components/qti/interactions/QtiChoiceInteraction'
 import QtiInlineChoiceInteraction from '@/components/qti/interactions/QtiInlineChoiceInteraction'
 import QtiTextEntryInteraction from '@/components/qti/interactions/QtiTextEntryInteraction'
+import QtiExtendedTextInteraction from '@/components/qti/interactions/QtiExtendedTextInteraction'
 /*
 import QtiCustomInteraction from '@/components/qti/interactions/QtiCustomInteraction'
 */
@@ -34,6 +35,7 @@ const qtiAttributeValidation = new QtiAttributeValidation()
 Vue.component('qti-choice-interaction', QtiChoiceInteraction)
 Vue.component('qti-inline-choice-interaction', QtiInlineChoiceInteraction)
 Vue.component('qti-text-entry-interaction', QtiTextEntryInteraction)
+Vue.component('qti-extended-text-interaction', QtiExtendedTextInteraction)
 /*
 Vue.component('qti-custom-interaction', QtiCustomInteraction)
 */
