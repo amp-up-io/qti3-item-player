@@ -455,10 +455,10 @@ input[type="text"]:focus {
   box-shadow: var(--choice-control-focus-shadow);
 }
 
-input[type="text"]::-moz-placeholder,
 input[type="text"]::placeholder {
-  color: #6c757d;
-  opacity: 1;
+  color: var(--foreground);
+  opacity: 0.6;
+  font-style: italic;
 }
 
 .qti-text-entry-interaction.qti-align-center input {
