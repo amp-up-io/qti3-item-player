@@ -318,7 +318,6 @@ export default {
 
     enableButton () {
       this.node.enable()
-
     },
 
     disableButton () {
@@ -337,13 +336,13 @@ export default {
 
     createComponentProperties () {
       // Create default properties
-      let properties = {
+      const properties = {
         responseIdentifier: this.responseIdentifier,
         title: this.title
       }
 
       // Add additional props used in an endattempt-controller-bar
-      properties.dataSteps        = (typeof this.dataSteps !== 'undefined') ? this.dataSteps : '1'
+      properties.dataSteps = (typeof this.dataSteps !== 'undefined') ? this.dataSteps : '1'
       properties.dataHastemplates = (typeof this.dataHastemplates !== 'undefined') ? this.dataHastemplates === 'true' : false
       properties.dataHideprogress = (typeof this.dataHideprogress !== 'undefined') ? this.dataHideprogress === 'true' : false
       properties.dataControllerType = (typeof this.dataControllerType !== 'undefined') ? this.dataControllerType : 'generic'
