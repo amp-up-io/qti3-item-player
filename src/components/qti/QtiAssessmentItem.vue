@@ -551,10 +551,12 @@ export default {
    2. Special Flex styles
    3. Margin
    4. Padding
-   5. Width
-   6. Height
-   7. Layout
-   8. QtiAssessmentItem component utilities
+   5. Height
+   6. Width
+   7. Text-Indent
+   8. List Style
+   9. Layout
+   10. QtiAssessmentItem component utilities
    ======================================== */
 
 /* ==========
@@ -1189,6 +1191,280 @@ export default {
 .qti-width-10-12	{ width: 83.333333%; }
 .qti-width-11-12 { width: 91.666667%; }
 .qti-width-full, .qti-fullwidth { width: 100%; }
+
+/* ==================
+   Text Indent styles
+   ================== */
+.qti-text-indent-0 {
+  text-indent: 0px;
+}
+
+.qti-text-indent-px {
+  text-indent: 1px;
+}
+
+.qti-text-indent-0p5 {
+  text-indent: 0.125rem;
+}
+
+.qti-text-indent-1 {
+  text-indent: 0.25rem;
+}
+
+.qti-text-indent-1p5 {
+  text-indent: 0.375rem;
+}
+
+.qti-text-indent-2 {
+  text-indent: 0.5rem;
+}
+
+.qti-text-indent-2p5 {
+  text-indent: 0.625rem;
+}
+
+.qti-text-indent-3 {
+  text-indent: 0.75rem;
+}
+
+.qti-text-indent-3p5 {
+  text-indent: 0.875rem;
+}
+
+.qti-text-indent-4 {
+  text-indent: 1rem;
+}
+
+.qti-text-indent-5 {
+  text-indent: 1.25rem;
+}
+
+.qti-text-indent-6 {
+  text-indent: 1.5rem;
+}
+
+.qti-text-indent-7 {
+  text-indent: 1.75rem;
+}
+
+.qti-text-indent-8 {
+  text-indent: 2rem;
+}
+
+/* =================
+   List Style styles
+   ================= */
+.qti-list-style-type-none {
+  list-style-type: none;
+}
+
+.qti-list-style-type-disc {
+  list-style-type: disc;
+}
+
+.qti-list-style-type-circle {
+  list-style-type: circle;
+}
+
+.qti-list-style-type-square {
+  list-style-type: square;
+}
+
+.qti-list-style-type-decimal {
+  list-style-type: decimal;
+}
+
+.qti-list-style-type-decimal-leading-zero {
+  list-style-type: decimal-leading-zero;
+}
+
+.qti-list-style-type-lower-alpha {
+  list-style-type: lower-alpha;
+}
+
+.qti-list-style-type-upper-alpha {
+  list-style-type: upper-alpha;
+}
+
+.qti-list-style-type-lower-roman {
+  list-style-type: lower-roman;
+}
+
+.qti-list-style-type-upper-roman {
+  list-style-type: upper-roman;
+}
+
+.qti-list-style-type-lower-latin {
+  list-style-type: lower-latin;
+}
+
+.qti-list-style-type-upper-latin {
+  list-style-type: upper-latin;
+}
+
+.qti-list-style-type-lower-greek {
+  list-style-type: lower-greek;
+}
+
+.qti-list-style-type-arabic-indic {
+  list-style-type: arabic-indic;
+}
+
+.qti-list-style-type-armenian {
+  list-style-type: armenian;
+}
+
+.qti-list-style-type-lower-armenian {
+  list-style-type: lower-armenian;
+}
+
+.qti-list-style-type-upper-armenian {
+  list-style-type: upper-armenian;
+}
+
+.qti-list-style-type-bengali {
+  list-style-type: bengali;
+}
+
+.qti-list-style-type-cambodian {
+  list-style-type: cambodian;
+}
+
+.qti-list-style-type-simp-chinese-formal {
+  list-style-type: simp-chinese-formal;
+}
+
+.qti-list-style-type-simp-chinese-informal {
+  list-style-type: simp-chinese-informal;
+}
+
+.qti-list-style-type-trad-chinese-formal {
+  list-style-type: trad-chinese-formal;
+}
+
+.qti-list-style-type-trad-chinese-informal {
+  list-style-type: trad-chinese-informal;
+}
+
+.qti-list-style-type-cjk-ideographic {
+  list-style-type: cjk-ideographic;
+}
+
+.qti-list-style-type-cjk-heavenly-stem {
+  list-style-type: cjk-heavenly-stem;
+}
+
+.qti-list-style-type-cjk-earthly-branch {
+  list-style-type: cjk-earthly-branch;
+}
+
+.qti-list-style-type-devanagari {
+  list-style-type: devanagari;
+}
+
+.qti-list-style-type-ethiopic-halehame-ti-er {
+  list-style-type: ethiopic-halehame-ti-er;
+}
+
+.qti-list-style-type-ethiopic-halehame-ti-et {
+  list-style-type: ethiopic-halehame-ti-et;
+}
+
+.qti-list-style-type-ethiopic-halehame-am {
+  list-style-type: ethiopic-halehame-am;
+}
+
+.qti-list-style-type-ethiopic-halehame {
+  list-style-type: ethiopic-halehame;
+}
+
+.qti-list-style-type-georgian {
+  list-style-type: georgian;
+}
+
+.qti-list-style-type-gujarati {
+  list-style-type: gujarati;
+}
+
+.qti-list-style-type-gurmukhi {
+  list-style-type: gurmukhi;
+}
+
+.qti-list-style-type-hangul {
+  list-style-type: hangul;
+}
+
+.qti-list-style-type-hangul-consonant {
+  list-style-type: hangul-consonant;
+}
+
+.qti-list-style-type-hebrew {
+  list-style-type: hebrew;
+}
+
+.qti-list-style-type-hiragana {
+  list-style-type: hiragana;
+}
+
+.qti-list-style-type-hiragana-iroha {
+  list-style-type: hiragana-iroha;
+}
+
+.qti-list-style-type-khmer {
+  list-style-type: khmer;
+}
+
+.qti-list-style-type-korean-hangul-formal {
+  list-style-type: korean-hangul-formal;
+}
+
+.qti-list-style-type-korean-hanja-formal {
+  list-style-type: korean-hanja-formal;
+}
+
+.qti-list-style-type-korean-hanja-informal {
+  list-style-type: korean-hanja-informal;
+}
+
+.qti-list-style-type-lao {
+  list-style-type: lao;
+}
+
+.qti-list-style-type-malayalam {
+  list-style-type: malayalam;
+}
+
+.qti-list-style-type-mongolian {
+  list-style-type: mongolian;
+}
+
+.qti-list-style-type-myanmar {
+  list-style-type: myanmar;
+}
+
+.qti-list-style-type-oriya {
+  list-style-type: oriya;
+}
+
+.qti-list-style-type-persian {
+  list-style-type: persian;
+}
+
+.qti-list-style-type-thai {
+  list-style-type: thai;
+}
+
+.qti-list-style-type-tibetan {
+  list-style-type: tibetan;
+}
+
+.qti-list-style-type-telugu {
+  list-style-type: telugu;
+}
+
+.qti-list-style-type-urdu {
+  list-style-type: urdu;
+}
 
 /* ========================================================================================
    ======================= Begin Layout Row and Column Definitions ========================
