@@ -1,14 +1,11 @@
 <template>
   <div ref="root" class="qti-extended-text-interaction">
-
     <slot name="prompt" />
-
     <component
       ref="textarea"
       :is="interactionTemplate"
       v-on:extendedTextUpdate="handleExtendedTextUpdate"
       v-on:extendedTextReady="handleExtendedTextReady"
-      v-bind="$attrs"
     />
   </div>
 </template>
@@ -29,6 +26,7 @@ import QtiValidationException from '@/components/qti/exceptions/QtiValidationExc
 import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
 import QtiParseException from '@/components/qti/exceptions/QtiParseException'
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
+import ExtendedTextPresentationFactory from '@/components/qti/interactions/presentation/ExtendedTextInteractionPresentationFactory'
 import { getExtendedTextInteractionSubType, extendedTextInteractionAdapter } from './adapters/extendedtext-interaction-adapter'
 import QtiPrompt from '@/components/qti/interactions/QtiPrompt'
 
@@ -45,10 +43,8 @@ export default {
       type: String
     },
     /*
-     * The expectedLength characteristic provides a hint to the candidate as to the expected overall
-     * length of the desired response measured in number of characters. A Delivery Engine should use
-     * the value of this attribute to set the size of the response box, where applicable. This is not a
-     * validity constraint.
+     * The expectedLength characteristic is only used when a qti-counter-<up | down>
+     * class is specified.  Otherwise, best practice is to ignore expectedLength.
      */
     expectedLength: {
       required: false,
@@ -103,7 +99,7 @@ export default {
      * @description Compute a template/component according to the interactionSubType.
      */
     interactionTemplate () {
-      return extendedTextInteractionAdapter(this.interactionSubType, this.createComponentProperties())
+      return extendedTextInteractionAdapter(this.interactionSubType, this.createComponentProperties(), this.$attrs)
     },
 
     placeholder () {
@@ -117,6 +113,7 @@ export default {
     patternMaskMessage () {
       return qtiAttributeValidation.validatePatternmaskMessage(this.dataPatternmaskMessage, 'Invalid Input')
     }
+
   },
 
   data() {
@@ -128,7 +125,9 @@ export default {
       interactionSubType: null,
       isValidResponse: false,
       invalidResponseMessage: 'Input Required',
+      classAttribute: '',
       isQtiValid: true,
+      presentationFactory: null,
       /*
        * Reference to the sub-component
        */
@@ -149,7 +148,6 @@ export default {
      * @return {String} response string or null
      */
     getResponse () {
-      console.log('extendedtext interaction getResponse:', this.response)
       if (this.response.length === 0) return null
 
       return this.response
@@ -343,9 +341,11 @@ export default {
       // Create default properties
       const properties = {
         responseIdentifier: this.responseIdentifier,
+        expectedLength: this.presentationFactory.getExpectedLength(),
         placeholder: this.placeholder,
         patternMask: this.patternMask,
-        patternMaskMessage: this.patternMaskMessage
+        patternMaskMessage: this.patternMaskMessage,
+        counterStyle: this.presentationFactory.getCounterStyle()
       }
 
       return properties
@@ -402,6 +402,9 @@ export default {
     try {
       this.responseDeclaration = qtiAttributeValidation.validateResponseIdentifierAttribute(store, this.responseIdentifier)
       this.setInteractionSubType(this.detectInteractionSubType(this.$vnode.data.staticClass, this.format))
+
+      // Set up a presentation factory
+      this.presentationFactory = new ExtendedTextPresentationFactory(this.$vnode.data.staticClass, this.expectedLength)
 
       // Pull any prior interaction state.
       this.priorState = this.getPriorState(this.responseIdentifier)

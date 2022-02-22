@@ -8,7 +8,8 @@ const EXTENDED_TEXT_TYPE = {
   XHTML_SBAC: 'sbac-xhtml'
 }
 
-export function extendedTextInteractionAdapter(interactionSubType, props) {
+export function extendedTextInteractionAdapter(interactionSubType, props, attrs) {
+
   // Produce the Template for the extended text interaction
   switch (interactionSubType) {
     case EXTENDED_TEXT_TYPE.XHTML_DEFAULT:
@@ -16,18 +17,24 @@ export function extendedTextInteractionAdapter(interactionSubType, props) {
       return {
         template: `<extended-text-plain-default ` +
           `response-identifier="` + props.responseIdentifier + `" ` +
+          getExpectedLength(props) +
           getPatternMask(props) +
           getPatternMaskMessage(props) +
-          getPlaceholderText(props) + `/>`,
+          getPlaceholderText(props) +
+          getCounterStyle(props) +
+          getPassthroughAttrs(attrs) + ` />`,
         components: { ExtendedTextPlainDefault }
       }
     default:
       return {
         template: `<extended-text-plain-default ` +
           `response-identifier="` + props.responseIdentifier + `" ` +
+          getExpectedLength(props) +
           getPatternMask(props) +
           getPatternMaskMessage(props) +
-          getPlaceholderText(props) + `/>`,
+          getPlaceholderText(props) +
+          getCounterStyle(props) +
+          getPassthroughAttrs(attrs) + ` />`,
         components: { ExtendedTextPlainDefault }
       }
   }
@@ -54,6 +61,24 @@ function getPatternMaskMessage (props) {
 
 function getPlaceholderText (props) {
   return `placeholder="` + props.placeholder + `" `
+}
+
+function getExpectedLength (props) {
+  if (typeof props.expectedLength === 'undefined') return ''
+  return `expected-length="` + props.expectedLength + `" `
+}
+
+function getCounterStyle (props) {
+  if (typeof props.counterStyle === 'undefined') return 'none'
+  return `counter-style="` + props.counterStyle + `" `
+}
+
+function getPassthroughAttrs (attrs) {
+  let result = ''
+  for (const [key, value] of Object.entries(attrs)) {
+    result += `${key}="${value}" `
+  }
+  return result
 }
 
 /**

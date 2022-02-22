@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="root">
     <textarea
       ref="textarea"
       class="extendedtext-plain-default"
@@ -37,6 +37,16 @@ export default {
 
   props: {
 
+    responseIdentifier: {
+      required: true,
+      type: String
+    },
+
+    expectedLength: {
+      required: false,
+      type: String
+    },
+
     placeholder: {
       required: false,
       type: String,
@@ -52,11 +62,21 @@ export default {
       required: false,
       type: String,
       default: 'Invalid Input'
+    },
+
+    counterStyle: {
+      required: false,
+      type: String,
+      default: 'none'
     }
 
   },
 
   computed: {
+
+    computedExpectedLength () {
+      return (typeof this.expectedLength !== 'undefined') ? this.expectedLength*1 : 400
+    },
 
     hasPatternMask () {
       return (typeof this.patternMask !== 'undefined')
@@ -84,6 +104,8 @@ export default {
       displayMessage: false
     }
   },
+
+  inheritAttrs: false,
 
   methods: {
 
@@ -221,15 +243,15 @@ export default {
   font-style: italic;
 }
 
-.qti-height-lines-3 {
+.qti-height-lines-3 .extendedtext-plain-default {
   height: calc(4.8rem + .35rem);
 }
 
-.qti-height-lines-6 {
+.qti-height-lines-6 .extendedtext-plain-default {
   height: calc(9.6rem + .35rem);
 }
 
-.qti-height-lines-15 {
+.qti-height-lines-15 .extendedtext-plain-default {
   height: calc(24rem + .35rem);
 }
 </style>
