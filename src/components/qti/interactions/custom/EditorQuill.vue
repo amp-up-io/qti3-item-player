@@ -120,7 +120,6 @@ export default {
     },
 
     textChangeHandler () {
-      console.log(this.$refs.editor)
       let html = this.$refs.editor.children[0].innerHTML
       if (html === '<p><br></p>') html = ''
 
