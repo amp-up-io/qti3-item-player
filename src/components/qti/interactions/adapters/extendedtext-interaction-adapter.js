@@ -1,5 +1,5 @@
 import ExtendedTextPlainDefault from '@/components/qti/interactions/custom/ExtendedTextPlainDefault'
-//import ExtendedTextXhtmlDefault from '@/components/qti/interactions/custom/ExtendedTextXhtmlDefault'
+import ExtendedTextXhtmlDefault from '@/components/qti/interactions/custom/ExtendedTextXhtmlDefault'
 
 const EXTENDED_TEXT_TYPE = {
   DEFAULT: 'default-plain',
@@ -10,20 +10,22 @@ const EXTENDED_TEXT_TYPE = {
 
 export function extendedTextInteractionAdapter(interactionSubType, props, attrs) {
 
+console.log('interactionSubType:', interactionSubType)
   // Produce the Template for the extended text interaction
   switch (interactionSubType) {
     case EXTENDED_TEXT_TYPE.XHTML_DEFAULT:
     case EXTENDED_TEXT_TYPE.XHTML_SBAC:
       return {
-        template: `<extended-text-plain-default ` +
+        template: `<extended-text-xhtml-default ` +
           `response-identifier="` + props.responseIdentifier + `" ` +
           getExpectedLength(props) +
           getPatternMask(props) +
           getPatternMaskMessage(props) +
           getPlaceholderText(props) +
+          getHeightClass(props) +
           getCounterStyle(props) +
           getPassthroughAttrs(attrs) + ` />`,
-        components: { ExtendedTextPlainDefault }
+        components: { ExtendedTextXhtmlDefault }
       }
     default:
       return {
@@ -33,6 +35,7 @@ export function extendedTextInteractionAdapter(interactionSubType, props, attrs)
           getPatternMask(props) +
           getPatternMaskMessage(props) +
           getPlaceholderText(props) +
+          getHeightClass(props) +
           getCounterStyle(props) +
           getPassthroughAttrs(attrs) + ` />`,
         components: { ExtendedTextPlainDefault }
@@ -45,8 +48,8 @@ export function getExtendedTextInteractionSubType(clazz, format) {
 
   if (format === 'plain' && sbac) return EXTENDED_TEXT_TYPE.DEFAULT_SBAC
   if (format === 'plain') return EXTENDED_TEXT_TYPE.DEFAULT
-  if (format === 'xhtml' && sbac) return EXTENDED_TEXT_TYPE.XHTL_SBAC
-  if (format === 'xhtml') return EXTENDED_TEXT_TYPE.XHTL_DEFAULT
+  if (format === 'xhtml' && sbac) return EXTENDED_TEXT_TYPE.XHTML_DEFAULT
+  if (format === 'xhtml') return EXTENDED_TEXT_TYPE.XHTML_DEFAULT
   return EXTENDED_TEXT_TYPE.DEFAULT
 }
 
@@ -66,6 +69,11 @@ function getPlaceholderText (props) {
 function getExpectedLength (props) {
   if (typeof props.expectedLength === 'undefined') return ''
   return `expected-length="` + props.expectedLength + `" `
+}
+
+function getHeightClass (props) {
+  if (typeof props.heightClass === 'undefined') return ''
+  return `height-class="` + props.heightClass + `" `
 }
 
 function getCounterStyle (props) {

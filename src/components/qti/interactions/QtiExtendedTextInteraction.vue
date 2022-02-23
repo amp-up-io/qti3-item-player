@@ -166,6 +166,13 @@ export default {
       this.node.setResponse(this.response)
     },
 
+    updateResponse (response) {
+      if (response === null)
+        this.response = ''
+      else
+        this.response = response
+    },
+
     /**
      * @description Get this interaction's state.
      * @return {Object} state
@@ -345,6 +352,7 @@ export default {
         placeholder: this.placeholder,
         patternMask: this.patternMask,
         patternMaskMessage: this.patternMaskMessage,
+        heightClass: this.presentationFactory.getHeightClass(),
         counterStyle: this.presentationFactory.getCounterStyle()
       }
 
@@ -352,7 +360,7 @@ export default {
     },
 
     handleExtendedTextUpdate (data) {
-      this.setResponse(data.response)
+      this.updateResponse(data.response)
       // Update validity
       this.evaluateValidity()
     },
