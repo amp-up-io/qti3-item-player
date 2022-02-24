@@ -1134,13 +1134,4 @@ export default {
   border: 1px solid;
   border-color: var(--ed-bc);
 }
-
-.extendedtext-editor-counter {
-    height: 1.5rem;
-    line-height: 1.5rem;
-    text-align: right;
-    font-size: .875rem;
-    color: var(--foreground);
-    padding-right: .25rem;
-}
 </style>

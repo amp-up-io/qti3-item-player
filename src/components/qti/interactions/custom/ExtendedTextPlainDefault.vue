@@ -9,8 +9,11 @@
       autocapitalize="none"
       spellcheck="false"
       maxlength="maxLength"
-      v-on:input="handleInput($event)"
+      @input="handleInput"
     />
+    <div v-if="showCounter" aria-hidden="true" class="extendedtext-plain-counter">
+      {{counter}}<span v-if="isCounterUp"> / {{expectedLength}}</span>
+    </div>
     <tooltip
       ref="tooltip"
       v-if="hasPatternMask"
@@ -89,6 +92,14 @@ export default {
 
     maxLength () {
       return 10000
+    },
+
+    showCounter () {
+      return (this.counterStyle === 'up' || this.counterStyle === 'down')
+    },
+
+    isCounterUp () {
+      return (this.counterStyle === 'up')
     }
 
   },
@@ -97,11 +108,14 @@ export default {
     return {
       response: '',
       // Used for reverting to the prior response when a patternMask is applied
+      // or when a counter limit is being enforced.
       priorResponse: '',
       // Save provided patternMask as a Regex here
       appliedRegex: null,
       // Used to toggle the patternMask message tooltip
-      displayMessage: false
+      displayMessage: false,
+      // Current character counter
+      counter: 0
     }
   },
 
@@ -124,10 +138,12 @@ export default {
     setResponse (response) {
       if (response === null) {
         this.response = ''
+        this.updateCounter(0)
         return
       }
 
       this.response = response
+      this.updateCounter(this.response.length)
     },
 
     /**
@@ -148,7 +164,10 @@ export default {
 
     handleInput (event) {
       event.preventDefault()
+
       let inputSucceeded = true
+
+      if (this.showCounter && !this.applyLimitCheck(this.$refs.textarea.value)) return
 
       if (this.appliedRegex !== null)
         inputSucceeded = this.applyPatternMask(this.$refs.textarea.value)
@@ -157,10 +176,39 @@ export default {
 
       if (!inputSucceeded) return
 
+      // Save textarea value for future limit checks
+      this.priorResponse = this.$refs.textarea.value
+
       // Notify parent that we have an update
       this.$parent.$emit('extendedTextUpdate', {
           response: this.getResponse()
         })
+    },
+
+    applyLimitCheck (value) {
+      if (value.length > this.computedExpectedLength) {
+        // Revert to the prior response
+        this.setResponse(this.priorResponse)
+        return false
+      }
+
+      // Limit check succeeded.
+      return true
+    },
+
+    updateCounter (contentLength) {
+      if (!this.showCounter) return
+
+      if (this.isCounterUp) {
+        this.counter = contentLength
+        return
+      }
+
+      this.counter = this.computedExpectedLength - contentLength
+    },
+
+    getLength () {
+      return this.response.length
     },
 
     applyPatternMask (value) {
@@ -253,5 +301,15 @@ export default {
 
 .qti-height-lines-15 .extendedtext-plain-default {
   height: calc(24rem + .35rem);
+}
+
+.extendedtext-plain-counter {
+  margin-top: -6px;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  text-align: right;
+  font-size: .875rem;
+  color: var(--foreground);
+  padding-right: .25rem;
 }
 </style>

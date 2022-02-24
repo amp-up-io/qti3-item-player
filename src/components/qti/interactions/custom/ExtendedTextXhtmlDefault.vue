@@ -6,8 +6,8 @@
       :editorHeight="editorHeight"
       :counterStyle="counterStyle"
       :expectedLength="computedExpectedLength"
-      v-on:input="handleInput"
-      v-on:editorReady="handleEditorReady"
+      @input="handleInput"
+      @editorReady="handleEditorReady"
     />
   </div>
 </template>
@@ -191,4 +191,12 @@ export default {
 </script>
 
 <style>
+.extendedtext-editor-counter {
+  height: 1.5rem;
+  line-height: 1.5rem;
+  text-align: right;
+  font-size: .875rem;
+  color: var(--foreground);
+  padding-right: .25rem;
+}
 </style>
