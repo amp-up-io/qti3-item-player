@@ -1130,8 +1130,18 @@ export default {
 .ql-snow a {
   color: #06c;
 }
+
 .ql-container.ql-snow {
   border: 1px solid;
-  border-color: var(--ed-bc);
+  border-color: var(--choice-control-focus-border);
+  border-radius: 0 0 .25rem .25rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.ql-editor:focus {
+  border-radius: 0 0 .25rem .25rem;
+  border-color: var(--choice-control-focus-border);
+  outline: 0;
+  box-shadow: var(--choice-control-focus-shadow);
 }
 </style>
