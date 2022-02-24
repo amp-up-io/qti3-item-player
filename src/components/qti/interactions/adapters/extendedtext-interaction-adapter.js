@@ -1,5 +1,5 @@
-import ExtendedTextPlainDefault from '@/components/qti/interactions/custom/ExtendedTextPlainDefault'
-import ExtendedTextXhtmlDefault from '@/components/qti/interactions/custom/ExtendedTextXhtmlDefault'
+import ExtendedTextPlainDefault from '@/components/qti/interactions/standard/ExtendedTextPlainDefault'
+import ExtendedTextXhtmlDefault from '@/components/qti/interactions/standard/ExtendedTextXhtmlDefault'
 
 const EXTENDED_TEXT_TYPE = {
   DEFAULT: 'default-plain',

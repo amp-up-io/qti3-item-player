@@ -14,7 +14,7 @@
 
 <script>
 import { store } from '@/store/store'
-import EditorQuill from '@/components/qti/interactions/custom/EditorQuill'
+import EditorQuill from '@/components/qti/interactions/standard/EditorQuill'
 
 export default {
   name: 'ExtendedTextXhtmlDefault',
