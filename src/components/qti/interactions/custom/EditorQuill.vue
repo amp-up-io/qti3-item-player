@@ -1,6 +1,5 @@
 <template>
   <div ref="root" class="quill-editor">
-    <slot name="toolbar"></slot>
     <div
       ref="editor"
       :style="style"
@@ -11,7 +10,6 @@
 <script>
 import { store } from '@/store/store'
 import Quill from 'quill'
-//import 'quill/dist/quill.snow.css'
 
 export default {
 
@@ -107,7 +105,17 @@ export default {
               ['bold', 'italic', 'underline'],
               ['blockquote'],
               [{ 'list': 'ordered' }, { 'list': 'bullet' }]
-            ]
+            ],
+            keyboard: {
+              bindings: {
+                'tab': {
+                  key: 9,
+                  handler: function() {
+                    return true
+                  }
+                }
+              }
+            }
           },
           placeholder: this.placeholder,
           readOnly: false
@@ -150,12 +158,6 @@ export default {
 </script>
 
 <style>
-/*!
- * Quill Editor v1.3.6
- * https://quilljs.com/
- * Copyright (c) 2014, Jason Chen
- * Copyright (c) 2013, salesforce.com
- */
 .ql-container {
   box-sizing: border-box;
   font-family: Helvetica, Arial, sans-serif;
@@ -468,48 +470,6 @@ export default {
 .ql-editor .ql-video.ql-align-right {
   margin: 0 0 0 auto;
 }
-.ql-editor .ql-bg-black {
-  background-color: #000;
-}
-.ql-editor .ql-bg-red {
-  background-color: #e60000;
-}
-.ql-editor .ql-bg-orange {
-  background-color: #f90;
-}
-.ql-editor .ql-bg-yellow {
-  background-color: #ff0;
-}
-.ql-editor .ql-bg-green {
-  background-color: #008a00;
-}
-.ql-editor .ql-bg-blue {
-  background-color: #06c;
-}
-.ql-editor .ql-bg-purple {
-  background-color: #93f;
-}
-.ql-editor .ql-color-white {
-  color: #fff;
-}
-.ql-editor .ql-color-red {
-  color: #e60000;
-}
-.ql-editor .ql-color-orange {
-  color: #f90;
-}
-.ql-editor .ql-color-yellow {
-  color: #ff0;
-}
-.ql-editor .ql-color-green {
-  color: #008a00;
-}
-.ql-editor .ql-color-blue {
-  color: #06c;
-}
-.ql-editor .ql-color-purple {
-  color: #93f;
-}
 .ql-editor .ql-font-serif {
   font-family: Georgia, Times New Roman, serif;
 }
@@ -539,7 +499,8 @@ export default {
   text-align: right;
 }
 .ql-editor.ql-blank::before {
-  color: rgba(0,0,0,0.6);
+  color: var(--foreground);
+  opacity: 0.6;
   content: attr(data-placeholder);
   font-style: italic;
   left: 15px;
@@ -706,20 +667,20 @@ export default {
 }
 .ql-snow .ql-stroke {
   fill: none;
-  stroke: #444;
+  stroke: var(--foreground);
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 2;
 }
 .ql-snow .ql-stroke-miter {
   fill: none;
-  stroke: #444;
+  stroke: var(--foreground);
   stroke-miterlimit: 10;
   stroke-width: 2;
 }
 .ql-snow .ql-fill,
 .ql-snow .ql-stroke.ql-fill {
-  fill: #444;
+  fill: var(--foreground);
 }
 .ql-snow .ql-empty {
   fill: none;
@@ -765,7 +726,8 @@ export default {
   text-decoration: underline;
 }
 .ql-snow .ql-editor blockquote {
-  border-left: 4px solid #ccc;
+  border-left: 4px solid;
+  border-color: var(--ed-bq-color);
   margin-bottom: 5px;
   margin-top: 5px;
   padding-left: 16px;
@@ -998,7 +960,8 @@ export default {
   background-color: #000;
 }
 .ql-toolbar.ql-snow {
-  border: 1px solid #ccc;
+  border: 1px solid;
+  border-color: var(--ed-bc);
   box-sizing: border-box;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   padding: 8px;
@@ -1093,6 +1056,7 @@ export default {
   color: #06c;
 }
 .ql-container.ql-snow {
-  border: 1px solid #ccc;
+  border: 1px solid;
+  border-color: var(--ed-bc);
 }
 </style>

@@ -421,6 +421,9 @@ export default {
   --ea-button-secondary-focus-bgc: #697783;
   --ea-button-secondary-focus-bc: #63707c;
   --ea-button-hover-brightness: brightness(95%);
+  /* Editor colors */
+  --ed-bc: var(--gray-dark);
+  --ed-bq-color: #ccc;
 }
 
 /* Default foreground / background colors */
@@ -475,6 +478,9 @@ export default {
   --ea-button-secondary-focus-color: var(--foreground);
   --ea-button-secondary-focus-bgc: #697783;
   --ea-button-secondary-focus-bc: #63707c;
+  /* Editor colors */
+  --ed-bc: #ddd;
+  --ed-bq-color: #ccc;
 }
 
 /* High Contrast */
@@ -524,6 +530,9 @@ export default {
   --ea-button-secondary-focus-color: var(--background);
   --ea-button-secondary-focus-bgc: var(--foreground);
   --ea-button-secondary-focus-bc: var(--foreground);
+  /* Editor colors */
+  --ed-bc: #222;
+  --ed-bq-color: #bbb;
 }
 
 /* High Contrast - reverse polarity */
@@ -576,6 +585,9 @@ export default {
   --ea-button-secondary-focus-color: var(--background);
   --ea-button-secondary-focus-bgc: var(--foreground);
   --ea-button-secondary-focus-bc: var(--foreground);
+  /* Editor colors */
+  --ed-bc: var(--lighter);
+  --ed-bq-color: #ccc;
 }
 
 .qti3-player-color-blackrose {
@@ -624,6 +636,9 @@ export default {
   --ea-button-secondary-focus-color: var(--white);
   --ea-button-secondary-focus-bgc: #697783;
   --ea-button-secondary-focus-bc: #63707c;
+  /* Editor colors */
+  --ed-bc: var(--gray-dark);
+  --ed-bq-color: #999;
 }
 
 .qti3-player-color-roseblack {
@@ -675,6 +690,9 @@ export default {
   --ea-button-secondary-focus-color: var(--white);
   --ea-button-secondary-focus-bgc: #697783;
   --ea-button-secondary-focus-bc: #63707c;
+  /* Editor colors */
+  --ed-bc: #ddd;
+  --ed-bq-color: #ccc;
 }
 
 .qti3-player-color-mgraydgray {
@@ -723,6 +741,9 @@ export default {
   --ea-button-secondary-focus-color: var(--white);
   --ea-button-secondary-focus-bgc: #555;
   --ea-button-secondary-focus-bc: #63707c;
+  /* Editor colors */
+  --ed-bc: #ddd;
+  --ed-bq-color: #ccc;
 }
 
 .qti3-player-color-dgraymgray {
@@ -771,6 +792,9 @@ export default {
   --ea-button-secondary-focus-color: var(--white);
   --ea-button-secondary-focus-bgc: #697783;
   --ea-button-secondary-focus-bc: #63707c;
+  /* Editor colors */
+  --ed-bc: var(--gray-dark);
+  --ed-bq-color: #555;
 }
 
 .qti3-player-color-yellowblue {
@@ -822,6 +846,9 @@ export default {
   --ea-button-secondary-focus-color: var(--white);
   --ea-button-secondary-focus-bgc: #697783;
   --ea-button-secondary-focus-bc: #63707c;
+  /* Editor colors */
+  --ed-bc: var(--well-border);
+  --ed-bq-color: #6c757d;
 }
 
 .qti3-player-color-blueyellow {
@@ -870,6 +897,9 @@ export default {
   --ea-button-secondary-focus-color: var(--white);
   --ea-button-secondary-focus-bgc: #697783;
   --ea-button-secondary-focus-bc: #63707c;
+  /* Editor colors */
+  --ed-bc: var(--well-border);
+  --ed-bq-color: #6c757d;
 }
 
 .qti3-player-container,
