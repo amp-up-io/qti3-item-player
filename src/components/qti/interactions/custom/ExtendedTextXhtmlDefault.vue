@@ -4,6 +4,8 @@
       :content="content"
       :placeholder="placeholder"
       :editorHeight="editorHeight"
+      :counterStyle="counterStyle"
+      :expectedLength="computedExpectedLength"
       v-on:input="handleInput"
       v-on:editorReady="handleEditorReady"
     />
@@ -56,7 +58,7 @@ export default {
   computed: {
 
     computedExpectedLength () {
-      return (typeof this.expectedLength !== 'undefined') ? this.expectedLength*1 : 400
+      return (typeof this.expectedLength !== 'undefined') ? this.expectedLength : '400'
     },
 
     colorStyle () {

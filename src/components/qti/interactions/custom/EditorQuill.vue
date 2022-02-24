@@ -4,6 +4,9 @@
       ref="editor"
       :style="style"
     ></div>
+    <div v-if="showCounter" aria-hidden="true" class="extendedtext-editor-counter">
+      {{counter}}<span v-if="isCounterUp"> / {{expectedLength}}</span>
+    </div>
   </div>
 </template>
 
@@ -64,6 +67,14 @@ export default {
         'height': this.editorHeight,
         'minHeight':  undefined
       }
+    },
+
+    showCounter () {
+      return (this.counterStyle === 'up' || this.counterStyle === 'down')
+    },
+
+    isCounterUp () {
+      return (this.counterStyle === 'up')
     }
 
   },
@@ -77,7 +88,8 @@ export default {
 
   data () {
     return {
-      quill: undefined
+      quill: undefined,
+      counter: 0
     }
   },
 
@@ -88,7 +100,9 @@ export default {
         // Turn off the text-change listener
         this.quill.off('text-change', this.textChangeHandler)
         // Set the content
-        this.quill.clipboard.dangerouslyPasteHTML(0, this.content)
+        this.$refs.editor.children[0].innerHTML = this.content
+        // Update counter with current text length
+        this.updateCounter(this.getLength())
         // Turn on the text-change listener
         this.quill.on('text-change', this.textChangeHandler)
       }
@@ -97,15 +111,46 @@ export default {
     initialize () {
       if (this.$el) {
 
+        let icons = Quill.import('ui/icons')
+        icons['undo'] = `<svg viewbox="0 0 18 18">
+    <polygon class="ql-fill ql-stroke" points="6 10 4 12 2 10 6 10"></polygon>
+    <path class="ql-stroke" d="M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9"></path>
+  </svg>`
+        icons['redo'] = `<svg viewbox="0 0 18 18">
+    <polygon class="ql-fill ql-stroke" points="12 10 14 12 16 10 12 10"></polygon>
+    <path class="ql-stroke" d="M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5"></path>
+  </svg>`
+
+        let self = this
+
+        // Build default config
         const defaultOptions = {
           theme: 'snow',
           boundary: 'div.qti-extended-text-interaction',
           modules: {
-            toolbar: [
-              ['bold', 'italic', 'underline'],
-              ['blockquote'],
-              [{ 'list': 'ordered' }, { 'list': 'bullet' }]
-            ],
+            toolbar: {
+              container: [
+                ['undo', 'redo'],
+                ['bold', 'italic', 'underline'],
+                ['blockquote'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }]
+              ],
+              handlers: {
+                redo() {
+                  self.quill.history.redo()
+                },
+                undo() {
+                  self.quill.history.undo()
+                }
+              }
+            },
+            history: {
+              delay: 2000,
+              maxStack: 100,
+              userOnly: false
+            },
+            // This forces forward tab out of editor.
+            // Without this, a tab key inserts a tab into the editor.
             keyboard: {
               bindings: {
                 'tab': {
@@ -123,19 +168,49 @@ export default {
 
         this.quill = new Quill(this.$refs.editor, defaultOptions)
         this.quill.on('text-change', this.textChangeHandler)
+        this.updateCounter(this.getLength())
         this.quill.enable(true)
       }
     },
 
     textChangeHandler () {
+      let text = this.getText()
       let html = this.$refs.editor.children[0].innerHTML
+      let length = this.getLength()
+
+      if (this.expectedLength && length > this.expectedLength) {
+        this.quill.deleteText(this.expectedLength, length)
+        return
+      }
+
       if (html === '<p><br></p>') html = ''
+
+      this.updateCounter(this.getLength())
 
       // Notify wrapper component
       this.$emit('input', {
           html: html,
-          text: this.quill.getText()
+          text: text
         })
+    },
+
+    updateCounter (contentLength) {
+      if (!this.showCounter) return
+
+      if (this.isCounterUp) {
+        this.counter = contentLength
+        return
+      }
+
+      this.counter = this.computedExpectedLength - contentLength
+    },
+
+    getLength () {
+      return this.quill.getLength() - 1
+    },
+
+    getText () {
+      return this.quill.getText()
     }
 
   },
@@ -1058,5 +1133,14 @@ export default {
 .ql-container.ql-snow {
   border: 1px solid;
   border-color: var(--ed-bc);
+}
+
+.extendedtext-editor-counter {
+    height: 1.5rem;
+    line-height: 1.5rem;
+    text-align: right;
+    font-size: .875rem;
+    color: var(--foreground);
+    padding-right: .25rem;
 }
 </style>

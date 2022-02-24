@@ -9,8 +9,6 @@ const EXTENDED_TEXT_TYPE = {
 }
 
 export function extendedTextInteractionAdapter(interactionSubType, props, attrs) {
-
-console.log('interactionSubType:', interactionSubType)
   // Produce the Template for the extended text interaction
   switch (interactionSubType) {
     case EXTENDED_TEXT_TYPE.XHTML_DEFAULT:
