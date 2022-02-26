@@ -20,7 +20,8 @@ export const store = {
     processing: [],
     feedbacks: [],
     templates: [],
-    printedVariables: []
+    printedVariables: [],
+    catalogs: []
   },
 
   itemContext: {
@@ -112,6 +113,14 @@ export const store = {
 
   getPrintedVariables () {
     return this.state.printedVariables
+  },
+
+  getCatalog (id) {
+    return this.state.catalogs.find(c => c.id === id)
+  },
+
+  getCatalogs () {
+    return this.state.catalogs
   },
 
   getItem () {
@@ -244,6 +253,20 @@ export const store = {
     this.state.printedVariables.push(printedVariable)
   },
 
+  defineCatalog (catalog) {
+    let catalogIndex = this.state.catalogs.findIndex(c => c.id == catalog.id)
+
+    if (catalogIndex < 0) {
+        console.log('[DefineCatalog][' + catalog.id + ']')
+        // New catalog
+        this.state.catalogs.push(catalog)
+        return
+    }
+
+    // Found the catalog. Replace the old with the new
+    this.state.catalogs[catalogIndex] = catalog
+  },
+
   resetAll () {
     this.state.item = null
     this.state.itemBody = null
@@ -258,6 +281,7 @@ export const store = {
     this.state.feedbacks.splice(0, this.state.feedbacks.length)
     this.state.templates.splice(0, this.state.templates.length)
     this.state.printedVariables.splice(0, this.state.printedVariables.length)
+    this.state.catalogs.splice(0, this.state.catalogs.length)
     // Reset itemContext
     this.itemContext.guid = null
     this.itemContext.state = null
