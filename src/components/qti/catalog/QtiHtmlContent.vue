@@ -1,23 +1,14 @@
 <template>
-  <div class="qti-catalog-info">
+  <div ref="root" class="qti-html-content">
     <slot></slot>
   </div>
 </template>
 
 <script>
-/*
- * The qti-catalog-info node holds one or more catalogs. Catalogs hold and
- * reference item content that is presented to candidates based on their
- * candidate profile (PNP) requirements.
- */
-import Vue from 'vue'
-import QtiCatalog from '@/components/qti/catalog/QtiCatalog'
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
 
-Vue.component('qti-catalog', QtiCatalog)
-
 export default {
-  name: 'QtiCatalogInfo',
+  name: 'QtiHtmlContent',
 
   data () {
     return {
@@ -36,12 +27,19 @@ export default {
       try {
         // Validate children.
         this.validateChildren()
-        console.log('[QtiCatalogInfo]')
+        console.log('[' + this.$options.name + ']')
       } catch (err) {
         this.isQtiValid = false
         throw new QtiValidationException(err.message)
       }
     }
   }
+
 }
 </script>
+
+<style>
+.qti-html-content {
+  display:none;
+}
+</style>
