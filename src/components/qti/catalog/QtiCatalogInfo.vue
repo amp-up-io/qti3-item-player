@@ -55,9 +55,6 @@ export default {
       try {
         // Validate children.
         this.validateChildren()
-        // Notify item we have a qti-catalog-info node
-        this.$parent.$emit('catalogInfoReady', { catalogInfo: this })
-
         console.log('[QtiCatalogInfo]')
       } catch (err) {
         this.isQtiValid = false
