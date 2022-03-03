@@ -9,6 +9,7 @@
  * The qti-catalog node holds one or more qti-cards.
  */
 import Vue from 'vue'
+import { store } from '@/store/store'
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
 import QtiCard from '@/components/qti/catalog/QtiCard'
@@ -70,7 +71,14 @@ export default {
       try {
         // Validate children.
         this.validateChildren()
-        console.log('[QtiCatalog][Id:' + this.id + '][Cards]', this.cards)
+
+        // Notify store of our new catalog
+        store.defineCatalog({
+            id: this.id,
+            node: this
+          })
+        
+        console.log('[QtiCatalog][Id: ' + this.id + ' ]')
       } catch (err) {
         this.isQtiValid = false
         throw new QtiValidationException(err.message)

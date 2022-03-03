@@ -1,6 +1,9 @@
 <template>
   <div class="qti-assessment-item">
-    <event-listener @templateProcessingReady="handleTemplateProcessingReady" @itemBodyReady="handleItemBodyReady">
+    <event-listener
+      @templateProcessingReady="handleTemplateProcessingReady"
+      @itemBodyReady="handleItemBodyReady"
+      @catalogInfoReady="handleCatalogInfoReady">
       <div>
         <slot></slot>
       </div>
@@ -168,6 +171,10 @@ export default {
       if (this.isAdaptive) {
         this.evaluateFeedbacks()
       }
+    },
+
+    handleCatalogInfoReady (node) {
+      console.log('[QtiAssessmentItem][CatalogInfoReady]', node)
     },
 
     /**

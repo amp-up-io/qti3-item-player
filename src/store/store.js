@@ -257,7 +257,6 @@ export const store = {
     let catalogIndex = this.state.catalogs.findIndex(c => c.id == catalog.id)
 
     if (catalogIndex < 0) {
-        console.log('[DefineCatalog][' + catalog.id + ']')
         // New catalog
         this.state.catalogs.push(catalog)
         return

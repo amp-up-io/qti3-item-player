@@ -74,7 +74,8 @@ export default {
       try {
         // Validate children.
         this.validateChildren()
-        console.log('[QtiCard][Support:' + this.support + '][Children]', this.children)
+        
+        console.log('[QtiCard][Support: ' + this.support + ' ]')
       } catch (err) {
         this.isQtiValid = false
         throw new QtiValidationException(err.message)

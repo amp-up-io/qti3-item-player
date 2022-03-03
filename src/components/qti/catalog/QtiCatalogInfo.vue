@@ -11,8 +11,11 @@
  * candidate profile (PNP) requirements.
  */
 import Vue from 'vue'
-import QtiCatalog from '@/components/qti/catalog/QtiCatalog'
+import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
+import QtiCatalog from '@/components/qti/catalog/QtiCatalog'
+
+const qtiAttributeValidation = new QtiAttributeValidation()
 
 Vue.component('qti-catalog', QtiCatalog)
 
@@ -26,8 +29,24 @@ export default {
   },
 
   methods: {
+    isCatalog (tag) {
+      if (tag === 'qti-catalog') return true
+      return false
+    },
+
+    /**
+     * Iterate through the child nodes:
+     * responseRule (*)
+     */
     validateChildren () {
-      // TODO
+      this.$slots.default.forEach((slot) => {
+        if (qtiAttributeValidation.isValidSlot(slot)) {
+          // Must be qti-card
+          if (!this.isCatalog(slot.componentOptions.tag)) {
+            throw new QtiValidationException('Invalid CatalogInfo child node: "' + slot.componentOptions.tag + '"')
+          }
+        }
+      })
     }
   },
 
@@ -36,6 +55,9 @@ export default {
       try {
         // Validate children.
         this.validateChildren()
+        // Notify item we have a qti-catalog-info node
+        this.$parent.$emit('catalogInfoReady', { catalogInfo: this })
+
         console.log('[QtiCatalogInfo]')
       } catch (err) {
         this.isQtiValid = false
