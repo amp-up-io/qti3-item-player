@@ -149,6 +149,9 @@ export default {
       store.NotifyItemReady({
           item: this.item
         })
+
+      this.applyPnpSupports()
+
       // Notify listener that the qti-assessment-item component is loaded and ready.
       this.$emit('notifyQti3ItemReady', param.item)
     },
@@ -243,6 +246,19 @@ export default {
      */
     setItemContextState (state) {
       store.setItemContextState(state)
+    },
+
+    applyPnpSupports () {
+      const catalogs = store.getCatalogs()
+      if (catalogs.length === 0) return
+
+      /*
+      const nodeList = this.$refs.item.$el.querySelectorAll(`[data-catalog-idref="glosscat"]`)
+      for (let i=0; i<nodeList.length; i++) {
+        nodeList[i].classList.add('qti3-player-catalog-clickable-term')
+      }
+      const glossaryOnScreen = store.getItemContextPnp().getGlossaryOnScreen()
+      */
     },
 
     /**
@@ -993,5 +1009,12 @@ export default {
 /* Sweet Alert should use same font-family as player */
 .swal2-popup {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.qti3-player-catalog-clickable-term {
+  cursor: pointer;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  border-color: var(--secondary);
 }
 </style>
