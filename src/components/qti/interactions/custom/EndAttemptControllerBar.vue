@@ -195,7 +195,6 @@ export default {
     },
 
     updateControllerState () {
-      console.log('updateControllerState, controllerType:', this.dataControllerType)
       switch (this.dataControllerType) {
         case 'showexample':
         case 'solve':
