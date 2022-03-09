@@ -193,7 +193,7 @@ export default {
      */
     getRegex () {
       if (this.isPatternIdentifier) {
-        let declaration = this.$store.getters.getVariableDeclaration(this.pattern)
+        let declaration = store.getVariableDeclaration(this.pattern)
         return qtiAttributeValidation.validatePattern('pattern', declaration.value)
       }
       return this.appliedRegex

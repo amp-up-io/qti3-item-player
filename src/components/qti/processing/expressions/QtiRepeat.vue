@@ -235,7 +235,7 @@ export default {
       if (this.valueNumberRepeats !== null) {
         return (this.valueNumberRepeats)
       }
-      let declaration = this.$store.getters.getVariableDeclaration(this.numberRepeats)
+      let declaration = store.getVariableDeclaration(this.numberRepeats)
       // Return the variable's value.  Return 0 if variable is somehow not found.
       return (declaration !== null ? declaration.value : 0)
     }
