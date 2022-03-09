@@ -1,26 +1,26 @@
 <template>
   <transition name="fade">
-    <div ref="mymodal" class="modal">
-      <div class="modal-dialog modal-md modal-dialog-centered">
+    <div ref="mymodal" class="qti3-player-modal">
+      <div class="qti3-player-modal-dialog qti3-player-modal-md qti3-player-modal-dialog-centered">
         <span tabindex="0"></span>
-        <div class="modal-content">
-          <header class="modal-header">
+        <div class="qti3-player-modal-content">
+          <header class="qti3-player-modal-header">
             <slot name="header"/>
-            <button type="button" class="close" aria-label="Close" @click="hide()">×</button>
+            <button type="button" class="qti3-player-close" aria-label="Close" @click="hide()">×</button>
           </header>
 
-          <div class="modal-body">
+          <div class="qti3-player-modal-body">
             <slot name="body"/>
           </div>
 
-          <footer class="modal-footer">
+          <footer class="qti3-player-modal-footer">
             <slot name="footer"/>
           </footer>
         </div>
         <span tabindex="0"></span>
       </div>
 
-      <div class="modal-backdrop" @click="hide()"/>
+      <div class="qti3-player-modal-backdrop" @click="hide()"/>
     </div>
   </transition>
 </template>
@@ -58,12 +58,12 @@ export default {
 // .modal-content   - actual modal w/ bg and corners and stuff
 */
 
-.modal-open .modal {
+.modal-open .qti3-player-modal {
   overflow-x: hidden;
   overflow-y: auto;
 }
 
-.modal {
+.qti3-player-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -75,14 +75,14 @@ export default {
   outline: 0;
 }
 
-.modal-dialog {
+.qti3-player-modal-dialog {
   position: relative;
   width: auto;
   margin: 0.5rem;
   pointer-events: none;
 }
 
-.modal-dialog-centered {
+.qti3-player-modal-dialog-centered {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -92,7 +92,7 @@ export default {
   min-height: calc(100% - 1rem);
 }
 
-.modal-dialog-centered::before {
+.qti3-player-modal-dialog-centered::before {
   display: block;
   height: calc(100vh - 1rem);
   height: -webkit-min-content;
@@ -102,16 +102,16 @@ export default {
 }
 
 @media (min-width: 576px) {
-  .modal-dialog {
+  .qti3-player-modal-dialog {
       max-width: 500px;
       margin: 1.75rem auto;
   }
 
-  .modal-dialog-centered {
+  .qti3-player-modal-dialog-centered {
     min-height: calc(100% - 3.5rem);
   }
 
-  .modal-dialog-centered::before {
+  .qti3-player-modal-dialog-centered::before {
       height: calc(100vh - 3.5rem);
       height: -webkit-min-content;
       height: -moz-min-content;
@@ -120,7 +120,7 @@ export default {
 
 }
 
-.modal-content {
+.qti3-player-modal-content {
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -139,15 +139,15 @@ export default {
   outline: 0;
 }
 
-.modal.show {
+.qti3-player-modal.show {
   display: block;
 }
 
-.modal.show .modal-content {
+.qti3-player-modal.show .qti3-player-modal-content {
   z-index: 1050;
 }
 
-.modal-header {
+.qti3-player-modal-header {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -178,14 +178,15 @@ button:not(:disabled) {
   cursor: pointer;
 }
 
-button.close {
+button.qti3-player-close {
   -webkit-appearance: button;
   padding: 0;
+  margin: 0 0 0 auto;
   background-color: transparent;
   border: 1px solid transparent;
 }
 
-.close {
+.qti3-player-close {
   float: right;
   font-size: 1.3125rem;
   font-weight: 600;
@@ -195,15 +196,15 @@ button.close {
   opacity: .75;
 }
 
-.close:focus {
+.qti3-player-close:focus {
   border-color: var(--foreground);
 }
 
-.modal-header .close {
+.qti3-player-modal-header .qti3-player-close {
   cursor: pointer;
 }
 
-.modal-body {
+.qti3-player-modal-body {
   position: relative;
   -webkit-box-flex: 1;
           -ms-flex: 1 1 auto;
@@ -211,7 +212,7 @@ button.close {
   padding: .5rem;
 }
 
-.modal-footer {
+.qti3-player-modal-footer {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -240,7 +241,7 @@ button.close {
   opacity: 0;
 }
 
-.modal-backdrop {
+.qti3-player-modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
