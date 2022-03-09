@@ -923,7 +923,7 @@ export default {
   margin: 0;
   font-size: 1rem;
   font-weight: 400;
-  line-height: 1.6;
+  line-height: 1.8rem;
   font-family: "Roboto", sans-serif;
   color: var(--foreground);
   text-align: left;
