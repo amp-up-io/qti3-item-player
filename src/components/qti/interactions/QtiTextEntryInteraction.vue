@@ -131,7 +131,7 @@ export default {
       baseType: 'string',
       cardinality: 'single',
       isValidResponse: false,
-      invalidResponseMessage: 'Text box input is required',
+      invalidResponseMessage: 'Input Required',
       // Save provided patternMask as a Regex here
       appliedRegex: null,
       // Used to toggle the patternMask message tooltip
