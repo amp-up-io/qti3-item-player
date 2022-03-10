@@ -639,15 +639,17 @@ export const store = {
   },
 
   /**
-   * @description This method should be called whenever we want to end an attempt.
-   * For example, this might be called by a qti-end-attempt-interaction, or it might be
-   * called by an item container such as an item or test controller.
-   *
-   * This calls the endAttempt method exposed by the qti-assessment-item component.
+   * @description This method should be called whenever we want to end an attempt
+   * from a qti-end-attempt-interaction. This calls the endAttempt method exposed
+   * by the qti-assessment-item component, and reports the results of the
+   * endAttempt to any listeners.
    * @param {Object} stateObject - an object containing any desired state.
    */
   NotifyEndAttempt (stateObject) {
     this.state.item.endAttempt(stateObject)
+    // Report attempt state to listeners.  Any validation messages
+    // will get reported here.
+    this.state.item.notifyAttemptResults(true)
   },
 
   /**

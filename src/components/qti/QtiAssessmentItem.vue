@@ -104,13 +104,7 @@ export default {
       // Show feedback (if sessionControl permits it)
       this.endAttempt()
 
-      // Pull state from the store
-      const state = new ItemStateFactory(this.identifier, store)
-
-      this.$parent.$emit('itemEndAttemptReady', {
-        "state": state.getSerializedState(),
-        "target": (typeof target !== 'undefined' ? target : null)
-      })
+      this.notifyAttemptResults(true, target)
     },
 
     /**
@@ -125,10 +119,17 @@ export default {
       // Examine session control for validateResponses.
       this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())
 
+      this.notifyAttemptResults(false, target)
+    },
+
+    notifyAttemptResults (isEndAttempt=true, target) {
       // Pull state from the store
       const state = new ItemStateFactory(this.identifier, store)
 
-      this.$parent.$emit('itemSuspendAttemptReady', {
+      // Compute whether or not this is an endAttempt or a suspendAttempt
+      const eventType = isEndAttempt ? 'itemEndAttemptReady' : 'itemSuspendAttemptReady'
+
+      this.$parent.$emit(eventType, {
         "state": state.getSerializedState(),
         "target": (typeof target !== 'undefined' ? target : null)
       })
@@ -343,9 +344,13 @@ export default {
       this.getResponses()
 
       // Evaluate response validity if item session control validateResponses=true
-      if (this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())) {
-        this.processResponses()
+      const isAttemptValid = this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())
+      if (!isAttemptValid) {
+        console.log('[EndAttempt][InvalidResponses][Identifier]', this.identifier)
+        return
       }
+
+      this.processResponses()
 
       if (this.isAdaptive) {
         this.evaluateItemCompleted()
