@@ -7,3 +7,17 @@ The amp-up.io QTI 3 Player Component ("QTI 3 Player") is a 100% JavaScript compo
 A conforming QTI 3 authoring or exporting system can construct a QTI 3 Item XML solution that will "play" authentically and reliably - according to the Best Practices Implementation Guide - in the QTI 3 Player component.
 
 License:  MIT
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles, minifies, creates package
+```
+npm run build:npm
