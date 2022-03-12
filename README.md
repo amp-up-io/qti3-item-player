@@ -1,37 +1,41 @@
 # amp-up.io QTI 3 Player Component
 
-
-## About
-
 The amp-up.io QTI 3 Player Component ("QTI 3 Player") is a 100% JavaScript component that aims to encapsulate the best practices and behaviors of the IMS Global QTI 3 Assessment Item specification which can be found here:
 
 [IMS Global QTI v3 Best Practices and Implementation Guide](https://www.imsglobal.org/spec/qti/v3p0/impl)
 
 A conforming QTI 3 authoring or exporting system can construct a QTI 3 Item XML solution that will "play" authentically and reliably - according to the Best Practices Implementation Guide - in the QTI 3 Player component.
 
+## QTI Element Support
+
+For the complete list of the QTI3 XML elements supported by the QTI 3 Player component, please refer to the [QTI 3 Player Item Reference](https://docs.google.com/document/d/1KCImUAk-2uBqSOHRO1lJa1orrzF4b8cl/#heading=h.gjdgxs)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 
 
 ## Getting Started
 
-### Clone the repo
+### 1. Clone the repo
 ```sh
 git clone https://github.com/amp-up-io/qti3-item-player.git
 ```
 
-### Installation
+### 2. Installation
 ```sh
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 3. Compiles and hot-reloads for development
 ```sh
 npm run serve
 ```
 
-### Compiles, minifies, creates package
+### 4. Compiles, minifies, creates package
 ```sh
 npm run build:npm
 ```
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
@@ -48,14 +52,6 @@ npm run build:npm
 - [ ] Scoring API Example(s)
 - [ ] Improved Audio Player
 - [ ] Improved Video Player
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-## QTI Element Support
-
-For the complete list of QTI3 element support, please refer to the [QTI3 Player Item Reference](https://docs.google.com/document/d/1KCImUAk-2uBqSOHRO1lJa1orrzF4b8cl/#heading=h.gjdgxs)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
