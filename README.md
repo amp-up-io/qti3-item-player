@@ -1,5 +1,7 @@
 # amp-up.io QTI 3 Player Component
 
+[![MIT License][license-shield]][license-url]
+
 The amp-up.io QTI 3 Player Component ("QTI 3 Player") is a 100% JavaScript component that aims to encapsulate the best practices and behaviors of the IMS Global QTI 3 Assessment Item specification which can be found here:
 
 [IMS Global QTI v3 Best Practices and Implementation Guide](https://www.imsglobal.org/spec/qti/v3p0/impl)
