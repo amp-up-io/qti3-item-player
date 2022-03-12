@@ -1,4 +1,3 @@
-<div id="top"></div>
 # amp-up.io QTI 3 Player Component
 
 The amp-up.io QTI 3 Player Component ("QTI 3 Player") is a 100% JavaScript component that aims to encapsulate the best practices and behaviors of the IMS Global QTI 3 Assessment Item specification which can be found here:
@@ -22,7 +21,7 @@ npm run serve
 ### Compiles, minifies, creates package
 ```
 npm run build:npm
-
+```
 
 <!-- PROJECT SHIELDS -->
 <!--
