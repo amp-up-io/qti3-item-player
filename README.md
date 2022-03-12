@@ -1,16 +1,15 @@
 # amp-up.io QTI 3 Player Component
 
-[![MIT License][license-shield]][license-url]
 
-## About The Project
-
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+## About
 
 The amp-up.io QTI 3 Player Component ("QTI 3 Player") is a 100% JavaScript component that aims to encapsulate the best practices and behaviors of the IMS Global QTI 3 Assessment Item specification which can be found here:
 
 [IMS Global QTI v3 Best Practices and Implementation Guide](https://www.imsglobal.org/spec/qti/v3p0/impl)
 
 A conforming QTI 3 authoring or exporting system can construct a QTI 3 Item XML solution that will "play" authentically and reliably - according to the Best Practices Implementation Guide - in the QTI 3 Player component.
+
+
 
 ## Getting Started
 
@@ -37,43 +36,6 @@ npm run build:npm
 
 
 
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
-  <h3 align="center">Best-README-Template</h3>
-
-  <p align="center">
-    A 100% Javascript component that renders and scores QTI3 Assessment Items
-    <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
-    ·
-    <a href="https://github.com/amp-up-io/qti3-item-player/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/amp-up-io/qti3-item-player/issues">Request Feature</a>
-  </p>
-</div>
-
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
 <!-- ROADMAP -->
 ## Roadmap
 
@@ -93,7 +55,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## QTI Element Support
 
-For the complete list of QTI3 element support, please refer to the [Documentation](https://docs.google.com/document/d/1KCImUAk-2uBqSOHRO1lJa1orrzF4b8cl/#heading=h.gjdgxs)
+For the complete list of QTI3 element support, please refer to the [QTI3 Player Item Reference](https://docs.google.com/document/d/1KCImUAk-2uBqSOHRO1lJa1orrzF4b8cl/#heading=h.gjdgxs)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -135,9 +97,3 @@ Project Link: [https://github.com/amp-up-io/qti3-item-player](https://github.com
 This component would not be possible were it not for a fortuitous decision by the aQTI working group - meeting at CITO headquarters in Arnhem, NE, January 2015 - to make QTI3 "web component friendly".  
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[product-screenshot]: images/screenshot.png
