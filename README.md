@@ -105,4 +105,4 @@ This component would not be possible were it not for a fortuitous decision by th
 
 
 [license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
+[license-url]: https://github.com/amp-up-io/qti3-item-player/blob/main/LICENSE
