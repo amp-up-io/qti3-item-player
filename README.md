@@ -6,7 +6,7 @@ The amp-up.io QTI 3 Player Component ("QTI 3 Player") is a 100% JavaScript compo
 
 A conforming QTI 3 authoring or exporting system can construct a QTI 3 Item XML solution that will "play" authentically and reliably - according to the Best Practices Implementation Guide - in the QTI 3 Player component.
 
-For a complete list of the QTI3 XML elements supported by the QTI 3 Player component, please refer to the [QTI 3 Player Item Reference](https://docs.google.com/document/d/1KCImUAk-2uBqSOHRO1lJa1orrzF4b8cl/#heading=h.gjdgxs)
+For a complete list of the QTI3 XML elements supported by the QTI 3 Player component, please refer to the [QTI 3 Player Item Reference](https://docs.google.com/document/d/1KCImUAk-2uBqSOHRO1lJa1orrzF4b8cl/#heading=h.gjdgxs).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
