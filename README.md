@@ -104,5 +104,5 @@ This component would not be possible were it not for a fortuitous decision by th
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/amp-up-io/qti3-item-player?label=License&style=for-the-badge
 [license-url]: https://github.com/amp-up-io/qti3-item-player/blob/main/LICENSE
