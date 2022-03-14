@@ -21,10 +21,11 @@ The QTI 3 Player has API's, interfaces, and capabilities which are optimized for
 
 <div align="center">
 <p>Thumbnails of Items/Rendering</p>
-<img src="https://user-images.githubusercontent.com/898605/158032910-d739e359-c248-4bad-be30-935bb23aa6ff.png" width="320" height="300">
-<img src="https://user-images.githubusercontent.com/898605/158033033-dbb00c44-6d95-4ec0-9591-9d3459fcc1b8.png" width="320" height="300">
-<img src="https://user-images.githubusercontent.com/898605/158033144-d19063f0-43c4-48e4-a2d1-6e4de6439fc9.png" width="320" height="300">
-<img src="https://user-images.githubusercontent.com/898605/158032910-d739e359-c248-4bad-be30-935bb23aa6ff.png" width="320" height="300">
+
+<img src="https://user-images.githubusercontent.com/898605/158195206-4f82d851-f3f0-47f6-9756-fbee098c7dcf.png" width="320" height="270">
+<img src="https://user-images.githubusercontent.com/898605/158033033-dbb00c44-6d95-4ec0-9591-9d3459fcc1b8.png" width="320" height="270">
+<img src="https://user-images.githubusercontent.com/898605/158033144-d19063f0-43c4-48e4-a2d1-6e4de6439fc9.png" width="320" height="270">
+<img src="https://user-images.githubusercontent.com/898605/158032910-d739e359-c248-4bad-be30-935bb23aa6ff.png" width="320" height="270">
 </div>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -69,7 +70,7 @@ import Qti3Player from 'qti3-item-player'
 import 'qti3-item-player/dist/qti3Player.css'
 ```
 
-### 2. Load a QTI 3 Item
+### 2. Load a QTI 3 Item into QTI 3 Player
 
 QTI 3 Item XML can be loaded directly into QTI 3 Player via the Player's `loadItemFromXML` method which takes two arguments `xml {String}` and `configuration {Object}`.  
 
@@ -78,42 +79,65 @@ QTI 3 Item XML can be loaded directly into QTI 3 Player via the Player's `loadIt
 this.qti3Player.loadItemFromXml(xml, configuration)
 ```
 
-The `configuration` object is used to specify runtime context to QTI 3 Player during the item session loaded in `loadItemFromXml`.  The following is a sample method to build a configuration object.
+#### 2a) About a Configuration
+
+The `configuration` object is used to specify runtime context to QTI 3 Player during the item session loaded in `loadItemFromXml`.  A configuration object has the following structure:
 
 ```js
-/**
- * @description Build a configuration object.
- * @param {String} guid - a tracking guid used for saving/retrieving
- * item state.
- * @return {Object} configuration
- */
- getConfiguration (guid) {
-   // Intialize
-   const configuration = {}
+configuration: {
+  guid: <{String} identifier used to track item state>,
+  pnp: <{Object} used to define Personal Needs and Preferences>,
+  sessionControl: <{Object} used to defined Item Session Control>,
+  state: <{Object} used to RESTORE prior state saved from a prior Item Session>
+}
+```
 
-   // Fetch prior state from Test State.  If a 'state'
-   // property is in a configuration then QTI 3 Player will
-   // use this to restore a prior item state - including all
-   // template, context, outcome, and response variables.
-   const state = this.getTestStateItemState(guid)
-   if (typeof state !== 'undefined') configuration.state = state
+#### 2b) Constructing a Configuration
 
-   // IMPORTANT: Stamp the item's tracking guid onto the configuration
-   configuration.guid = guid
+The following snippet is an example of how an application can construct a `configuration`.
+
+```js
+// Intialize
+const configuration = {}
+
+// Stamp an item's tracking guid (if any) onto the configuration
+configuration.guid = myItemTrackingGuid
    
-   // QTI 3 Player includes a helper class called 'PnpFactory' - used
-   // to build a Personal Needs and Preferences definition.
-   configuration.pnp = this.pnp.getPnp()
-   
-   // QTI 3 Player includes a helper class called 'ItemSessionControl' - used
-   // to build an Item Session Control definition.
-   configuration.sessionControl = this.sessionControl.getSessionControl()
+// QTI 3 Player includes a helper class called 'PnpFactory' which can be used
+// to build a Personal Needs and Preferences definition.
+// The Default pnp object in the PnpFactory is:
+const pnp = {
+  textAppearance: {
+    colorStyle: 'qti3-player-color-default'
+  },
+  glossaryOnScreen: true, // unsupported - see Roadmap
+  layoutSingleColumn: false // unsupported - see Roadmap (Simplified Layout)
+}
 
-   return configuration
- }
+// Set the configuration's 'pnp' property
+configuration.pnp = pnp
+   
+// QTI 3 Player includes a helper class called 'SessionControlFactory' which can be 
+// used to build an Item Session Control definition.
+// The Default sessionControl object in the SessionControlFactory is:
+const defaultItemSessionControl = {
+  max_attempts: 0, // no limit
+  show_feedback: false,
+  validate_responses: false
+}
+   
+// Set the configuration's 'sessionControl' property
+configuration.sessionControl = defaultItemSessionControl
+
+// OPTIONAL
+// If a 'state' property is in a configuration then QTI 3 Player will
+// use this to restore a prior item state - including all
+// template, context, outcome, and response variables.
+const state = testController.getTestStateItemState(myItemTrackingGuid)
+if (typeof state !== 'undefined') configuration.state = state
  ```
 
-In the absence of a `pnp` property, QTI 3 Player will use defaults, or previous settings, for presentation and accessibility supports.  In the absence of a `sessionControl` property, QTI 3 Player will use standard Item Session Control defaults.
+In the absence of a `pnp` property, QTI 3 Player will use defaults, or previous settings, for presentation and accessibility supports.  In the absence of a `sessionControl` property, QTI 3 Player will use defaults, or previous settings, for the Item Session Control definition.
 
 
 
@@ -134,6 +158,7 @@ The QTI3 Item Player 2022 development roadmap includes all features and capabili
 - [x] Support for Adaptive Items and QtiEndAttemptInteraction
 - [ ] Catalog Support for Glossary and Keyword Translation
 - [ ] Shared Stimulus Support
+- [ ] Simplified Layout
 - [ ] QtiMatch, QtiGapMatch, QtiGraphicGapMatch Interaction Support
 - [ ] QtiHottext Interaction Support
 - [ ] QtiHotspot Interaction Support
