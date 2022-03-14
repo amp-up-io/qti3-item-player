@@ -15,9 +15,9 @@ For a complete list of the QTI3 XML elements supported by the QTI 3 Player compo
 
 ## About The Project
 
-The QTI 3 Player has API's, interfaces, and capabilities which are optimized for formative or classroom assessment settings.  Such settings typically require sophisticated QTI features such as adaptive items, item templating (sometimes called item "cloning"), template processing, and full response processing; i.e., scoring.  The QTI 3 Player implements the full expressive QTI 3 Item XML vocabulary according to best practices.  Consequently, you don't have to know anything about QTI.  Just install the component in your project, inject XML, and go!  In the demo below, a "TestRunner" application embeds the QTI 3 Player component for Item Rendering.
+The QTI 3 Player has API's, interfaces, and capabilities which are optimized for formative or classroom assessment settings.  Such settings typically require sophisticated QTI features such as adaptive items, item templating (sometimes called item "cloning"), template processing, and full response processing; i.e., scoring.  The QTI 3 Player implements the full expressive QTI 3 Item XML vocabulary according to best practices.  Consequently, you don't have to know anything about QTI.  Just install the component in your project, inject XML, and go!  In the following demo, a "TestRunner" application embeds the QTI 3 Player component for Item Rendering.
 
-<a href="https://qti.amp-up.io/testrunner/" target="_blank">View Demo</a>
+<a href="https://qti.amp-up.io/testrunner/" target="_blank">View TestRunner Demo</a>
 
 <div align="center">
 <p>Thumbnails of Items/Rendering</p>
@@ -55,6 +55,69 @@ npm run build:npm
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+
+
+## Usage
+
+The [Demo TestRunner](https://github.com/amp-up-io/qti3-item-player-controller) is a good way to get familiar with QTI 3 Player usage.  Specifically, please see the [TestRunner.vue](https://github.com/amp-up-io/qti3-item-player-controller/blob/main/src/views/TestRunner.vue) sub-component.
+
+### 1. Import QTI 3 Player and QTI 3 Player CSS
+
+```js
+// The Qti3Player component and built-in CSS
+import Qti3Player from 'qti3-item-player'
+import 'qti3-item-player/dist/qti3Player.css'
+```
+
+### 2. Load a QTI 3 Item
+
+QTI 3 Item XML can be loaded directly into QTI 3 Player via the Player's `loadItemFromXML` method which takes two arguments `xml {String}` and `configuration {Object}`.  
+
+```js
+// Load item XML with a configuration
+this.qti3Player.loadItemFromXml(xml, configuration)
+```
+
+The `configuration` object is used to specify runtime context to QTI 3 Player during the item session loaded in `loadItemFromXml`.  The following is a sample method to build a configuration object.
+
+```js
+/**
+ * @description Build a configuration object.
+ * @param {String} guid - a tracking guid used for saving/retrieving
+ * item state.
+ * @return {Object} configuration
+ */
+ getConfiguration (guid) {
+   // Intialize
+   const configuration = {}
+
+   // Fetch prior state from Test State.  If a 'state'
+   // property is in a configuration then QTI 3 Player will
+   // use this to restore a prior item state - including all
+   // template, context, outcome, and response variables.
+   const state = this.getTestStateItemState(guid)
+   if (typeof state !== 'undefined') configuration.state = state
+
+   // IMPORTANT: Stamp the item's tracking guid onto the configuration
+   configuration.guid = guid
+   
+   // QTI 3 Player includes a helper class called 'PnpFactory' - used
+   // to build a Personal Needs and Preferences definition.
+   configuration.pnp = this.pnp.getPnp()
+   
+   // QTI 3 Player includes a helper class called 'ItemSessionControl' - used
+   // to build an Item Session Control definition.
+   configuration.sessionControl = this.sessionControl.getSessionControl()
+
+   return configuration
+ }
+ ```
+
+In the absence of a `pnp` property, QTI 3 Player will use defaults, or previous settings, for presentation and accessibility supports.  In the absence of a `sessionControl` property, QTI 3 Player will use standard Item Session Control defaults.
+
+
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 
 <!-- ROADMAP -->
