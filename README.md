@@ -62,6 +62,7 @@ npm run build:npm
 
 The [Demo TestRunner](https://github.com/amp-up-io/qti3-item-player-controller) is a good way to get familiar with QTI 3 Player usage.  Specifically, please see the [TestRunner.vue](https://github.com/amp-up-io/qti3-item-player-controller/blob/main/src/views/TestRunner.vue) sub-component.
 
+
 ### 1. Import QTI 3 Player and QTI 3 Player CSS
 
 ```js
@@ -69,17 +70,59 @@ The [Demo TestRunner](https://github.com/amp-up-io/qti3-item-player-controller) 
 import Qti3Player from 'qti3-item-player'
 import 'qti3-item-player/dist/qti3Player.css'
 ```
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-### 2. Load a QTI 3 Item into QTI 3 Player
 
-QTI 3 Item XML can be loaded directly into QTI 3 Player via the Player's `loadItemFromXML` method which takes two arguments `xml {String}` and `configuration {Object}`.  
+### 2. Load the QTI 3 Player component in your Page or Template
+
+```html
+<Qti3Player
+  ref="qti3player"
+  :container-class="containerClass"
+  :container-padding-class="containerPaddingClass"
+  :color-class="colorClass"
+  suppress-alert-messages
+  suppress-invalid-response-messages
+  @notifyQti3PlayerReady="handlePlayerReady"
+  @notifyQti3ItemReady="handleItemReady"
+  @notifyQti3SuspendAttemptCompleted="handleSuspendAttemptCompleted"
+  @notifyQti3EndAttemptCompleted="handleEndAttemptCompleted"
+  @notifyQti3ItemAlertEvent="displayItemAlertEvent"
+/>
+```
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+### 3. Listen for the QTI 3 Player 'notifyQti3PlayerReady' event
+
+This event signifies that the QTI 3 Player component is loaded and ready for action.  The following snippet is a sample handler for the `notifyQti3PlayerReady` event.  QTI 3 Player hands itself as an argument to the `notifyQti3PlayerReady` event, thus simplifying further QTI 3 Player API calls.
 
 ```js
-// Load item XML with a configuration
+/**
+ * @description Event handler for the QTI3Player component's 'notifyQti3PlayerReady'
+ * event.  This event is fired upon mounting of the Qti3Player component.
+ *
+ * The Qti3Player is now ready for XML loading.
+ * @param {Component} qti3Player - the Qti3Player component itself
+ */
+handlePlayerReady (qti3Player) {
+  this.qti3Player = qti3Player
+}
+```
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+### 4. Load a QTI 3 Item into QTI 3 Player
+
+Once QTI 3 Player is loaded and ready (see #3 above), QTI 3 Item XML can be loaded directly into QTI 3 Player via the Player's `loadItemFromXML` method which takes two arguments `xml {String}` and `configuration {Object}`.  
+
+```js
+// Load item XML with a configuration.  Use the `this.qti3Player` reference
+// saved in the notifyQti3PlayerReady event handler.
 this.qti3Player.loadItemFromXml(xml, configuration)
 ```
 
-#### 2a) About a Configuration
+#### 4a) About a Configuration
 
 The `configuration` object is used to specify runtime context to QTI 3 Player during the item session loaded in `loadItemFromXml`.  A configuration object has the following structure:
 
@@ -92,7 +135,7 @@ configuration: {
 }
 ```
 
-#### 2b) Constructing a Configuration
+#### 4b) Constructing a Configuration
 
 The following snippet is an example of how an application can construct a `configuration`.
 
@@ -139,9 +182,260 @@ if (typeof state !== 'undefined') configuration.state = state
 
 In the absence of a `pnp` property, QTI 3 Player will use defaults, or previous settings, for presentation and accessibility supports.  In the absence of a `sessionControl` property, QTI 3 Player will use defaults, or previous settings, for the Item Session Control definition.
 
+<p align="right">(<a href="#top">back to top</a>)</p>
 
+
+### 5. Listen for the QTI 3 Player 'notifyQti3ItemReady' Event
+
+QTI 3 Player triggers a `notifyQti3ItemReady` event upon completion of the Player's `loadItemFromXML` method.  The following snippet is a sample handler for the `notifyQti3ItemReady` event.
+
+```js
+/**
+ * @description Event handler for the QTI3Player component's 'notifyQti3ItemReady'
+ * event.  This event is fired upon completion of the qti-assessment-item
+ * component's loading of XML.
+ */
+handleItemReady () {
+  console.log('QTI 3 Item XML is loaded and rendered!  The latest "attempt" has officially begun.')
+}
+```
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+### 6. Retrieving Item State
+
+After item XML is loaded and an attempt has begun, a test controller may retrieve the item's current state via two methods:
+
+* **endAttempt**
+
+  This performs response validation (if validateResponses=true), ends the attempt, _executes response processing_, and produces the state of all item variables.  Typical use is when `submissionMode: "individual"`, or when you want to generate a raw score from the responses and the response processing.  Note that Feedback (inline, block, modal) is also displayed if `showFeedback: true`
+  
+* **suspendAttempt**
+
+    This performs response validation (if `validateResponses: true`) and produces the state of all item variables.  _No response processing is executed._  Typical use is when `submissionMode: "simultaneous"`.
+
+The `endAttempt` and `suspendAttempt` methods may take a considerable amount of time to complete.  QTI 3 Player triggers the `notifyQti3EndAttemptCompleted` and `notifyQti3SuspendAttemptCompleted` events, respectively, upon completion of an `endAttempt` or a `suspendAttempt` method call.
+
+#### 6a) Calling endAttempt and handling the notifyQti3EndAttemptCompleted event
+
+```js
+// Call the endAttempt method, passing a string/target action that will be
+// echoed back in the notifyQti3EndAttemptCompleted event payload.
+this.qti3Player.endAttempt('navigateNextItem')
+```
+
+```js
+/**
+ * @description Example event handler for the QTI3Player component's 'notifyQti3EndAttemptCompleted'
+ * event.  This event is fired upon completion of the endAttempt method.
+ * @param {Object} data - the item's state, including outcomes from response processing
+ */
+handleEndAttemptCompleted (data) {
+  // 'data' contains the item state, including any validation messages, 
+  // response variable values, outcome variable values, template variable values,
+  // and context variable values.
+  // ... do something ...
+}
+```
+
+#### 6b) Calling suspendAttempt and handling the notifyQti3SuspendAttemptCompleted event
+
+```js
+// Call the suspendAttempt method, passing a string/target action that will be
+// echoed back in the notifyQti3SuspendAttemptCompleted event payload.
+this.qti3Player.suspendAttempt('navigateNextItem')
+```
+
+```js
+/**
+ * @description Example event handler for the QTI3Player component's 'notifyQti3SuspendAttemptCompleted'
+ * event.  This event is fired upon completion of the suspendAttempt method.
+ * @param {Object} data - the item's state
+ */
+handleSuspendAttemptCompleted (data) {
+  // 'data' contains the item state, including any validation messages, 
+  // response variable values, outcome variable values, template variable values,
+  // and context variable values.
+  // ... do something ...
+}
+```
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+### 7. About Item State
+
+#### Item State Object Structure
+
+The `endAttempt` and `suspendAttempt` methods produce a `state` object with the following properties/structure:
+
+```js
+"state": {
+  "identifier": "<qti-assessment-item identifier>",
+  "guid": "<tracking guid passed in the configuration>",
+  "contextVariables": [ <built-in and declared context variables> ],
+  "responseVariables": [ <built-in and declared response variables> ],
+  "outcomeVariables": [ <built-in and declared outcome variables> ],
+  "templateVariables": [ <declared template variables> ],
+  "validationMessages": [ <validation messages (if validateResponses: true, and response constraints not met)> ]
+}
+```
+
+#### Full Item State Example Payload
+
+In this item, there are two qti-choice-interaction's, each with single cardinality.  This item is not adaptive; i.e., `adaptive="false"`, and the item's XML contains no response processing that changes the original value of `completionStatus`.
+
+```js
+{
+  "state": {
+    "identifier": "q2-choice-interaction-single-sv-4a",
+    "guid": "0000-0002-0001",
+    "contextVariables": [
+      {
+        "identifier": "QTI_CONTEXT",
+        "cardinality": "record",
+        "value": {}
+      }
+    ],
+    "responseVariables": [
+      {
+        "identifier": "numAttempts",
+        "cardinality": "single",
+        "value": 1,
+        "state": null
+      },
+      {
+        "identifier": "duration",
+        "cardinality": "single",
+        "value": 0,
+        "state": null
+      },
+      {
+        "identifier": "RESPONSE1",
+        "cardinality": "single",
+        "value": "ChoiceA",
+        "state": {
+          "order": [
+            "ChoiceA",
+            "ChoiceB",
+            "ChoiceC"
+          ]
+        },
+        "correctResponse": null
+      },
+      {
+        "identifier": "RESPONSE2",
+        "cardinality": "single",
+        "value": "ChoiceB",
+        "state": {
+          "order": [
+            "ChoiceA",
+            "ChoiceB",
+            "ChoiceC"
+          ]
+        },
+        "correctResponse": null
+      }
+    ],
+    "outcomeVariables": [
+      {
+        "identifier": "SCORE",
+        "cardinality": "single",
+        "value": 0
+      },
+      {
+        "identifier": "completionStatus",
+        "cardinality": "single",
+        "value": "not_attempted"
+      }
+    ],
+    "templateVariables": [],
+    "validationMessages": []
+  },
+  "target": "navigateNextItem"
+}
+```
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+### 8. Item Session 'Alert' Messages and the notifyQti3ItemAlertEvent
+
+An item session 'alert' message is triggered by QTI 3 Player when a person exceeds an interaction's max-choices or max-associations threshold.  QTI 3 Player uses a built-in messaging/toast component to display such alerts to the candidate.  
+
+An encapsulating application may instrument the QTI 3 Player to _not display alert messages_ by specifying the boolean attribute `suppress-alert-messages`.  Example:
+
+```html
+<Qti3Player
+  ref="qti3player"
+  suppress-alert-messages
+  @notifyQti3ItemAlertEvent="displayItemAlertEvent"
+/>
+```
+
+An encapsulating application should implement a handler for the `notifyQti3ItemAlertEvent` when instrumenting QTI 3 Player to suppress its internal alert message display.  Example:
+
+```js
+/**
+ * @description Handler for QTI item alert messages such as max selections messages.
+ * @param {Object} event - object containing an icon property and a message property
+ */
+displayItemAlertEvent (event) {
+  // This example uses the sweetalert component to display messages as toasts
+  Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon: event.icon,
+    html: event.message,
+    showConfirmButton: false,
+    showCloseButton: true,
+    timer: 3000,
+    timerProgressBar: true
+  })
+}
+```
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+### 9. Item Session 'Invalid Response' Messages
+
+An item session 'invalid response' message is triggered by QTI 3 Player when,  
+
+* `SessionControl.validateResponses=true`, and 
+* A response validity requirement is not met on an interaction in the loaded item  
+
+As with item session 'alert' messages, QTI 3 Player uses a built-in messaging/toast component to display such 'invalid response' messages to the candidate.  
+
+An encapsulating application may instrument the QTI 3 Player to _not display invalid response messages_ by specifying the boolean attribute `suppress-invalid-response-messages`.  Example:
+
+```html
+<Qti3Player
+  ref="qti3player"
+  suppress-invalid-response-messages
+/>
+```
+
+All violations of response validity are reported in the `validationMessages` property of the state object returned to the notifyQti3EndAttemptCompleted and notifyQti3SuspendAttemptCompleted event handlers.
+
+```js
+"state": {
+  "identifier": "<qti-assessment-item identifier>",
+  "guid": "<tracking guid passed in the configuration>",
+  "contextVariables": [ <built-in and declared context variables> ],
+  "responseVariables": [ <built-in and declared response variables> ],
+  "outcomeVariables": [ <built-in and declared outcome variables> ],
+  "templateVariables": [ <declared template variables> ],
+  "validationMessages": [
+    {
+      "identifier": "RESPONSE3",
+      "message": "Not enough selected! Please select at least two."
+    }
+  ]
+}
+```
+
+This permits an encapsulating application to handle and display validation messages using its own UX.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
 
 
 <!-- ROADMAP -->
