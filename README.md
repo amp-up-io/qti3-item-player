@@ -99,11 +99,11 @@ This event signifies that the QTI 3 Player component is loaded and ready for act
 
 ```js
 /**
- * @description Event handler for the QTI3Player component's 'notifyQti3PlayerReady'
- * event.  This event is fired upon mounting of the Qti3Player component.
+ * @description Event handler for the QTI 3 Player component's 'notifyQti3PlayerReady'
+ * event.  This event is fired upon mounting of QTI 3 Player.
  *
- * The Qti3Player is now ready for XML loading.
- * @param {Component} qti3Player - the Qti3Player component itself
+ * The Qti3Player is now ready for loading XML.
+ * @param {Component} qti3Player - the QTI 3 Player component itself
  */
 handlePlayerReady (qti3Player) {
   this.qti3Player = qti3Player
@@ -117,7 +117,7 @@ handlePlayerReady (qti3Player) {
 Once QTI 3 Player is loaded and ready (see #3 above), QTI 3 Item XML can be loaded directly into QTI 3 Player via the Player's `loadItemFromXML` method which takes two arguments `xml {String}` and `configuration {Object}`.  
 
 ```js
-// Load item XML with a configuration.  Use the `this.qti3Player` reference
+// Load item XML with a configuration.  Use the 'this.qti3Player' reference
 // saved in the notifyQti3PlayerReady event handler.
 this.qti3Player.loadItemFromXml(xml, configuration)
 ```
@@ -438,7 +438,61 @@ This permits an encapsulating application to handle and display validation messa
 
 
 
-<!-- ROADMAP -->
+## QTI 3 Player Presentation Attributes
+
+QTI 3 Player has several attributes to instrument presentation within an encapsulating application/web page. These attributes are `container-class`, `container-padding-class`, and `color-class`
+
+### container-class
+
+Container classes are used to contain and pad content within them. QTI 3 Player comes with built-in support for two container classes: `qti3-player-container-fluid` and `qti3-player-container`. 
+
+* qti3-player-container-fluid **DEFAULT**
+
+  This container is a width=100%, padding=0 container at all widths.
+  
+* qti3-player-container
+
+  This container has responsive breakpoints at screen widths of 1200px, 980px, and 768px.  
+
+<a href="https://qti.amp-up.io/testrunner/test/1" target="testrunner">Experiment with the Container Class</a> Note: Click the "Settings" menu in the top-right corner of the TestRunner application.
+
+
+### container-padding-class
+
+Container padding classes are for setting the padding between the QTI 3 Player container and the qti-assessment-item rendered content.  QTI 3 Player comes with built-in support for six container padding classes.
+
+* qti3-player-container-padding-0 { padding: 0; } **DEFAULT**
+* qti3-player-container-padding-1 { padding: 0.25rem; }
+* qti3-player-container-padding-2 { padding: 0.5rem; }
+* qti3-player-container-padding-3 { padding: 1rem; }
+* qti3-player-container-padding-4 { padding: 1.5rem; }
+* qti3-player-container-padding-5 { padding: 3rem; }
+
+<a href="https://qti.amp-up.io/testrunner/test/1" target="testrunner">Experiment with the Container Padding Class</a> Note: Click the "Settings" menu in the top-right corner of the TestRunner application.
+
+
+### color-class
+
+QTI 3 Player has built-in support for ten foreground / background color combinations in accordance with best practices for many forms of color blindness or other visual impairments.  In addition to setting a colorClass in a PNP, color settings may also be applied dynamically.
+
+* qti3-player-color-default **DEFAULT**
+* qti3-player-color-defaultreverse (Default - Reverse Polarity)
+* qti3-player-color-blackwhite (High Contrast - foreground color: black, background color: white)
+* qti3-player-color-whiteblack (High Contrast - foreground color: white, background color: black)
+* qti3-player-color-blackrose (foreground color: black, background color: rose) 
+* qti3-player-color-roseblack (foreground color: rose, background color: black)
+* qti3-player-color-dgraymgray (foreground color: dark gray, background color: medium gray)
+* qti3-player-color-mgraydgray (foreground color: medium gray, background color: dark gray)
+* qti3-player-color-yellowblue (foreground color: yellow, background color: blue)
+* qti3-player-color-blueyellow (foreground color: blue, background color: yellow)
+
+<a href="https://qti.amp-up.io/testrunner/test/1" target="testrunner">Experiment with the Color Class</a> Note: Click the "Settings" menu in the top-right corner of the TestRunner application.
+
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
 ## Roadmap
 
 The QTI3 Item Player 2022 development roadmap includes all features and capabilities included in QTI 3 Delivery System Level 1 and Level 2 conformance. 
