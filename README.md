@@ -130,7 +130,7 @@ The `configuration` object is used to specify runtime context to QTI 3 Player du
 configuration: {
   guid: <{String} identifier used to track item state>,
   pnp: <{Object} used to define Personal Needs and Preferences>,
-  sessionControl: <{Object} used to defined Item Session Control>,
+  sessionControl: <{Object} used to define Item Session Control>,
   state: <{Object} used to RESTORE prior state saved from a prior Item Session>
 }
 ```
