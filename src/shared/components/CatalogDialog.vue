@@ -37,6 +37,14 @@ export default {
 
   methods: {
 
+    setGlossaryTerm (term) {
+      this.content.term = term
+    },
+
+    setGlossaryDefinition (definition) {
+      this.content['glossary-on-screen'].definition = definition
+    },
+
     show () {
       this.state.hidden = false
       this.render()

@@ -38,6 +38,10 @@ export default {
 
   methods: {
 
+    getChildren () {
+      return this.children
+    },
+
     isValidCardChild (tag) {
       if (tag === 'qti-card-entry') return true
       if (tag === 'qti-html-content') return true
@@ -74,7 +78,7 @@ export default {
       try {
         // Validate children.
         this.validateChildren()
-        
+
         console.log('[QtiCard][Support: ' + this.support + ' ]')
       } catch (err) {
         this.isQtiValid = false

@@ -12,14 +12,33 @@ export default {
 
   data () {
     return {
+      content: null,
       isQtiValid: true
     }
   },
 
   methods: {
+
+    getContent () {
+      return this.content
+    },
+
+    setContent (content) {
+      this.content = content
+    },
+
     validateChildren () {
-      // TODO
+      // For now, no validation.
+      // @TODO
+
+      // Process children
+      this.processChildren()
+    },
+
+    processChildren () {
+      this.setContent(this.$refs.root.innerHTML)
     }
+
   },
 
   mounted () {

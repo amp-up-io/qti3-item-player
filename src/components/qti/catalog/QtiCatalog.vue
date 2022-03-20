@@ -37,6 +37,10 @@ export default {
 
   methods: {
 
+    getCards () {
+      return this.cards
+    },
+
     isCard (tag) {
       if (tag === 'qti-card') return true
       return false
@@ -77,7 +81,7 @@ export default {
             id: this.id,
             node: this
           })
-        
+
         console.log('[QtiCatalog][Id: ' + this.id + ' ]')
       } catch (err) {
         this.isQtiValid = false
