@@ -8,8 +8,10 @@
       @itemCompleted="handleItemCompleted"
       @itemSuspendAttemptReady="handleSuspendAttemptReady"
       @itemEndAttemptReady="handleEndAttemptReady"
+      @itemCatalogEvent="handleCatalogEvent"
       v-bind:is="processedXml">
     </component>
+    <catalog-dialog ref="catalogdialog" />
   </div>
 </template>
 
@@ -18,8 +20,10 @@ import Vue from 'vue'
 import { store } from '@/store/store'
 import { XmlFilters } from '@/shared/helpers/XmlFilters'
 import Swal from 'sweetalert2'
+import CatalogDialog from '@/shared/components/CatalogDialog'
 import QtiAssessmentItem from '@/components/qti/QtiAssessmentItem'
 
+Vue.component('catalog-dialog', CatalogDialog)
 Vue.component('qti-assessment-item', QtiAssessmentItem)
 
 export default {
@@ -48,6 +52,11 @@ export default {
     },
     suppressInvalidResponseMessages: {
       type: Boolean,
+      required: false,
+      default: false
+    },
+    suppressCatalogMessages: {
+      type:Boolean,
       required: false,
       default: false
     }
@@ -90,6 +99,18 @@ export default {
 
   methods: {
 
+    handleCatalogEvent (catalogEvent) {
+      if (!this.suppressCatalogMessages) {
+        if (catalogEvent.type === 'glossary') {
+          this.$refs.catalogdialog.setGlossaryTerm(catalogEvent.term)
+          this.$refs.catalogdialog.setGlossaryDefinition(catalogEvent.data.glossary.definition)
+          this.$refs.catalogdialog.show()
+        }
+      }
+      // Always notify listener
+      this.$emit('notifyQti3ItemCatalogEvent', catalogEvent)
+    },
+
     /**
      * @description Main item loading method for the Qti3Player.  Accepts
      * a raw QTI 3 xml string and a configuration object.
@@ -106,11 +127,13 @@ export default {
       console.log('[Qti3Player][LoadItemFromXml][configuration]', configuration)
       // Step 1: clear out the existing store
       store.resetAll()
-      // Step 2: initialize the built-in variables
+      // Step 2: reset all catalog components
+      this.resetCatalogComponents()
+      // Step 3: initialize the built-in variables
       store.initializeBuiltInDeclarations()
-      // Step 2: set item player context
+      // Step 4: set item player context
       this.loadItemContextFromConfiguration(configuration)
-      // Step 3: load the item xml
+      // Step 5: load the item xml
       this.itemXml = xml
     },
 
@@ -149,9 +172,6 @@ export default {
       store.NotifyItemReady({
           item: this.item
         })
-
-      this.applyPnpSupports()
-
       // Notify listener that the qti-assessment-item component is loaded and ready.
       this.$emit('notifyQti3ItemReady', param.item)
     },
@@ -248,17 +268,8 @@ export default {
       store.setItemContextState(state)
     },
 
-    applyPnpSupports () {
-      const catalogs = store.getCatalogs()
-      if (catalogs.length === 0) return
-
-      /*
-      const nodeList = this.$refs.item.$el.querySelectorAll(`[data-catalog-idref="glosscat"]`)
-      for (let i=0; i<nodeList.length; i++) {
-        nodeList[i].classList.add('qti3-player-catalog-clickable-term')
-      }
-      const glossaryOnScreen = store.getItemContextPnp().getGlossaryOnScreen()
-      */
+    resetCatalogComponents () {
+      this.$refs.catalogdialog.reset()
     },
 
     /**
@@ -1013,8 +1024,6 @@ export default {
 
 .qti3-player-catalog-clickable-term {
   cursor: pointer;
-  border-top: 1px solid;
-  border-bottom: 1px solid;
-  border-color: var(--secondary);
+  border-bottom: 1px dotted var(--foreground);
 }
 </style>

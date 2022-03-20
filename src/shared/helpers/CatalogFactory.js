@@ -5,15 +5,19 @@ export class CatalogFactory {
     this.item = item
     this.itemElement = item.$refs.item
     this.store = store
-    this.nodeList = []
+    this.nodeList = null
     return this
   }
 
   bindAll () {
+    // Get Catalogs
     const catalogs = this.store.getCatalogs()
     if (catalogs.length === 0) return
 
+    // Get catalog-idref's
     this.nodeList = this.itemElement.querySelectorAll('[data-catalog-idref]')
+    if (this.nodeList.length === 0) return
+
     this.nodeList.forEach((node) => {
         this.bindNode(node, catalogs[0])
       }, this)
@@ -23,6 +27,10 @@ export class CatalogFactory {
     this.nodeList.forEach((node) => {
       this.unbindNode(node)
     }, this)
+
+    this.item = null
+    this.itemElement = null
+    this.nodeList = null
   }
 
   bindNode (node) {

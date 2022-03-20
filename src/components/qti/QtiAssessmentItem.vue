@@ -1,5 +1,5 @@
 <template>
-  <div class="qti-assessment-item">
+  <div ref="item" class="qti-assessment-item">
     <event-listener
       @templateProcessingReady="handleTemplateProcessingReady"
       @itemBodyReady="handleItemBodyReady">
@@ -19,6 +19,7 @@
 import Vue from 'vue'
 import { store } from '@/store/store'
 import { ItemStateFactory } from '@/shared/helpers/ItemStateFactory'
+import { CatalogFactory } from '@/shared/helpers/CatalogFactory'
 import EventListener from '@/shared/components/EventListener'
 import QtiContextDeclaration from '@/components/qti/declarations/QtiContextDeclaration'
 import QtiResponseDeclaration from '@/components/qti/declarations/QtiResponseDeclaration'
@@ -84,7 +85,11 @@ export default {
       /*
        * Try to parse this from xml:lang
        */
-      locale: null
+      locale: null,
+      /*
+       * Keep a handle on the CatalogFactory
+       */
+      catalogFactory: null
     }
   },
 
@@ -542,10 +547,19 @@ export default {
   },
 
   mounted () {
+    // After everything is mounted, bind Catalog to the DOM
+    this.catalogFactory = new CatalogFactory(this, store)
+    this.catalogFactory.bindAll()
+
     // Notify our container that we are loaded.
     this.$parent.$emit('itemReady', {
       item: this
     })
+  },
+
+  beforeDestroy () {
+    // Unbind all Catalogs to avoid memory leaks
+    this.catalogFactory.resetAll()
   }
 }
 </script>
