@@ -34,7 +34,9 @@ export class PnpFactory {
       textAppearance: {
         colorStyle: this.constants.COLOR_DEFAULT
       },
-      glossaryOnScreen: true, // unsupported
+      glossaryOnScreen: true,
+      keywordTranslationLanguage: null, // set to ISO 639-1 code when not null
+      extSbacGlossaryIllustration: false, // unsupported
       layoutSingleColumn: false // unsupported
     }
     return pnp
@@ -55,6 +57,14 @@ export class PnpFactory {
 
     if (('glossaryOnScreen' in pnp) && (pnp.glossaryOnScreen !== null)) {
       this.setGlossaryOnScreen(pnp.glossaryOnScreen)
+    }
+
+    if ('keywordTranslationLanguage' in pnp) {
+      this.setKeywordTranslationLanguage(pnp.keywordTranslationLanguage)
+    }
+
+    if (('extSbacGlossaryIllustration' in pnp) && (pnp.extSbacGlossaryIllustration !== null)) {
+      this.setExtSbacGlossaryIllustration(pnp.extSbacGlossaryIllustration)
     }
 
     if (('layoutSingleColumn' in pnp) && (pnp.layoutSingleColumn !== null)) {
@@ -80,6 +90,22 @@ export class PnpFactory {
 
   setGlossaryOnScreen (glossaryOnScreen) {
     this.pnp.glossaryOnScreen = glossaryOnScreen
+  }
+
+  getKeywordTranslationLanguage () {
+    return this.pnp.keywordTranslationLanguage
+  }
+
+  setKeywordTranslationLanguage (keywordTranslationLanguage) {
+    this.pnp.keywordTranslationLanguage = keywordTranslationLanguage
+  }
+
+  getExtSbacGlossaryIllustration () {
+    return this.pnp.extSbacGlossaryIllustration
+  }
+
+  setExtSbacGlossaryIllustration (extSbacGlossaryIllustration) {
+    this.pnp.extSbacGlossaryIllustration = extSbacGlossaryIllustration
   }
 
   getLayoutSingleColumn () {
