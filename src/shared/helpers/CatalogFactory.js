@@ -18,35 +18,91 @@ export class CatalogFactory {
     this.nodeList = this.itemElement.querySelectorAll('[data-catalog-idref]')
     if (this.nodeList.length === 0) return
 
+    // First, look for supports that requires Glossary Dialog binding.
+    // If a support is enabled it will be added to the enabledSupportsArray.
+    const pnpGlossarySupports = this.getPnpGlossarySupports(this.store.getItemContextPnp())
+    const hasPnpGlossarySupports = (pnpGlossarySupports.length > 0)
+
     this.nodeList.forEach((node) => {
-        this.bindNode(node, catalogs[0])
+        if (hasPnpGlossarySupports) this.bindGlossaryNode(node, pnpGlossarySupports)
       }, this)
   }
 
   resetAll () {
     this.nodeList.forEach((node) => {
-      this.unbindNode(node)
+      this.unbindGlossaryNode(node)
     }, this)
 
-    this.item = null
-    this.itemElement = null
     this.nodeList = null
   }
 
-  bindNode (node) {
-    node.classList.add('qti3-player-catalog-clickable-term')
+  /**
+   * @description Determine if any supports are enabled that are rendered
+   * via a Glossary Dialog.
+   * @param {Class} pnp
+   */
+  getPnpGlossarySupports(pnp) {
+    let supports = []
 
+    if (pnp.getGlossaryOnScreen()) {
+      supports.push('glossary-on-screen')
+    }
+
+    if (pnp.getKeywordTranslationLanguage() != null) {
+      supports.push(`keyword-translation:${pnp.getKeywordTranslationLanguage()}`)
+    }
+
+    if (pnp.getExtSbacGlossaryIllustration()) {
+      supports.push('ext:sbac-glossary-illustration')
+    }
+
+    return supports
+  }
+
+  /**
+   * @description This preps a DOM element to be a clickable
+   * glossary dialog element.
+   * @param {DomElement} node
+   * @param {Array} supports - list of Catalog supports
+   */
+  bindGlossaryNode (node, supports) {
+    const idref = node.getAttribute('data-catalog-idref')
+    const catalog = this.store.getCatalog(idref)
+
+    // If no catalog, bail
+    if (typeof catalog === 'undefined') return
+
+    // If catalog has requested supports, bail
+    if (!this.hasCatalogGlossarySupport(catalog, supports)) return
+
+    // Found the needed catalog supports.  Bind the DOM.
+    this.bindGlossaryDOM(node)
+  }
+
+  /**
+   * @description This preps a DOM element to be a clickable
+   * glossary dialog element.
+   * @param {DomElement} node
+   */
+  bindGlossaryDOM (node) {
+    node.classList.add('qti3-player-catalog-clickable-term')
     // Add a data- for the term - if one does not already exist
     this.setGlossaryTerm(node)
-
     node.addEventListener('click',    this.showGlossary.bind(this))
     node.addEventListener('touchend', this.showGlossary.bind(this))
   }
 
-  unbindNode (node) {
-    node.classList.remove('qti3-player-catalog-clickable-term')
-    node.removeEventListener('click',    this.showGlossary)
-    node.removeEventListener('touchend', this.showGlossary)
+  /**
+   * @description This unbinds a DOM element as a clickable
+   * glossary dialog element.
+   * @param {DomElement} node
+   */
+  unbindGlossaryDOM (node) {
+    if (node.classList.contains('qti3-player-catalog-clickable-term')) {
+      node.classList.remove('qti3-player-catalog-clickable-term')
+      node.removeEventListener('click',    this.showGlossary)
+      node.removeEventListener('touchend', this.showGlossary)
+    }
   }
 
   /**
@@ -97,8 +153,19 @@ export class CatalogFactory {
     return data
   }
 
+  hasCatalogGlossarySupport(catalog, glossarySupports) {
+    let card = null
+
+    glossarySupports.forEach((support) => {
+      card = this.findCatalogCardBySupport(catalog, support)
+      if (card !== null) return
+    }, this)
+
+    return card != null
+  }
+
   findCatalogCardBySupport (catalog, support) {
-    if (typeof catalog === undefined) return null
+    if (typeof catalog === 'undefined') return null
     return this.findCardBySupport(catalog.node.getCards(), support)
   }
 
@@ -121,13 +188,13 @@ export class CatalogFactory {
     card.getChildren().forEach((cardChild) => {
 
         // Handle QtiHtmlContent
-        if (cardChild.$options.name === "QtiHtmlContent") {
+        if (cardChild.$options.name === 'QtiHtmlContent') {
           content = cardChild.getContent()
           return
         }
 
         // Handle QtiCardEntry
-        if (cardChild.$options.name === "QtiCardEntry") {
+        if (cardChild.$options.name === 'QtiCardEntry') {
           content = this.getGlossaryCardContent(cardChild)
           return
         }
