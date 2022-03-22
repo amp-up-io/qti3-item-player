@@ -99,18 +99,6 @@ export default {
 
   methods: {
 
-    handleCatalogEvent (catalogEvent) {
-      if (!this.suppressCatalogMessages) {
-        if (catalogEvent.type === 'glossary') {
-          this.$refs.catalogdialog.setGlossaryTerm(catalogEvent.term)
-          this.$refs.catalogdialog.setGlossaryDefinition(catalogEvent.data.glossary.definition)
-          this.$refs.catalogdialog.show()
-        }
-      }
-      // Always notify listener
-      this.$emit('notifyQti3ItemCatalogEvent', catalogEvent)
-    },
-
     /**
      * @description Main item loading method for the Qti3Player.  Accepts
      * a raw QTI 3 xml string and a configuration object.
@@ -206,6 +194,17 @@ export default {
       this.displayInvalidResponseMessages(itemState.state.validationMessages)
       // Notify listener that an Item State object is ready.
       this.$emit('notifyQti3EndAttemptCompleted', itemState)
+    },
+
+    handleCatalogEvent (catalogEvent) {
+      if (!this.suppressCatalogMessages) {
+        if (catalogEvent.type === 'glossary') {
+          this.$refs.catalogdialog.setContent(catalogEvent)
+          this.$refs.catalogdialog.show()
+        }
+      }
+      // Notify listener that a catalog event occured
+      this.$emit('notifyQti3ItemCatalogEvent', catalogEvent)
     },
 
     /**

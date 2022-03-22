@@ -1,17 +1,17 @@
 <template>
-  <div ref="dialog" class="qti3-player-cat-dialog" style="display:none;">
-    <span tabindex="0"></span>
+  <div ref="dialog" class="qti3-player-cat-dialog" role="dialog" style="display:none;">
     <div ref="header" class="qti3-player-cat-dialog-header">
       <span class="qti3-player-cat-dialog-term">{{content.term}}</span>
       <button ref="close" type="button" class="qti3-player-cat-dialog-close" aria-label="Close">×</button>
     </div>
-    <div class="qti3-player-cat-dialog-body" v-html="content['glossary-on-screen'].definition">
+    <div ref="body" class="qti3-player-cat-dialog-body">
     </div>
-    <span tabindex="0"></span>
   </div>
 </template>
 
 <script>
+import { Tabs } from '@/shared/components/Tabs'
+
 export default {
   name: 'CatalogDialog',
 
@@ -26,10 +26,11 @@ export default {
         x: 0,
         y: 0
       },
+      tabs: null,
       content: {
-        term: 'Glossary Dialog',
-        'glossary-on-screen': {
-          definition: '<p>This is a draggable dialog which is created using HTML CSS & JavaScript. You can <em>move</em> this dialog anywhere on the document or page.</p>'
+        term: '',
+        glossary: {
+          definition: ''
         }
       }
     }
@@ -37,12 +38,23 @@ export default {
 
   methods: {
 
-    setGlossaryTerm (term) {
+    setDialogTerm (term) {
       this.content.term = term
     },
 
-    setGlossaryDefinition (definition) {
-      this.content['glossary-on-screen'].definition = definition
+    getDialogGlossaryDefinition () {
+      return this.content.glossary.definition
+    },
+
+    setDialogGlossaryDefinition (definition) {
+      this.content.glossary.definition = definition
+    },
+
+
+    setContent(content) {
+      this.setDialogTerm(content.term)
+      this.setDialogGlossaryDefinition(content.data.glossary.definition)
+      this.tabs.create(this.content)
     },
 
     show () {
@@ -164,6 +176,7 @@ export default {
   },
 
   mounted() {
+    this.tabs = new Tabs(this.$refs.body)
     this.addListeners()
   },
 
@@ -173,7 +186,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .qti3-player-cat-dialog {
   z-index: 1020;
   border: 1px solid;
@@ -184,7 +197,7 @@ export default {
   background-color: var(--background);
   outline: none;
   min-width: 250px;
-  width: 280px;
+  width: 300px;
   position: absolute;
   box-shadow: 5px 5px 10px rgba(0,0,0,0.06);
   -webkit-touch-callout: none;
@@ -197,7 +210,7 @@ export default {
 }
 
 .qti3-player-cat-dialog .qti3-player-cat-dialog-header {
-  padding: .5rem .5rem .5rem 1rem;
+  padding: .5rem;
   cursor: move;
   border-bottom: 1px solid;
   border-color: var(--foreground);
@@ -251,9 +264,127 @@ button.qti3-player-cat-dialog-close {
 
 .qti3-player-cat-dialog .qti3-player-cat-dialog-body {
   display: flex;
-  padding: 1rem;
+  padding: .5rem;
   /* align-items: center; */
   flex-direction: column;
   justify-content: center;
+}
+
+
+.qti3-player-cat-dialog-body .qti3-player-cat-tabs {
+  width: 100%;
+}
+
+.qti3-player-cat-dialog-body [role="tablist"] {
+  margin: 0 0 -0.1em;
+  overflow: visible;
+}
+
+.qti3-player-cat-dialog-body [role="tab"] {
+  position: relative;
+  margin: 0;
+  padding: 0.3em 0.5em 0.4em;
+  border: 1px solid hsl(219deg 1% 72%);
+  border-radius: 0.2em 0.2em 0 0;
+  /*box-shadow: 0 0 0.2em hsl(219deg 1% 72%);*/
+  overflow: visible;
+  font-family: inherit;
+  font-size: inherit;
+  background-color: var(--background);
+  /*background: hsl(220deg 20% 94%);*/
+}
+
+.qti3-player-cat-dialog-body [role="tab"]:hover::before,
+.qti3-player-cat-dialog-body [role="tab"]:focus::before,
+.qti3-player-cat-dialog-body [role="tab"][aria-selected="true"]::before {
+  position: absolute;
+  bottom: 100%;
+  right: -1px;
+  left: -1px;
+  border-radius: 0.2em 0.2em 0 0;
+  border-top: 3px solid;
+  border-color: #0d6efd;
+  /*
+  border-top: 3px solid hsl(20deg 96% 48%);
+  */
+  content: "";
+}
+
+.qti3-player-cat-dialog-body [role="tab"][aria-selected="true"] {
+  border-radius: 0;
+  background-color: var(--background);
+  /*background: hsl(220deg 43% 99%);*/
+  outline: 0;
+}
+
+.qti3-player-cat-dialog-body [role="tab"][aria-selected="true"]:not(:focus):not(:hover)::before {
+  border-top: 5px solid;
+  /* blue */
+  border-color: #0d6efd;
+}
+
+.qti3-player-cat-dialog-body [role="tab"][aria-selected="true"]::after {
+  position: absolute;
+  z-index: 3;
+  bottom: -1px;
+  right: 0;
+  left: 0;
+  height: 0.3em;
+  background-color: var(--background);
+  /*background: hsl(220deg 43% 99%);*/
+  box-shadow: none;
+  content: "";
+}
+
+.qti3-player-cat-dialog-body [role="tab"]:hover,
+.qti3-player-cat-dialog-body [role="tab"]:focus,
+.qti3-player-cat-dialog-body [role="tab"]:active {
+  outline: 0;
+  border-radius: 0;
+  color: inherit;
+}
+
+.qti3-player-cat-dialog-body [role="tab"]:hover::before,
+.qti3-player-cat-dialog-body [role="tab"]:focus::before {
+  /* border-color: hsl(20deg 96% 48%); */
+}
+
+.qti3-player-cat-dialog-body [role="tabpanel"] {
+  position: relative;
+  z-index: 2;
+  padding: 0.5em 0.5em 0.7em;
+  border: 1px solid hsl(219deg 1% 72%);
+  border-radius: 0 0.2em 0.2em;
+  /*box-shadow: 0 0 0.2em hsl(219deg 1% 72%);*/
+  /*background: hsl(220deg 43% 99%);*/
+}
+
+.qti3-player-cat-dialog-body [role="tabpanel"].is-hidden {
+  display: none;
+}
+
+.qti3-player-cat-dialog-body [role="tabpanel"]:focus {
+  /*border-color: hsl(20deg 96% 48%);
+  box-shadow: 0 0 0.2em hsl(20deg 96% 48%);*/
+  outline: 0;
+}
+
+.qti3-player-cat-dialog-body [role="tabpanel"]:focus::after {
+  position: absolute;
+  bottom: 0;
+  right: -1px;
+  left: -1px;
+  /* border-bottom: 3px solid;*/
+  /*border-color: hsl(20deg 96% 48%);*/
+  border-radius: 0 0 0.2em 0.2em;
+  content: "";
+}
+
+.qti3-player-cat-dialog-body [role="tabpanel"] p {
+  margin: 0;
+}
+
+.qti3-player-cat-dialog-body [role="tabpanel"] * + p {
+  margin-top: 1em;
 }
 </style>
