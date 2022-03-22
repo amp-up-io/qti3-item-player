@@ -37,9 +37,7 @@ export class CatalogFactory {
     node.classList.add('qti3-player-catalog-clickable-term')
 
     // Add a data- for the term - if one does not already exist
-    if (!node.hasAttribute('data-glossary-term')) {
-      node.setAttribute('data-glossary-term', node.innerText)
-    }
+    this.setGlossaryTerm(node)
 
     node.addEventListener('click',    this.showGlossary.bind(this))
     node.addEventListener('touchend', this.showGlossary.bind(this))
@@ -49,6 +47,22 @@ export class CatalogFactory {
     node.classList.remove('qti3-player-catalog-clickable-term')
     node.removeEventListener('click',    this.showGlossary)
     node.removeEventListener('touchend', this.showGlossary)
+  }
+
+  /**
+   * @description Set a data-glossary-term on a node in the DOM.
+   * @param {DomElement} node
+   */
+  setGlossaryTerm (node) {
+    if (node.hasAttribute('data-glossary-term')) return
+
+    // Transform a data-sbac-term into a data-glossary-term
+    if (node.hasAttribute('data-sbac-term')) {
+      node.setAttribute('data-glossary-term', node.getAttribute('data-sbac-term'))
+      return
+    }
+
+    node.setAttribute('data-glossary-term', node.innerText)
   }
 
   showGlossary (event) {
@@ -105,12 +119,18 @@ export class CatalogFactory {
 
     // Should be QtiHtmlContent or QtiCardEntry
     card.getChildren().forEach((cardChild) => {
+
         // Handle QtiHtmlContent
         if (cardChild.$options.name === "QtiHtmlContent") {
           content = cardChild.getContent()
           return
         }
-        // @TODO QtiCardEntry
+
+        // Handle QtiCardEntry
+        if (cardChild.$options.name === "QtiCardEntry") {
+          content = this.getGlossaryCardContent(cardChild)
+          return
+        }
       }, this)
 
     return content
