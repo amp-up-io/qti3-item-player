@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { Tabs } from '@/shared/components/Tabs'
+import { CatalogDialogTabs } from '@/shared/components/CatalogDialogTabs'
 
 export default {
   name: 'CatalogDialog',
@@ -28,10 +28,18 @@ export default {
       },
       tabs: null,
       content: {
-        term: '',
+        term: ''
+        /*
         glossary: {
           definition: ''
+        },
+        keywordTranslation: {
+          definition: ''
+        },
+        glossaryIllustration: {
+          definition: ''
         }
+        */
       }
     }
   },
@@ -42,19 +50,65 @@ export default {
       this.content.term = term
     },
 
-    getDialogGlossaryDefinition () {
-      return this.content.glossary.definition
+    setDialogGlossary (glossary) {
+      this.content.glossary = glossary
     },
 
-    setDialogGlossaryDefinition (definition) {
-      this.content.glossary.definition = definition
+    setDialogKeywordTranslation (keywordTranslation) {
+      this.content.keywordTranslation = keywordTranslation
     },
 
+    setDialogGlossaryIllustration (glossaryIllustration) {
+      this.content.glossaryIllustration = glossaryIllustration
+    },
 
+    /**
+     * @description Inject dialog content and generate the dialog's tab control.
+     * @param {Object} content - contains properties for support definitions
+     */
     setContent(content) {
+      // Clear out existing content
+      this.resetDialogContent()
+      // Set term
       this.setDialogTerm(content.term)
-      this.setDialogGlossaryDefinition(content.data.glossary.definition)
-      this.tabs.create(this.content)
+      // Set support content
+      this.setDialogContent(content)
+      // Create Tab structure
+      this.createTabs(this.content)
+    },
+
+    /**
+     * @description Utility method to pluck properties out of the content object.
+     * @param {Object} content
+     */
+    setDialogContent (content) {
+      if (!('data' in content)) return
+
+      if ('glossary' in content.data)
+        this.setDialogGlossary(content.data.glossary)
+
+      if ('keywordTranslation' in content.data)
+        this.setDialogKeywordTranslation(content.data.keywordTranslation)
+
+      if ('sbacGlossaryIllustration' in content.data)
+        this.setDialogGlossaryIllustration(content.data.sbacGlossaryIllustration)
+    },
+
+    /**
+     * @description Utility method to clean out the content object.
+     */
+    resetDialogContent() {
+      delete this.content.glossary
+      delete this.content.keywordTranslation
+      delete this.content.glossaryIllustration
+    },
+
+    createTabs (content) {
+      if (this.tabs === null) {
+        this.tabs = new CatalogDialogTabs(this.$refs.body)
+      }
+
+      this.tabs.create(content)
     },
 
     show () {
@@ -176,11 +230,12 @@ export default {
   },
 
   mounted() {
-    this.tabs = new Tabs(this.$refs.body)
+    this.tabs = new CatalogDialogTabs(this.$refs.body)
     this.addListeners()
   },
 
   beforeDestroy () {
+    this.tabs.removeListeners()
     this.removeListeners()
   }
 }
@@ -291,7 +346,6 @@ button.qti3-player-cat-dialog-close {
   font-family: inherit;
   font-size: inherit;
   background-color: var(--background);
-  /*background: hsl(220deg 20% 94%);*/
 }
 
 .qti3-player-cat-dialog-body [role="tab"]:hover::before,
@@ -303,22 +357,19 @@ button.qti3-player-cat-dialog-close {
   left: -1px;
   border-radius: 0.2em 0.2em 0 0;
   border-top: 3px solid;
+  /* blue */
   border-color: #0d6efd;
-  /*
-  border-top: 3px solid hsl(20deg 96% 48%);
-  */
   content: "";
 }
 
 .qti3-player-cat-dialog-body [role="tab"][aria-selected="true"] {
   border-radius: 0;
   background-color: var(--background);
-  /*background: hsl(220deg 43% 99%);*/
   outline: 0;
 }
 
 .qti3-player-cat-dialog-body [role="tab"][aria-selected="true"]:not(:focus):not(:hover)::before {
-  border-top: 5px solid;
+  border-top: 3px solid;
   /* blue */
   border-color: #0d6efd;
 }
@@ -331,7 +382,6 @@ button.qti3-player-cat-dialog-close {
   left: 0;
   height: 0.3em;
   background-color: var(--background);
-  /*background: hsl(220deg 43% 99%);*/
   box-shadow: none;
   content: "";
 }
@@ -355,11 +405,9 @@ button.qti3-player-cat-dialog-close {
   padding: 0.5em 0.5em 0.7em;
   border: 1px solid hsl(219deg 1% 72%);
   border-radius: 0 0.2em 0.2em;
-  /*box-shadow: 0 0 0.2em hsl(219deg 1% 72%);*/
-  /*background: hsl(220deg 43% 99%);*/
 }
 
-.qti3-player-cat-dialog-body [role="tabpanel"].is-hidden {
+.qti3-player-cat-dialog-body [role="tabpanel"].hidden {
   display: none;
 }
 
@@ -374,8 +422,6 @@ button.qti3-player-cat-dialog-close {
   bottom: 0;
   right: -1px;
   left: -1px;
-  /* border-bottom: 3px solid;*/
-  /*border-color: hsl(20deg 96% 48%);*/
   border-radius: 0 0 0.2em 0.2em;
   content: "";
 }
