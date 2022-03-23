@@ -164,27 +164,6 @@ export class CatalogDialogTabs {
     return tabs
   }
 
-  /**
-   * @description Pseudo-random string generator
-   * http://stackoverflow.com/a/27872144/383904
-   * Default: return a random alpha-numeric string
-   *
-   * @param {Integer} len Desired length
-   * @param {String} an Optional (alphanumeric), "a" (alpha), "n" (numeric)
-   * @return {String}
-   */
-  randomString (len, an) {
-    an = an && an.toLowerCase()
-    let str = ''
-    const min = an == 'a' ? 10 : 0
-    const max = an == 'n' ? 10 : 62
-    for (let i=0; i < len; i++) {
-      let r = Math.random() * (max - min) + min << 0
-      str += String.fromCharCode(r += r > 9 ? r < 36 ? 55 : 61 : 48)
-    }
-    return str
-  }
-
   bindTabListEvents () {
     // get the tablist element
     const tabWrapperElement = document.getElementById(this.idList.tabWrapperId)
@@ -214,9 +193,9 @@ export class CatalogDialogTabs {
 
   removeListeners () {
     for (let index=0; index<this.tabElements.length; ++index) {
-      this.tabElements[index].removeEventListener('click', this.onTabClick)
+      this.tabElements[index].removeEventListener('click',   this.onTabClick)
       this.tabElements[index].removeEventListener('keydown', this.onKeyDown)
-      this.tabElements[index].removeEventListener('keyup', this.onKeyUp)
+      this.tabElements[index].removeEventListener('keyup',   this.onKeyUp)
     }
   }
 
@@ -318,6 +297,27 @@ export class CatalogDialogTabs {
 
   focusLastTab () {
     this.tabElements[this.tabElements.length - 1].focus()
+  }
+
+  /**
+   * @description Pseudo-random string generator
+   * http://stackoverflow.com/a/27872144/383904
+   * Default: return a random alpha-numeric string
+   *
+   * @param {Integer} len Desired length
+   * @param {String} an Optional (alphanumeric), "a" (alpha), "n" (numeric)
+   * @return {String}
+   */
+  randomString (len, an) {
+    an = an && an.toLowerCase()
+    let str = ''
+    const min = an == 'a' ? 10 : 0
+    const max = an == 'n' ? 10 : 62
+    for (let i=0; i < len; i++) {
+      let r = Math.random() * (max - min) + min << 0
+      str += String.fromCharCode(r += r > 9 ? r < 36 ? 55 : 61 : 48)
+    }
+    return str
   }
 
 }

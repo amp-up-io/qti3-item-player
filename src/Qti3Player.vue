@@ -197,12 +197,8 @@ export default {
     },
 
     handleCatalogEvent (catalogEvent) {
-      if (!this.suppressCatalogMessages) {
-        if (catalogEvent.type === 'glossary') {
-          this.$refs.catalogdialog.setContent(catalogEvent)
-          this.$refs.catalogdialog.show()
-        }
-      }
+      // Display catalog events of type 'glossary'
+      this.displayCatalogEvent (catalogEvent)
       // Notify listener that a catalog event occured
       this.$emit('notifyQti3ItemCatalogEvent', catalogEvent)
     },
@@ -311,6 +307,22 @@ export default {
               timerProgressBar: true
             })
         })
+      }
+    },
+
+    /**
+     * @description Display catalog event messages if ok to display the
+     * messages in the Player.
+     * @param {Object} catalogEvent - catalog content to be displayed
+     */
+    displayCatalogEvent (catalogEvent) {
+      if (!this.suppressCatalogMessages) {
+        // Only Catalog 'glossary' events handled.
+        // Display CatalogDialog.
+        if (catalogEvent.type === 'glossary') {
+          this.$refs.catalogdialog.setContent(catalogEvent)
+          this.$refs.catalogdialog.show()
+        }
       }
     },
 

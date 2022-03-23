@@ -35,8 +35,9 @@ export class PnpFactory {
         colorStyle: this.constants.COLOR_DEFAULT
       },
       glossaryOnScreen: true,
-      keywordTranslationLanguage: null, // set to ISO 639-1 code when not null
-      extSbacGlossaryIllustration: false, // unsupported
+      // Set to ISO 639-1 code when not null
+      keywordTranslationLanguage: null,
+      extSbacGlossaryIllustration: false,
       layoutSingleColumn: false // unsupported
     }
     return pnp

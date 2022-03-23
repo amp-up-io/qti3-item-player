@@ -6,6 +6,13 @@
 
 <script>
 /*
+ * A content container within a catalog card. Each instance of a CardEntry provides
+ * a different resource where an attribute (often custom attributes) on the CardEntry
+ * element declares the difference between the resources, and where the attribute
+ * value aligns with a specific preference/need from the candidate's PNP (or an
+ * assessment program's settings). For example, there could be multiple CardEntry
+ * nodes for different language versions for a particular support.
+ *
  * The qti-card -entry node holds the following elements:
  *   qti-html-content
  *   qti-file-href
@@ -26,15 +33,21 @@ export default {
 
   props: {
     /*
-     * QtiCardEntry MUST have an xml:lang
+     * QtiCardEntry should have an xml:lang
      */
     'xml:lang': {
       type: String,
-      required: true
+      required: false,
+      default: ''
     },
+    /*
+     * default="true" means that this QtiCardEntry is the default
+     * when no match on any xml:lang code.
+     */
     default: {
       type: String,
-      required: false
+      required: false,
+      default: 'false'
     },
     /*
      * Smarter Balanced Extensions for Keyword Translations,

@@ -349,15 +349,24 @@ button.qti3-player-cat-dialog-close {
 }
 
 .qti3-player-cat-dialog-body [role="tab"]:hover::before,
-.qti3-player-cat-dialog-body [role="tab"]:focus::before,
-.qti3-player-cat-dialog-body [role="tab"][aria-selected="true"]::before {
+.qti3-player-cat-dialog-body [role="tab"]:focus::before {
   position: absolute;
   bottom: 100%;
   right: -1px;
   left: -1px;
   border-radius: 0.2em 0.2em 0 0;
   border-top: 3px solid;
-  /* blue */
+  border-color: var(--foreground);
+  content: "";
+}
+
+.qti3-player-cat-dialog-body [role="tab"][aria-selected="true"]::before {
+  position: absolute;
+  bottom: 100%;
+  right: -1px;
+  left: -1px;
+  border-radius: 0.2em 0.2em 0 0;
+  border-top: 5px solid;
   border-color: #0d6efd;
   content: "";
 }
