@@ -442,4 +442,8 @@ button.qti3-player-cat-dialog-close {
 .qti3-player-cat-dialog-body [role="tabpanel"] * + p {
   margin-top: 1em;
 }
+
+.qti3-player-cat-dialog-body audio {
+  width: 100%;
+}
 </style>
