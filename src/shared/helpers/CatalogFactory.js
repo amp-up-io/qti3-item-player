@@ -30,7 +30,7 @@ export class CatalogFactory {
 
   resetAll () {
     this.nodeList.forEach((node) => {
-      this.unbindGlossaryNode(node)
+      this.unbindGlossaryDOM(node)
     }, this)
 
     this.nodeList = null
@@ -72,7 +72,7 @@ export class CatalogFactory {
     // If no catalog, bail
     if (typeof catalog === 'undefined') return
 
-    // If catalog has requested supports, bail
+    // If catalog does not have requested supports, bail
     if (!this.hasCatalogGlossarySupport(catalog, supports)) return
 
     // Found the needed catalog supports.  Bind the DOM.
@@ -126,7 +126,7 @@ export class CatalogFactory {
     event.stopPropagation()
 
     // Glossary data may contain glossary, keyword translation,
-    // linguistic guidance, and sbac illustrated glossary
+    // and sbac illustrated glossary
     const catalogData = this.createGlossaryData(event.target)
 
     this.item.$parent.$emit('itemCatalogEvent', {
@@ -137,19 +137,53 @@ export class CatalogFactory {
     })
   }
 
+  /**
+   * @description Main workhorse method that generates a Glossary data object.
+   * Strategy: get the current settings from the PNP.  Then examine the catalog
+   * for any content that supports the PNP.  Build a Glossary data Object containing
+   * as many as three properties: 'glossary', 'keywordTranslation', and
+   * 'sbacGlossaryIllustration'.
+   * @param {DomElement} element - containing a data-catalog-idref
+   * @return {Object} data - to support a Glossary Dialog message
+   */
   createGlossaryData (element) {
     const idref = element.getAttribute('data-catalog-idref')
     const data = {}
 
-    const catalog = this.store.getCatalog(idref)
-    const card = this.findCatalogCardBySupport(catalog, 'glossary-on-screen')
+    // First, look for supports that requires Glossary Dialog binding.
+    // If a support is enabled it will be added to the enabledSupportsArray.
+    const pnpGlossarySupports = this.getPnpGlossarySupports(this.store.getItemContextPnp())
 
-    // Bail if no glossary card
-    if (card === null) return data
-
-    data.glossary = {
-      definition: this.getGlossaryCardContent(card)
+    if (pnpGlossarySupports.length == 0) {
+      // ?? How did we get here ?? If there are no supports
+      // then the Glossary event should not have been bound.
+      return data
     }
+
+    const catalog = this.store.getCatalog(idref)
+
+    for (let i=0; i<pnpGlossarySupports.length; i++) {
+      const card = this.findCatalogCardBySupport(catalog, pnpGlossarySupports[i])
+
+      if (card == null) continue
+
+      if (pnpGlossarySupports[i] === 'glossary-on-screen') {
+        data.glossary = { definition: this.getGlossaryCardContent(card) }
+        continue
+      }
+
+      if (pnpGlossarySupports[i].startsWith('keyword-translation:')) {
+        const languageCode = this.getLanguageCodeFromSupport(pnpGlossarySupports[i])
+        data.keywordTranslation = { definition: this.getTranslationCardContent(card, languageCode) }
+        continue
+      }
+
+      if (pnpGlossarySupports[i] === 'ext:sbac-glossary-illustration') {
+        data.sbacGlossaryIllustration = { definition: this.getGlossaryCardContent(card) }
+        continue
+      }
+    }
+
     return data
   }
 
@@ -157,20 +191,30 @@ export class CatalogFactory {
     let card = null
 
     glossarySupports.forEach((support) => {
-      card = this.findCatalogCardBySupport(catalog, support)
-      if (card !== null) return
+      let supportCard = this.findCatalogCardBySupport(catalog, support)
+      if (supportCard !== null) {
+        card = supportCard
+        return
+      }
     }, this)
 
     return card != null
   }
 
+  getLanguageCodeFromSupport (support) {
+    return support.substring(support.indexOf(':') + 1)
+  }
+
   findCatalogCardBySupport (catalog, support) {
     if (typeof catalog === 'undefined') return null
+    // If keyword translation, drop the language from the support.
+    support = (support.startsWith('keyword-translation:') ? 'keyword-translation' : support)
     return this.findCardBySupport(catalog.node.getCards(), support)
   }
 
   findCardBySupport (cards, support) {
     let supportedCard = null
+
     cards.forEach((card) => {
         if (card.support === support) {
           supportedCard = card
@@ -198,6 +242,30 @@ export class CatalogFactory {
           content = this.getGlossaryCardContent(cardChild)
           return
         }
+
+      }, this)
+
+    return content
+  }
+
+  getTranslationCardContent (card, lang) {
+    let content = ''
+
+    // Should be QtiHtmlContent or QtiCardEntry
+    card.getChildren().forEach((cardChild) => {
+
+        // Handle QtiHtmlContent
+        if (cardChild.$options.name === 'QtiHtmlContent') {
+          content = cardChild.getContent()
+          return
+        }
+
+        // Handle QtiCardEntry
+        if (cardChild.$options.name === 'QtiCardEntry') {
+          content = this.getTranslationCardContent(cardChild, lang)
+          return
+        }
+
       }, this)
 
     return content
