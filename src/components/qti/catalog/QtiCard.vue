@@ -31,7 +31,11 @@ export default {
     support: {
       type: String,
       required: true
-    }
+    },
+    'xml:lang': {
+      type: String,
+      required: false
+    },
   },
 
   data () {

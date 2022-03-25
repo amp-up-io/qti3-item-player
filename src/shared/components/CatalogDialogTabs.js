@@ -9,6 +9,16 @@ export class CatalogDialogTabs {
   }
 
   constants = {
+    labels: {
+      GLOSSARY: 'Glossary',
+      KEYWORD_TRANSLATION: 'Translation',
+      GLOSSARY_ILLUSTRATION: 'Illustration'
+    },
+    cards: {
+      GLOSSARY: 'glossary',
+      KEYWORD_TRANSLATION: 'keywordTranslation',
+      GLOSSARY_ILLUSTRATION: 'glossaryIllustration'
+    },
     keys: {
       ENTER: 13,
       SPACE: 32,
@@ -30,26 +40,14 @@ export class CatalogDialogTabs {
   /**
    * @description Create the tab structure.
    * @param {Object} content
-   * {
-   *   term: 'acronym',
-   *   'glossary': {
-   *     definition: '<p>This is my HTML definition of acronym.</p>'
-   *   }
-   *   'keywordTranslation': {
-   *     definition: '<p>This is my HTML keyword trans of acronym.</p>'
-   *   }
-   *   'glossaryIllustration': {
-   *     definition: '<img />'
-   *   }
-   * }
    */
   create (content) {
     // Just in case there are any listeners...
     this.unbindTabListEvents()
 
-    const hasGlossary = ('glossary' in content)
-    const hasKeyword = ('keywordTranslation' in content)
-    const hasIllustration = ('glossaryIllustration' in content)
+    const hasGlossary = (this.constants.cards.GLOSSARY in content)
+    const hasKeyword = (this.constants.cards.KEYWORD_TRANSLATION in content)
+    const hasIllustration = (this.constants.cards.GLOSSARY_ILLUSTRATION in content)
 
     // Build the tab array list
     const tabList = this.tabList(hasGlossary, hasKeyword, hasIllustration)
@@ -103,14 +101,14 @@ export class CatalogDialogTabs {
     this.bindTabListEvents()
   }
 
-  tabPanel (tabLabel, index, content, tabIndex=-1) {
+  tabPanel (tabLabel, index, tabContent, tabIndex=-1) {
     switch (tabLabel) {
-      case 'Glossary':
-        return this.createTabPanel (this.idList.tabIds[index], this.idList.tabPanelIds[index], content['glossary'].definition, tabIndex)
-      case 'Translation':
-        return this.createTabPanel (this.idList.tabIds[index], this.idList.tabPanelIds[index], content['keywordTranslation'].definition, tabIndex)
-      case 'Illustration':
-        return this.createTabPanel (this.idList.tabIds[index], this.idList.tabPanelIds[index], content['glossaryIllustration'].definition, tabIndex)
+      case this.constants.labels.GLOSSARY:
+        return this.createTabPanel (this.idList.tabIds[index], this.idList.tabPanelIds[index], tabContent[this.constants.cards.GLOSSARY].content, tabIndex)
+      case this.constants.labels.KEYWORD_TRANSLATION:
+        return this.createTabPanel (this.idList.tabIds[index], this.idList.tabPanelIds[index], tabContent[this.constants.cards.KEYWORD_TRANSLATION].content, tabIndex)
+      case this.constants.labels.GLOSSARY_ILLUSTRATION:
+        return this.createTabPanel (this.idList.tabIds[index], this.idList.tabPanelIds[index], tabContent[this.constants.cards.GLOSSARY_ILLUSTRATION].content, tabIndex)
       default:
         return ''
     }
@@ -157,9 +155,9 @@ export class CatalogDialogTabs {
   tabList (hasGlossary, hasKeyword, hasIllustration) {
     let tabs = []
 
-    if (hasGlossary) tabs.push('Glossary')
-    if (hasKeyword) tabs.push('Translation')
-    if (hasIllustration) tabs.push('Illustration')
+    if (hasGlossary) tabs.push(this.constants.labels.GLOSSARY)
+    if (hasKeyword) tabs.push(this.constants.labels.KEYWORD_TRANSLATION)
+    if (hasIllustration) tabs.push(this.constants.labels.GLOSSARY_ILLUSTRATION)
 
     return tabs
   }

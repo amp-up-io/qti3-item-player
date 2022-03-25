@@ -18,7 +18,7 @@ export class CatalogFactory {
     this.nodeList = this.itemElement.querySelectorAll('[data-catalog-idref]')
     if (this.nodeList.length === 0) return
 
-    // First, look for supports that requires Glossary Dialog binding.
+    // First, look for supports that require Glossary Dialog binding.
     // If a support is enabled it will be added to the enabledSupportsArray.
     const pnpGlossarySupports = this.getPnpGlossarySupports(this.store.getItemContextPnp())
     const hasPnpGlossarySupports = (pnpGlossarySupports.length > 0)
@@ -125,13 +125,16 @@ export class CatalogFactory {
     event.preventDefault()
     event.stopPropagation()
 
+    // Get the catalog idref from the DOM
+    const idref = event.target.getAttribute('data-catalog-idref')
+
     // Glossary data may contain glossary, keyword translation,
     // and sbac illustrated glossary
-    const catalogData = this.createGlossaryData(event.target)
+    const catalogData = this.createGlossaryData(idref)
 
     this.item.$parent.$emit('itemCatalogEvent', {
       type: 'glossary',
-      catalogId: event.target.getAttribute('data-catalog-idref'),
+      catalogIdRef: idref,
       term: event.target.getAttribute('data-glossary-term'),
       data: catalogData
     })
@@ -143,46 +146,50 @@ export class CatalogFactory {
    * for any content that supports the PNP.  Build a Glossary data Object containing
    * as many as three properties: 'glossary', 'keywordTranslation', and
    * 'sbacGlossaryIllustration'.
-   * @param {DomElement} element - containing a data-catalog-idref
+   * @param {String} idref - containing a data-catalog-idref
    * @return {Object} data - to support a Glossary Dialog message
    */
-  createGlossaryData (element) {
-    const idref = element.getAttribute('data-catalog-idref')
-    const data = {}
-
-    // First, look for supports that requires Glossary Dialog binding.
-    // If a support is enabled it will be added to the enabledSupportsArray.
-    const pnpGlossarySupports = this.getPnpGlossarySupports(this.store.getItemContextPnp())
-
-    if (pnpGlossarySupports.length == 0) {
-      // ?? How did we get here ?? If there are no supports
-      // then the Glossary event should not have been bound.
-      return data
-    }
-
+  createGlossaryData (idref) {
+    // Get the catalog associated with this idref
     const catalog = this.store.getCatalog(idref)
 
-    for (let i=0; i<pnpGlossarySupports.length; i++) {
-      const card = this.findCatalogCardBySupport(catalog, pnpGlossarySupports[i])
+    // First, look for supports that requires Glossary Dialog binding.
+    // If a support is enabled it will be added to pnpGlossarySupports.
+    const pnpGlossarySupports = this.getPnpGlossarySupports(this.store.getItemContextPnp())
 
-      if (card == null) continue
+    // Create the payload from the catalog and supports
+    return this.createGlossaryDataFromCatalog(catalog, pnpGlossarySupports)
+  }
 
-      if (pnpGlossarySupports[i] === 'glossary-on-screen') {
-        data.glossary = { definition: this.getGlossaryCardContent(card) }
-        continue
+  createGlossaryDataFromCatalog (catalog, supports) {
+    let data = []
+
+    // Loop through each of the supports.  When we find catalog
+    // content for the support, add it to our data payload.
+    supports.forEach((support) => {
+      const card = this.findCatalogCardBySupport(catalog, support)
+      if (card === null) return
+
+      if ((support === 'glossary-on-screen') ||
+          (support === 'ext:sbac-glossary-illustration')) {
+        const content = this.createGlossaryContent(card)
+        if (content === null) return
+
+        // Add content
+        data.push({ support: support, card:  content })
+        return
       }
 
-      if (pnpGlossarySupports[i].startsWith('keyword-translation:')) {
-        const languageCode = this.getLanguageCodeFromSupport(pnpGlossarySupports[i])
-        data.keywordTranslation = { definition: this.getTranslationCardContent(card, languageCode) }
-        continue
-      }
+      if (support.startsWith('keyword-translation:')) {
+        const languageCode = this.getLanguageCodeFromSupport(support)
+        const content = this.createTranslationContent(card, languageCode)
+        if (content === null) return
 
-      if (pnpGlossarySupports[i] === 'ext:sbac-glossary-illustration') {
-        data.sbacGlossaryIllustration = { definition: this.getGlossaryCardContent(card) }
-        continue
+        // Add content
+        data.push({ support: 'keyword-translation', card: content })
+        return
       }
-    }
+    }, this)
 
     return data
   }
@@ -225,22 +232,38 @@ export class CatalogFactory {
     return supportedCard
   }
 
-  getGlossaryCardContent (card) {
-    let content = ''
+  createGlossaryContent (card) {
+    return this.getGlossaryCardContent(card)
+  }
 
-    // Should be QtiHtmlContent or QtiCardEntry
+  createTranslationContent (card, languageCode) {
+    // Search by language
+    let translationContent = this.getTranslationCardContent(card, languageCode)
+    if (translationContent !== null) return translationContent
+
+    // Language search failed. Do a default search.
+    return this.getTranslationCardContent(card, languageCode, true)
+  }
+
+  getGlossaryCardContent (card) {
+    let content = null
+
+    // Should be QtiHtmlContent or QtiFileRef or QtiCardEntry
     card.getChildren().forEach((cardChild) => {
 
-        // Handle QtiHtmlContent
-        if (cardChild.$options.name === 'QtiHtmlContent') {
-          content = cardChild.getContent()
-          return
-        }
-
-        // Handle QtiCardEntry
-        if (cardChild.$options.name === 'QtiCardEntry') {
-          content = this.getGlossaryCardContent(cardChild)
-          return
+        switch (cardChild.$options.name) {
+          case 'QtiHtmlContent':
+            content = this.createContent('qti-html-content', cardChild)
+            return
+          case 'QtiFileRef':
+            content = this.createContent('qti-file-ref', cardChild)
+            return
+          case 'QtiCardEntry':
+            content = this.getGlossaryCardContent(cardChild)
+            return
+          default:
+            // ??
+            return
         }
 
       }, this)
@@ -248,27 +271,51 @@ export class CatalogFactory {
     return content
   }
 
-  getTranslationCardContent (card, lang) {
-    let content = ''
+  getTranslationCardContent (card, lang, defaultSearch=false, depth=0) {
+    if (depth > 1) return null
+
+    let content = null
 
     // Should be QtiHtmlContent or QtiCardEntry
     card.getChildren().forEach((cardChild) => {
 
-        // Handle QtiHtmlContent
-        if (cardChild.$options.name === 'QtiHtmlContent') {
-          content = cardChild.getContent()
-          return
-        }
+        switch (cardChild.$options.name) {
+          case 'QtiHtmlContent':
+            content = this.createContent('qti-html-content', cardChild)
+            return
+          case 'QtiFileRef':
+            content = this.createContent('qti-file-ref', cardChild)
+            return
+          case 'QtiCardEntry':
+            // default search
+            if (defaultSearch && cardChild.isDefault()) {
+              content = this.getTranslationCardContent(cardChild, lang, defaultSearch, depth+1)
+              return
+            }
 
-        // Handle QtiCardEntry
-        if (cardChild.$options.name === 'QtiCardEntry') {
-          content = this.getTranslationCardContent(cardChild, lang)
-          return
+            // language search
+            if (cardChild.getLanguage() === lang) {
+              content = this.getTranslationCardContent(cardChild, lang, defaultSearch, depth+1)
+              return
+            }
+            return
+          default:
+            // ??
+            return
         }
 
       }, this)
 
     return content
+  }
+
+  createContent (elementName, node) {
+    return {
+      properties: {
+        name: elementName
+      },
+      content: node.getContent()
+    }
   }
 
 }

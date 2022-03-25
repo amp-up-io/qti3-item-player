@@ -17,6 +17,10 @@ export default {
 
   data() {
     return {
+      /*
+       * The state object is for maintaining the visual draggable
+       * state of this Dialog
+       */
       state: {
         isShown: false,
         dragging: false,
@@ -26,41 +30,22 @@ export default {
         x: 0,
         y: 0
       },
-      tabs: null,
+      /*
+       * The content object is for maintaining the Catalog content
+       * that is injected into this Dialog.
+       */
       content: {
         term: ''
-        /*
-        glossary: {
-          definition: ''
-        },
-        keywordTranslation: {
-          definition: ''
-        },
-        glossaryIllustration: {
-          definition: ''
-        }
-        */
-      }
+      },
+      /*
+       * The tabs property is for keeping a handle on the tabs
+       * control of this Dialog.
+       */
+      tabs: null
     }
   },
 
   methods: {
-
-    setDialogTerm (term) {
-      this.content.term = term
-    },
-
-    setDialogGlossary (glossary) {
-      this.content.glossary = glossary
-    },
-
-    setDialogKeywordTranslation (keywordTranslation) {
-      this.content.keywordTranslation = keywordTranslation
-    },
-
-    setDialogGlossaryIllustration (glossaryIllustration) {
-      this.content.glossaryIllustration = glossaryIllustration
-    },
 
     /**
      * @description Inject dialog content and generate the dialog's tab control.
@@ -78,20 +63,27 @@ export default {
     },
 
     /**
-     * @description Utility method to pluck properties out of the content object.
+     * @description Utility method to extract support information from
+     * a Glossary Catalog Event.
      * @param {Object} content
      */
     setDialogContent (content) {
       if (!('data' in content)) return
 
-      if ('glossary' in content.data)
-        this.setDialogGlossary(content.data.glossary)
-
-      if ('keywordTranslation' in content.data)
-        this.setDialogKeywordTranslation(content.data.keywordTranslation)
-
-      if ('sbacGlossaryIllustration' in content.data)
-        this.setDialogGlossaryIllustration(content.data.sbacGlossaryIllustration)
+      content.data.forEach((catalog) => {
+        switch (catalog.support) {
+          case 'glossary-on-screen':
+            this.setDialogGlossary(catalog.card)
+            break
+          case 'keyword-translation':
+            this.setDialogKeywordTranslation(catalog.card)
+            break
+          case 'ext:sbac-glossary-illustration':
+            this.setDialogGlossaryIllustration(catalog.card)
+            break
+          default:
+        }
+      }, this)
     },
 
     /**
@@ -103,11 +95,23 @@ export default {
       delete this.content.glossaryIllustration
     },
 
-    createTabs (content) {
-      if (this.tabs === null) {
-        this.tabs = new CatalogDialogTabs(this.$refs.body)
-      }
+    setDialogTerm (term) {
+      this.content.term = term
+    },
 
+    setDialogGlossary (glossary) {
+      this.content.glossary = glossary
+    },
+
+    setDialogKeywordTranslation (keywordTranslation) {
+      this.content.keywordTranslation = keywordTranslation
+    },
+
+    setDialogGlossaryIllustration (glossaryIllustration) {
+      this.content.glossaryIllustration = glossaryIllustration
+    },
+
+    createTabs (content) {
       this.tabs.create(content)
     },
 

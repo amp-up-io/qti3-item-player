@@ -89,6 +89,38 @@ export default {
 
   methods: {
 
+    /**
+     * @description Convenience method to provide the 'xml:lang' attribute.
+     * @return {String} the language code or ''
+     */
+    getLanguage () {
+      return this.$props['xml:lang']
+    },
+
+    /**
+     * @description Convenience method to provide the 'default' attribute
+     * as a Boolean value.
+     * @return {Boolean} true when default="true", false otherwise.
+     */
+    isDefault () {
+      return (this.$props['default'] === 'true')
+    },
+
+    /**
+     * @description Return all known and defined data- attributes in one payload.
+     * @return {Object} containing all known and defined data- attributes
+     */
+    getDataAttributes () {
+      let obj = {}
+      if (typeof this.dataListCode !== 'undefined') obj['data-list-code'] = this.dataListCode
+      if (typeof this.dataListType !== 'undefined') obj['data-list-type'] = this.dataListType
+      if (typeof this.dataMathRepresentation !== 'undefined') obj['data-math-representation'] = this.dataMathRepresentation
+      if (typeof this.dataContracted !== 'undefined') obj['data-contracted'] = this.dataContracted
+      if (typeof this.dataType !== 'undefined') obj['data-type'] = this.dataType
+      if (typeof this.dataFormat !== 'undefined') obj['data-format'] = this.dataFormat
+      return obj
+    },
+
     getChildren () {
       return this.children
     },
