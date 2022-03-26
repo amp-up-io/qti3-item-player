@@ -101,8 +101,11 @@ export default {
   mounted () {
     if (this.isQtiValid) {
       try {
-        // Validate children.
-        this.validateChildren()
+
+        // If any children, validate them
+        if ('default' in this.$slots) {
+          this.validateChildren()
+        }
 
         console.log('[QtiCard][Support: ' + this.support + ' ]')
       } catch (err) {
