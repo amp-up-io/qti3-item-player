@@ -16,6 +16,7 @@ class ExtendedTextPresentationFactory {
       QTI_HEIGHT_LINES_3: 'qti-height-lines-3',
       QTI_HEIGHT_LINES_6: 'qti-height-lines-6',
       QTI_HEIGHT_LINES_15: 'qti-height-lines-15',
+      SBAC_HEIGHT_LINES_95: 'sbac-height-lines-95',
 
       // Sbac
       SBAC_PRESENTATION: 'sbac'
@@ -49,6 +50,9 @@ class ExtendedTextPresentationFactory {
       switch (clazzTokens[index]) {
         case this.constants.SBAC_PRESENTATION:
           this.presentation_Sbac = true
+          break
+        case this.constants.SBAC_HEIGHT_LINES_95:
+          this.presentation_HeightClass = this.constants.SBAC_HEIGHT_LINES_95
           break
         case this.constants.QTI_COUNTER_UP:
           this.presentation_CounterStyle = 'up'

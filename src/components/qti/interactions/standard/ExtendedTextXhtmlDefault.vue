@@ -69,6 +69,7 @@ export default {
     editorHeight () {
       if (this.heightClass === 'qti-height-lines-15') return '22.9rem'
       if (this.heightClass === 'qti-height-lines-6') return '10.1rem'
+      if (this.heightClass === 'sbac-height-lines-95') return '136.6rem'
       // If anything else, return Height for qti-height-lines-3
       return '5.8rem'
     },

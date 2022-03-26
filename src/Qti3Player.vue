@@ -198,7 +198,7 @@ export default {
 
     handleCatalogEvent (catalogEvent) {
       // Display catalog events of type 'glossary'
-      this.displayCatalogEvent (catalogEvent)
+      this.displayCatalogEvent(catalogEvent)
       // Notify listener that a catalog event occured
       this.$emit('notifyQti3ItemCatalogEvent', catalogEvent)
     },
