@@ -20,7 +20,7 @@ import Vue from 'vue'
 import { store } from '@/store/store'
 import { XmlFilters } from '@/shared/helpers/XmlFilters'
 import Swal from 'sweetalert2'
-import CatalogDialog from '@/shared/components/CatalogDialog'
+import CatalogDialog from '@/shared/components/catalog/CatalogDialog'
 import QtiAssessmentItem from '@/components/qti/QtiAssessmentItem'
 
 Vue.component('catalog-dialog', CatalogDialog)
@@ -115,7 +115,7 @@ export default {
       console.log('[Qti3Player][LoadItemFromXml][configuration]', configuration)
       // Step 1: clear out the existing store
       store.resetAll()
-      // Step 2: reset all catalog components
+      // Step 2: reset (close, re-center, etc) Catalog Dialog
       this.resetCatalogComponents()
       // Step 3: initialize the built-in variables
       store.initializeBuiltInDeclarations()

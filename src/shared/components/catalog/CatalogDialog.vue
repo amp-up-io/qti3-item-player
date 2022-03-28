@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { CatalogDialogTabs } from '@/shared/components/CatalogDialogTabs'
+import { CatalogDialogTabs } from './CatalogDialogTabs'
 
 export default {
   name: 'CatalogDialog',
@@ -90,9 +90,9 @@ export default {
      * @description Utility method to clean out the content object.
      */
     resetDialogContent() {
-      delete this.content.glossary
-      delete this.content.keywordTranslation
-      delete this.content.glossaryIllustration
+      if ('glossary' in this.content) delete this.content.glossary
+      if ('keywordTranslation' in this.content) delete this.content.keywordTranslation
+      if ('glossaryIllustration' in this.content) delete this.content.glossaryIllustration
     },
 
     setDialogTerm (term) {
