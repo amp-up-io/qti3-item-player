@@ -5,6 +5,7 @@ export class CatalogFactory {
     this.item = item
     this.itemElement = item.$refs.item
     this.store = store
+    // List of all item elements that have a data-catalog-idref attribute
     this.nodeList = null
     return this
   }
@@ -16,6 +17,8 @@ export class CatalogFactory {
 
     // Get catalog-idref's
     this.nodeList = this.itemElement.querySelectorAll('[data-catalog-idref]')
+
+    // If no catalog-idref's, bail
     if (this.nodeList.length === 0) return
 
     // First, look for supports that require Glossary Dialog binding.
