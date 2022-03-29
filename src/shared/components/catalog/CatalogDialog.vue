@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { CatalogDialogTabs } from './CatalogDialogTabs'
+import { CatalogDialogTabs } from '@/shared/components/catalog/CatalogDialogTabs'
 
 export default {
   name: 'CatalogDialog',
@@ -447,7 +447,117 @@ button.qti3-player-cat-dialog-close {
   margin-top: 1em;
 }
 
-.qti3-player-cat-dialog-body audio {
-  width: 100%;
+.cat-audio {
+  display: inline-block;
+  position: relative;
+}
+
+.cat-audio__holder {
+  position:fixed !important;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px);
+  height: 1px;
+  width: 1px;
+  border: 0;
+  margin: -1px;
+}
+
+.cat-audio__container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  border: 1px solid;
+  border-color: var(--foreground);
+  border-radius: 2px;
+  width: 2.6rem;
+  height: 2.6rem;
+}
+
+.cat-audio-playpause__container {
+  outline: none;
+  border: 1px solid transparent;
+  background: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+}
+
+.cat-audio-playpause__container:focus {
+  border: 1px solid transparent;
+  border-radius: 2px;
+  border-color: #0d6efd;
+}
+
+.cat-playpause-button {
+  height: 2.0rem;
+  width: 2.0rem;
+}
+
+.cat-audio-playpause__container.play,
+.qti3-player-color-default .cat-audio-playpause__container.play,
+.qti3-player-color-blackwhite .cat-audio-playpause__container.play,
+.qti3-player-color-blackrose .cat-audio-playpause__container.play {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'/%3e%3c/svg%3e" );
+}
+
+.cat-audio-playpause__container.pause,
+.qti3-player-color-default .cat-audio-playpause__container.pause,
+.qti3-player-color-blackwhite .cat-audio-playpause__container.pause,
+.qti3-player-color-blackrose .cat-audio-playpause__container.pause {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z'/%3e%3c/svg%3e" );
+}
+
+.qti3-player-color-defaultreverse .cat-audio-playpause__container.play,
+.qti3-player-color-whiteblack .cat-audio-playpause__container.play {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23fff'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'/%3e%3c/svg%3e" );
+}
+
+.qti3-player-color-defaultreverse .cat-audio-playpause__container.pause,
+.qti3-player-color-whiteblack .cat-audio-playpause__container.pause {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23fff'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z'/%3e%3c/svg%3e" );
+}
+
+.qti3-player-color-mgraydgray .cat-audio-playpause__container.play {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23e5e5e5'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'/%3e%3c/svg%3e" );
+}
+
+.qti3-player-color-mgraydgray .cat-audio-playpause__container.pause {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23e5e5e5'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z'/%3e%3c/svg%3e" );
+}
+
+.qti3-player-color-dgraymgray .cat-audio-playpause__container.play {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23666'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'/%3e%3c/svg%3e" );
+}
+
+.qti3-player-color-dgraymgray .cat-audio-playpause__container.pause {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23666'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z'/%3e%3c/svg%3e" );
+}
+
+.qti3-player-color-roseblack .cat-audio-playpause__container.play {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23ffd0ff'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'/%3e%3c/svg%3e" );
+}
+
+.qti3-player-color-roseblack .cat-audio-playpause__container.pause {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23ffd0ff'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z'/%3e%3c/svg%3e" );
+}
+
+.qti3-player-color-yellowblue .cat-audio-playpause__container.play {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23ffcc00'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'/%3e%3c/svg%3e" );
+}
+
+.qti3-player-color-yellowblue .cat-audio-playpause__container.pause {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23ffcc00'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z'/%3e%3c/svg%3e" );
+}
+
+.qti3-player-color-blueyellow .cat-audio-playpause__container.play {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23003398'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'/%3e%3c/svg%3e" );
+}
+
+.qti3-player-color-blueyellow .cat-audio-playpause__container.pause {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23003398'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z'/%3e%3c/svg%3e" );
 }
 </style>

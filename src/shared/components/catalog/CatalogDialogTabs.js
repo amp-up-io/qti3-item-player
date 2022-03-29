@@ -1,3 +1,5 @@
+import { CatalogAudioPlayer } from '@/shared/components/catalog/CatalogAudioPlayer'
+
 export class CatalogDialogTabs {
 
   constructor (element) {
@@ -5,6 +7,7 @@ export class CatalogDialogTabs {
     this.idList = this.createIds()
     this.tabElements = []
     this.tabPanelElements = []
+    this.audioPlayers = []
     return this
   }
 
@@ -176,10 +179,31 @@ export class CatalogDialogTabs {
     for (let index=0; index < this.tabElements.length; ++index) {
       this.addListeners(this.tabElements[index], this.tabPanelElements[index], index)
     }
+
+    // Override native audio with custom audio player
+    this.bindTabAudioPlayers()
   }
 
   unbindTabListEvents () {
     this.removeListeners()
+    this.unbindTabAudioPlayers()
+  }
+
+  bindTabAudioPlayers() {
+    const audioList = this.element.querySelectorAll('audio')
+    audioList.forEach((audio) => {
+        const player = new CatalogAudioPlayer(audio).create()
+        this.audioPlayers.push(player)
+      }, this)
+  }
+
+  unbindTabAudioPlayers () {
+    this.audioPlayers.forEach((player) => {
+        player.removeListeners()
+      }, this)
+
+    // Clean out the array of players
+    this.audioPlayers.splice(0, this.audioPlayers.length)
   }
 
   addListeners (tabElement, tabPanelElement, index) {
@@ -190,11 +214,11 @@ export class CatalogDialogTabs {
   }
 
   removeListeners () {
-    for (let index=0; index<this.tabElements.length; ++index) {
-      this.tabElements[index].removeEventListener('click',   this.onTabClick)
-      this.tabElements[index].removeEventListener('keydown', this.onKeyDown)
-      this.tabElements[index].removeEventListener('keyup',   this.onKeyUp)
-    }
+    this.tabElements.forEach((tab) => {
+        tab.removeEventListener('click',   this.onTabClick)
+        tab.removeEventListener('keydown', this.onKeyDown)
+        tab.removeEventListener('keyup',   this.onKeyUp)
+      }, this)
   }
 
   onTabClick (event) {
@@ -266,7 +290,7 @@ export class CatalogDialogTabs {
     // Deactivate all other tabs
     this.deactivateTabs()
     // Remove tabindex attribute
-    tab.removeAttribute('tabindex')
+    //tab.removeAttribute('tabindex')
     // Set the tab as selected
     tab.setAttribute('aria-selected', 'true')
     // Get the value of aria-controls (which is an ID)
@@ -278,15 +302,21 @@ export class CatalogDialogTabs {
   }
 
   deactivateTabs () {
+    // pause any playing audioPlayers
+    this.audioPlayers.forEach((player) => {
+        player.pause()
+      }, this)
+
     // deselect all tabs
-    for (let tab=0; tab<this.tabElements.length; tab++) {
-      this.tabElements[tab].setAttribute('tabindex', '-1')
-      this.tabElements[tab].setAttribute('aria-selected', 'false')
-    }
+    this.tabElements.forEach((tab) => {
+        //tab.setAttribute('tabindex', '-1')
+        tab.setAttribute('aria-selected', 'false')
+      }, this)
+
     // hide all panels
-    for (let panel=0; panel<this.tabPanelElements.length; panel++) {
-      this.tabPanelElements[panel].classList.add('hidden')
-    }
+    this.tabPanelElements.forEach((panel) => {
+        panel.classList.add('hidden')
+      }, this)
   }
 
   focusFirstTab () {
