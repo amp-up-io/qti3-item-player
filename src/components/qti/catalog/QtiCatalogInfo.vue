@@ -53,8 +53,12 @@ export default {
   mounted () {
     if (this.isQtiValid) {
       try {
-        // Validate children.
-        this.validateChildren()
+
+        // If any children, validate them
+        if ('default' in this.$slots) {
+          this.validateChildren()
+        }
+
         console.log('[QtiCatalogInfo]')
       } catch (err) {
         this.isQtiValid = false
