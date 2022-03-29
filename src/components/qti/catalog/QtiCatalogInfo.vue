@@ -36,7 +36,7 @@ export default {
 
     /**
      * Iterate through the child nodes:
-     * responseRule (*)
+     * qti-catalog (*)
      */
     validateChildren () {
       this.$slots.default.forEach((slot) => {
