@@ -66,7 +66,7 @@ export default {
 </script>
 
 <style>
-.qti-html-content {
+.qti-file-href {
   display:none;
 }
 </style>
