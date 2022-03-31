@@ -506,6 +506,15 @@ export default {
     },
 
     /**
+     * @description Utility method to call the CatalogFactory's bindAll
+     * method.  This effectively clears out all current Catalog bindings
+     * and rebinds any catalog-idref's with current PNP settings.
+     */
+    bindCatalog () {
+      if (this.catalogFactory !== null) this.catalogFactory.bindAll()
+    },
+
+    /**
      * @description Transform some qti-assessment-item attributes.
      * Important: Run this at create time.  Mount is too late.
      */
@@ -532,6 +541,7 @@ export default {
         }
       })
     }
+
   },
 
   /**
@@ -549,7 +559,7 @@ export default {
   mounted () {
     // After everything is mounted, bind Catalog to the DOM
     this.catalogFactory = new CatalogFactory(this, store)
-    this.catalogFactory.bindAll()
+    this.bindCatalog()
 
     // Notify our container that we are loaded.
     this.$parent.$emit('itemReady', {
