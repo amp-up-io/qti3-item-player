@@ -27,6 +27,10 @@ export class PnpFactory {
     COLOR_MGRAY_DGRAY: 'qti3-player-color-mgraydgray',
     // Dark Gray on Medium Gray
     COLOR_DGRAY_MGRAY: 'qti3-player-color-dgraymgray',
+    // glossary on
+    GLOSSARY_ON: 'glossary-on',
+    // Glossary off
+    GLOSSARY_OFF: 'glossary-off'
   }
 
   defaultPnp () {
@@ -115,6 +119,28 @@ export class PnpFactory {
 
   setLayoutSingleColumn (layoutSingleColumn) {
     this.pnp.layoutSingleColumn = layoutSingleColumn
+  }
+
+  evaluatePnpEvent (event) {
+    let flag = false
+
+    switch (event) {
+      case this.constants.GLOSSARY_ON:
+        if (this.getGlossaryOnScreen() === false) {
+          this.setGlossaryOnScreen(true)
+          flag = true
+        }
+        break
+      case this.constants.GLOSSARY_OFF:
+        if (this.getGlossaryOnScreen() === true) {
+          this.setGlossaryOnScreen(false)
+          flag = true
+        }
+        break
+      default:
+    }
+
+    return flag
   }
 
 }
