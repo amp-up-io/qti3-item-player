@@ -263,7 +263,19 @@ export default {
       store.setItemContextState(state)
     },
 
+    /**
+     * @description Method to bind (or rebind) the item to the PNP/Catalog.
+     * This effectively clears out all current Catalog bindings
+     * and rebinds any catalog-idref's with current PNP settings.
+     */
+    bindCatalog () {
+      console.log('[Qti3Player][BindCatalog]')
+      this.resetCatalogComponents()
+      this.item.bindCatalog()
+    },
+
     resetCatalogComponents () {
+      // Reset (close, re-center, etc) Catalog Dialog
       this.$refs.catalogdialog.reset()
     },
 
