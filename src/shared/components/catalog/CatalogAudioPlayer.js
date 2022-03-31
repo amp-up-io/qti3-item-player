@@ -51,11 +51,13 @@ export class CatalogAudioPlayer {
     this.playButton = this.playerContainer.querySelector('.cat-audio-playpause__container')
     this.playButton.addEventListener('click', this.onPlayPauseClick.bind(this))
     this.playButton.addEventListener('keydown', this.onKeyDown.bind(this))
+    this.audioElement.addEventListener('ended', this.onEnded.bind(this))
   }
 
   removeListeners () {
     this.playButton.removeEventListener('click', this.handlePlayPauseClick)
     this.playButton.removeEventListener('keydown', this.onKeyDown)
+    this.audioElement.removeEventListener('ended', this.onEnded)
   }
 
   onPlayPauseClick () {
@@ -102,6 +104,13 @@ export class CatalogAudioPlayer {
     this.playButton.classList.add('play')
     this.isPaused = true
     this.audioElement.pause()
+  }
+
+  onEnded (event) {
+    // Return the PlayPause button to its Play state
+    this.playButton.classList.remove('pause')
+    this.playButton.classList.add('play')
+    this.isPaused = true
   }
 
 }

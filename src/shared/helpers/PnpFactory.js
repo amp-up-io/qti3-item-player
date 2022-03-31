@@ -40,8 +40,10 @@ export class PnpFactory {
     KEYWORD_TRANS_MY: 'ktlang-my',
     // Keyword Trans Cantonese
     KEYWORD_TRANS_YUE: 'ktlang-yue',
-    // Keyword Trans Tagalog
-    KEYWORD_TRANS_TL: 'ktlang-tl',
+    // Keyword Trans Chinese
+    KEYWORD_TRANS_ZH: 'ktlang-zh',
+    // Keyword Trans German
+    KEYWORD_TRANS_DE: 'ktlang-de',
     // Keyword Trans Hmong
     KEYWORD_TRANS_HMN: 'ktlang-hmn',
     // Keyword Trans Korean
@@ -56,7 +58,9 @@ export class PnpFactory {
     KEYWORD_TRANS_SO: 'ktlang-so',
     // Keyword Trans Spanish
     KEYWORD_TRANS_ES: 'ktlang-es',
-    // Keyword Trans Ukranian
+    // Keyword Trans Filipino Tagalog
+    KEYWORD_TRANS_TL: 'ktlang-tl',
+    // Keyword Trans Ukrainian
     KEYWORD_TRANS_UK: 'ktlang-uk',
     // Keyword Trans Vietnamese
     KEYWORD_TRANS_VI: 'ktlang-vi',
@@ -201,6 +205,12 @@ export class PnpFactory {
           flag = true
         }
         break
+      case this.constants.KEYWORD_TRANS_DE:
+        if (this.getKeywordTranslationLanguage() !== 'de') {
+          this.setKeywordTranslationLanguage('de')
+          flag = true
+        }
+        break
       case this.constants.KEYWORD_TRANS_HMN:
         if (this.getKeywordTranslationLanguage() !== 'hmn') {
           this.setKeywordTranslationLanguage('hmn')
@@ -252,6 +262,12 @@ export class PnpFactory {
       case this.constants.KEYWORD_TRANS_VI:
         if (this.getKeywordTranslationLanguage() !== 'vi') {
           this.setKeywordTranslationLanguage('vi')
+          flag = true
+        }
+        break
+      case this.constants.KEYWORD_TRANS_ZH:
+        if (this.getKeywordTranslationLanguage() !== 'zh') {
+          this.setKeywordTranslationLanguage('zh')
           flag = true
         }
         break
