@@ -15,6 +15,9 @@ export class CatalogFactory {
     const catalogs = this.store.getCatalogs()
     if (catalogs.length === 0) return
 
+    // Clean out the DOM
+    this.resetAll()
+
     // Get catalog-idref's
     this.nodeList = this.itemElement.querySelectorAll('[data-catalog-idref]')
 
@@ -32,6 +35,8 @@ export class CatalogFactory {
   }
 
   resetAll () {
+    if (this.nodeList === null) return
+
     this.nodeList.forEach((node) => {
       this.unbindGlossaryDOM(node)
     }, this)
