@@ -10,6 +10,17 @@ export class CatalogFactory {
     return this
   }
 
+  constants = {
+    // PNP supports
+    supports: {
+      GLOSSARY: 'glossary-on-screen',
+      KEYWORD_TRANSLATION: 'keyword-translation',
+      EXT_SBAC_GLOSSARY_ILLUSTRATION: 'ext:sbac-glossary-illustration'
+    },
+    // No language specified
+    LANGUAGE_OFF: '',
+  }
+
   bindAll () {
     // Get Catalogs
     const catalogs = this.store.getCatalogs()
@@ -24,14 +35,8 @@ export class CatalogFactory {
     // If no catalog-idref's, bail
     if (this.nodeList.length === 0) return
 
-    // First, look for supports that require Glossary Dialog binding.
-    // If a support is enabled it will be added to the enabledSupportsArray.
-    const pnpGlossarySupports = this.getPnpGlossarySupports(this.store.getItemContextPnp())
-    const hasPnpGlossarySupports = (pnpGlossarySupports.length > 0)
-
-    this.nodeList.forEach((node) => {
-        if (hasPnpGlossarySupports) this.bindGlossaryNode(node, pnpGlossarySupports)
-      }, this)
+    // Step 1: Bind Glossary
+    this.bindGlossary(this.nodeList)
   }
 
   resetAll () {
@@ -46,25 +51,45 @@ export class CatalogFactory {
 
   /**
    * @description Determine if any supports are enabled that are rendered
-   * via a Glossary Dialog.
+   * via a Glossary Dialog.  Glossary supports are:
+   *   glossary-on-screen
+   *   keyword-translation
+   *   ext:sbac-glossary-illustration
    * @param {Class} pnp
    */
   getPnpGlossarySupports(pnp) {
     let supports = []
 
     if (pnp.getGlossaryOnScreen()) {
-      supports.push('glossary-on-screen')
+      supports.push(this.constants.supports.GLOSSARY)
     }
 
-    if (pnp.getKeywordTranslationLanguage() != null) {
-      supports.push(`keyword-translation:${pnp.getKeywordTranslationLanguage()}`)
+    if (pnp.getKeywordTranslationLanguage() !== this.constants.LANGUAGE_OFF) {
+      supports.push(`${this.constants.supports.KEYWORD_TRANSLATION}:${pnp.getKeywordTranslationLanguage()}`)
     }
 
     if (pnp.getExtSbacGlossaryIllustration()) {
-      supports.push('ext:sbac-glossary-illustration')
+      supports.push(this.constants.supports.EXT_SBAC_GLOSSARY_ILLUSTRATION)
     }
 
     return supports
+  }
+
+  /**
+   * @description Bind the item to the Glossary Dialog when the PNP and Catalog
+   * have appropriate settings and content.
+   * @param {NodeList} nodes - a DOM NodeList
+   */
+  bindGlossary (nodes) {
+    // If a 'Glossary' support is enabled it will be added to the enabledSupportsArray.
+    const pnpGlossarySupports = this.getPnpGlossarySupports(this.store.getItemContextPnp())
+
+    // Bail if no Glossary supports enabled
+    if (pnpGlossarySupports.length === 0) return
+
+    nodes.forEach((node) => {
+        this.bindGlossaryNode(node, pnpGlossarySupports)
+      }, this)
   }
 
   /**
