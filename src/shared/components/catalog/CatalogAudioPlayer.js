@@ -106,7 +106,7 @@ export class CatalogAudioPlayer {
     this.audioElement.pause()
   }
 
-  onEnded (event) {
+  onEnded () {
     // Return the PlayPause button to its Play state
     this.playButton.classList.remove('pause')
     this.playButton.classList.add('play')
