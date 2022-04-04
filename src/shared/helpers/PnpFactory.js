@@ -36,34 +36,44 @@ export class PnpFactory {
     KEYWORD_TRANS_OFF: 'ktlang-off',
     // Keyword Trans Arabic
     KEYWORD_TRANS_AR: 'ktlang-ar',
-    // Keyword Trans Burmese
-    KEYWORD_TRANS_MY: 'ktlang-my',
-    // Keyword Trans Cantonese
-    KEYWORD_TRANS_YUE: 'ktlang-yue',
-    // Keyword Trans Chinese
-    KEYWORD_TRANS_ZH: 'ktlang-zh',
-    // Keyword Trans German
-    KEYWORD_TRANS_DE: 'ktlang-de',
-    // Keyword Trans Hmong
-    KEYWORD_TRANS_HMN: 'ktlang-hmn',
-    // Keyword Trans Korean
-    KEYWORD_TRANS_KO: 'ktlang-ko',
     // Keyword Trans Mandarin
     KEYWORD_TRANS_CMN: 'ktlang-cmn',
+    // Keyword Trans German
+    KEYWORD_TRANS_DE: 'ktlang-de',
+    // Keyword Trans English
+    KEYWORD_TRANS_EN: 'ktlang-en',
+    // Keyword Trans Spanish
+    KEYWORD_TRANS_ES: 'ktlang-es',
+    // Keyword Trans French
+    KEYWORD_TRANS_FR: 'ktlang-fr',
+    // Keyword Trans Hmong
+    KEYWORD_TRANS_HMN: 'ktlang-hmn',
+    // Keyword Trans Italian
+    KEYWORD_TRANS_IT: 'ktlang-it',
+    // Keyword Trans Japanese
+    KEYWORD_TRANS_JA: 'ktlang-ja',
+    // Keyword Trans Korean
+    KEYWORD_TRANS_KO: 'ktlang-ko',
+    // Keyword Trans Burmese
+    KEYWORD_TRANS_MY: 'ktlang-my',
+    // Keyword Trans Netherlands
+    KEYWORD_TRANS_NL: 'ktlang-nl',
     // Keyword Trans Punjabi
     KEYWORD_TRANS_PA: 'ktlang-pa',
     // Keyword Trans Russian
     KEYWORD_TRANS_RU: 'ktlang-ru',
     // Keyword Trans Somali
     KEYWORD_TRANS_SO: 'ktlang-so',
-    // Keyword Trans Spanish
-    KEYWORD_TRANS_ES: 'ktlang-es',
     // Keyword Trans Filipino Tagalog
     KEYWORD_TRANS_TL: 'ktlang-tl',
     // Keyword Trans Ukrainian
     KEYWORD_TRANS_UK: 'ktlang-uk',
     // Keyword Trans Vietnamese
     KEYWORD_TRANS_VI: 'ktlang-vi',
+    // Keyword Trans Cantonese
+    KEYWORD_TRANS_YUE: 'ktlang-yue',
+    // Keyword Trans Chinese
+    KEYWORD_TRANS_ZH: 'ktlang-zh',
 
     // Illustrated Glossary on
     EXT_SBAC_GLOSSARY_ILLUSTRATION_ON: 'sbacGlossaryIllustration-on',
@@ -187,21 +197,9 @@ export class PnpFactory {
           flag = true
         }
         break
-      case this.constants.KEYWORD_TRANS_MY:
-        if (this.getKeywordTranslationLanguage() !== 'my') {
-          this.setKeywordTranslationLanguage('my')
-          flag = true
-        }
-        break
-      case this.constants.KEYWORD_TRANS_YUE:
-        if (this.getKeywordTranslationLanguage() !== 'yue') {
-          this.setKeywordTranslationLanguage('yue')
-          flag = true
-        }
-        break
-      case this.constants.KEYWORD_TRANS_TL:
-        if (this.getKeywordTranslationLanguage() !== 'tl') {
-          this.setKeywordTranslationLanguage('tl')
+      case this.constants.KEYWORD_TRANS_CMN:
+        if (this.getKeywordTranslationLanguage() !== 'cmn') {
+          this.setKeywordTranslationLanguage('cmn')
           flag = true
         }
         break
@@ -211,9 +209,39 @@ export class PnpFactory {
           flag = true
         }
         break
+      case this.constants.KEYWORD_TRANS_EN:
+        if (this.getKeywordTranslationLanguage() !== 'en') {
+          this.setKeywordTranslationLanguage('en')
+          flag = true
+        }
+        break
+      case this.constants.KEYWORD_TRANS_ES:
+        if (this.getKeywordTranslationLanguage() !== 'es') {
+          this.setKeywordTranslationLanguage('es')
+          flag = true
+        }
+      break
+      case this.constants.KEYWORD_TRANS_FR:
+        if (this.getKeywordTranslationLanguage() !== 'fr') {
+          this.setKeywordTranslationLanguage('fr')
+          flag = true
+        }
+        break
       case this.constants.KEYWORD_TRANS_HMN:
         if (this.getKeywordTranslationLanguage() !== 'hmn') {
           this.setKeywordTranslationLanguage('hmn')
+          flag = true
+        }
+        break
+      case this.constants.KEYWORD_TRANS_IT:
+        if (this.getKeywordTranslationLanguage() !== 'it') {
+          this.setKeywordTranslationLanguage('it')
+          flag = true
+        }
+        break
+      case this.constants.KEYWORD_TRANS_JA:
+        if (this.getKeywordTranslationLanguage() !== 'ja') {
+          this.setKeywordTranslationLanguage('ja')
           flag = true
         }
         break
@@ -223,9 +251,15 @@ export class PnpFactory {
           flag = true
         }
         break
-      case this.constants.KEYWORD_TRANS_CMN:
-        if (this.getKeywordTranslationLanguage() !== 'cmn') {
-          this.setKeywordTranslationLanguage('cmn')
+      case this.constants.KEYWORD_TRANS_MY:
+        if (this.getKeywordTranslationLanguage() !== 'my') {
+          this.setKeywordTranslationLanguage('my')
+          flag = true
+        }
+        break
+      case this.constants.KEYWORD_TRANS_NL:
+        if (this.getKeywordTranslationLanguage() !== 'nl') {
+          this.setKeywordTranslationLanguage('nl')
           flag = true
         }
         break
@@ -247,9 +281,9 @@ export class PnpFactory {
           flag = true
         }
         break
-      case this.constants.KEYWORD_TRANS_ES:
-        if (this.getKeywordTranslationLanguage() !== 'es') {
-          this.setKeywordTranslationLanguage('es')
+      case this.constants.KEYWORD_TRANS_TL:
+        if (this.getKeywordTranslationLanguage() !== 'tl') {
+          this.setKeywordTranslationLanguage('tl')
           flag = true
         }
         break
@@ -262,6 +296,12 @@ export class PnpFactory {
       case this.constants.KEYWORD_TRANS_VI:
         if (this.getKeywordTranslationLanguage() !== 'vi') {
           this.setKeywordTranslationLanguage('vi')
+          flag = true
+        }
+        break
+      case this.constants.KEYWORD_TRANS_YUE:
+        if (this.getKeywordTranslationLanguage() !== 'yue') {
+          this.setKeywordTranslationLanguage('yue')
           flag = true
         }
         break
