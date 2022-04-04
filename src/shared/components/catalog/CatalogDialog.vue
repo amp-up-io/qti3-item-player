@@ -327,6 +327,7 @@ button.qti3-player-cat-dialog-close {
   /* align-items: center; */
   flex-direction: column;
   justify-content: center;
+  min-height: 2.5rem;
 }
 
 
