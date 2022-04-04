@@ -304,12 +304,30 @@ export class CatalogFactory {
     return content
   }
 
+  /**
+   * @description This is specifically for keyword translation.  Find a card or
+   * cardEntry that matches the requested language.
+   * @param {Component} card - a qti-card
+   * @param {String} lang - the requested language code
+   * @param {Boolean} defaultSearch - true when this method is called for a
+   *                                  default search; attribute default="true"
+   * @param {Integer} depth - this method can recurse.  Tracks depth of the
+   *                          recursion.  May never exceed 1.
+   * @return {String} content or null when no content found.
+   */
   getTranslationCardContent (card, lang, defaultSearch=false, depth=0) {
+    // Under no circumstances may depth exceed 1.
     if (depth > 1) return null
+
+    // If the card has an xml:lang attribute, and that xml:lang is not equal
+    // to our lang parameter, then bail.
+    if ((depth == 0) &&
+        (card.getLanguage().length > 0) &&
+        (card.getLanguage() !== lang)) return null
 
     let content = null
 
-    // Should be QtiHtmlContent or QtiCardEntry
+    // Should be QtiHtmlContent, QtiFileRef, or QtiCardEntry
     card.getChildren().forEach((cardChild) => {
 
         switch (cardChild.$options.name) {
