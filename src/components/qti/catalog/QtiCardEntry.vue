@@ -41,8 +41,11 @@ export default {
       default: ''
     },
     /*
-     * default="true" means that this QtiCardEntry is the default
-     * when no match on any xml:lang code.
+     * An attribute that denotes whether the particular card is the default
+     * content for the support (listed in the Card attribute). If the CardEntry
+     * attribute values do not identify the proper content for a candidate,
+     * use the content designated as default. Only one of the CardEntry
+     * instances can have a default designation.
      */
     default: {
       type: String,

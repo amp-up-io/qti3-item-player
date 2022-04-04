@@ -6,7 +6,14 @@
 
 <script>
 /*
- * The qti-catalog node holds one or more qti-cards.
+ * A container of content or resource references that is outside the content
+ * body node. A catalog holds support-specific dormant content that can be made
+ * active (a part of the perceivable content presented to the candidate) based
+ * on the candidate's PNP information (or an assessment program's settings).
+ * A catalog is referenced from a specific portion of the content body by a
+ * specific, unique identifier, which matches the catalog's identifier.
+ * A catalog contains one or more "cards", each of which address a specific
+ * support/feature.
  */
 import Vue from 'vue'
 import { store } from '@/store/store'
@@ -48,17 +55,30 @@ export default {
 
     /**
      * Iterate through the child nodes:
-     * responseRule (*)
+     * qti-card (1-*)
      */
     validateChildren () {
+
+      if (!('default' in this.$slots)) {
+        throw new QtiValidationException('Invalid Catalog.  Must contain at least 1 qti-card child node')
+      }
+
+      let countChildren = 0
       this.$slots.default.forEach((slot) => {
         if (qtiAttributeValidation.isValidSlot(slot)) {
           // Must be qti-card
           if (!this.isCard(slot.componentOptions.tag)) {
             throw new QtiValidationException('Invalid Catalog child node: "' + slot.componentOptions.tag + '"')
           }
+
+          countChildren += 1
         }
       })
+
+      if (countChildren == 0) {
+        throw new QtiValidationException('Invalid Catalog.  Must contain at least 1 qti-card child node')
+      }
+
       // All good.  Save off our children.
       this.processChildren()
     },

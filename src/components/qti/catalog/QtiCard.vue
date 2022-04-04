@@ -6,6 +6,11 @@
 
 <script>
 /*
+ * A data structure within a catalog which contains dormant HTML content or a
+ * resource reference for a specific support/feature. A card may also contain
+ * multiple CardEntry containers. For example, you might have multiple CardEntry
+ * nodes for different language versions of a particular support.
+ *
  * The qti-card node holds the following elements:
  *   qti-card-entry
  *   qti-html-content
@@ -28,13 +33,20 @@ export default {
   name: 'QtiCard',
 
   props: {
+    /*
+     * This attribute names either pre-defined supports or a custom-named
+     * support. The named support will indicate for whom the dormant content
+     * is intended. Use only one card for any particular named support in
+     * a catalog.
+     */
     support: {
       type: String,
       required: true
     },
     'xml:lang': {
       type: String,
-      required: false
+      required: false,
+      default: ''
     },
   },
 
@@ -46,6 +58,14 @@ export default {
   },
 
   methods: {
+
+    /**
+     * @description Convenience method to provide the 'xml:lang' attribute.
+     * @return {String} the language code or ''
+     */
+    getLanguage () {
+      return this.$props['xml:lang']
+    },
 
     getChildren () {
       return this.children
