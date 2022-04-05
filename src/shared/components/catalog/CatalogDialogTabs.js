@@ -8,6 +8,10 @@ export class CatalogDialogTabs {
     this.tabElements = []
     this.tabPanelElements = []
     this.audioPlayers = []
+    // Initialize the event handler function references
+    this.onTabClick = this.tabClickHandler.bind(this)
+    this.onKeyDown = this.keydownHandler.bind(this)
+    this.onKeyUp = this.keyupHandler.bind(this)
     return this
   }
 
@@ -207,9 +211,9 @@ export class CatalogDialogTabs {
   }
 
   addListeners (tabElement, tabPanelElement, index) {
-    tabElement.addEventListener('click',   this.onTabClick.bind(this))
-    tabElement.addEventListener('keydown', this.onKeyDown.bind(this))
-    tabElement.addEventListener('keyup',   this.onKeyUp.bind(this))
+    tabElement.addEventListener('click',   this.onTabClick)
+    tabElement.addEventListener('keydown', this.onKeyDown)
+    tabElement.addEventListener('keyup',   this.onKeyUp)
     tabElement.index = index
   }
 
@@ -221,12 +225,12 @@ export class CatalogDialogTabs {
       }, this)
   }
 
-  onTabClick (event) {
+  tabClickHandler (event) {
     var tab = event.target
     this.activateTab(tab, false)
   }
 
-  onKeyDown (event) {
+  keydownHandler (event) {
     const key = event.keyCode
 
     switch (key) {
@@ -269,7 +273,7 @@ export class CatalogDialogTabs {
     }
   }
 
-  onKeyUp (event) {
+  keyupHandler (event) {
     const key = event.keyCode
 
     switch (key) {

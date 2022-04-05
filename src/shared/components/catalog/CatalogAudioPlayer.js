@@ -3,6 +3,10 @@ export class CatalogAudioPlayer {
   constructor (element) {
     this.audioElement = element
     this.isPaused = true
+    // Initialize the event handler function references
+    this.onPlayPauseClick = this.playPauseClickHandler.bind(this)
+    this.onKeyDown = this.keydownHandler.bind(this)
+    this.onEnded = this.endedHandler.bind(this)
     return this
   }
 
@@ -49,22 +53,22 @@ export class CatalogAudioPlayer {
 
   addListeners () {
     this.playButton = this.playerContainer.querySelector('.cat-audio-playpause__container')
-    this.playButton.addEventListener('click', this.onPlayPauseClick.bind(this))
-    this.playButton.addEventListener('keydown', this.onKeyDown.bind(this))
-    this.audioElement.addEventListener('ended', this.onEnded.bind(this))
+    this.playButton.addEventListener('click',   this.onPlayPauseClick)
+    this.playButton.addEventListener('keydown', this.onKeyDown)
+    this.audioElement.addEventListener('ended', this.onEnded)
   }
 
   removeListeners () {
-    this.playButton.removeEventListener('click', this.handlePlayPauseClick)
+    this.playButton.removeEventListener('click',   this.onPlayPauseClick)
     this.playButton.removeEventListener('keydown', this.onKeyDown)
     this.audioElement.removeEventListener('ended', this.onEnded)
   }
 
-  onPlayPauseClick () {
+  playPauseClickHandler () {
     this.toggleAudio()
   }
 
-  onKeyDown (event) {
+  keydownHandler (event) {
     let flag = false
     const key = event.keyCode
 
@@ -82,6 +86,13 @@ export class CatalogAudioPlayer {
       event.stopPropagation()
       event.preventDefault()
     }
+  }
+
+  endedHandler () {
+    // Return the PlayPause button to its Play state
+    this.playButton.classList.remove('pause')
+    this.playButton.classList.add('play')
+    this.isPaused = true
   }
 
   toggleAudio () {
@@ -104,13 +115,6 @@ export class CatalogAudioPlayer {
     this.playButton.classList.add('play')
     this.isPaused = true
     this.audioElement.pause()
-  }
-
-  onEnded () {
-    // Return the PlayPause button to its Play state
-    this.playButton.classList.remove('pause')
-    this.playButton.classList.add('play')
-    this.isPaused = true
   }
 
 }
