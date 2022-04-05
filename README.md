@@ -493,6 +493,14 @@ An encapsulating application may instrument the QTI 3 Player to _not display its
     },
 ```
 
+#### Supported Keyword Translation Language Codes ####
+
+QTI 3 Player groups PNP 'glossary-on-screen', 'keyword-translation', and 'ext:sbac-glossary-illustration' supports into 'glossary' events that will trigger a Catalog event of type 'glossary'.
+
+As of the 0.3.4 release, QTI 3 Player supports the following IS0 639 language codes for keyword translations:
+
+`{ ar | cmn | de | en | es | fr | hmn | it | ja | ko | my | nl | pa | ru | so | tl | uk | vi | yue | zh }`
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
