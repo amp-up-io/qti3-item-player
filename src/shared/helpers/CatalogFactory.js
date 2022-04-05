@@ -7,6 +7,8 @@ export class CatalogFactory {
     this.store = store
     // List of all item elements that have a data-catalog-idref attribute
     this.nodeList = null
+    // Initialize the showGlossary function reference
+    this.showGlossary = this.showGlossaryHandler.bind(this)
     return this
   }
 
@@ -17,6 +19,7 @@ export class CatalogFactory {
       KEYWORD_TRANSLATION: 'keyword-translation',
       EXT_SBAC_GLOSSARY_ILLUSTRATION: 'ext:sbac-glossary-illustration'
     },
+    GLOSSARY_CLICKABLE_CLASS: 'qti3-player-catalog-clickable-term',
     // No language specified
     LANGUAGE_OFF: '',
   }
@@ -118,11 +121,14 @@ export class CatalogFactory {
    * @param {DomElement} node
    */
   bindGlossaryDOM (node) {
-    node.classList.add('qti3-player-catalog-clickable-term')
+    // If node is already bound, bail
+    if (node.classList.contains(this.constants.GLOSSARY_CLICKABLE_CLASS)) return
+
+    node.classList.add(this.constants.GLOSSARY_CLICKABLE_CLASS)
     // Add a data- for the term - if one does not already exist
     this.setGlossaryTerm(node)
-    node.addEventListener('click',    this.showGlossary.bind(this))
-    node.addEventListener('touchend', this.showGlossary.bind(this))
+    node.addEventListener('click',    this.showGlossary)
+    node.addEventListener('touchend', this.showGlossary)
   }
 
   /**
@@ -131,8 +137,8 @@ export class CatalogFactory {
    * @param {DomElement} node
    */
   unbindGlossaryDOM (node) {
-    if (node.classList.contains('qti3-player-catalog-clickable-term')) {
-      node.classList.remove('qti3-player-catalog-clickable-term')
+    if (node.classList.contains(this.constants.GLOSSARY_CLICKABLE_CLASS)) {
+      node.classList.remove(this.constants.GLOSSARY_CLICKABLE_CLASS)
       node.removeEventListener('click',    this.showGlossary)
       node.removeEventListener('touchend', this.showGlossary)
     }
@@ -154,7 +160,14 @@ export class CatalogFactory {
     node.setAttribute('data-glossary-term', node.innerText)
   }
 
-  showGlossary (event) {
+  /**
+   * @description Does the heavy work of building a Glossary data payload.
+   * Sends an 'itemCatalogEvent' to the parent and passes the Glossary data
+   * payload.
+   * @param {Event} event - contains the event target and
+   *                        the data-catalog-idref
+   */
+  showGlossaryHandler (event) {
     event.preventDefault()
     event.stopPropagation()
 
@@ -203,8 +216,8 @@ export class CatalogFactory {
       const card = this.findCatalogCardBySupport(catalog, support)
       if (card === null) return
 
-      if ((support === 'glossary-on-screen') ||
-          (support === 'ext:sbac-glossary-illustration')) {
+      if ((support === this.constants.supports.GLOSSARY) ||
+          (support === this.constants.supports.EXT_SBAC_GLOSSARY_ILLUSTRATION)) {
         const content = this.createGlossaryContent(card)
         if (content === null) return
 
@@ -213,13 +226,13 @@ export class CatalogFactory {
         return
       }
 
-      if (support.startsWith('keyword-translation:')) {
+      if (support.startsWith(`${this.constants.supports.KEYWORD_TRANSLATION}:`)) {
         const languageCode = this.getLanguageCodeFromSupport(support)
         const content = this.createTranslationContent(card, languageCode)
         if (content === null) return
 
         // Add content
-        data.push({ support: 'keyword-translation', card: content })
+        data.push({ support: this.constants.supports.KEYWORD_TRANSLATION, card: content })
         return
       }
     }, this)
@@ -242,21 +255,40 @@ export class CatalogFactory {
   }
 
   getLanguageCodeFromSupport (support) {
-    return support.substring(support.indexOf(':') + 1)
+    const index = support.indexOf(':')
+    return (support.length > index+1) ? support.substring(index+1) : ''
   }
 
   findCatalogCardBySupport (catalog, support) {
     if (typeof catalog === 'undefined') return null
     // If keyword translation, drop the language from the support.
-    support = (support.startsWith('keyword-translation:') ? 'keyword-translation' : support)
+    //support = (support.startsWith(`${this.constants.supports.KEYWORD_TRANSLATION}:`) ? this.constants.supports.KEYWORD_TRANSLATION : support)
     return this.findCardBySupport(catalog.node.getCards(), support)
   }
 
   findCardBySupport (cards, support) {
     let supportedCard = null
 
+    // Special handling of keyword translation and language codes
+    let languageCode = ''
+    if (support.startsWith(`${this.constants.supports.KEYWORD_TRANSLATION}:`)) {
+      languageCode = this.getLanguageCodeFromSupport(support)
+      support = this.constants.supports.KEYWORD_TRANSLATION
+    }
+
     cards.forEach((card) => {
         if (card.support === support) {
+
+          // For keyword translation language support, we need to dig deeper
+          // into the catalog card to discover whether or not there is
+          // supporting content.
+          if (support === this.constants.supports.KEYWORD_TRANSLATION) {
+            const keywordTranslationContent = this.createTranslationContent(card, languageCode)
+            // Bail if we did not find any keyword translation content that
+            // matched the language code.
+            if (keywordTranslationContent === null) return
+          }
+
           supportedCard = card
           return
         }
@@ -281,7 +313,7 @@ export class CatalogFactory {
   getGlossaryCardContent (card) {
     let content = null
 
-    // Should be QtiHtmlContent or QtiFileRef or QtiCardEntry
+    // Must be QtiHtmlContent or QtiFileRef or QtiCardEntry
     card.getChildren().forEach((cardChild) => {
 
         switch (cardChild.$options.name) {
