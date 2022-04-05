@@ -20,7 +20,7 @@ The QTI 3 Player has API's, interfaces, and capabilities which are optimized for
 <a href="https://qti.amp-up.io/testrunner/" target="_blank">View TestRunner Demo</a>
 
 <div align="center">
-<p>Thumbnails of Items/Rendering</p>
+  <p><b>Thumbnails of Items/Rendering</b></p>
 
 <img src="https://user-images.githubusercontent.com/898605/158195206-4f82d851-f3f0-47f6-9756-fbee098c7dcf.png" width="320" height="270">
 <img src="https://user-images.githubusercontent.com/898605/158033033-dbb00c44-6d95-4ec0-9591-9d3459fcc1b8.png" width="320" height="270">
@@ -442,10 +442,12 @@ This permits an encapsulating application to handle and display validation messa
 
 An item 'catalog' event is triggered by QTI 3 Player when a user selects a control (such as a highlighted term) within the item's presentation that is bound to an item's catalog.  As of QTI 3 Player version 0.3.1, the only supported catalog event () is a 'glossary' event.  QTI 3 Player will display its own Catalog Glossary Dialog component when a user selects a control within the item's presentation that is bound to a 'glossary' event.
 
+
 <div align="center">
-<p>Example of QTI 3 Player Glossary Dialog</p>
-<img src="https://user-images.githubusercontent.com/898605/161848852-6cec8b3d-f843-403c-a651-99b284946f65.png" width="320" height="300">
+  <p><b>Example of QTI 3 Player Glossary Dialog</b></p>
+<img src="https://user-images.githubusercontent.com/898605/161848852-6cec8b3d-f843-403c-a651-99b284946f65.png" width="260" height="240">
 </div>
+
 
 An encapsulating application may instrument the QTI 3 Player to _not display its internal Catalog Dialog component_ by specifying the boolean attribute `suppress-catalog-messages`.  When instrumenting QTI 3 Player to suppress its internal catalog message display, an application should implement a handler for the `notifyQti3ItemCatalogEvent`.  This permits an application to handle and display catalog event messages using its own UX.  Example: 
 
