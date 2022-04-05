@@ -88,6 +88,7 @@ import 'qti3-item-player/dist/qti3Player.css'
   @notifyQti3SuspendAttemptCompleted="handleSuspendAttemptCompleted"
   @notifyQti3EndAttemptCompleted="handleEndAttemptCompleted"
   @notifyQti3ItemAlertEvent="displayItemAlertEvent"
+  @notifyQti3ItemCatalogEvent="handleItemCatalogEvent"
 />
 ```
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -437,6 +438,62 @@ This permits an encapsulating application to handle and display validation messa
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
+### 10. Item 'Catalog' Events
+
+An item 'catalog' event is triggered by QTI 3 Player when a user selects a control (such as a highlighted term) within the item's presentation that is bound to an item's catalog.  As of QTI 3 Player version 0.3.1, the only supported catalog event () is a 'glossary' event.  QTI 3 Player will display its own Catalog Glossary Dialog component when a user selects a control within the item's presentation that is bound to a 'glossary' event.
+
+<div align="center">
+<p>Example of QTI 3 Player Glossary Dialog</p>
+<img src="https://user-images.githubusercontent.com/898605/161848852-6cec8b3d-f843-403c-a651-99b284946f65.png" width="320" height="300">
+</div>
+
+An encapsulating application may instrument the QTI 3 Player to _not display its internal Catalog Dialog component_ by specifying the boolean attribute `suppress-catalog-messages`.  When instrumenting QTI 3 Player to suppress its internal catalog message display, an application should implement a handler for the `notifyQti3ItemCatalogEvent`.  This permits an application to handle and display catalog event messages using its own UX.  Example: 
+
+```html
+<Qti3Player
+  ref="qti3player"
+  suppress-catalog-messages
+  @notifyQti3ItemCatalogEvent="handleItemCatalogEvent"
+/>
+```
+
+```js
+    /**
+     * @description Handler for QTI item catalog events such as 'glossary' events.
+     * @param {Object} event - object containing a catalog event payload
+     * Sample event schema:
+     * {
+     *   type: "glossary",
+     *   term: "acronym",
+     *   catalogIdRef: "glosscat",
+     *   data: [
+     *     {
+     *       support: "glossary-on-screen",
+     *       card: {
+     *         content: ""<p>An abbreviation.</p>"",
+     *         properties: {
+     *           name: "qti-html-content"
+     *         }
+     *       }
+     *     }
+     *     ... additional Card supports in Catalog based on PNP ...
+     *   ]
+     * }
+     */
+    handleItemCatalogEvent (event) {
+      console.log('[ItemCatalogEvent][Type: ' + event.type + ']', event)
+      switch (event.type) {
+        case 'glossary':
+          // Do something!
+          break
+        default:
+      }
+    },
+```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
 
 ## QTI 3 Player Presentation Attributes
 
@@ -504,9 +561,8 @@ The QTI3 Item Player 2022 development roadmap includes all features and capabili
 - [x] Support for Smarter Balanced-style Choice Interaction
 - [x] Support for Smarter Balanced-style Audio player
 - [x] Support for Adaptive Items and QtiEndAttemptInteraction
-- [ ] Catalog Support for Glossary and Keyword Translation
+- [x] Catalog Support for Glossary and Keyword Translation
 - [ ] Shared Stimulus Support
-- [ ] Simplified Layout
 - [ ] QtiMatch, QtiGapMatch, QtiGraphicGapMatch Interaction Support
 - [ ] QtiHottext Interaction Support
 - [ ] QtiHotspot Interaction Support
