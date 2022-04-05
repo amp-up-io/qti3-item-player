@@ -1,6 +1,6 @@
 {
   "name": "qti3-item-player",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "QTI 3 Item Player",
   "author": {
     "name": "Paul Grudnitski",
@@ -8,6 +8,13 @@
   },
   "license": "MIT",
   "private": false,
+  "keywords": [
+    "QTI3",
+    "QTI 3",
+    "assessment-item",
+    "item",
+    "component"
+  ],
   "files": [
     "dist"
   ],
