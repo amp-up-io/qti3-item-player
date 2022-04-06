@@ -154,7 +154,12 @@ const pnp = {
   textAppearance: {
     colorStyle: 'qti3-player-color-default'
   },
-  glossaryOnScreen: true, // unsupported - see Roadmap
+  // Glossary is universal support turned on (true) by default
+  glossaryOnScreen: true,
+  // Keyword translation is off ('') by default
+  keywordTranslationLanguage: '', 
+  // Custom SBAC Illustrated Glossary is off (false) by default
+  extSbacGlossaryIllustration: false,
   layoutSingleColumn: false // unsupported - see Roadmap (Simplified Layout)
 }
 
@@ -500,6 +505,32 @@ QTI 3 Player groups PNP 'glossary-on-screen', 'keyword-translation', and 'ext:sb
 As of the 0.3.4 release, QTI 3 Player supports the following IS0 639 language codes for keyword translations:
 
 `{ ar | cmn | de | en | es | fr | hmn | it | ja | ko | my | nl | pa | ru | so | tl | uk | vi | yue | zh }`
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+### 11. About Dynamic Catalog Rebinding
+
+Under most use-cases, a PNP is passed into QTI 3 Player as part of the configuration (see 4b Constructing a Configuration) as an item's XML is loaded.  However, _after an item is loaded_, an encapsulating application may update PNP settings and then force a catalog rebinding with the updated PNP settings.  QTI 3 Player implements a `bindCatalog` API method for this use-case.
+
+```js
+// 1) Use the PnpFactory helper class to build an updated PNP.
+let pnpFactory = new PnpFactory()
+// Example: turn off glossary
+pnpFactory.setGlossaryOnScreen(false)
+// Example: turn on Spanish keyword translations
+pnpFactory.setKeywordTranslationLanguage('es')
+// Example: turn on ext:sbac-glossary-illustration
+pnpFactory.setExtSbacGlossaryIllustration(true)
+
+// 2) Set QTI 3 Player's current PNP to our new PNP constructed in 1) above.
+this.qti3Player.setItemContextPnp(pnpFactory.getPnp())
+
+// 3) Even with a new Item Context PNP (step 2) above, QTI 3 Player will not 
+// automatically rebind the PNP + Catalog.  
+// Force QTI3 Player to bind (rebind) the Catalog.
+this.qti3Player.bindCatalog()
+```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
