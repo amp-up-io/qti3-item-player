@@ -18,12 +18,9 @@ import QtiCustomInteraction from '@/components/qti/interactions/QtiCustomInterac
 import QtiEndAttemptInteraction from '@/components/qti/interactions/QtiEndAttemptInteraction'
 import QtiFeedbackInline from '@/components/qti/body/QtiFeedbackInline'
 import QtiFeedbackBlock from '@/components/qti/body/QtiFeedbackBlock'
-/*
 import QtiRubricBlock from '@/components/qti/body/QtiRubricBlock'
-*/
 import QtiTemplateInline from '@/components/qti/body/QtiTemplateInline'
 import QtiTemplateBlock from '@/components/qti/body/QtiTemplateBlock'
-
 import QtiPrintedVariable from '@/components/qti/body/QtiPrintedVariable'
 /*
 import Img from '@/components/html/Img'
@@ -42,9 +39,7 @@ Vue.component('qti-custom-interaction', QtiCustomInteraction)
 Vue.component('qti-end-attempt-interaction', QtiEndAttemptInteraction)
 Vue.component('qti-feedback-inline', QtiFeedbackInline)
 Vue.component('qti-feedback-block', QtiFeedbackBlock)
-/*
 Vue.component('qti-rubric-block', QtiRubricBlock)
-*/
 Vue.component('qti-template-inline', QtiTemplateInline)
 Vue.component('qti-template-block', QtiTemplateBlock)
 Vue.component('qti-printed-variable', QtiPrintedVariable)
