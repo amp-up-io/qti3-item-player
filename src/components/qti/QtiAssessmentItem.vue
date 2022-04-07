@@ -210,23 +210,25 @@ export default {
      */
     newTemplate () {
       console.log('[QtiAssessmentItem][NewTemplate][Started]')
-      // 1) Reset the values of the response declarations
+      // 1) Inform any listeners that we are generating a new template
+      this.$parent.$emit('itemNewTemplate')
+      // 2) Reset the values of the response declarations
       this.resetResponseDeclarations()
-      // 2) Reset the interactions
+      // 3) Reset the interactions
       this.resetInteractions()
-      // 3) Reset the template declarations
+      // 4) Reset the template declarations
       this.resetTemplateDeclarations()
-      // 4) Run template processing to generate new template variables
+      // 5) Run template processing to generate new template variables
       this.executeTemplateProcessing()
-      // 5) Evaluate all printed variables
+      // 6) Evaluate all printed variables
       this.evaluatePrintedVariables()
-      // 6) Evaluate all template math variables
+      // 7) Evaluate all template math variables
       this.evaluateTemplateMathVariables()
-      // 7) Evaluate all templates
+      // 8) Evaluate all templates
       this.evaluateTemplates()
-      // 8) Reset the values of the outcome declarations
+      // 9) Reset the values of the outcome declarations
       this.resetOutcomeDeclarations()
-      // 9) Evaluate all feedbacks
+      // 10) Evaluate all feedbacks
       this.evaluateFeedbacks()
       console.log('[QtiAssessmentItem][NewTemplate][Completed]')
     },

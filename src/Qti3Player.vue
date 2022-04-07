@@ -9,6 +9,7 @@
       @itemSuspendAttemptReady="handleSuspendAttemptReady"
       @itemEndAttemptReady="handleEndAttemptReady"
       @itemCatalogEvent="handleCatalogEvent"
+      @itemNewTemplate="handleNewTemplate"
       v-bind:is="processedXml">
     </component>
     <catalog-dialog ref="catalogdialog" />
@@ -196,11 +197,27 @@ export default {
       this.$emit('notifyQti3EndAttemptCompleted', itemState)
     },
 
+    /**
+     * @description event handler initially developed for handling Catalog
+     * Glossary events.  In turn, this takes appropriate action based on
+     * the type of the catalogEvent.
+     * @param {Object} catalogEvent - the event payload
+     */
     handleCatalogEvent (catalogEvent) {
       // Display catalog events of type 'glossary'
       this.displayCatalogEvent(catalogEvent)
       // Notify listener that a catalog event occured
       this.$emit('notifyQti3ItemCatalogEvent', catalogEvent)
+    },
+
+    /**
+     * @description event handler for any actions the Player may want
+     * to take when the QtiAssessmentItem component is generating a new
+     * template.
+     */
+    handleNewTemplate () {
+      // Close/reset Catalog components
+      this.resetCatalogComponents()
     },
 
     /**
