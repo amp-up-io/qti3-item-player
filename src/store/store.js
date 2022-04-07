@@ -21,7 +21,8 @@ export const store = {
     feedbacks: [],
     templates: [],
     printedVariables: [],
-    catalogs: []
+    catalogs: [],
+    scoringRubricBlocks: []
   },
 
   itemContext: {
@@ -121,6 +122,10 @@ export const store = {
 
   getCatalogs () {
     return this.state.catalogs
+  },
+
+  getScoringRubricBlocks () {
+    return this.state.scoringRubricBlocks
   },
 
   getItem () {
@@ -266,6 +271,11 @@ export const store = {
     this.state.catalogs[catalogIndex] = catalog
   },
 
+  defineScoringRubricBlock (rubricBlock) {
+    console.log('[DefineScoringRubricBlock]', rubricBlock)
+    this.state.scoringRubricBlocks.push(rubricBlock)
+  },
+
   resetAll () {
     this.state.item = null
     this.state.itemBody = null
@@ -281,6 +291,7 @@ export const store = {
     this.state.templates.splice(0, this.state.templates.length)
     this.state.printedVariables.splice(0, this.state.printedVariables.length)
     this.state.catalogs.splice(0, this.state.catalogs.length)
+    this.state.scoringRubricBlocks.splice(0, this.state.scoringRubricBlocks.length)
     // Reset itemContext
     this.itemContext.guid = null
     this.itemContext.state = null
