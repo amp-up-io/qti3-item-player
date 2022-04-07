@@ -21,7 +21,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.qti-content-body {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+/*
 .qti-content-body {
   font-size: 16px;
   font-weight: 400;
@@ -32,4 +38,5 @@ export default {
   display: inline-block;
   margin-left: 2px;
 }
+*/
 </style>
