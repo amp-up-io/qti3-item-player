@@ -272,7 +272,6 @@ export const store = {
   },
 
   defineScoringRubricBlock (rubricBlock) {
-    console.log('[DefineScoringRubricBlock]', rubricBlock)
     this.state.scoringRubricBlocks.push(rubricBlock)
   },
 
