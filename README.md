@@ -146,7 +146,7 @@ const configuration = {}
 
 // Stamp an item's tracking guid (if any) onto the configuration
 configuration.guid = myItemTrackingGuid
-   
+
 // QTI 3 Player includes a helper class called 'PnpFactory' which can be used
 // to build a Personal Needs and Preferences definition.
 // The Default pnp object in the PnpFactory is:
@@ -157,7 +157,7 @@ const pnp = {
   // Glossary is universal support turned on (true) by default
   glossaryOnScreen: true,
   // Keyword translation is off ('') by default
-  keywordTranslationLanguage: '', 
+  keywordTranslationLanguage: '',
   // Custom SBAC Illustrated Glossary is off (false) by default
   extSbacGlossaryIllustration: false,
   layoutSingleColumn: false // unsupported - see Roadmap (Simplified Layout)
@@ -165,8 +165,8 @@ const pnp = {
 
 // Set the configuration's 'pnp' property
 configuration.pnp = pnp
-   
-// QTI 3 Player includes a helper class called 'SessionControlFactory' which can be 
+
+// QTI 3 Player includes a helper class called 'SessionControlFactory' which can be
 // used to build an Item Session Control definition.
 // The Default sessionControl object in the SessionControlFactory is:
 const defaultItemSessionControl = {
@@ -174,7 +174,7 @@ const defaultItemSessionControl = {
   show_feedback: false,
   validate_responses: false
 }
-   
+
 // Set the configuration's 'sessionControl' property
 configuration.sessionControl = defaultItemSessionControl
 
@@ -215,7 +215,7 @@ After item XML is loaded and an attempt has begun, a test controller may retriev
 * **endAttempt**
 
   This performs response validation (if validateResponses=true), ends the attempt, _executes response processing_, and produces the state of all item variables.  Typical use is when `submissionMode: "individual"`, or when you want to generate a raw score from the responses and the response processing.  Note that Feedback (inline, block, modal) is also displayed if `showFeedback: true`
-  
+
 * **suspendAttempt**
 
     This performs response validation (if `validateResponses: true`) and produces the state of all item variables.  _No response processing is executed._  Typical use is when `submissionMode: "simultaneous"`.
@@ -237,7 +237,7 @@ this.qti3Player.endAttempt('navigateNextItem')
  * @param {Object} data - the item's state, including outcomes from response processing
  */
 handleEndAttemptCompleted (data) {
-  // 'data' contains the item state, including any validation messages, 
+  // 'data' contains the item state, including any validation messages,
   // response variable values, outcome variable values, template variable values,
   // and context variable values.
   // ... do something ...
@@ -259,7 +259,7 @@ this.qti3Player.suspendAttempt('navigateNextItem')
  * @param {Object} data - the item's state
  */
 handleSuspendAttemptCompleted (data) {
-  // 'data' contains the item state, including any validation messages, 
+  // 'data' contains the item state, including any validation messages,
   // response variable values, outcome variable values, template variable values,
   // and context variable values.
   // ... do something ...
@@ -405,7 +405,7 @@ displayItemAlertEvent (event) {
 
 An item session 'invalid response' message is triggered by QTI 3 Player when,  
 
-* `SessionControl.validateResponses=true`, and 
+* `SessionControl.validateResponses=true`, and
 * A response validity requirement is not met on an interaction in the loaded item  
 
 As with item session 'alert' messages, QTI 3 Player uses a built-in messaging/toast component to display such 'invalid response' messages to the candidate.  
@@ -454,7 +454,7 @@ An item 'catalog' event is triggered by QTI 3 Player when a user selects a contr
 </div>
 
 
-An encapsulating application may instrument the QTI 3 Player to _not display its internal Catalog Dialog component_ by specifying the boolean attribute `suppress-catalog-messages`.  When instrumenting QTI 3 Player to suppress its internal catalog message display, an application should implement a handler for the `notifyQti3ItemCatalogEvent`.  This permits an application to handle and display catalog event messages using its own UX.  Example: 
+An encapsulating application may instrument the QTI 3 Player to _not display its internal Catalog Dialog component_ by specifying the boolean attribute `suppress-catalog-messages`.  When instrumenting QTI 3 Player to suppress its internal catalog message display, an application should implement a handler for the `notifyQti3ItemCatalogEvent`.  This permits an application to handle and display catalog event messages using its own UX.  Example:
 
 ```html
 <Qti3Player
@@ -526,7 +526,7 @@ pnpFactory.setExtSbacGlossaryIllustration(true)
 // 2) Set QTI 3 Player's current PNP to our new PNP constructed in 1) above.
 this.qti3Player.setItemContextPnp(pnpFactory.getPnp())
 
-// 3) Even with a new Item Context PNP (step 2) above, QTI 3 Player will not 
+// 3) Even with a new Item Context PNP (step 2) above, QTI 3 Player will not
 // automatically rebind the PNP + Catalog.  
 // Force QTI3 Player to bind (rebind) the Catalog.
 this.qti3Player.bindCatalog()
@@ -542,12 +542,12 @@ QTI 3 Player has several attributes to instrument presentation within an encapsu
 
 ### container-class
 
-Container classes are used to contain and pad content within them. QTI 3 Player comes with built-in support for two container classes: `qti3-player-container-fluid` and `qti3-player-container`. 
+Container classes are used to contain and pad content within them. QTI 3 Player comes with built-in support for two container classes: `qti3-player-container-fluid` and `qti3-player-container`.
 
 * qti3-player-container-fluid **DEFAULT**
 
   This container is a width=100%, padding=0 container at all widths.
-  
+
 * qti3-player-container
 
   This container has responsive breakpoints at screen widths of 1200px, 980px, and 768px.  
@@ -577,7 +577,7 @@ QTI 3 Player has built-in support for ten foreground / background color combinat
 * qti3-player-color-defaultreverse (Default - Reverse Polarity)
 * qti3-player-color-blackwhite (High Contrast - foreground color: black, background color: white)
 * qti3-player-color-whiteblack (High Contrast - foreground color: white, background color: black)
-* qti3-player-color-blackrose (foreground color: black, background color: rose) 
+* qti3-player-color-blackrose (foreground color: black, background color: rose)
 * qti3-player-color-roseblack (foreground color: rose, background color: black)
 * qti3-player-color-dgraymgray (foreground color: dark gray, background color: medium gray)
 * qti3-player-color-mgraydgray (foreground color: medium gray, background color: dark gray)
@@ -593,7 +593,7 @@ QTI 3 Player has built-in support for ten foreground / background color combinat
 
 ## Roadmap
 
-The QTI3 Item Player 2022 development roadmap includes all features and capabilities included in QTI 3 Delivery System Level 1 and Level 2 conformance. 
+The QTI3 Item Player 2022 development roadmap includes all features and capabilities included in QTI 3 Delivery System Level 1 and Level 2 conformance.
 
 - [x] Support for the 10 Standard Color Combinations
 - [x] Support for Template Processing and all Template Rules
@@ -603,6 +603,8 @@ The QTI3 Item Player 2022 development roadmap includes all features and capabili
 - [x] Support for Smarter Balanced-style Audio player
 - [x] Support for Adaptive Items and QtiEndAttemptInteraction
 - [x] Catalog Support for Glossary and Keyword Translation
+- [x] Catalog Support for Smarter Balanced Illustrated Glossary
+- [x] Rubric Block Support
 - [ ] Shared Stimulus Support
 - [ ] QtiMatch, QtiGapMatch, QtiGraphicGapMatch Interaction Support
 - [ ] QtiHottext Interaction Support
