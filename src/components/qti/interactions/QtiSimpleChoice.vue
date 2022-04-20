@@ -201,6 +201,11 @@ export default {
 
     initializeChoice () {
       switch (this.$parent.cardinality) {
+        case 'ordered':
+          this.role = 'button'
+          this.isRadio = false
+          this.tabIndex = 0
+          break
         case 'multiple':
           this.role = 'checkbox'
           this.isRadio = false
@@ -212,6 +217,18 @@ export default {
           this.isRadio = true
           this.tabIndex = -1
           break
+      }
+    },
+
+    /**
+     * @description For initializing a qti-simple-choice in an Order interaction.
+     * For order simple choices we hide the label and the control, leaving only
+     * the description.
+     */
+    initializeOrderChoice () {
+      if (this.role === 'button') {
+        this.hideLabel()
+        this.hideControl()
       }
     },
 
@@ -238,6 +255,9 @@ export default {
   },
 
   mounted () {
+    // If this is an order choice, its role will be button
+    this.initializeOrderChoice()
+
     this.createId()
   }
 }
@@ -286,6 +306,24 @@ export default {
   appearance: none;
   -webkit-print-color-adjust: exact;
   color-adjust: exact;
+}
+
+/* Used for order interaction */
+[role="button"] {
+  display: inline-block;
+  font-weight: 400;
+  cursor: move;
+  padding: .5rem;
+  margin: 0 .15rem .5rem;
+  vertical-align: top;
+  color: var(--choice-ctrlh-color);
+  background-color: var(--choice-ctrlh-bgc);
+  border: 1px solid var(--choice-ctrlh-color);
+  overflow: hidden;
+  text-decoration: none;
+  -webkit-border-radius: .25rem;
+  -moz-border-radius: .25rem;
+  border-radius: .25rem;
 }
 
 /* ============================================
@@ -573,5 +611,16 @@ export default {
 .control-hidden .qti-choice-label,
 .control-hidden .qti-choice-description {
   padding-left: 0.25rem;
+}
+
+[role="button"].control-hidden .qti-choice-description {
+  display: inline-block;
+  vertical-align: top;
+  width: 100%;
+}
+
+[role="button"].control-hidden .qti-choice-label,
+[role="button"].control-hidden .qti-choice-description {
+  padding: 0;
 }
 </style>
