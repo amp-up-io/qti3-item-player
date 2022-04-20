@@ -617,6 +617,7 @@ export default {
   display: inline-block;
   vertical-align: top;
   width: 100%;
+  overflow-wrap: break-word;
 }
 
 [role="button"].control-hidden .qti-choice-label,
