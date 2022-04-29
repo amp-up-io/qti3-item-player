@@ -9,8 +9,11 @@
     @blur="handleBlur"
     @click="handleClick"
     @keydown="handleKeydown"
-    class="qti-simple-choice">
-    <div style="width:100%;">
+    class="qti-simple-choice"
+    :class="{ source: role=='button' }">
+    <div
+      :class="{ draggable: role=='button' }"
+      style="width:100%;">
       <div
         ref="label"
         class="qti-choice-label">
@@ -309,20 +312,19 @@ export default {
 }
 
 /* Used for order interaction */
-[role="button"] {
+.draggable {
   display: inline-block;
+  position: relative;
   font-weight: 400;
   cursor: move;
-  padding: .5rem;
-  margin: 0 .15rem .5rem;
+  padding: .25rem;
+  margin: 0;
   vertical-align: top;
   color: var(--choice-ctrlh-color);
   background-color: var(--choice-ctrlh-bgc);
   border: 1px solid var(--choice-ctrlh-color);
   overflow: hidden;
   text-decoration: none;
-  -webkit-border-radius: .25rem;
-  -moz-border-radius: .25rem;
   border-radius: .25rem;
 }
 
