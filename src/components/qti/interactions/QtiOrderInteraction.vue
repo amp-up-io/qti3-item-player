@@ -189,19 +189,26 @@ export default {
     initializeValue (response) {
       this.setResponse(response)
       this.setState(this.computeState())
-      this.setIsValid(this.computeIsValid())
+      this.updateValidity(this.computeIsValid())
     },
 
     /**
-     * @description Reset this interaction's response and UI.
+     * @description Reset this interaction's response and UI.  Typically, this
+     * method is called when a new template is generated.
      */
     resetValue () {
       console.log('[ResetValue][identifier]', this.responseIdentifier)
 
-      this.updateValidity(this.computeIsValid())
+      // Reset the response, state, priorState
+      this.setResponse(null)
+      this.setState(null)
+      this.priorState = null
 
-      // Call the OrderGroup component to rebuild the UI
-      this.$refs.ordergroup.processGroupUI()
+      // Call the OrderGroup component to rebuild the UI.
+      // After the OrderGroup is rebuilt (it will be 'ready'), which triggers
+      // the 'orderGroupReady' event, which in turn completes the
+      // initialization process. See the handleOrderGroupReady method.
+      this.$refs.ordergroup.resetGroupUI()
     },
 
     /**
@@ -366,7 +373,8 @@ export default {
     },
 
     /**
-     * @description Update the interaction's validity.
+     * @description Update the interaction's validity in this component
+     * and in the store.
      * @param {Boolean} isValid
      */
     updateValidity (isValid) {
@@ -410,7 +418,7 @@ export default {
         this.minSelectionsMessage = this.dataMinSelectionsMessage
         return
       }
-      this.minSelectionsMessage = (this.minChoices == 0) ? '' : 'You must set an order for at least ' + this.minChoices + ' choice' + (this.minChoices > 1 ? 's' : '') + ' for this question.'
+      this.minSelectionsMessage = (this.minChoices == 0) ? '' : 'You must set the order for at least ' + this.minChoices + ' choice' + (this.minChoices > 1 ? 's' : '') + ' for this question.'
     },
 
     /**
@@ -422,6 +430,14 @@ export default {
       return this.getOrderInteractionSubType(staticClass)
     },
 
+    /**
+     * @description Order interactions have a considerable amount of shared
+     * vocabulary that is expressed via the interaction's class attribute.
+     * This determines whether nor not the interaction has choices separated
+     * from targets.
+     * @param {String} clazz - the interaction's class attribute
+     * @return {String} one of 'default' | 'ordermatch'
+     */
     getOrderInteractionSubType (clazz) {
       if ((typeof clazz === 'undefined') || (clazz === null) || (clazz.length == 0)) {
         return 'default'

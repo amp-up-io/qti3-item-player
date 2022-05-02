@@ -146,16 +146,14 @@ export default {
 
     /**
      * @description Main workhorse method to initialize this Order Group's UI.
+     * @param {Array} response - a prior response or null
      */
-    processGroupUI () {
+    processGroupUI (response) {
       const container = this.createContainer(this.choices, this.priorState)
       this.processContainerChoices(container)
 
       // Other than shuffling, this handles all of the QTI presentation vocab.
       this.presentationFactory.initialize(this.$refs.root, this)
-
-      // Generate a prior response from priorState
-      const priorResponse = (this.priorState === null ? null : this.priorState.value)
 
       // Bind to the OrderMatchInteraction widget.
       // 1) handeWidgetReady is called upon completion of instantiation.
@@ -163,10 +161,25 @@ export default {
       //    the order of the choices.
       this.sortable = new OrderMatchInteraction(this.$refs.root, {
         interactionSubType: this.interactionSubType,
-        response: priorResponse,
+        response: response,
         onReady: this.handleWidgetReady,
         onUpdate: this.handleWidgetUpdate
       })
+    },
+
+    /**
+     * @description Utility method used when generating a new template - in
+     * which case we unbind the sortable widget and then call processGroupUI
+     * all over again.
+     */
+    resetGroupUI () {
+      // Clean up the current sortable
+      if (this.sortable === null) return
+      // Place any draggers in targets back in their sources
+      this.sortable.reset()
+      this.sortable = null
+      // Reprocess the entire UI
+      this.processGroupUI(null)
     },
 
     /**
@@ -326,7 +339,7 @@ export default {
         this.validateChildren()
 
         // Build a UI - triggers an 'orderGroupReady' event upon completion.
-        this.processGroupUI()
+        this.processGroupUI(this.priorState === null ? null : this.priorState.value)
       } catch (err) {
         this.isQtiValid = false
         if (err.name === 'QtiValidationException') {
@@ -338,6 +351,11 @@ export default {
         }
       }
     }
+  },
+
+  beforeDestroy () {
+    this.sortable.destroy()
+    this.sortable = null
   }
 }
 </script>

@@ -226,6 +226,9 @@ class OrderMatchInteraction {
       this.itemStart.append(dragger)
       this.itemStart.classList.add('full')
 
+      // Set the dragger's width to 100% of its container li
+      dragger.setAttribute('style', 'width:100%')
+
     } else if (this.itemTarget.classList.contains('active')) {
       // We have an active target.  Dock the dragger to it.
       this.itemStart.classList.remove('full')
@@ -503,8 +506,69 @@ class OrderMatchInteraction {
     target.classList.add('full')
   }
 
+  addTargetDraggerToSourceAtIndex (index, dragger) {
+    const source = this.sources[index]
+    source.append(dragger)
+    source.classList.add('full')
+  }
+
   emptyDraggerParent (dragger) {
     dragger.parentNode.classList.remove('full')
+  }
+
+  findSourceByIdentifier (identifier) {
+    for (let i=0; i<this.sources.length; i++) {
+      if (identifier === this.sources[i].getAttribute('data-identifier')) {
+        return this.sources[i]
+      }
+    }
+    return null
+  }
+
+  reset () {
+    if (this.options.interactionSubType === 'ordermatch') {
+      this.resetDraggersToSources()
+    }
+
+    this.destroy()
+  }
+
+  resetDraggersToSources () {
+    this.targets.forEach((target) => {
+      if (target.classList.contains('full')) {
+        // Get the dragger inside the full target
+        const dragger = target.querySelector('.draggable')
+
+        // Find the source that has the same data-identifier as the dragger
+        const source = this.findSourceByIdentifier(dragger.getAttribute('data-identifier'))
+
+        // The source should not be full, but check anyway
+        if (source.classList.contains('full')) return
+
+        // 1) empty the target
+        this.emptyDraggerParent(dragger)
+        // 2) append dragger to the source
+        source.append(dragger)
+        source.classList.add('full')
+      }
+    }, this)
+  }
+
+  destroy () {
+    if (this.options.interactionSubType === 'ordermatch') {
+      // Remove all dragger event listeners
+      this.draggers.forEach((dragger) => {
+          dragger.removeEventListener('touchstart', this.handleTouchStart)
+          dragger.removeEventListener('touchmove', this.handleTouchMove)
+          dragger.removeEventListener('touchend', this.handleTouchEnd)
+          dragger.removeEventListener('mousedown', this.handleDragStart)
+          dragger.removeEventListener('mousemove', this.handleDragMove)
+          dragger.removeEventListener('mouseup', this.handleDragEnd)
+        }, this)
+
+      // Remove the target wrapper
+      this.targetwrapper.remove()
+    }
   }
 
 }
