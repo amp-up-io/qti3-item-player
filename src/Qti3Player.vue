@@ -972,10 +972,10 @@ export default {
 .qti3-player-container,
 .qti3-player-container-fluid {
   margin: 0;
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 400;
   line-height: 1.8rem;
-  font-family: "Roboto", sans-serif;
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
   color: var(--foreground);
   text-align: left;
   background-color: var(--background);
@@ -1059,7 +1059,7 @@ export default {
 
 /* Sweet Alert should use same font-family as player */
 .swal2-popup {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .qti3-player-catalog-clickable-term {
