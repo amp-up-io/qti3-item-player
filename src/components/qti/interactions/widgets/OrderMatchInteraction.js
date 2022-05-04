@@ -49,6 +49,7 @@ class OrderMatchInteraction {
       this.offsetY = 0
       this.startingX = 0
       this.startingY = 0
+      this.currentTargetCount = 0
 
       this.initializeSources(this.sourcewrapper)
       this.targetwrapper = this.wrapper.querySelector('.qti-order-target-wrapper')
@@ -64,9 +65,11 @@ class OrderMatchInteraction {
 
   options = {
     interactionSubType: 'default',
+    maxChoices: 0,
     response: null,
     onReady: null,
-    onUpdate: null
+    onUpdate: null,
+    onSelectionsLimit: null
   }
 
   /**
@@ -77,8 +80,10 @@ class OrderMatchInteraction {
   processOptions (options) {
     if ('interactionSubType' in options) this.options.interactionSubType = options.interactionSubType
     if ('response' in options) this.options.response = options.response
+    if ('maxChoices' in options) this.options.maxChoices = options.maxChoices
     if ('onReady' in options) this.options.onReady = options.onReady
     if ('onUpdate' in options) this.options.onUpdate = options.onUpdate
+    if ('onSelectionsLimit' in options) this.options.onSelectionsLimit = options.onSelectionsLimit
   }
 
   notifyReady () {
@@ -99,6 +104,12 @@ class OrderMatchInteraction {
     this.options.onUpdate({
         response: this.computeResponse(param)
       })
+  }
+
+  notifySelectionsLimit () {
+    if (this.options.onSelectionsLimit === null) return
+
+    this.options.onSelectionsLimit()
   }
 
   handleDragStart (event) {
@@ -222,6 +233,7 @@ class OrderMatchInteraction {
     this.clearTargetHighlights()
 
     if (this.itemTarget === null) {
+
       // No target.  Dock the dragger to its pre-drag host.
       this.itemStart.append(dragger)
       this.itemStart.classList.add('full')
@@ -229,8 +241,28 @@ class OrderMatchInteraction {
       // Set the dragger's width to 100% of its container li
       dragger.setAttribute('style', 'width:100%')
 
+      this.removeListeners(dragger, isTouch)
+
     } else if (this.itemTarget.classList.contains('active')) {
-      // We have an active target.  Dock the dragger to it.
+
+      // We have an active target.  Dock the dragger to it...if we are not
+      // exceeding maxChoices.
+      if (this.isExceedingMaxChoices(this.itemStart, this.itemTarget)) {
+        this.itemTarget.classList.remove('active')
+
+        // No target.  Dock the dragger to its pre-drag host.
+        this.itemStart.append(dragger)
+        this.itemStart.classList.add('full')
+
+        // Set the dragger's width to 100% of its container li
+        dragger.setAttribute('style', 'width:100%')
+
+        this.removeListeners(dragger, isTouch)
+
+        this.notifySelectionsLimit()
+        return
+      }
+
       this.itemStart.classList.remove('full')
       this.itemTarget.append(dragger)
       this.itemTarget.classList.remove('active')
@@ -242,14 +274,19 @@ class OrderMatchInteraction {
       // If we are docked to the sourcewrapper container, put the dragger in its
       // original order in the sourcewrapper.
       if (this.itemTarget.classList.contains('source')) {
+        this.currentTargetCount -= 1
         this.sortContainerElements(this.sourcewrapper)
       }
+
+      if (!this.itemStart.classList.contains('target')) {
+        this.currentTargetCount += 1
+      }
+
+      this.removeListeners(dragger, isTouch)
 
       // Important: callback when we have an update.
       this.notifyUpdate()
     }
-
-    this.removeListeners(dragger, isTouch)
   }
 
   findDraggerTarget (dragger, draggerRect, items) {
@@ -525,9 +562,43 @@ class OrderMatchInteraction {
     return null
   }
 
+  isExceedingMaxChoices(startItem, target) {
+    // If maxChoices is 0, then we can never exceed maxChoices
+    if (this.options.maxChoices === 0) return false
+
+    // If returning a dragger to a source bay, then we cannot be
+    // exceeding maxChoices
+    if (target.classList.contains('source')) return false
+
+    // If moving a dragger from one target to another, then we cannot be
+    // exceeding maxChoices
+    if (startItem.classList.contains('target')) return false
+
+    // If current full targets are less than maxChoices then we
+    // have room to grow.
+    if (this.currentTargetCount < this.options.maxChoices) return false
+
+    // currentTargetCount is >= maxChoices, so no room to grow.
+    return true
+  }
+
+  initializeCurrentTargetCount () {
+    this.currentTargetCount = 0
+  }
+
+  incrementTargetCount () {
+    this.currentTargetCount += 1
+  }
+
+  decrementTargetCount () {
+    if (this.currentTargetCount === 0) return
+    this.currentTargetCount -= 1
+  }
+
   reset () {
     if (this.options.interactionSubType === 'ordermatch') {
       this.resetDraggersToSources()
+      this.initializeCurrentTargetCount()
     }
 
     this.destroy()

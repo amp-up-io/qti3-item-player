@@ -54,13 +54,16 @@ export default {
       default: 'horizontal'
     },
     /*
-     * The maximum number of choices that can be selected.
-     * A value of 0 means unlimited choices.
+     * The maximum number of choices that the candidate may select and order
+     * when responding to the interaction. Used in conjunction with minChoices,
+     * if specified, maxChoices must be greater than or equal to minChoices
+     * and must not exceed the number of choices available. If unspecified,
+     * all of the choices may be ordered.
      */
     maxChoices: {
       required: false,
       type: String,
-      default: '1'
+      default: '0'
     },
     /*
      * NOT A QTI ATTRIBUTE - Determined by the QtiOrderInteraction component.
@@ -104,6 +107,14 @@ export default {
       sortable: null,
       isQtiValid: true
     }
+  },
+
+  computed: {
+
+    computedMaxChoices () {
+      return this.maxChoices*1
+    }
+
   },
 
   methods: {
@@ -161,9 +172,11 @@ export default {
       //    the order of the choices.
       this.sortable = new OrderMatchInteraction(this.$refs.root, {
         interactionSubType: this.interactionSubType,
+        maxChoices: this.computedMaxChoices,
         response: response,
         onReady: this.handleWidgetReady,
-        onUpdate: this.handleWidgetUpdate
+        onUpdate: this.handleWidgetUpdate,
+        onSelectionsLimit: this.handleSelectionsLimit
       })
     },
 
@@ -210,6 +223,10 @@ export default {
       this.$emit('orderGroupUpdate', {
           response: this.getResponse()
         })
+    },
+
+    handleSelectionsLimit () {
+      this.$emit('orderGroupSelectionsLimit')
     },
 
     /**

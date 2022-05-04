@@ -15,6 +15,7 @@
       :priorState="priorState"
       @orderGroupReady="handleOrderGroupReady"
       @orderGroupUpdate="handleOrderGroupUpdate"
+      @orderGroupSelectionsLimit="handleSelectionsLimit"
       v-bind="$attrs">
       <slot name="default" />
     </OrderGroup>
@@ -54,15 +55,28 @@ export default {
       required: true,
       type: String
     },
+    /*
+     * The minimum number of choices that the candidate must select and order
+     * to form a valid response to the interaction. If specified, minChoices
+     * must be '1' or greater but must not exceed the number of choices available.
+     * If unspecified, all of the choices must be ordered and maxChoices is ignored.
+     */
     minChoices: {
       required: false,
       type: String,
       default: '0'
     },
+    /*
+     * The maximum number of choices that the candidate may select and order
+     * when responding to the interaction. Used in conjunction with minChoices,
+     * if specified, maxChoices must be greater than or equal to minChoices
+     * and must not exceed the number of choices available. If unspecified,
+     * all of the choices may be ordered.
+     */
     maxChoices: {
       required: false,
       type: String,
-      default: '1'
+      default: '0'
     },
     /*
      * If the shuffle characteristic is true then the delivery engine must randomize the order in which
@@ -277,6 +291,10 @@ export default {
       this.updateValidity(this.computeIsValid())
     },
 
+    handleSelectionsLimit () {
+      store.NotifyInteractionSelectionsLimit(this.maxSelectionsMessage)
+    },
+
     /**
      * @description Build a response from the array of choices.
      * Response is an array of identifier strings
@@ -313,12 +331,9 @@ export default {
      * @return {Boolean} (true if valid, false if invalid)
      */
     computeIsValid () {
-      // If minChoices is 0, there are no constraints
-      if ((this.minChoices*1) === 0) return true
-
-      // MinChoices is > 0.  There are constraints.
       const state = this.getState()
       const response = this.getResponse()
+      const minRequired = this.minChoices*1
 
       // First, completely null responses are not valid.
       if (response === null) return false
@@ -329,16 +344,27 @@ export default {
 
       let changeCount = 0
 
+      // Depending on the interactionSubType, we count changes differently.
       switch (this.interactionSubType) {
         case 'default':
-          // Compare state order vs current order
+          // Compare state.order vs current response order
           for (let i = 0; i < response.length; i++) {
-            // If state and response do not match then increment count
+            // If state.order and response do not match then increment count
             if (response[i] !== state.order[i]) {
               changeCount += 1
             }
           }
-          break
+
+          // minChoices is not explicitly specified.
+          if (minRequired === 0) {
+            if (changeCount > 0) return true
+            return false
+          }
+
+          // minChoices is explicitly specified.
+          if (changeCount >= minRequired) return true
+          return false
+
         case 'ordermatch':
           // Look for any response elements that are not null
           for (let i = 0; i < response.length; i++) {
@@ -346,12 +372,17 @@ export default {
               changeCount += 1
             }
           }
-          break
-      }
 
-      // If the number of changes is greater than or equal
-      // to minChoices, then this is valid.
-      if ((this.minChoices*1) <= changeCount) return true
+          // minChoices is not explicitly specified.
+          if (minRequired === 0) {
+            if (changeCount === response.length) return true
+            return false
+          }
+
+          if (changeCount >= minRequired) return true
+          return false
+
+      }
 
       // Must be invalid
       return false
@@ -385,32 +416,12 @@ export default {
         })
     },
 
-    /**
-     * @description This method should be called prior to setting checked=true on a choice.
-     * @return {Boolean} (true if exceeding max-choices, false if not)
-     */
-    checkMaxChoicesLimit () {
-      // max-choices = 0 means no limit.
-      // On Radio Groups there should always be at most 1 choice.
-      if ((this.isRadio) || (this.maxChoices == 0)) return false
-
-      // Should only get to this code on a multiple cardinality ChoiceGroup.
-      // In this case, response should be an array of identifier strings.
-      const response = this.getResponse()
-      if ((response !== null) && (response.length == this.maxChoices)) {
-        store.NotifyInteractionSelectionsLimit(this.maxSelectionsMessage)
-        return true
-      }
-
-      return false
-    },
-
     computeMaxSelectionsMessage () {
       if (typeof this.dataMaxSelectionsMessage !== 'undefined') {
         this.maxSelectionsMessage = this.dataMaxSelectionsMessage
         return
       }
-      this.maxSelectionsMessage = (this.maxChoices == 0) ? '' : 'You may set an order for a maximum of ' + this.maxChoices + ' choice' + (this.maxChoices > 1 ? 's' : '') + ' for this question.<br/><br/>Please remove one of your choices before making another choice.'
+      this.maxSelectionsMessage = (this.maxChoices == 0) ? '' : 'You may set an order for a maximum of ' + this.maxChoices + ' choice' + (this.maxChoices > 1 ? 's' : '') + ' for this question.'
     },
 
     computeMinSelectionsMessage () {
@@ -418,7 +429,24 @@ export default {
         this.minSelectionsMessage = this.dataMinSelectionsMessage
         return
       }
-      this.minSelectionsMessage = (this.minChoices == 0) ? '' : 'You must set the order for at least ' + this.minChoices + ' choice' + (this.minChoices > 1 ? 's' : '') + ' for this question.'
+
+      // With default, we are ordering choices in place.  In this case,
+      // when minChoices is unspecified, we look for at least one change.
+      if (this.interactionSubType === 'default') {
+        // minChoices is not explicitly specified.
+        if ((this.minChoices*1) == 0) {
+          this.minSelectionsMessage = 'You must set the order for at least 1 choice for this question.'
+        } else {
+          this.minSelectionsMessage = 'You must set the order for at least ' + this.minChoices + ' choice' + (this.minChoices > 1 ? 's' : '') + ' for this question.'
+        }
+      } else if (this.interactionSubType === 'ordermatch') {
+        // minChoices is not explicitly specified.
+        if ((this.minChoices*1) == 0) {
+          this.minSelectionsMessage = 'You must set the order for all choices for this question.'
+        } else {
+          this.minSelectionsMessage = 'You must set the order for at least ' + this.minChoices + ' choice' + (this.minChoices > 1 ? 's' : '') + ' for this question.'
+        }
+      }
     },
 
     /**
