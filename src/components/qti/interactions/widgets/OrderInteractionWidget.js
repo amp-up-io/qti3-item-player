@@ -1,6 +1,6 @@
 import Sortable from 'sortablejs'
 
-class OrderMatchInteraction {
+class OrderInteractionWidget {
 
   constructor (container, options) {
 
@@ -180,6 +180,8 @@ class OrderMatchInteraction {
   }
 
   interactionMove (dragElement, coordX, coordY) {
+
+    console.log('interaction move')
     // Get a handle on the draggable container of the dragElement
     const dragger = this.getClosestElement(dragElement, 'draggable')
 
@@ -209,6 +211,8 @@ class OrderMatchInteraction {
 
   interactionEnd (dragElement, coordX, coordY, isTouch) {
 
+    console.log('interaction end')
+
     // Get a handle on the draggable container of the dragElement
     const dragger = this.getClosestElement(dragElement, 'draggable')
 
@@ -233,60 +237,62 @@ class OrderMatchInteraction {
     this.clearTargetHighlights()
 
     if (this.itemTarget === null) {
-
       // No target.  Dock the dragger to its pre-drag host.
-      this.itemStart.append(dragger)
-      this.itemStart.classList.add('full')
-
-      // Set the dragger's width to 100% of its container li
-      dragger.setAttribute('style', 'width:100%')
-
+      this.resetDraggerToItemStart(this.itemStart, dragger)
       this.removeListeners(dragger, isTouch)
+      return
+    }
 
-    } else if (this.itemTarget.classList.contains('active')) {
+    if (this.itemTarget.classList.contains('active')) {
+      this.itemTarget.classList.remove('active')
 
-      // We have an active target.  Dock the dragger to it...if we are not
-      // exceeding maxChoices.
-      if (this.isExceedingMaxChoices(this.itemStart, this.itemTarget)) {
-        this.itemTarget.classList.remove('active')
-
-        // No target.  Dock the dragger to its pre-drag host.
-        this.itemStart.append(dragger)
-        this.itemStart.classList.add('full')
-
-        // Set the dragger's width to 100% of its container li
-        dragger.setAttribute('style', 'width:100%')
-
-        this.removeListeners(dragger, isTouch)
-
+      // We have an active target. Before we dock, check if we are up
+      // against maxChoices limit.
+      if (this.isExceedingMaxChoices(this.itemStart, this.itemTarget, dragger)) {
+        // Dock the dragger to its pre-drag host.
+        this.resetDraggerToItemStart(this.itemStart, dragger)
+        // Trigger max selections message event
         this.notifySelectionsLimit()
+        // Always remove listeners
+        this.removeListeners(dragger, isTouch)
         return
       }
 
+      // Everything ok, dock the dragger.
       this.itemStart.classList.remove('full')
-      this.itemTarget.append(dragger)
-      this.itemTarget.classList.remove('active')
-      this.itemTarget.classList.add('full')
+      // Dock the dragger to the target
+      this.setDraggerToItemTarget(this.itemTarget, dragger)
 
-      // Set the dragger's width to 100% of its container li
-      dragger.setAttribute('style', 'width:100%')
-
-      // If we are docked to the sourcewrapper container, put the dragger in its
-      // original order in the sourcewrapper.
+      // If we are docked to the sourcewrapper container, put the
+      // dragger in its original order in the sourcewrapper.
       if (this.itemTarget.classList.contains('source')) {
-        this.currentTargetCount -= 1
+        this.decrementTargetCount()
         this.sortContainerElements(this.sourcewrapper)
       }
 
       if (!this.itemStart.classList.contains('target')) {
-        this.currentTargetCount += 1
+        this.incrementTargetCount()
       }
-
-      this.removeListeners(dragger, isTouch)
 
       // Important: callback when we have an update.
       this.notifyUpdate()
     }
+
+    this.removeListeners(dragger, isTouch)
+  }
+
+  resetDraggerToItemStart (itemStart, dragger) {
+    itemStart.append(dragger)
+    itemStart.classList.add('full')
+    // Set the dragger's width to 100% of its container li
+    dragger.setAttribute('style', 'width:100%')
+  }
+
+  setDraggerToItemTarget (itemTarget, dragger) {
+    itemTarget.append(dragger)
+    itemTarget.classList.add('full')
+    // Set the dragger's width to 100% of its container li
+    dragger.setAttribute('style', 'width:100%')
   }
 
   findDraggerTarget (dragger, draggerRect, items) {
@@ -644,4 +650,4 @@ class OrderMatchInteraction {
 
 }
 
-export default OrderMatchInteraction
+export default OrderInteractionWidget

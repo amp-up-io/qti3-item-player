@@ -14,7 +14,7 @@ import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationExc
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
 import QtiProcessing from '@/components/qti/processing/utils/QtiProcessing'
 import OrderPresentationFactory from '@/components/qti/interactions/presentation/OrderInteractionPresentationFactory'
-import OrderMatchInteraction from '@/components/qti/interactions/widgets/OrderMatchInteraction'
+import OrderInteractionWidget from '@/components/qti/interactions/widgets/OrderInteractionWidget'
 
 const qtiAttributeValidation = new QtiAttributeValidation()
 const qtiProcessing = new QtiProcessing()
@@ -170,7 +170,7 @@ export default {
       // 1) handeWidgetReady is called upon completion of instantiation.
       // 2) handleWidgetUpdate is called any time the candidate changes
       //    the order of the choices.
-      this.sortable = new OrderMatchInteraction(this.$refs.root, {
+      this.sortable = new OrderInteractionWidget(this.$refs.root, {
         interactionSubType: this.interactionSubType,
         maxChoices: this.computedMaxChoices,
         response: response,
