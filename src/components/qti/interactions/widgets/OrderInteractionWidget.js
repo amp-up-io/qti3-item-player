@@ -126,7 +126,6 @@ class OrderInteractionWidget {
   }
 
   interactionStart (dragElement, coordX, coordY, isTouch) {
-
     // Get a handle on the draggable container of the dragElement
     const dragger = this.getClosestElement(dragElement, 'draggable')
 
@@ -180,8 +179,6 @@ class OrderInteractionWidget {
   }
 
   interactionMove (dragElement, coordX, coordY) {
-
-    console.log('interaction move')
     // Get a handle on the draggable container of the dragElement
     const dragger = this.getClosestElement(dragElement, 'draggable')
 
@@ -210,9 +207,6 @@ class OrderInteractionWidget {
   }
 
   interactionEnd (dragElement, coordX, coordY, isTouch) {
-
-    console.log('interaction end')
-
     // Get a handle on the draggable container of the dragElement
     const dragger = this.getClosestElement(dragElement, 'draggable')
 
@@ -393,12 +387,12 @@ class OrderInteractionWidget {
   identifyTargets (highlight) {
     for (let i=0; i<this.targets.length; i++) {
       if (highlight && !this.targets[i].classList.contains('full')) {
-        this.targets[i].classList.add('custom-state-active')
+        this.targets[i].classList.add('target-active')
       }
     }
 
     if (highlight && !this.isItemStartSource) {
-      this.sourcewrapper.classList.add('custom-state-active')
+      this.sourcewrapper.classList.add('target-active')
     }
   }
 
@@ -426,10 +420,10 @@ class OrderInteractionWidget {
 
   clearTargetHighlights () {
     this.targets.forEach((target) => {
-        target.classList.remove('custom-state-active')
+        target.classList.remove('target-active')
       }, this)
 
-    this.sourcewrapper.classList.remove('custom-state-active')
+    this.sourcewrapper.classList.remove('target-active')
   }
 
   getClosestElement (element, classToSearch) {

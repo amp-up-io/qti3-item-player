@@ -491,6 +491,10 @@ export default {
   /* Editor colors */
   --ed-bc: var(--gray-dark);
   --ed-bq-color: #ccc;
+  /* Order colors */
+  --order-target-active-color: var(--foreground);
+  --order-target-active-bgc: #bbcef1;
+  --order-placeholder-color: #d3d5d7;
 }
 
 /* Default foreground / background colors */
@@ -548,6 +552,10 @@ export default {
   /* Editor colors */
   --ed-bc: #ddd;
   --ed-bq-color: #ccc;
+  /* Order colors */
+  --order-target-active-color: var(--darker);
+  --order-target-active-bgc: #bbcef1;
+  --order-placeholder-color: #d3d5d7;
 }
 
 /* High Contrast */
@@ -600,6 +608,10 @@ export default {
   /* Editor colors */
   --ed-bc: #222;
   --ed-bq-color: #bbb;
+  /* Order colors */
+  --order-target-active-color: var(--foreground);
+  --order-target-active-bgc: #bbcef1;
+  --order-placeholder-color: #d3d5d7;
 }
 
 /* High Contrast - reverse polarity */
@@ -655,6 +667,10 @@ export default {
   /* Editor colors */
   --ed-bc: var(--lighter);
   --ed-bq-color: #ccc;
+  /* Order colors */
+  --order-target-active-color: var(--darker);
+  --order-target-active-bgc: #bbcef1;
+  --order-placeholder-color: var(--foreground);
 }
 
 .qti3-player-color-blackrose {
@@ -706,6 +722,10 @@ export default {
   /* Editor colors */
   --ed-bc: var(--gray-dark);
   --ed-bq-color: #999;
+  /* Order colors */
+  --order-target-active-color: var(--foreground);
+  --order-target-active-bgc: var(--secondary);
+  --order-placeholder-color: #bbcef1;
 }
 
 .qti3-player-color-roseblack {
@@ -760,6 +780,10 @@ export default {
   /* Editor colors */
   --ed-bc: #ddd;
   --ed-bq-color: #ccc;
+  /* Order colors */
+--order-target-active-color: var(--darker);
+--order-target-active-bgc: #bbcef1;
+--order-placeholder-color: var(--foreground);
 }
 
 .qti3-player-color-mgraydgray {
@@ -811,6 +835,10 @@ export default {
   /* Editor colors */
   --ed-bc: #ddd;
   --ed-bq-color: #ccc;
+  /* Order colors */
+  --order-target-active-color: var(--background);
+  --order-target-active-bgc: #bbcef1;
+  --order-placeholder-color: #d3d5d7;
 }
 
 .qti3-player-color-dgraymgray {
@@ -862,6 +890,10 @@ export default {
   /* Editor colors */
   --ed-bc: var(--gray-dark);
   --ed-bq-color: #555;
+  /* Order colors */
+  --order-target-active-color: var(--foreground);
+  --order-target-active-bgc: #bbcef1;
+  --order-placeholder-color: var(--background);
 }
 
 .qti3-player-color-yellowblue {
@@ -916,6 +948,10 @@ export default {
   /* Editor colors */
   --ed-bc: var(--well-border);
   --ed-bq-color: #6c757d;
+  /* Order colors */
+  --order-target-active-color: var(--darker);
+  --order-target-active-bgc: #bbcef1;
+  --order-placeholder-color: var(--foreground);
 }
 
 .qti3-player-color-blueyellow {
@@ -967,6 +1003,10 @@ export default {
   /* Editor colors */
   --ed-bc: var(--well-border);
   --ed-bq-color: #6c757d;
+  /* Order colors */
+  --order-target-active-color: var(--foreground);
+  --order-target-active-bgc: #bbcef1;
+  --order-placeholder-color: var(--background);
 }
 
 .qti3-player-container,

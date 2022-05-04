@@ -385,12 +385,14 @@ export default {
 ul.qti-order-source-wrapper {
   list-style: none;
   display: inline-block;
-  position: relative;
   margin: .5rem auto;
   padding: 0;
   width: 100%;
   min-height: 3rem;
   text-align: center;
+  border: 1px solid;
+  border-color: var(--background);
+  border-radius: .25rem;
 }
 
 ul.qti-order-source-wrapper.qti-choices-left {
@@ -405,14 +407,19 @@ ul.qti-order-source-wrapper.qti-choices-right {
   padding: 0 1rem;
 }
 
-ul.qti-order-source-wrapper.custom-state-active {
-  background-color: #f5f5f5;
-  border: 1px dashed #6D95E0;
+ul.qti-order-source-wrapper.target-active {
+  background-color: var(--well-bg);
+  border: 1px dashed;
+  border-color: var(--ea-button-secondary-bgc);
 }
 
+/* Hide sources when not containing a dragger */
 ul.qti-order-source-wrapper > li.source {
+  display: none;
+}
+
+ul.qti-order-source-wrapper > li.source.full {
   display: inline-block;
-  cursor: move;
   padding: .75rem .25rem;
   margin: 0 .15rem .15rem;
   vertical-align: top;
@@ -466,19 +473,20 @@ ul.qti-order-target-wrapper > li.target.qti-labels-none {
   min-height: 3.5rem;
 }
 
-ul.qti-order-target-wrapper > li.target.custom-state-active {
-  color: var(--foreground);
-  background: #BBCEF1;
-  border:1px dashed var(--well-bc);
+ul.qti-order-target-wrapper > li.target.target-active {
+  color: var(--order-target-active-color);
+  background-color: var(--order-target-active-bgc);
+  border: 1px dashed var(--ea-button-secondary-bgc);
 }
 
-ul.qti-order-target-wrapper > li.target.custom-state-active.active {
-  color: var(--ea-button-secondary-color);
-  background-color: var(--ea-button-secondary-bgc);
+ul.qti-order-target-wrapper > li.target.target-active.active {
+  color: var(--order-target-active-color);
+  background-color: var(--order-placeholder-color);
   border: 1px dashed var(--ea-button-secondary-bgc);
 }
 
 ul.qti-order-target-wrapper > li.target.full > .draggable {
+  cursor: move;
   width: 100%;
   /* Make sure long draggables wrap and fit in the target */
   overflow-wrap: break-word;
@@ -498,9 +506,8 @@ ul.qti-order-target-wrapper.qti-orientation-vertical > li.target {
 }
 
 .dragger-placeholder {
-  opacity: .25;
-  border: 1px solid #2871bd;
-  background-color: var(--ea-button-secondary-bgc); /*#eff2f7;*/
+  border: 1px solid var(--order-placeholder-color);
+  background-color: var(--order-placeholder-color);
   border-radius: .25rem;
 }
 
