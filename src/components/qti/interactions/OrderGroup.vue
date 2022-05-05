@@ -413,8 +413,18 @@ ul.qti-order-source-wrapper.target-active {
   border-color: var(--ea-button-secondary-bgc);
 }
 
+ul.qti-order-source-wrapper.qti-choices-inline > li.source {
+  display: inline-block;
+  padding: .75rem .25rem;
+  margin: 0 .15rem .15rem;
+  vertical-align: top;
+}
+
 /* Hide sources when not containing a dragger */
-ul.qti-order-source-wrapper > li.source {
+ul.qti-order-source-wrapper.qti-choices-left > li.source,
+ul.qti-order-source-wrapper.qti-choices-right > li.source,
+ul.qti-order-source-wrapper.qti-choices-top > li.source,
+ul.qti-order-source-wrapper.qti-choices-bottom > li.source {
   display: none;
 }
 

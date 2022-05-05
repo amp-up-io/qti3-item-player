@@ -31,6 +31,7 @@ class OrderPresentationFactory {
       QTI_CHOICES_BOTTOM: 'qti-choices-bottom',
       QTI_CHOICES_LEFT: 'qti-choices-left',
       QTI_CHOICES_RIGHT: 'qti-choices-right',
+      QTI_CHOICES_INLINE: 'qti-choices-inline',
 
       // Orientation
       QTI_ORIENTATION_VERTICAL: 'qti-orientation-vertical',
@@ -126,7 +127,10 @@ class OrderPresentationFactory {
   processPresentation () {
     this.processOrientation()
 
-    if (this.presentation_Choices_Orientation === null) return
+    if (this.presentation_Choices_Orientation === null) {
+      this.orderGroupNode.$refs.ordergroup.classList.add(this.constants.QTI_CHOICES_INLINE)
+      return
+    }
 
     const targetWrapper = this.createTargetWrapper()
 
