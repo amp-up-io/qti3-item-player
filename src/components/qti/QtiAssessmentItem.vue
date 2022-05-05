@@ -2216,9 +2216,13 @@ h2, h3, h4, h5, h6 {
 p {
   margin-top: 0;
   margin-bottom: 1rem;
+  font-size: inherit;
+  line-height: inherit;
 }
 article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
   display: block;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 ol, ul, dl {
@@ -2241,14 +2245,18 @@ dd {
 
 blockquote {
    margin: 0 0 1rem;
+   line-height: inherit;
 }
 
 b, strong {
   font-weight: bolder;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 small {
   font-size: 80%;
+  line-height: inherit;
 }
 
 sub, sup {
@@ -2297,6 +2305,7 @@ hr {
   margin-bottom: 4px;
   color: var(--foreground);
   background-color: transparent;
+  border-collapse: collapse;
 }
 
 .table th {
