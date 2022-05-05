@@ -609,7 +609,7 @@ The QTI3 Item Player 2022 development roadmap includes all features and capabili
 - [ ] QtiMatch, QtiGapMatch, QtiGraphicGapMatch Interaction Support
 - [ ] QtiHottext Interaction Support
 - [ ] QtiHotspot Interaction Support
-- [ ] QtiOrder Interaction Support
+- [x] QtiOrder Interaction Support
 - [ ] Scoring API Examples
 - [ ] Improved Audio Player
 - [ ] Improved Video Player
