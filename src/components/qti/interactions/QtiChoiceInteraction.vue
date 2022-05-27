@@ -10,7 +10,6 @@
       :responseIdentifier="responseIdentifier"
       :maxChoices="maxChoices"
       :minChoices="minChoices"
-      :priorState="priorState"
       @choiceGroupReady="handleChoiceGroupReady"
       @setChecked="handleSetChecked"
       @setFocusNextChoice="handleSetFocusNextChoice"
@@ -168,18 +167,23 @@ export default {
      */
     resetValue () {
       console.log('[ResetValue][identifier]', this.responseIdentifier)
+
+      // Uncheck all choices
       this.choices.forEach((choice) => {
         choice.setChecked(false)
         if (this.isRadio) {
           choice.setTabIndex('-1')
         }
       })
-      this.currentChoice = null
-      this.setResponse(null)
-      this.updateValidity(this.computeIsValid())
 
-      // Call the ChoiceGroup component to rebuild the UI
-      this.$refs.choicegroup.processGroupUI()
+      this.currentChoice = null
+
+      // When a new template, smoke the priorState
+      this.priorState = null
+
+      // Call the ChoiceGroup component to rebuild the UI.
+      // Upon completion, ChoiceGroup will trigger the choiceGroupReady event.
+      this.$refs.choicegroup.resetGroupUI()
     },
 
     /**

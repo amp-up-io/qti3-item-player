@@ -51,25 +51,6 @@ export default {
       required: false,
       type: String,
       default: '1'
-    },
-    /*
-     * NOT A QTI ATTRIBUTE
-     * Parent QtiChoiceInteraction component passed the
-     * choice interaction state into this ChoiceGroup component.
-     * Used for re-establishing a prior choice order on shuffled interactions.
-     * When not null, has this schema:
-     * {
-     *   identifier: [String],
-     *   value: [String or Array]
-     *   state: {
-     *     order: [Array of Strings]
-     *   }
-     * }
-     */
-    priorState: {
-      required: false,
-      type: Object,
-      default: null
     }
   },
 
@@ -83,11 +64,28 @@ export default {
       isShuffle: null,
       choiceInteractionClassAttribute: null,
       presentationFactory: null,
-      isQtiValid: true
+      isQtiValid: true,
+      priorState: null
     }
   },
 
   methods: {
+
+    /**
+     * @description Get this ChoiceGroup's priorState.
+     * @return {Object} priorState
+     */
+    getPriorState () {
+      return this.priorState
+    },
+
+    /**
+     * @description Set this ChoiceGroup's priorState.
+     * @param {Object} priorState
+     */
+    setPriorState (priorState) {
+      this.priorState = priorState
+    },
 
     validateChildren () {
       this.$slots.default.forEach((slot) => {
@@ -101,6 +99,10 @@ export default {
 
       // All good.  Save off our children.
       this.processChildren()
+
+      // Init priorState in case there is a shuffle order and a restore
+      this.setPriorState(this.$parent.priorState)
+
       // Build a UI
       this.processGroupUI()
     },
@@ -135,12 +137,33 @@ export default {
     },
 
     /**
+     * @description Utility method used when generating a new template - in
+     * which case we reset priorState then call processGroupUI
+     * all over again.
+     */
+    resetGroupUI () {
+      // Clear out any prior ordering in case shuffle is true
+      this.setPriorState(null)
+
+      // Reprocess the entire UI
+      this.processGroupUI()
+
+      // Important: Notify parent qti-choice-interaction component
+      // that our choices are ready
+      this.$emit('choiceGroupReady', {
+        choices: this.choices,
+        firstChoice: this.firstChoice,
+        lastChoice: this.lastChoice
+      })
+    },
+
+    /**
      * @description This builds a new dom and choices
      * array from the choices array
      */
     processShuffle () {
       // Load all nodes into a container to be shuffled.
-      let container = this.createShuffleContainer(this.choices, this.priorState)
+      let container = this.createShuffleContainer(this.choices, this.getPriorState())
 
       // Clean out the dom and the original choices array
       this.choices.splice(0, this.choices.length)
