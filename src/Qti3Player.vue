@@ -430,6 +430,7 @@ export default {
   --warning: #f1b44c;
   --danger: #fb4d53;
   --light: #eff2f7;
+  --lighter: #f5f5f5;
   --dark: #343a40;
   --darker: #212529;
   --black: #000;
@@ -471,7 +472,9 @@ export default {
   --choice-sbac-control-unchecked-bg: var(--white);
   /* Control Hidden colors */
   --choice-ctrlh-color: #2871bd;
-  --choice-ctrlh-bgc: var(--light);
+  --choice-ctrlh-bgc: var(--lighter);
+  --choice-ctrlh-lblbgc: var(--white);
+  --choice-ctrlh-desccolor: var(--foreground);
   --choice-ctrlh-checked-color: var(--white);
   --choice-ctrlh-checked-bgc: #2871bd;
   --choice-ctrlh-focus-bc: #2871bd;
@@ -533,7 +536,9 @@ export default {
   --choice-sbac-control-unchecked-bg: var(--darker);
   /* Control Hidden colors */
   --choice-ctrlh-color: #2871bd;
-  --choice-ctrlh-bgc: var(--light);
+  --choice-ctrlh-bgc: var(--lighter);
+  --choice-ctrlh-lblbgc: var(--white);
+  --choice-ctrlh-desccolor: var(--background);
   --choice-ctrlh-checked-color: var(--white);
   --choice-ctrlh-checked-bgc: #2871bd;
   --choice-ctrlh-focus-bc: #2871bd;
@@ -588,11 +593,13 @@ export default {
   --choice-sbac-control-unchecked-bc: var(--black);
   --choice-sbac-control-unchecked-bg: var(--white);
   /* Control Hidden colors */
-  --choice-ctrlh-color: var(--black);
+  --choice-ctrlh-color: #2871bd;
   --choice-ctrlh-bgc: var(--white);
+  --choice-ctrlh-lblbgc: var(--white);
+  --choice-ctrlh-desccolor: var(--foreground);
   --choice-ctrlh-checked-color: var(--white);
-  --choice-ctrlh-checked-bgc: var(--black);
-  --choice-ctrlh-focus-bc: var(--black);
+  --choice-ctrlh-checked-bgc: #2871bd;
+  --choice-ctrlh-focus-bc: #2871bd;
   --choice-ctrlh-focus-checked-bc: var(--white);
   --choice-ctrlh-hover-brightness: brightness(95%);
   /* Inline Choice colors */
@@ -647,11 +654,13 @@ export default {
   --choice-sbac-control-unchecked-bc: var(--white);
   --choice-sbac-control-unchecked-bg: var(--black);
   /* Control Hidden colors */
-  --choice-ctrlh-color: var(--white);
-  --choice-ctrlh-bgc: var(--black);
-  --choice-ctrlh-checked-color: var(--black);
-  --choice-ctrlh-checked-bgc: var(--white);
-  --choice-ctrlh-focus-bc: var(--white);
+  --choice-ctrlh-color: #2871bd;
+  --choice-ctrlh-bgc: var(--white);
+  --choice-ctrlh-lblbgc: var(--white);
+  --choice-ctrlh-desccolor: var(--background);
+  --choice-ctrlh-checked-color: var(--white);
+  --choice-ctrlh-checked-bgc: #2871bd;
+  --choice-ctrlh-focus-bc: #2871bd;
   --choice-ctrlh-focus-checked-bc: var(--white);
   --choice-ctrlh-hover-brightness: brightness(90%);
   /* Inline Choice colors */

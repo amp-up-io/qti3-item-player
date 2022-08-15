@@ -198,6 +198,16 @@ export default {
       this.$refs.label.classList.add('qti-visually-hidden')
     },
 
+    /**
+     * Utility method for setting class to lrn.
+     */
+    setChoiceLrn (label) {
+      this.$refs.choice.classList.add('lrn')
+      this.$refs.label.classList.add('lrn')
+      this.$refs.description.classList.add('lrn')
+      this.$refs.label.innerText = label
+    },
+
     hideControl () {
       this.$refs.choice.classList.add('control-hidden')
     },
@@ -561,6 +571,64 @@ export default {
   filter: var(--choice-ctrlh-hover-brightness);
 }
 
+/* ================
+   LRN Block Styles
+   ================ */
+
+[role="radio"].control-hidden.lrn,
+[role="checkbox"].control-hidden.lrn {
+  color: var(--foreground);
+  background-color: var(--choice-ctrlh-bgc);
+  border: 1px solid var(--choice-ctrlh-color);
+  border-radius: 0rem;
+  margin-bottom: .5rem;
+  padding: 0;
+}
+
+[role="radio"].control-hidden.lrn .qti-choice-label,
+[role="checkbox"].control-hidden.lrn .qti-choice-label {
+  display: table-cell;
+  padding-top: .55em;
+  padding-left: .65em;
+  padding-right: .65em;
+  padding-bottom: .55em;
+  font-size: 1.8em;
+  width: 2.1em;
+  min-width: 2.1em;
+  height: 100%;
+  min-height: 2.0em;
+  color: var(--choice-ctrlh-color);
+  background-color: var(--choice-ctrlh-lblbgc);
+  border-right: 2px solid rgba(0,0,0,0.1);
+  vertical-align: middle;
+}
+
+[role="radio"].control-hidden.lrn .qti-choice-description,
+[role="checkbox"].control-hidden.lrn .qti-choice-description {
+  display: table-cell;
+  width: 100%;
+  padding-top: .85em;
+  padding-right: 0;
+  padding-bottom: .8em;
+  padding-left: .7em;
+  vertical-align: middle;
+  color: var(--choice-ctrlh-desccolor);
+}
+
+[role="radio"][aria-checked="true"].control-hidden.lrn .qti-choice-label,
+[role="checkbox"][aria-checked="true"].control-hidden.lrn .qti-choice-label {
+  border-right: 2px solid rgba(0,0,0,0.3);
+  color: var(--choice-ctrlh-checked-color);
+  background-color: var(--choice-ctrlh-checked-bgc);
+}
+
+[role="radio"][aria-checked="true"].control-hidden.lrn .qti-choice-description,
+[role="checkbox"][aria-checked="true"].control-hidden.lrn .qti-choice-description {
+  color: var(--choice-ctrlh-checked-color);
+  background-color: var(--choice-ctrlh-checked-bgc);
+  border: 1px solid var(--choice-ctrlh-checked-bgc);
+}
+
 /* ===============
    Disabled styles
    ===============*/
@@ -625,5 +693,12 @@ export default {
 [role="button"].control-hidden .qti-choice-label,
 [role="button"].control-hidden .qti-choice-description {
   padding: 0;
+}
+
+/* ======================
+   Special utility styles
+   ====================== */
+.qti-choice-description.lrn code {
+  background-color: #e4e4e4;
 }
 </style>

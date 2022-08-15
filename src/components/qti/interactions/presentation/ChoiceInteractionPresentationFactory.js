@@ -36,6 +36,9 @@ class ChoicePresentationFactory {
       // Sbac
       SBAC_PRESENTATION: 'sbac',
 
+      // lrn
+      LRN_PRESENTATION: 'lrn',
+
       // Stacking options
       QTI_CHOICES_STACKING_1: 'qti-choices-stacking-1',
       QTI_CHOICES_STACKING_2: 'qti-choices-stacking-2',
@@ -56,6 +59,7 @@ class ChoicePresentationFactory {
     this.presentation_Labels = this.constants.LABELS_UPPER_ALPHA
     this.presentation_LabelsSuffix = this.constants.LABELS_SUFFIX_PERIOD
     this.presentation_Sbac = false
+    this.presentation_Lrn = false
     this.presentation_IsInputControlHidden = false
     this.presentation_IsOrientationVertical = false
     this.presentation_IsOrientationHorizontal =  false
@@ -157,6 +161,10 @@ class ChoicePresentationFactory {
             this.presentation_Sbac = true
             break
 
+          case this.constants.LRN_PRESENTATION:
+            this.presentation_Lrn = true
+            break
+
           default:
             break
         } // end switch
@@ -227,6 +235,8 @@ class ChoicePresentationFactory {
         this.choices[index].hideLabel()
       } else if (this.presentation_Sbac) {
         this.choices[index].setLabelSbac(this.presentation_Labels[index])
+      } else if (this.presentation_Lrn) {
+        this.choices[index].setChoiceLrn(this.presentation_Labels[index]);
       } else {
         this.choices[index].setLabel(this.presentation_Labels[index] + this.presentation_LabelsSuffix)
       }
