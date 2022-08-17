@@ -600,7 +600,6 @@ export default {
   color: var(--choice-ctrlh-color);
   background-color: var(--choice-ctrlh-lblbgc);
   border-right: 2px solid rgba(0,0,0,0.1);
-  vertical-align: middle;
 }
 
 [role="radio"].control-hidden.lrn .qti-choice-description,
