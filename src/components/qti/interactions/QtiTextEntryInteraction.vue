@@ -9,7 +9,7 @@
       :placeholder="placeholder"
       autocapitalize="none"
       spellcheck="false"
-      maxlength="500"
+      :maxlength="computeMaxlength"
       v-on:input="handleInput($event)"
     />
     <tooltip
@@ -100,6 +100,13 @@ export default {
     dataPatternmaskMessage: {
       required: false,
       type: String
+    },
+    /*
+     * Override delivery platform's default maxlength
+     */
+    dataMaxlength: {
+      required: false,
+      type: String
     }
   },
 
@@ -119,6 +126,10 @@ export default {
     colorStyle () {
       const pnp = store.getItemContextPnp()
       return pnp.getColorStyle()
+    },
+
+    computeMaxlength () {
+      return (typeof this.dataMaxlength !== 'undefined') ? this.dataMaxlength : 500
     }
   },
 
