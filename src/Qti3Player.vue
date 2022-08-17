@@ -717,6 +717,8 @@ export default {
   /* Control Hidden colors */
   --choice-ctrlh-color: var(--black);
   --choice-ctrlh-bgc: var(--rose);
+  --choice-ctrlh-lblbgc: var(--rose);
+  --choice-ctrlh-desccolor: var(--black);
   --choice-ctrlh-checked-color: var(--rose);
   --choice-ctrlh-checked-bgc: var(--black);
   --choice-ctrlh-focus-bc: var(--black);
@@ -775,6 +777,8 @@ export default {
   /* Control Hidden colors */
   --choice-ctrlh-color: var(--rose);
   --choice-ctrlh-bgc: var(--black);
+  --choice-ctrlh-lblbgc: var(--black);
+  --choice-ctrlh-desccolor: var(--rose);
   --choice-ctrlh-checked-color: var(--black);
   --choice-ctrlh-checked-bgc: var(--rose);
   --choice-ctrlh-focus-bc: var(--rose);
@@ -830,6 +834,8 @@ export default {
   /* Control Hidden colors */
   --choice-ctrlh-color: var(--foreground);
   --choice-ctrlh-bgc: var(--background);
+  --choice-ctrlh-lblbgc: var(--background);
+  --choice-ctrlh-desccolor: var(--foreground);
   --choice-ctrlh-checked-color: var(--background);
   --choice-ctrlh-checked-bgc: var(--foreground);
   --choice-ctrlh-focus-bc: var(--foreground);
@@ -885,6 +891,8 @@ export default {
   /* Control Hidden colors */
   --choice-ctrlh-color: var(--foreground);
   --choice-ctrlh-bgc: var(--background);
+  --choice-ctrlh-lblbgc: var(--background);
+  --choice-ctrlh-desccolor: var(--foreground);
   --choice-ctrlh-checked-color: var(--background);
   --choice-ctrlh-checked-bgc: var(--foreground);
   --choice-ctrlh-focus-bc: var(--foreground);
@@ -943,6 +951,8 @@ export default {
   /* Control Hidden colors */
   --choice-ctrlh-color: var(--foreground);
   --choice-ctrlh-bgc: var(--background);
+  --choice-ctrlh-lblbgc: var(--background);
+  --choice-ctrlh-desccolor: var(--foreground);
   --choice-ctrlh-checked-color: var(--background);
   --choice-ctrlh-checked-bgc: var(--foreground);
   --choice-ctrlh-focus-bc: var(--foreground);
@@ -998,6 +1008,8 @@ export default {
   /* Control Hidden colors */
   --choice-ctrlh-color: var(--foreground);
   --choice-ctrlh-bgc: var(--background);
+  --choice-ctrlh-lblbgc: var(--background);
+  --choice-ctrlh-desccolor: var(--foreground);
   --choice-ctrlh-checked-color: var(--background);
   --choice-ctrlh-checked-bgc: var(--foreground);
   --choice-ctrlh-focus-bc: var(--foreground);
