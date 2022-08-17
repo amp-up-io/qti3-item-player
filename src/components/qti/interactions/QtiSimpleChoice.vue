@@ -198,9 +198,8 @@ export default {
       this.$refs.label.classList.add('qti-visually-hidden')
     },
 
-    setLabelLrn (label) {
+    setChoiceLrn () {
       this.$refs.choice.classList.add('lrn')
-      this.$refs.label.innerText = label
     },
 
     hideControl () {
@@ -580,8 +579,8 @@ export default {
   padding: 0;
 }
 
-[role="radio"].control-hidden.lrn .qti-choice-label,
-[role="checkbox"].control-hidden.lrn .qti-choice-label {
+[role="radio"].control-hidden.lrn .qti-choice-label:not(.qti-hidden),
+[role="checkbox"].control-hidden.lrn .qti-choice-label:not(.qti-hidden) {
   display: table-cell;
   padding-top: .55em;
   padding-left: .65em;
@@ -609,8 +608,8 @@ export default {
   color: var(--choice-ctrlh-desccolor);
 }
 
-[role="radio"][aria-checked="true"].control-hidden.lrn .qti-choice-label,
-[role="checkbox"][aria-checked="true"].control-hidden.lrn .qti-choice-label {
+[role="radio"][aria-checked="true"].control-hidden.lrn .qti-choice-label:not(.qti-hidden),
+[role="checkbox"][aria-checked="true"].control-hidden.lrn .qti-choice-label:not(.qti-hidden) {
   border-right: 2px solid rgba(0,0,0,0.3);
   color: var(--choice-ctrlh-checked-color);
   background-color: var(--choice-ctrlh-checked-bgc);

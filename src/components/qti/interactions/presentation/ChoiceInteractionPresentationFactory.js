@@ -235,10 +235,13 @@ class ChoicePresentationFactory {
         this.choices[index].hideLabel()
       } else if (this.presentation_Sbac) {
         this.choices[index].setLabelSbac(this.presentation_Labels[index])
-      } else if (this.presentation_Lrn) {
-        this.choices[index].setLabelLrn(this.presentation_Labels[index]);
       } else {
         this.choices[index].setLabel(this.presentation_Labels[index] + this.presentation_LabelsSuffix)
+      }
+
+      // Set choice class to lrn
+      if (this.presentation_Lrn) {
+        this.choices[index].setChoiceLrn();
       }
 
       // Update input control.  By default, input control (radio button or checkbox) is visible.
