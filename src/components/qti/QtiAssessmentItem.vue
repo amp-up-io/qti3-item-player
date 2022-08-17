@@ -2302,7 +2302,6 @@ hr {
 code {
   padding: 2px 4px;
   font-size: 90%;
-  /*color: #c7254e;*/
   color: rgba(0,0,0,.87);
   background-color: #f9f2f4;
   white-space: nowrap;
