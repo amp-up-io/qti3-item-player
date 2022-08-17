@@ -367,6 +367,10 @@ export default {
             messageStyle: 'none',
             showProcessingMessages: false,
             tex2jax: {
+              inlineMath: [
+                ['$','$'],
+                ["\\(","\\)"]
+              ],
               preview: 'none'
             }
           })
