@@ -198,13 +198,8 @@ export default {
       this.$refs.label.classList.add('qti-visually-hidden')
     },
 
-    /**
-     * Utility method for setting class to lrn.
-     */
-    setChoiceLrn (label) {
+    setLabelLrn (label) {
       this.$refs.choice.classList.add('lrn')
-      this.$refs.label.classList.add('lrn')
-      this.$refs.description.classList.add('lrn')
       this.$refs.label.innerText = label
     },
 

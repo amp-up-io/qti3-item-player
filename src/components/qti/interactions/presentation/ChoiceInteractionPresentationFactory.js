@@ -236,7 +236,7 @@ class ChoicePresentationFactory {
       } else if (this.presentation_Sbac) {
         this.choices[index].setLabelSbac(this.presentation_Labels[index])
       } else if (this.presentation_Lrn) {
-        this.choices[index].setChoiceLrn(this.presentation_Labels[index]);
+        this.choices[index].setLabelLrn(this.presentation_Labels[index]);
       } else {
         this.choices[index].setLabel(this.presentation_Labels[index] + this.presentation_LabelsSuffix)
       }
