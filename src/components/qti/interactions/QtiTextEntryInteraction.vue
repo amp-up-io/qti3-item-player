@@ -8,7 +8,7 @@
       type="text"
       :placeholder="placeholder"
       autocapitalize="none"
-      spellcheck="false"
+      :spellcheck="computeSpellcheck"
       :maxlength="computeMaxlength"
       v-on:input="handleInput($event)"
     />
@@ -107,7 +107,14 @@ export default {
     dataMaxlength: {
       required: false,
       type: String
-    }
+    },
+    /*
+     * Override delivery platform's default spellcheck attribute
+     */
+     dataSpellcheck: {
+       required: false,
+       type: String
+     }
   },
 
   computed: {
@@ -130,6 +137,10 @@ export default {
 
     computeMaxlength () {
       return (typeof this.dataMaxlength !== 'undefined') ? this.dataMaxlength : 500
+    },
+
+    computeSpellcheck () {
+      return (typeof this.dataSpellcheck !== 'undefined') ? this.dataSpellcheck : false
     }
   },
 
