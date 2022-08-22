@@ -7,9 +7,9 @@
         </span>
       </div>
       <span class="toolbar-left">
-        <button type="button" class="btn-copy" unselectable="on">Copy</button>
-        <button type="button" class="btn-cut" unselectable="on">Cut</button>
-        <button type="button" class="btn-paste" unselectable="on">Paste</button>
+        <button  v-if="showCopy" type="button" class="btn-copy" unselectable="on">Copy</button>
+        <button  v-if="showCut" type="button" class="btn-cut" unselectable="on">Cut</button>
+        <button  v-if="showPaste" type="button" class="btn-paste" unselectable="on">Paste</button>
       </span>
     </div>
     <textarea
@@ -82,7 +82,18 @@ export default {
       default: 'none'
     },
 
+    /*
+     * Show or hide native browser squiggly
+     */
     dataSpellcheck: {
+      required: false,
+      type: String
+    },
+
+    /*
+     * Comma-separated list from 'cut', 'copy', 'paste'
+     */
+    dataLrnToolbarButtons: {
       required: false,
       type: String
     }
@@ -117,8 +128,19 @@ export default {
     },
 
     computeSpellcheck () {
-      console.log('this.dataSpellcheck:', this.dataSpellcheck)
       return (typeof this.dataSpellcheck !== 'undefined') ? this.dataSpellcheck : false
+    },
+
+    showCopy() {
+      return (typeof this.dataLrnToolbarButtons !== 'undefined') ? this.dataLrnToolbarButtons.includes('copy') : false
+    },
+
+    showCut () {
+      return (typeof this.dataLrnToolbarButtons !== 'undefined') ? this.dataLrnToolbarButtons.includes('cut') : false
+    },
+
+    showPaste () {
+      return (typeof this.dataLrnToolbarButtons !== 'undefined') ? this.dataLrnToolbarButtons.includes('paste') : false
     }
 
   },
@@ -162,7 +184,7 @@ export default {
       }
 
       this.response = response
-      this.updateCounter(this.response.length)
+      this.updateCounter(this.computeWordCount(this.response))
     },
 
     /**
@@ -204,11 +226,17 @@ export default {
         })
     },
 
+    /**
+     * @description Lrn has no hard limit constraints AFAIK, but keep this
+     * around just in case we find out otherwise.
+     * @return {String} response
+     */
     applyLimitCheck (value) {
-      if (value.length > this.computedExpectedLength) {
+      // No hard limit check with lrn
+      if (this.computeWordCount(value) > this.computedExpectedLength) {
         // Revert to the prior response
-        this.setResponse(this.priorResponse)
-        return false
+        //this.setResponse(this.priorResponse)
+        return true
       }
 
       // Limit check succeeded.
@@ -224,6 +252,15 @@ export default {
       }
 
       this.counter = this.computedExpectedLength - contentLength
+    },
+
+    /**
+     * @description Calculate the number of words in a string response.
+     * @return {String} response
+     */
+    computeWordCount (response) {
+      // Match on any sequence of non-whitespace characters
+      return response.match(/\S+/g).length
     },
 
     getLength () {
@@ -280,6 +317,7 @@ export default {
   box-sizing: border-box;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   padding: 0;
+  min-height: 2.85rem;
 }
 
 .extendedtext-toolbar .toolbar-right {
@@ -323,6 +361,7 @@ export default {
 
 .extendedtext-toolbar-counter {
   display: inline-block;
+  min-height: 2.6rem;
   line-height: 1.5rem;
   float: right;
   box-sizing: border-box;
