@@ -1,9 +1,11 @@
 import ExtendedTextPlainDefault from '@/components/qti/interactions/standard/ExtendedTextPlainDefault'
+import ExtendedTextPlainLrn from '@/components/qti/interactions/standard/ExtendedTextPlainLrn'
 import ExtendedTextXhtmlDefault from '@/components/qti/interactions/standard/ExtendedTextXhtmlDefault'
 
 const EXTENDED_TEXT_TYPE = {
   DEFAULT: 'default-plain',
   DEFAULT_SBAC: 'sbac-plain',
+  DEFAULT_LRN: 'lrn-plain',
   XHTML_DEFAULT: 'default-xhtml',
   XHTML_SBAC: 'sbac-xhtml'
 }
@@ -25,6 +27,19 @@ export function extendedTextInteractionAdapter(interactionSubType, props, attrs)
           getPassthroughAttrs(attrs) + ` />`,
         components: { ExtendedTextXhtmlDefault }
       }
+      case EXTENDED_TEXT_TYPE.DEFAULT_LRN:
+        return {
+          template: `<extended-text-plain-lrn ` +
+            `response-identifier="` + props.responseIdentifier + `" ` +
+            getExpectedLength(props) +
+            getPatternMask(props) +
+            getPatternMaskMessage(props) +
+            getPlaceholderText(props) +
+            getHeightClass(props) +
+            getCounterStyle(props) +
+            getPassthroughAttrs(attrs) + ` />`,
+          components: { ExtendedTextPlainLrn }
+        }
     default:
       return {
         template: `<extended-text-plain-default ` +
@@ -43,8 +58,10 @@ export function extendedTextInteractionAdapter(interactionSubType, props, attrs)
 
 export function getExtendedTextInteractionSubType(clazz, format) {
   const sbac = isSbacInClass(clazz)
+  const lrn = isLrnInClass(clazz)
 
   if (format === 'plain' && sbac) return EXTENDED_TEXT_TYPE.DEFAULT_SBAC
+  if (format === 'plain' && lrn) return EXTENDED_TEXT_TYPE.DEFAULT_LRN
   if (format === 'plain') return EXTENDED_TEXT_TYPE.DEFAULT
   if (format === 'xhtml' && sbac) return EXTENDED_TEXT_TYPE.XHTML_DEFAULT
   if (format === 'xhtml') return EXTENDED_TEXT_TYPE.XHTML_DEFAULT
@@ -95,9 +112,24 @@ function isSbacInClass (clazz) {
     return false
   }
 
+  return findClass('sbac', clazz)
+}
+
+/**
+ * @description Utility method to sniff for lrn in the class attribute.
+ */
+function isLrnInClass (clazz) {
+  if ((typeof clazz === 'undefined') || (clazz === null) || (clazz.length == 0)) {
+    return false
+  }
+
+  return findClass('lrn', clazz)
+}
+
+function findClass (needle, clazz) {
   const clazzTokens = clazz.split(' ')
   for (let index = 0; index < clazzTokens.length; index++) {
-    if (clazzTokens[index] === 'sbac') return true
+    if (clazzTokens[index] === needle) return true
   }
 
   return false
