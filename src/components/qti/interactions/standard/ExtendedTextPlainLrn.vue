@@ -7,9 +7,9 @@
         </span>
       </div>
       <span class="toolbar-left">
-        <button  v-if="showCopy" type="button" class="btn-copy" unselectable="on">Copy</button>
-        <button  v-if="showCut" type="button" class="btn-cut" unselectable="on">Cut</button>
-        <button  v-if="showPaste" type="button" class="btn-paste" unselectable="on">Paste</button>
+        <button  v-if="showCopy" @click.prevent="handleCopy" type="button" class="btn-copy" unselectable="on">Copy</button>
+        <button  v-if="showCut" @click.prevent="handleCut" type="button" class="btn-cut" unselectable="on">Cut</button>
+        <button  v-if="showPaste" @click.prevent="handlePaste" type="button" class="btn-paste" unselectable="on">Paste</button>
       </span>
     </div>
     <textarea
@@ -22,6 +22,7 @@
       :spellcheck="computeSpellcheck"
       maxlength="maxLength"
       @input="handleInput"
+
     />
     <tooltip
       ref="tooltip"
@@ -93,7 +94,7 @@ export default {
     /*
      * Comma-separated list from 'cut', 'copy', 'paste'
      */
-    dataLrnToolbarButtons: {
+    dataToolbarButtons: {
       required: false,
       type: String
     }
@@ -132,15 +133,15 @@ export default {
     },
 
     showCopy() {
-      return (typeof this.dataLrnToolbarButtons !== 'undefined') ? this.dataLrnToolbarButtons.includes('copy') : false
+      return (typeof this.dataToolbarButtons !== 'undefined') ? this.dataToolbarButtons.includes('copy') : false
     },
 
     showCut () {
-      return (typeof this.dataLrnToolbarButtons !== 'undefined') ? this.dataLrnToolbarButtons.includes('cut') : false
+      return (typeof this.dataToolbarButtons !== 'undefined') ? this.dataToolbarButtons.includes('cut') : false
     },
 
     showPaste () {
-      return (typeof this.dataLrnToolbarButtons !== 'undefined') ? this.dataLrnToolbarButtons.includes('paste') : false
+      return (typeof this.dataToolbarButtons !== 'undefined') ? this.dataToolbarButtons.includes('paste') : false
     }
 
   },
@@ -156,7 +157,9 @@ export default {
       // Used to toggle the patternMask message tooltip
       displayMessage: false,
       // Current word counter
-      counter: 0
+      counter: 0,
+      // Handle on currently selected text.  Used for cut and copy operations.
+      selectedText: ''
     }
   },
 
@@ -206,24 +209,23 @@ export default {
     handleInput (event) {
       event.preventDefault()
 
-      let inputSucceeded = true
-
-      if (this.showCounter && !this.applyLimitCheck(this.$refs.textarea.value)) return
-
-      if (this.appliedRegex !== null)
-        inputSucceeded = this.applyPatternMask(this.$refs.textarea.value)
-      else
-        this.setResponse(this.$refs.textarea.value)
-
-      if (!inputSucceeded) return
+      const response = this.$refs.textarea.value
+      if (!this.isPassedConstraints(response)) return
+      this.setResponse(response)
 
       // Save textarea value for future limit checks
-      this.priorResponse = this.$refs.textarea.value
+      this.priorResponse = response
 
       // Notify parent that we have an update
       this.$parent.$emit('extendedTextUpdate', {
           response: this.getResponse()
         })
+    },
+
+    isPassedConstraints (value) {
+      if (this.showCounter && !this.applyLimitCheck(value)) return false
+      //if (this.appliedRegex !== null && !this.applyPatternMask(value)) return false
+      return true
     },
 
     /**
@@ -235,12 +237,25 @@ export default {
       // No hard limit check with lrn
       if (this.computeWordCount(value) > this.computedExpectedLength) {
         // Revert to the prior response
-        //this.setResponse(this.priorResponse)
-        return true
+        this.setResponse(this.priorResponse)
+        return false
       }
 
       // Limit check succeeded.
       return true
+    },
+
+    applyPatternMask (value) {
+      if (this.appliedRegex.test(value)) {
+        // Pattern mask succeeded.
+        return true
+      }
+
+      // Pattern mask failed.  Display the message and revert the
+      // control to the priorResponse.
+      this.showPatternMaskMessage()
+      this.setResponse(this.priorResponse)
+      return false
     },
 
     updateCounter (contentLength) {
@@ -260,27 +275,12 @@ export default {
      */
     computeWordCount (response) {
       // Match on any sequence of non-whitespace characters
-      return response.match(/\S+/g).length
+      const words = response.match(/\S+/g)
+      return (words === null) ? 0 : words.length
     },
 
     getLength () {
       return this.response.length
-    },
-
-    applyPatternMask (value) {
-      if (this.appliedRegex.test(value)) {
-        // Pattern mask succeeded.  Update the response
-        // and the new priorResponse.
-        this.setResponse(value)
-        this.priorResponse = value
-        return true
-      }
-
-      // Pattern mask failed.  Display the message and revert the
-      // control to the priorResponse.
-      this.showPatternMaskMessage()
-      this.setResponse(this.priorResponse)
-      return false
     },
 
     showPatternMaskMessage () {
@@ -292,6 +292,81 @@ export default {
       setTimeout(() => {
           this.$refs.tooltip.hide()
         }, timeout)
+    },
+
+    handleCopy () {
+      this.selectedText = this.getSelectedText()
+    },
+
+    handleCut () {
+      this.selectedText = this.getSelectedText()
+      // Replace selection with empty string
+      this.insertText('')
+    },
+
+    handlePaste () {
+      this.insertText(this.selectedText)
+    },
+
+    getSelectedText () {
+      const element = this.$refs.textarea
+      // Get text from textarea selection
+      if (typeof element.selectionStart == 'number') {
+        // Get text from selection range
+        const selectedText = element.value.slice(element.selectionStart, element.selectionEnd)
+        // Refocus the textarea and highlight the selection range
+        element.focus()
+        element.setSelectionRange(element.selectionStart, element.selectionEnd)
+        return selectedText
+      }
+
+      return ''
+    },
+
+    insertText (value) {
+      this.insertTextAtCursor(value)
+
+      this.setResponse(this.$refs.textarea.value)
+
+      // Save textarea value for future limit checks
+      this.priorResponse = this.$refs.textarea.value
+
+      // Notify parent that we have an update
+      this.$parent.$emit('extendedTextUpdate', {
+        response: this.getResponse()
+      })
+    },
+
+    insertTextAtCursor (value) {
+      const element = this.$refs.textarea
+
+      if (element.selectionStart || element.selectionStart === 0) {
+        const startPos = element.selectionStart
+        const endPos = element.selectionEnd
+        const scrollTop = element.scrollTop
+
+        // Compute new text string
+        const newValue = element.value.substring(0, startPos) +
+                         value +
+                         element.value.substring(endPos, element.value.length)
+
+        if (!this.isPassedConstraints(newValue)) return
+        element.value = newValue
+
+        // Update selection and scroll position
+        element.focus()
+        element.selectionStart = startPos + value.length
+        element.selectionEnd = startPos + value.length
+        element.scrollTop = scrollTop
+        return
+      }
+
+      // no cursor pos?
+      // Compute new text string
+      const newValue = element.value + value
+      if (!this.isPassedConstraints(newValue)) return
+      element.value = newValue
+      element.focus()
     }
 
   },
