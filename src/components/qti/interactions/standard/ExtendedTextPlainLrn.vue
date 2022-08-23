@@ -448,12 +448,12 @@ export default {
 .extendedtext-plain-lrn {
   margin: 0;
   vertical-align:inherit;
-  padding: 0 .3rem;
+  padding: .75rem .9rem;
   font-family: inherit;
   font-size: inherit;
   font-weight: 400;
-  line-height: 1.6rem;
-  height: calc(4.8rem + .35rem);
+  line-height: 1.42rem;
+  height: calc(5.45rem + .35rem);
   color: var(--foreground);
   width: 100%;
   background-color: var(--background);
@@ -482,14 +482,14 @@ export default {
 }
 
 .qti-height-lines-3 .extendedtext-plain-lrn {
-  height: calc(4.8rem + .35rem);
+  height: calc(5.45rem + .35rem);
 }
 
 .qti-height-lines-6 .extendedtext-plain-lrn {
-  height: calc(9.6rem + .35rem);
+  height: calc(9.7rem + .35rem);
 }
 
 .qti-height-lines-15 .extendedtext-plain-lrn {
-  height: calc(24rem + .35rem);
+  height: calc(22.5rem + .35rem);
 }
 </style>
