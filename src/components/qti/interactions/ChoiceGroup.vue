@@ -327,6 +327,11 @@ export default {
   width: 100%;
 }
 
+.qti-choice-interaction.lrn [role="group"],
+.qti-choice-interaction.lrn [role="radiogroup"] {
+  margin-bottom: 1.5rem;
+}
+
 [role="group"],
 [role="radiogroup"]:focus {
   outline: none;

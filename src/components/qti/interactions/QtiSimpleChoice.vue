@@ -574,8 +574,8 @@ export default {
   color: var(--foreground);
   background-color: var(--choice-ctrlh-bgc);
   border: 1px solid var(--choice-ctrlh-color);
-  border-radius: 0rem;
-  margin-bottom: .5rem;
+  border-radius: 0;
+  margin-bottom: 0;
   padding: 0;
 }
 
@@ -619,7 +619,6 @@ export default {
 [role="checkbox"][aria-checked="true"].control-hidden.lrn .qti-choice-description {
   color: var(--choice-ctrlh-checked-color);
   background-color: var(--choice-ctrlh-checked-bgc);
-  border: 1px solid var(--choice-ctrlh-checked-bgc);
 }
 
 /* ===============
