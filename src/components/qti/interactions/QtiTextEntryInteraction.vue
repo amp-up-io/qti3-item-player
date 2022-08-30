@@ -448,7 +448,7 @@ export default {
 </script>
 
 <style>
-input[type="text"] {
+input.text-entry-input {
   margin: 0;
   vertical-align:inherit;
   padding: 0 .3rem;
@@ -469,7 +469,7 @@ input[type="text"] {
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-input[type="text"]:focus {
+input.text-entry-input:focus {
   color: var(--foreground);
   background-color: var(--background);
   border-color: var(--choice-control-focus-border);
@@ -477,7 +477,7 @@ input[type="text"]:focus {
   box-shadow: var(--choice-control-focus-shadow);
 }
 
-input[type="text"]::placeholder {
+input.text-entry-input::placeholder {
   color: var(--foreground);
   opacity: 0.6;
   font-style: italic;
