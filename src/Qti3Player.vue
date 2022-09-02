@@ -368,8 +368,11 @@ export default {
             showProcessingMessages: false,
             tex2jax: {
               inlineMath: [
-                ['$','$'],
+                ['$$','$$'],
                 ["\\(","\\)"]
+              ],
+              displayMath: [
+                ['\\[','\\]']
               ],
               preview: 'none'
             }
