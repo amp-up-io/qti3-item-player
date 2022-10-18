@@ -842,7 +842,8 @@ div.inline-choice-wrapper {
 .qti3-player-color-default .inline-choice-select,
 .qti3-player-color-blackwhite .inline-choice-select,
 .qti3-player-color-blackrose .inline-choice-select,
-.qti3-player-color-blackcyan .inline-choice-select {
+.qti3-player-color-blackcyan .inline-choice-select,
+.qti3-player-color-blackcream .inline-choice-select {
   background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23212529' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat right .4rem center/8px 10px;
 }
 
@@ -868,6 +869,10 @@ div.inline-choice-wrapper {
 
 .qti3-player-color-cyanblack .inline-choice-select {
   background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23add8e6' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat right .4rem center/8px 10px;
+}
+
+.qti3-player-color-creamblack .inline-choice-select {
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23fffacd' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat right .4rem center/8px 10px;
 }
 
 .inline-choice-select-prompt {
