@@ -366,6 +366,9 @@ export default {
           window.MathJax.Hub.Config({
             messageStyle: 'none',
             showProcessingMessages: false,
+            menuSettings: {
+              inTabOrder: false
+            },
             tex2jax: {
               inlineMath: [
                 ['$$','$$'],
@@ -428,6 +431,7 @@ export default {
   --teal: #008080;
   --cyan: #0db4d6;
   --rose: #ffd0ff;
+  --lblue: #add8e6;
   --white: #fff;
   --gray: #7c8a96;
   --gray-dark: #343a40;
@@ -452,7 +456,7 @@ export default {
   --background: var(--white);
   --secondary: #dbdbdb;
   --secondary-complement: var(--darker);
-  --hr-border: 1px solid var(--secondary);
+  --hr-border: 1px solid var(--black);
   --table-border-color: var(--black);
   --well-bg: #f5f5f5;
   --well-border: 1px solid #e3e3e3;
@@ -517,6 +521,7 @@ export default {
 .qti3-player-color-defaultreverse {
   --foreground: var(--white);
   --background: var(--darker);
+  --hr-border: 1px solid var(--white);
   --table-border-color: var(--white);
   --well-bg: #444;
   --well-border: 1px solid #222;
@@ -694,7 +699,7 @@ export default {
   --background: var(--rose);
   --secondary: #c6bcf8;
   --secondary-complement: var(--black);
-  --hr-border: 1px solid var(--secondary);
+  --hr-border: 1px solid var(--gray-dark);
   --table-border-color: var(--black);
   --well-bg: #ffc0ff;
   --well-border: 1px solid #da70d6; /* orchid */
@@ -751,7 +756,7 @@ export default {
   --background: var(--black);
   --secondary: #c6bcf8;
   --secondary-complement: var(--black);
-  --hr-border: 1px solid var(--secondary);
+  --hr-border: 1px solid var(--light);
   --table-border-color: var(--rose);
   --well-bg: #333;
   --well-border: 1px solid #222;
@@ -866,7 +871,7 @@ export default {
 .qti3-player-color-dgraymgray {
   --foreground: #666;
   --background: #e5e5e5;
-  --secondary: #c8c8c8;
+  --secondary: #888;
   --secondary-complement: var(--black);
   --hr-border: 1px solid var(--secondary);
   --table-border-color: var(--foreground);
@@ -917,7 +922,7 @@ export default {
   /* Order colors */
   --order-target-active-color: var(--foreground);
   --order-target-active-bgc: #bbcef1;
-  --order-placeholder-color: var(--background);
+  --order-placeholder-color: var(--foreground);
 }
 
 .qti3-player-color-yellowblue {
@@ -925,7 +930,7 @@ export default {
   --background: #003398;
   --secondary: #dbdbdb;
   --secondary-complement: var(--black);
-  --hr-border: 1px solid var(--secondary);
+  --hr-border: 1px solid var(--foreground);
   --table-border-color: var(--foreground);
   --well-bg: #00008C;
   --well-border: 1px solid rgba(0, 0, 128, 1);
@@ -985,7 +990,7 @@ export default {
   --background: #ffcc00;
   --secondary: #dbdbdb;
   --secondary-complement: var(--black);
-  --hr-border: 1px solid var(--secondary);
+  --hr-border: 1px solid var(--foreground);
   --table-border-color: var(--foreground);
   --well-bg: #ffbb00;  /* #ffbb00; */
   --well-border: 1px solid rgba(255, 175, 0, 1);
@@ -1035,6 +1040,123 @@ export default {
   --order-target-active-color: var(--foreground);
   --order-target-active-bgc: #bbcef1;
   --order-placeholder-color: var(--background);
+}
+
+.qti3-player-color-blackcyan {
+  --foreground: var(--black);
+  --background: var(--lblue);
+  --secondary: #888;
+  --secondary-complement: var(--black);
+  --hr-border: 1px solid var(--gray-dark);
+  --table-border-color: var(--black);
+  --well-bg: #99ccdd;
+  --well-border: 1px solid #77ccdd;
+  --well-box-shadow: inset 0 1px 1px rgba(119, 204, 221, 0.5);
+  /* Overall choice focus border */
+  --choice-focus-border: #86b7fe;
+  /* Default inner background color of the control */
+  --choice-control-bgc: var(--lblue);
+  /* The pale gray border around the control */
+  --choice-control-border: 1px solid rgba(0, 0, 0, 1.0);
+  --choice-control-checked-bc: var(--black);
+  --choice-control-checked-bg: var(--black);
+  --choice-control-focus-border: var(--black);
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  --choice-control-hover-bc: rgba(0, 0, 0, 0.5);
+  /* Sbac colors */
+  --choice-sbac-checked-color: var(--lblue);
+  --choice-sbac-unchecked-color: var(--black);
+  --choice-sbac-control-checked-bc: var(--black);
+  --choice-sbac-control-checked-bg: var(--black);
+  --choice-sbac-control-unchecked-bc: var(--black);
+  --choice-sbac-control-unchecked-bg: var(--lblue);
+  /* Control Hidden colors */
+  --choice-ctrlh-color: var(--black);
+  --choice-ctrlh-bgc: var(--lblue);
+  --choice-ctrlh-lblbgc: var(--lblue);
+  --choice-ctrlh-desccolor: var(--black);
+  --choice-ctrlh-checked-color: var(--lblue);
+  --choice-ctrlh-checked-bgc: var(--black);
+  --choice-ctrlh-focus-bc: var(--black);
+  --choice-ctrlh-focus-checked-bc: var(--lblue);
+  --choice-ctrlh-hover-brightness: brightness(95%);
+  /* Inline Choice colors */
+  --ic-focus-fc: var(--secondary-complement);
+  --ic-focus-bc: #d8ade6;
+  /* End Attempt Button colors */
+  --ea-button-secondary-color: var(--background);
+  --ea-button-secondary-bgc: #6c757d;
+  --ea-button-secondary-bc: #6c757d;
+  --ea-button-secondary-focus-color: var(--white);
+  --ea-button-secondary-focus-bgc: #697783;
+  --ea-button-secondary-focus-bc: #63707c;
+  /* Editor colors */
+  --ed-bc: var(--gray-dark);
+  --ed-bq-color: #999;
+  /* Order colors */
+  --order-target-active-color: var(--foreground);
+  --order-target-active-bgc: var(--secondary);
+  --order-placeholder-color: #d8ade6;
+}
+
+.qti3-player-color-cyanblack {
+  --foreground: var(--lblue);
+  --background: var(--black);
+  --secondary: #585858;
+  --secondary-complement: var(--black);
+  --hr-border: 1px solid var(--light);
+  --table-border-color: var(--lblue);
+  --well-bg: #333;
+  --well-border: 1px solid #222;
+  --well-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5);
+  /* Item Card */
+  --item-card-panel-bgc: rgba(255, 255, 255, .25);
+  --item-card-panel-bc: rgba(255, 255, 255, .25);
+  /* Overall choice focus border */
+  --choice-focus-border: var(--lblue);
+  /* Default inner background color of the control */
+  --choice-control-bgc: var(--black);
+  /* Sbac colors */
+  --choice-sbac-checked-color: var(--black);
+  --choice-sbac-unchecked-color: var(--lblue);
+  --choice-sbac-control-checked-bc: var(--lblue);
+  --choice-sbac-control-checked-bg: var(--lblue);
+  --choice-sbac-control-unchecked-bc: var(--lblue);
+  --choice-sbac-control-unchecked-bg: var(--black);
+  /* The pale gray border around the control */
+  --choice-control-border: 1px solid var(--lblue);
+  --choice-control-checked-bc: var(--lblue);
+  --choice-control-checked-bg: var(--lblue);
+  --choice-control-focus-border: var(--lblue);
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
+  --choice-control-hover-bc: var(--lblue);
+  /* Control Hidden colors */
+  --choice-ctrlh-color: var(--lblue);
+  --choice-ctrlh-bgc: var(--black);
+  --choice-ctrlh-lblbgc: var(--black);
+  --choice-ctrlh-desccolor: var(--lblue);
+  --choice-ctrlh-checked-color: var(--black);
+  --choice-ctrlh-checked-bgc: var(--lblue);
+  --choice-ctrlh-focus-bc: var(--lblue);
+  --choice-ctrlh-focus-checked-bc: var(--lblue);
+  --choice-ctrlh-hover-brightness: brightness(90%);
+  /* Inline Choice colors */
+  --ic-focus-fc: var(--secondary-complement);
+  --ic-focus-bc: #d8ade6;
+  /* End Attempt Button colors */
+  --ea-button-secondary-color: var(--foreground);
+  --ea-button-secondary-bgc: #6c757d;
+  --ea-button-secondary-bc: #6c757d;
+  --ea-button-secondary-focus-color: var(--white);
+  --ea-button-secondary-focus-bgc: #697783;
+  --ea-button-secondary-focus-bc: #63707c;
+  /* Editor colors */
+  --ed-bc: #ddd;
+  --ed-bq-color: #ccc;
+  /* Order colors */
+  --order-target-active-color: var(--darker);
+  --order-target-active-bgc: #d8ade6; /*#bbcef1;*/
+  --order-placeholder-color: var(--foreground);
 }
 
 .qti3-player-container,
