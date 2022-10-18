@@ -27,6 +27,14 @@ export class PnpFactory {
     COLOR_MGRAY_DGRAY: 'qti3-player-color-mgraydgray',
     // Dark Gray on Medium Gray
     COLOR_DGRAY_MGRAY: 'qti3-player-color-dgraymgray',
+    // Black on Cyan
+    COLOR_BLACK_CYAN: 'qti3-player-color-blackcyan',
+    // Cyan on Black
+    COLOR_CYAN_BLACK: 'qti3-player-color-cyanblack',
+    // Black on Cream
+    COLOR_BLACK_CREAM: 'qti3-player-color-blackcream',
+    // Cream on Black
+    COLOR_CREAM_BLACK: 'qti3-player-color-creamblack',
     // Glossary on
     GLOSSARY_ON: 'glossary-on',
     // Glossary off
