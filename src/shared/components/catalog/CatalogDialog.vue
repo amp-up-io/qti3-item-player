@@ -249,7 +249,6 @@ export default {
 .qti3-player-cat-dialog {
   z-index: 1020;
   border: 1px solid;
-  /* border-color: #999; */
   border-color: var(--foreground);
   border-radius: .25rem;
   color: var(--foreground);
@@ -344,9 +343,8 @@ button.qti3-player-cat-dialog-close {
   position: relative;
   margin: 0;
   padding: 0.3em 0.5em 0.4em;
-  border: 1px solid hsl(219deg 1% 72%);
+  border: var(--hr-border);
   border-radius: 0.2em 0.2em 0 0;
-  /*box-shadow: 0 0 0.2em hsl(219deg 1% 72%);*/
   overflow: visible;
   font-family: inherit;
   font-size: inherit;
@@ -417,7 +415,8 @@ button.qti3-player-cat-dialog-close {
   position: relative;
   z-index: 2;
   padding: 0.5em 0.5em 0.7em;
-  border: 1px solid hsl(219deg 1% 72%);
+  border: var(--hr-border);
+  /*border: 1px solid hsl(219deg 1% 72%);*/
   border-radius: 0 0.2em 0.2em;
 }
 
@@ -560,5 +559,13 @@ button.qti3-player-cat-dialog-close {
 
 .qti3-player-color-blueyellow .cat-audio-playpause__container.pause {
   background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23003398'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z'/%3e%3c/svg%3e" );
+}
+
+.qti3-player-color-cyanblack .cat-audio-playpause__container.play {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23add8e6'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z'/%3e%3c/svg%3e" );
+}
+
+.qti3-player-color-cyanblack .cat-audio-playpause__container.pause {
+  background-image: url("data:image/svg+xml,%3csvg class='amp-playpause-button' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23add8e6'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z'/%3e%3c/svg%3e" );
 }
 </style>
