@@ -432,6 +432,7 @@ export default {
   --cyan: #0db4d6;
   --rose: #ffd0ff;
   --lblue: #add8e6;
+  --lchiffon: #fffacd;
   --white: #fff;
   --gray: #7c8a96;
   --gray-dark: #343a40;
@@ -705,7 +706,7 @@ export default {
   --well-border: 1px solid #da70d6; /* orchid */
   --well-box-shadow: inset 0 1px 1px rgba(218, 112, 214, 0.5);
   /* Overall choice focus border */
-  --choice-focus-border: #86b7fe;
+  --choice-focus-border: rgba(13, 110, 253, 0.75);
   /* Default inner background color of the control */
   --choice-control-bgc: var(--rose);
   /* The pale gray border around the control */
@@ -713,7 +714,7 @@ export default {
   --choice-control-checked-bc: var(--black);
   --choice-control-checked-bg: var(--black);
   --choice-control-focus-border: var(--black);
-  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
   --choice-control-hover-bc: rgba(0, 0, 0, 0.5);
   /* Sbac colors */
   --choice-sbac-checked-color: var(--rose);
@@ -806,9 +807,9 @@ export default {
   --ed-bc: #ddd;
   --ed-bq-color: #ccc;
   /* Order colors */
---order-target-active-color: var(--darker);
---order-target-active-bgc: #bbcef1;
---order-placeholder-color: var(--foreground);
+  --order-target-active-color: var(--darker);
+  --order-target-active-bgc: #bbcef1;
+  --order-placeholder-color: var(--foreground);
 }
 
 .qti3-player-color-mgraydgray {
@@ -1053,7 +1054,7 @@ export default {
   --well-border: 1px solid #77ccdd;
   --well-box-shadow: inset 0 1px 1px rgba(119, 204, 221, 0.5);
   /* Overall choice focus border */
-  --choice-focus-border: #86b7fe;
+  --choice-focus-border: rgba(13, 110, 253, 0.75);
   /* Default inner background color of the control */
   --choice-control-bgc: var(--lblue);
   /* The pale gray border around the control */
@@ -1061,7 +1062,7 @@ export default {
   --choice-control-checked-bc: var(--black);
   --choice-control-checked-bg: var(--black);
   --choice-control-focus-border: var(--black);
-  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
   --choice-control-hover-bc: rgba(0, 0, 0, 0.5);
   /* Sbac colors */
   --choice-sbac-checked-color: var(--lblue);
@@ -1155,8 +1156,125 @@ export default {
   --ed-bq-color: #ccc;
   /* Order colors */
   --order-target-active-color: var(--darker);
-  --order-target-active-bgc: #d8ade6; /*#bbcef1;*/
+  --order-target-active-bgc: #d8ade6;
   --order-placeholder-color: var(--foreground);
+}
+
+.qti3-player-color-blackcream {
+  --foreground: var(--black);
+  --background: var(--lchiffon);
+  --secondary: #dbdbdb;
+  --secondary-complement: var(--darker);
+  --hr-border: 1px solid var(--gray-dark);
+  --table-border-color: var(--black);
+  --well-bg: #fff3aa;
+  --well-border: 1px solid #f0f000;
+  --well-box-shadow: inset 0 1px 1px rgba(240, 240, 0, 0.5);
+  /* Overall choice focus border */
+  --choice-focus-border: rgba(13, 110, 253, 0.75);
+  /* Default inner background color of the control */
+  --choice-control-bgc: var(--lchiffon);
+  /* The pale gray border around the control */
+  --choice-control-border: 1px solid rgba(0, 0, 0, 1.0);
+  --choice-control-checked-bc: var(--black);
+  --choice-control-checked-bg: var(--black);
+  --choice-control-focus-border: var(--black);
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
+  --choice-control-hover-bc: rgba(0, 0, 0, 0.5);
+  /* Sbac colors */
+  --choice-sbac-checked-color: var(--lchiffon);
+  --choice-sbac-unchecked-color: var(--black);
+  --choice-sbac-control-checked-bc: var(--black);
+  --choice-sbac-control-checked-bg: var(--black);
+  --choice-sbac-control-unchecked-bc: var(--black);
+  --choice-sbac-control-unchecked-bg: var(--lchiffon);
+  /* Control Hidden colors */
+  --choice-ctrlh-color: var(--black);
+  --choice-ctrlh-bgc: var(--lchiffon);
+  --choice-ctrlh-lblbgc: var(--lchiffon);
+  --choice-ctrlh-desccolor: var(--black);
+  --choice-ctrlh-checked-color: var(--lchiffon);
+  --choice-ctrlh-checked-bgc: var(--black);
+  --choice-ctrlh-focus-bc: var(--black);
+  --choice-ctrlh-focus-checked-bc: var(--lchiffon);
+  --choice-ctrlh-hover-brightness: brightness(95%);
+  /* Inline Choice colors */
+  --ic-focus-fc: var(--secondary-complement);
+  --ic-focus-bc: #bde4ff;
+  /* End Attempt Button colors */
+  --ea-button-secondary-color: var(--background);
+  --ea-button-secondary-bgc: #6c757d;
+  --ea-button-secondary-bc: #6c757d;
+  --ea-button-secondary-focus-color: var(--white);
+  --ea-button-secondary-focus-bgc: #697783;
+  --ea-button-secondary-focus-bc: #63707c;
+  /* Editor colors */
+  --ed-bc: var(--gray-dark);
+  --ed-bq-color: #999;
+  /* Order colors */
+  --order-target-active-color: var(--foreground);
+  --order-target-active-bgc: var(--secondary);
+  --order-placeholder-color: #bde4ff;
+}
+
+.qti3-player-color-creamblack {
+  --foreground: var(--lchiffon);
+  --background: var(--black);
+  --secondary: #c8c8c8;
+  --secondary-complement: var(--black);
+  --hr-border: 1px solid var(--light);
+  --table-border-color: var(--lchiffon);
+  --well-bg: #333;
+  --well-border: 1px solid #222;
+  --well-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5);
+  /* Item Card */
+  --item-card-panel-bgc: rgba(255, 255, 255, .25);
+  --item-card-panel-bc: rgba(255, 255, 255, .25);
+  /* Overall choice focus border */
+  --choice-focus-border: var(--lblue);
+  /* Default inner background color of the control */
+  --choice-control-bgc: var(--black);
+  /* Sbac colors */
+  --choice-sbac-checked-color: var(--black);
+  --choice-sbac-unchecked-color: var(--lchiffon);
+  --choice-sbac-control-checked-bc: var(--lchiffon);
+  --choice-sbac-control-checked-bg: var(--lchiffon);
+  --choice-sbac-control-unchecked-bc: var(--lchiffon);
+  --choice-sbac-control-unchecked-bg: var(--black);
+  /* The pale gray border around the control */
+  --choice-control-border: 1px solid var(--lchiffon);
+  --choice-control-checked-bc: var(--lchiffon);
+  --choice-control-checked-bg: var(--lchiffon);
+  --choice-control-focus-border: var(--lchiffon);
+  --choice-control-focus-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5);
+  --choice-control-hover-bc: var(--lchiffon);
+  /* Control Hidden colors */
+  --choice-ctrlh-color: var(--lchiffon);
+  --choice-ctrlh-bgc: var(--black);
+  --choice-ctrlh-lblbgc: var(--black);
+  --choice-ctrlh-desccolor: var(--lchiffon);
+  --choice-ctrlh-checked-color: var(--black);
+  --choice-ctrlh-checked-bgc: var(--lchiffon);
+  --choice-ctrlh-focus-bc: var(--lchiffon);
+  --choice-ctrlh-focus-checked-bc: var(--lchiffon);
+  --choice-ctrlh-hover-brightness: brightness(90%);
+  /* Inline Choice colors */
+  --ic-focus-fc: var(--secondary-complement);
+  --ic-focus-bc: #bde4ff;
+  /* End Attempt Button colors */
+  --ea-button-secondary-color: var(--foreground);
+  --ea-button-secondary-bgc: #6c757d;
+  --ea-button-secondary-bc: #6c757d;
+  --ea-button-secondary-focus-color: var(--white);
+  --ea-button-secondary-focus-bgc: #697783;
+  --ea-button-secondary-focus-bc: #63707c;
+  /* Editor colors */
+  --ed-bc: #ddd;
+  --ed-bq-color: #ccc;
+  /* Order colors */
+  --order-target-active-color: var(--darker);
+  --order-target-active-bgc: var(--secondary);
+  --order-placeholder-color: #bde4ff;
 }
 
 .qti3-player-container,
