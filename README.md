@@ -571,7 +571,7 @@ Container padding classes are for setting the padding between the QTI 3 Player c
 
 ### color-class
 
-QTI 3 Player has built-in support for ten foreground / background color combinations in accordance with best practices for many forms of color blindness or other visual impairments.  In addition to setting a colorClass in a PNP, color settings may also be applied dynamically.
+QTI 3 Player has built-in support for fourteen foreground / background color combinations (a.k.a. color "themes") in accordance with best practices for many forms of color blindness or other visual impairments.  In addition to setting a colorClass in a PNP, color settings may also be applied dynamically.
 
 * qti3-player-color-default **DEFAULT**
 * qti3-player-color-defaultreverse (Default - Reverse Polarity)
@@ -583,6 +583,10 @@ QTI 3 Player has built-in support for ten foreground / background color combinat
 * qti3-player-color-mgraydgray (foreground color: medium gray, background color: dark gray)
 * qti3-player-color-yellowblue (foreground color: yellow, background color: blue)
 * qti3-player-color-blueyellow (foreground color: blue, background color: yellow)
+* qti3-player-color-blackcyan (foreground color: black, background color: lblue)
+* qti3-player-color-cyanblack (foreground color: lblue, background color: black)
+* qti3-player-color-blackcream (foreground color: black, background color: lemonchiffon)
+* qti3-player-color-creamblack (foreground color: lemonchiffon, background color: black)
 
 <a href="https://qti.amp-up.io/testrunner/test/1" target="testrunner">Experiment with the Color Class</a> Note: Click the "Settings" menu in the top-right corner of the TestRunner application.
 
@@ -595,7 +599,7 @@ QTI 3 Player has built-in support for ten foreground / background color combinat
 
 The QTI3 Item Player 2022 development roadmap includes all features and capabilities included in QTI 3 Delivery System Level 1 and Level 2 conformance.
 
-- [x] Support for the 10 Standard Color Combinations
+- [x] Support for the 14 Standard Color Combinations/Themes
 - [x] Support for Template Processing and all Template Rules
 - [x] Support for Template Math Variables
 - [x] Support for Response Processing and all Response Processing Rules
@@ -605,6 +609,7 @@ The QTI3 Item Player 2022 development roadmap includes all features and capabili
 - [x] Catalog Support for Glossary and Keyword Translation
 - [x] Catalog Support for Smarter Balanced Illustrated Glossary
 - [x] Rubric Block Support
+- [x] QtiStylesheet Support
 - [ ] Shared Stimulus Support
 - [ ] QtiMatch, QtiGapMatch, QtiGraphicGapMatch Interaction Support
 - [ ] QtiHottext Interaction Support
