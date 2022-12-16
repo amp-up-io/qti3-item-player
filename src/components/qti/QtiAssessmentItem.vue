@@ -1286,6 +1286,30 @@ export default {
   text-indent: 2rem;
 }
 
+.qti-text-indent-12 {
+  text-indent: 3rem;
+}
+
+.qti-text-indent-16 {
+  text-indent: 4rem;
+}
+
+.qti-text-indent-20 {
+  text-indent: 5rem;
+}
+
+.qti-text-indent-24 {
+  text-indent: 6rem;
+}
+
+.qti-text-indent-28 {
+  text-indent: 7rem;
+}
+
+.qti-text-indent-32 {
+  text-indent: 8rem;
+}
+
 /* =================
    List Style styles
    ================= */
