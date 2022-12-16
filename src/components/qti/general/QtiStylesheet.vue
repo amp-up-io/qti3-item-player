@@ -39,6 +39,11 @@ export default {
 
   methods: {
 
+    /**
+     * @description Pull the stylesheet from the Href URI.
+     * Wrap stylesheet contents in a style element, then inject into the
+     * DOM.
+     */
     getCss () {
       axios.get(this.href).then(response => {
           this.css = `<style>${response.data}</style>`
@@ -54,7 +59,6 @@ export default {
 
   },
 
-
   created() {
     this.getCss();
   },
@@ -64,6 +68,7 @@ export default {
       try {
         // Validate children.
         this.validateChildren()
+
         console.log('[' + this.$options.name + '][Href: ' + this.href + ']')
       } catch (err) {
         this.isQtiValid = false

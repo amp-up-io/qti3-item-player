@@ -16,6 +16,7 @@ export const store = {
     outcomeDeclarations: [],
     templateDeclarations: [],
     contextDeclarations: [],
+    stimulusRefs: [],
     interactions: [],
     processing: [],
     feedbacks: [],
@@ -67,6 +68,14 @@ export const store = {
 
   getContextDeclaration (identifier) {
     return this.state.contextDeclarations.find(cd => cd.identifier === identifier)
+  },
+
+  getStimulusRefs () {
+    return this.state.stimulusRefs
+  },
+
+  getStimulusRef (identifier) {
+    return this.state.stimulusRefs.find(sr => sr.identifier === identifier)
   },
 
   /**
@@ -192,6 +201,18 @@ export const store = {
     }
   },
 
+  defineStimulusRef (stimulusReference) {
+    let srIndex = this.state.stimulusRefs.findIndex(sr => sr.identifier == stimulusReference.identifier)
+console.log("defineStimulusRef", stimulusReference)
+    if (srIndex > -1) {
+      // Found the stimulus reference.
+      this.state.stimulusRefs[srIndex] = stimulusReference
+    } else {
+      // New stimulus reference.
+      this.state.stimulusRefs.push(stimulusReference)
+    }
+  },
+
   defineInteraction (interaction) {
     let interactionIndex = this.state.interactions.findIndex(i => i.identifier == interaction.identifier)
 
@@ -284,6 +305,7 @@ export const store = {
     this.state.outcomeDeclarations.splice(0, this.state.outcomeDeclarations.length)
     this.state.templateDeclarations.splice(0, this.state.templateDeclarations.length)
     this.state.contextDeclarations.splice(0, this.state.contextDeclarations.length)
+    this.state.stimulusRefs.splice(0, this.state.stimulusRefs.length)
     this.state.interactions.splice(0, this.state.interactions.length)
     this.state.processing.splice(0, this.state.processing.length)
     this.state.feedbacks.splice(0, this.state.feedbacks.length)

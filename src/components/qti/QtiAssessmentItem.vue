@@ -28,6 +28,7 @@ import QtiTemplateProcessing from '@/components/qti/processing/QtiTemplateProces
 import QtiOutcomeDeclaration from '@/components/qti/declarations/QtiOutcomeDeclaration'
 import QtiCompanionMaterialsInfo from '@/components/qti/companionmaterials/QtiCompanionMaterialsInfo'
 import QtiStylesheet from '@/components/qti/general/QtiStylesheet'
+import QtiAssessmentStimulusRef from '@/components/qti/general/QtiAssessmentStimulusRef'
 import QtiItemBody from '@/components/qti/body/QtiItemBody'
 import QtiResponseProcessing from '@/components/qti/processing/QtiResponseProcessing'
 import QtiCatalogInfo from '@/components/qti/catalog/QtiCatalogInfo'
@@ -41,6 +42,7 @@ Vue.component('qti-template-processing', QtiTemplateProcessing)
 Vue.component('qti-outcome-declaration', QtiOutcomeDeclaration)
 Vue.component('qti-companion-materials-info', QtiCompanionMaterialsInfo)
 Vue.component('qti-stylesheet', QtiStylesheet)
+Vue.component('qti-assessment-stimulus-ref', QtiAssessmentStimulusRef)
 Vue.component('qti-item-body', QtiItemBody)
 Vue.component('qti-response-processing', QtiResponseProcessing)
 Vue.component('qti-catalog-info', QtiCatalogInfo)
