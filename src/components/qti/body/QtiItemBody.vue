@@ -23,8 +23,6 @@ import QtiRubricBlock from '@/components/qti/body/QtiRubricBlock'
 import QtiTemplateInline from '@/components/qti/body/QtiTemplateInline'
 import QtiTemplateBlock from '@/components/qti/body/QtiTemplateBlock'
 import QtiPrintedVariable from '@/components/qti/body/QtiPrintedVariable'
-// Register QtiAssessmentStimulus to support shared stimulus injection
-import QtiAssessmentStimulus from '@/components/qti/QtiAssessmentStimulus'
 /*
 import Img from '@/components/html/Img'
 import AmpAudio from '@/components/html/AmpAudio'
@@ -47,7 +45,6 @@ Vue.component('qti-rubric-block', QtiRubricBlock)
 Vue.component('qti-template-inline', QtiTemplateInline)
 Vue.component('qti-template-block', QtiTemplateBlock)
 Vue.component('qti-printed-variable', QtiPrintedVariable)
-Vue.component('qti-assessment-stimulus', QtiAssessmentStimulus)
 /*
 Vue.component('amp-img', Img)
 Vue.component('amp-audio', AmpAudio)
