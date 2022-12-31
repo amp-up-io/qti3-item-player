@@ -571,7 +571,7 @@ Container padding classes are for setting the padding between the QTI 3 Player c
 
 ### color-class
 
-QTI 3 Player has built-in support for fourteen foreground / background color combinations (a.k.a. color "themes") in accordance with best practices for many forms of color blindness or other visual impairments.  In addition to setting a colorClass in a PNP, color settings may also be applied dynamically.
+QTI 3 Player has built-in support for 14 foreground / background color combinations (a.k.a. color "themes") in accordance with best practices for many forms of color blindness or other visual impairments.  In addition to setting a colorClass in a PNP, color settings may also be applied dynamically.
 
 * qti3-player-color-default **DEFAULT**
 * qti3-player-color-defaultreverse (Default - Reverse Polarity)
@@ -610,7 +610,7 @@ The QTI3 Item Player 2022 development roadmap includes all features and capabili
 - [x] Catalog Support for Smarter Balanced Illustrated Glossary
 - [x] Rubric Block Support
 - [x] QtiStylesheet Support
-- [ ] Shared Stimulus Support
+- [x] Shared Stimulus Support
 - [ ] QtiMatch, QtiGapMatch, QtiGraphicGapMatch Interaction Support
 - [ ] QtiHottext Interaction Support
 - [ ] QtiHotspot Interaction Support
