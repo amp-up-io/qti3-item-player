@@ -27,7 +27,7 @@
   "main": "dist/qti3Player.umd.js",
   "unpkg": "dist/qti3Player.umd.min.js",
   "dependencies": {
-    "axios": "^1.2.1",
+    "axios": "^1.2.2",
     "bignumber.js": "^9.0.2",
     "core-js": "^3.6.5",
     "printf": "^0.6.1",
