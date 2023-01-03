@@ -252,3 +252,9 @@ export default {
   }
 }
 </script>
+
+<style>
+div.qti-template-declaration {
+  display:none;
+}
+</style>

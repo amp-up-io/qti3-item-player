@@ -249,3 +249,9 @@ export default {
   }
 }
 </script>
+
+<style>
+div.qti-response-declaration {
+  display:none;
+}
+</style>

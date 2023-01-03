@@ -303,3 +303,9 @@ export default {
   }
 }
 </script>
+
+<style>
+div.qti-outcome-declaration {
+  display:none;
+}
+</style>

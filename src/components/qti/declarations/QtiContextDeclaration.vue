@@ -209,3 +209,9 @@ export default {
   }
 }
 </script>
+
+<style>
+div.qti-context-declaration {
+  display:none;
+}
+</style>
