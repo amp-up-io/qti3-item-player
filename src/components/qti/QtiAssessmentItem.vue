@@ -2442,9 +2442,34 @@ code {
   box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.12),0 1px 5px 0 rgba(0,0,0,.2);
 }
 
-.qti3-player-template-vertical-rl {
-  writing-mode: vertical-rl;
+/* Override floats */
+.qti3-player-float-right {
   float: right;
+}
+
+.qti3-player-float-left {
+  float: left;
+}
+
+/* ===========================================
+   QtiAssessmentItem component utility classes
+   to support Chinese, Japanese, Korean and
+   Mongolian text
+   =========================================== */
+.qti3-player-writing-mode-vertical-rl {
+  writing-mode: vertical-rl;
+}
+
+.qti3-player-writing-mode-vertical-lr {
+  writing-mode: vertical-lr;
+}
+
+.qti3-player-writing-mode-horizontal-tb {
+  writing-mode: horizontal-tb;
+}
+
+.qti3-player-text-combine-upright-all {
+  text-combine-upright: all;
 }
 
 .qti3-player-text-orientation-upright {
