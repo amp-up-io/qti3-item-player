@@ -906,6 +906,43 @@ ul.inline-choice-select-listbox {
   z-index: 9;
 }
 
+/* Force listbox height */
+.qti3-player-listbox-height-8 ul.inline-choice-select-listbox {
+  height: 2rem;
+}
+
+.qti3-player-listbox-height-12 ul.inline-choice-select-listbox {
+  height: 3rem;
+}
+
+.qti3-player-listbox-height-16 ul.inline-choice-select-listbox {
+  height: 4rem;
+}
+
+.qti3-player-listbox-height-20 ul.inline-choice-select-listbox {
+  height: 5rem;
+}
+
+.qti3-player-listbox-height-24 ul.inline-choice-select-listbox {
+  height: 6rem;
+}
+
+.qti3-player-listbox-height-28 ul.inline-choice-select-listbox {
+  height: 7rem;
+}
+
+.qti3-player-listbox-height-32 ul.inline-choice-select-listbox {
+  height: 8rem;
+}
+
+.qti3-player-listbox-height-36 ul.inline-choice-select-listbox {
+  height: 9rem;
+}
+
+.qti3-player-listbox-height-40 ul.inline-choice-select-listbox {
+  height: 10rem;
+}
+
 [role="option"] {
   display: block;
   padding: 0 1em 0 1.5em;
