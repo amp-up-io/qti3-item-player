@@ -60,6 +60,7 @@ export default {
       id: null,
       checked: 'false',
       isRadio: true,
+      isDisabled: false,
       isQtiValid: true
     }
   },
@@ -70,6 +71,8 @@ export default {
 
     handleClick () {
       event.preventDefault()
+
+      if (this.isDisabled) return
 
       if (this.isRadio) {
         this.triggerChecked(this.identifier, 'true')
@@ -88,6 +91,8 @@ export default {
 
           event.stopPropagation()
           event.preventDefault()
+
+          if (this.isDisabled) return
 
           this.toggleChecked()
           this.triggerChecked(this.identifier, this.checked)
@@ -122,6 +127,10 @@ export default {
 
     setFocus () {
       this.$refs.hottext.focus()
+    },
+
+    disable (isDisabled) {
+      this.isDisabled = isDisabled
     },
 
     initialize () {
@@ -226,39 +235,4 @@ export default {
   padding: 1px 3px;
   cursor: pointer;
 }
-
-
-/*
-.qti-hottext[aria-checked="false"] { 
-  color: #2871BD;
-  background-color: #f6f6f6;
-  border: 1px solid #2871BD;
-  border-radius: 3px;
-  padding: 1px;
-  padding-left: 3px;
-  padding-right: 3px;
-  cursor: pointer;
-}
-
-.qti-hottext[aria-checked="false"]:hover {
-  background-color: #E8E8E8;
-  border: 2px solid #2871BD;
-  padding: 0px;
-  padding-left: 2px;
-  padding-right: 2px;
-}
-
-.qti-hottext[aria-checked="true"]:hover, 
-.qti-hottext[aria-checked="true"] {
-  color: #FFFFFF;
-  background-color: #2873BA;
-  box-shadow: inset 0px 0px 1px 1.5px rgba(0, 0, 0, 0.5);
-  border: 0px;
-  border-radius: 3px;
-  padding: 2px;
-  padding-left: 4px;
-  padding-right: 4px;
-  cursor: pointer;
-}
-*/
 </style>

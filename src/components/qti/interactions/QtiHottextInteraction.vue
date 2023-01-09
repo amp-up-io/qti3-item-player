@@ -425,6 +425,12 @@ export default {
       this.setIsValid(this.computeIsValid())
     },
 
+    disable () {
+      this.choices.forEach((hottextChoice) => {
+        hottextChoice.disable(true)
+      })
+    },
+
     /**
      * @description Retrieve this interaction's prior state.
      * When not null, has this schema:
@@ -494,6 +500,7 @@ export default {
             interactionType: 'Hottext',
             node: this,
             resetValue: this.resetValue,
+            disable: this.disable,
             isValidResponse: this.getIsValid(),
             invalidResponseMessage: this.getInvalidResponseMessage(),
             maxSelectionsMessage: this.maxSelectionsMessage
