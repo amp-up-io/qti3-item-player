@@ -173,18 +173,18 @@ export default {
             bubbles: false,
             detail: { 'identifier': response, 'checked': 'true' }
           }), true)
-        
-        return
+      } else {
+        // response is an array of identifier strings
+        response.forEach((identifier) => {
+          this.handleSetChecked(new CustomEvent('setChecked', {
+              bubbles: false,
+              detail: { 'identifier': identifier, 'checked': 'true' }
+            }), true)
+          }, this)
       }
 
-      // response is an array of identifier strings
-      response.forEach((identifier) => {
-          this.handleSetChecked(new CustomEvent('setChecked', {
-            bubbles: false,
-            detail: { 'identifier': identifier, 'checked': 'true' }
-          }), true)
-        }, this)
-
+      this.setResponse(this.computeResponse())
+      this.setState(this.computeState())
       // When restoring, manually update validity
       this.updateValidity(this.computeIsValid())
     },
