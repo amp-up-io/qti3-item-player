@@ -665,6 +665,21 @@ export default {
   width: 1.25rem;
 }
 
+/* Add more width to accommodate the wider CJK glyphs */
+.qti-labels-cjk-ideographic .qti-choice-label {
+  display: inline-block;
+  vertical-align: top;
+  width: 2rem;
+}
+
+/* When writing mode is vertical-rl, add more height */
+.qti3-player-writing-mode-vertical-rl .qti-labels-cjk-ideographic .qti-choice-label {
+  display: inline-block;
+  vertical-align: top;
+  width: 2rem;
+  height: 2rem;
+}
+
 .qti-choice-label.qti-hidden {
   display: none;
   width: 0px;

@@ -11,20 +11,24 @@ class ChoicePresentationFactory {
       LABELS_UPPER_ALPHA: ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'],
       LABELS_LOWER_ALPHA: ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'],
       LABELS_DECIMAL: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26'],
+      LABELS_CJK_IDEOGRAPHIC: ['一','二','三','四','五','六','七','八','九','十'],
       LABELS_SUFFIX_PERIOD: '.',
       LABELS_SUFFIX_PARENTHESIS: ')',
       LABELS_SUFFIX_NONE: '',
+      LABELS_SUFFIX_CJK_IDEOGRAPHIC_COMMA: '、',
 
       // Defines the Label
       QTI_LABELS_NONE: 'qti-labels-none',
       QTI_LABELS_DECIMAL: 'qti-labels-decimal',
       QTI_LABELS_LOWER_ALPHA: 'qti-labels-lower-alpha',
       QTI_LABELS_UPPER_ALPHA: 'qti-labels-upper-alpha',
+      QTI_LABELS_CJK_IDEOGRAPHIC: 'qti-labels-cjk-ideographic',
 
       // Defines the suffix; e.g., "." or ")" or "" after the Label
       QTI_LABELS_SUFFIX_NONE: 'qti-labels-suffix-none',
       QTI_LABELS_SUFFIX_PERIOD: 'qti-labels-suffix-period',
       QTI_LABELS_SUFFIX_PARENTHESIS: 'qti-labels-suffix-parenthesis',
+      QTI_LABELS_SUFFIX_CJK_IDEOGRAPHIC_COMMA: 'qti-labels-cjk-ideographic-comma',
 
       // Orientation
       QTI_ORIENTATION_VERTICAL: 'qti-orientation-vertical',
@@ -119,7 +123,7 @@ class ChoicePresentationFactory {
 
           case this.constants.QTI_CHOICES_STACKING_4:
             this.presentation_Stacking_Class = this.constants.QTI_CHOICES_STACKING_4
-              break
+            break
 
           case this.constants.QTI_CHOICES_STACKING_5:
             this.presentation_Stacking_Class = this.constants.QTI_CHOICES_STACKING_5
@@ -140,6 +144,10 @@ class ChoicePresentationFactory {
           case this.constants.QTI_LABELS_DECIMAL:
             this.presentation_Labels = this.constants.LABELS_DECIMAL
             break
+          
+          case this.constants.QTI_LABELS_CJK_IDEOGRAPHIC:
+            this.presentation_Labels = this.constants.LABELS_CJK_IDEOGRAPHIC
+            break
 
           case this.constants.QTI_LABELS_SUFFIX_NONE:
             this.presentation_LabelsSuffix = this.constants.LABELS_SUFFIX_NONE
@@ -151,6 +159,10 @@ class ChoicePresentationFactory {
 
           case this.constants.QTI_LABELS_SUFFIX_PARENTHESIS:
             this.presentation_LabelsSuffix = this.constants.LABELS_SUFFIX_PARENTHESIS
+            break
+
+          case this.constants.QTI_LABELS_SUFFIX_CJK_IDEOGRAPHIC_COMMA:
+            this.presentation_LabelsSuffix = this.constants.QTI_LABELS_SUFFIX_CJK_IDEOGRAPHIC_COMMA
             break
 
           case this.constants.QTI_INPUT_CONTROL_HIDDEN:
