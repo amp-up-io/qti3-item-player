@@ -284,6 +284,12 @@ export default {
   cursor: pointer;
 }
 
+/* Take a little padding out of the bottom on writing mode vertical-rl */
+.qti3-player-writing-mode-vertical-rl [role="radio"],
+.qti3-player-writing-mode-vertical-rl [role="checkbox"] {
+  padding-bottom: 0;
+}
+
 [role="checkbox"]::before,
 [role="checkbox"]::after,
 [role="radio"]::before,
@@ -291,6 +297,18 @@ export default {
   position: absolute;
   top: 1.05rem;
   left: .70rem;
+  transform: translate(-50%, -50%);
+  content: '';
+}
+
+.qti3-player-writing-mode-vertical-rl [role="checkbox"]:not(.control-hidden)::before,
+.qti3-player-writing-mode-vertical-rl [role="checkbox"]:not(.control-hidden)::after,
+.qti3-player-writing-mode-vertical-rl [role="radio"]:not(.control-hidden)::before,
+.qti3-player-writing-mode-vertical-rl [role="radio"]:not(.control-hidden)::after {
+  position: absolute;
+  top: .75rem;
+  left: auto;
+  right: 0.15rem;
   transform: translate(-50%, -50%);
   content: '';
 }
@@ -312,7 +330,7 @@ export default {
   -moz-appearance: none;
   appearance: none;
   -webkit-print-color-adjust: exact;
-  color-adjust: exact;
+  print-color-adjust: exact;
 }
 
 /* Used for order interaction */
@@ -554,6 +572,11 @@ export default {
   padding-left: .2rem;
 }
 
+.qti3-player-writing-mode-vertical-rl [role="radio"].control-hidden,
+.qti3-player-writing-mode-vertical-rl [role="checkbox"].control-hidden {
+  margin-left: .75rem;
+}
+
 [role="radio"][aria-checked="true"].control-hidden,
 [role="checkbox"][aria-checked="true"].control-hidden {
   color: var(--choice-ctrlh-checked-color);
@@ -672,12 +695,21 @@ export default {
   width: 2rem;
 }
 
-/* When writing mode is vertical-rl, add more height */
+/* When writing mode is vertical-rl, add more height, add some margin-top */
 .qti3-player-writing-mode-vertical-rl .qti-labels-cjk-ideographic .qti-choice-label {
   display: inline-block;
   vertical-align: top;
   width: 2rem;
   height: 2rem;
+  margin-top: 1.75rem;
+}
+
+.qti3-player-writing-mode-vertical-rl .qti-labels-cjk-ideographic .control-hidden .qti-choice-label {
+  display: inline-block;
+  vertical-align: top;
+  width: 2rem;
+  height: 2rem;
+  margin-top: 0;
 }
 
 .qti-choice-label.qti-hidden {
@@ -706,6 +738,11 @@ export default {
   padding-left: 0.25rem;
 }
 
+.qti3-player-writing-mode-vertical-rl .control-hidden .qti-choice-label,
+.qti3-player-writing-mode-vertical-rl .control-hidden .qti-choice-description {
+  padding-right: .25rem;
+}
+
 [role="button"].control-hidden .qti-choice-description {
   display: inline-block;
   vertical-align: top;
@@ -716,6 +753,10 @@ export default {
 [role="button"].control-hidden .qti-choice-label,
 [role="button"].control-hidden .qti-choice-description {
   padding: 0;
+}
+
+.qti3-player-writing-mode-vertical-rl .control-hidden .qti-choice-description {
+  padding-bottom: .25rem;
 }
 
 /* ======================

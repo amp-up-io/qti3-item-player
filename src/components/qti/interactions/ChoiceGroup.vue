@@ -363,6 +363,12 @@ export default {
   vertical-align: top;
 }
 
+.qti3-player-writing-mode-vertical-rl .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-2 > li {
+  display:inline-block;
+  height: 48%;
+  margin-bottom: .25rem;
+}
+
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-2 > li:nth-child(2n) {
   margin-right: 0;
 }
@@ -378,6 +384,12 @@ export default {
   width: 32.4%;
   margin-right: 0.25%;
   vertical-align: top;
+}
+
+.qti3-player-writing-mode-vertical-rl .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-3 > li {
+  display:inline-block;
+  height: 31.4%;
+  margin-bottom: .25rem;
 }
 
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-3 > li:nth-child(3n) {
@@ -397,6 +409,12 @@ export default {
   vertical-align: top;
 }
 
+.qti3-player-writing-mode-vertical-rl .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-4 > li {
+  display:inline-block;
+  height: 23.0%;
+  margin-bottom: .25rem;
+}
+
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-4 > li:nth-child(4n) {
   margin-right: 0;
 }
@@ -412,6 +430,12 @@ export default {
   width: 19.4%;
   margin-right: 0.25%;
   vertical-align: top;
+}
+
+.qti3-player-writing-mode-vertical-rl .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-5 > li {
+  display:inline-block;
+  height: 17.5%;
+  margin-bottom: .25rem;
 }
 
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-5 > li:nth-child(5n) {
