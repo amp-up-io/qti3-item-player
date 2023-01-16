@@ -21,6 +21,7 @@ import { store } from '@/store/store'
 import { ItemStateFactory } from '@/shared/helpers/ItemStateFactory'
 import { CatalogFactory } from '@/shared/helpers/CatalogFactory'
 import EventListener from '@/shared/components/EventListener'
+import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
 import QtiContextDeclaration from '@/components/qti/declarations/QtiContextDeclaration'
 import QtiResponseDeclaration from '@/components/qti/declarations/QtiResponseDeclaration'
 import QtiTemplateDeclaration from '@/components/qti/declarations/QtiTemplateDeclaration'
@@ -47,6 +48,8 @@ Vue.component('qti-item-body', QtiItemBody)
 Vue.component('qti-response-processing', QtiResponseProcessing)
 Vue.component('qti-catalog-info', QtiCatalogInfo)
 Vue.component('qti-modal-feedback', QtiModalFeedback)
+
+const qtiAttributeValidation = new QtiAttributeValidation()
 
 export default {
   name: 'QtiAssessmentItem',
@@ -85,7 +88,11 @@ export default {
        */
       isTimeDependent: false,
       /*
-       * Try to parse this from xml:lang
+       * Parse this from xml:lang
+       */
+      lang: null,
+      /*
+       * Parse this from lang
        */
       locale: null,
       /*
@@ -519,14 +526,26 @@ export default {
     },
 
     /**
+     * @description Set an element's lang attribute.
+     * @param element DOM element to be set
+     * @param lang {String} language
+     */
+    setLang (element, lang) {
+      if (lang === null) return
+      element.setAttribute('lang', lang)
+    },
+
+    /**
      * @description Transform some qti-assessment-item attributes.
      * Important: Run this at create time.  Mount is too late.
      */
     coerceItemAttributes () {
       this.isTimeDependent = (typeof this.timeDependent === 'undefined' ? false : this.timeDependent === 'true')
       this.isAdaptive = (typeof this.adaptive === 'undefined' ? false : this.adaptive === 'true')
+      this.lang = qtiAttributeValidation.parseXmlLangAttribute(this.$props['xml:lang'])
+
       // For now, return 'en' if nothing found. Sorry world.
-      this.locale = (typeof this.$props['xml-lang'] === 'undefined' ? 'en' : this.$props['xml-lang'])
+      this.locale = (this.lang === null ? 'en' : this.lang)
     },
 
     /**
@@ -561,6 +580,8 @@ export default {
   },
 
   mounted () {
+    this.setLang(this.$refs.item, this.lang)
+
     // After everything is mounted, bind Catalog to the DOM
     this.catalogFactory = new CatalogFactory(this, store)
     this.bindCatalog()
@@ -1142,6 +1163,7 @@ export default {
 .qti-height-72 { height: 18rem; }
 .qti-height-80 { height: 20rem; }
 .qti-height-96 { height: 24rem; }
+.qti-height-112 { height: 28rem; }
 .qti-height-1-2 { height: 50%; }
 .qti-height-1-3 { height: 33.333333%; }
 .qti-height-2-3 { height: 66.666667%; }
