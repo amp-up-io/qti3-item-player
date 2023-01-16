@@ -24,9 +24,12 @@ export default {
       type: String,
       required: true
     },
+    /*
+     * According to the schema, this is required; e.g., "text/css"
+     */
     type: {
       type: String,
-      required: false
+      required: true
     }
   },
 
