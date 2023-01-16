@@ -701,7 +701,13 @@ export default {
   vertical-align: top;
   width: 2rem;
   height: 2rem;
+}
+
+.qti3-player-writing-mode-vertical-rl .qti-choice-label {
+  display: inline-block;
+  vertical-align: top;
   margin-top: 1.75rem;
+  height: 1.5rem;
 }
 
 .qti3-player-writing-mode-vertical-rl .qti-labels-cjk-ideographic .control-hidden .qti-choice-label {
