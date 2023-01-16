@@ -327,6 +327,15 @@ export default {
   width: 100%;
 }
 
+.qti3-player-writing-mode-vertical-rl [role="group"],
+.qti3-player-writing-mode-vertical-rl [role="radiogroup"] {
+  display: block;
+  padding: 0;
+  margin: 0 .5rem;
+  list-style: none;
+  height: 100%;
+}
+
 .qti-choice-interaction.lrn [role="group"],
 .qti-choice-interaction.lrn [role="radiogroup"] {
   margin-bottom: 1.5rem;
@@ -366,7 +375,10 @@ export default {
 .qti3-player-writing-mode-vertical-rl .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-2 > li {
   display:inline-block;
   height: 48%;
-  margin-bottom: .25rem;
+  margin-bottom: 1.0%;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  margin-left: 0.5rem;
 }
 
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-2 > li:nth-child(2n) {
@@ -388,8 +400,11 @@ export default {
 
 .qti3-player-writing-mode-vertical-rl .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-3 > li {
   display:inline-block;
-  height: 31.4%;
-  margin-bottom: .25rem;
+  height: 31.0%;
+  margin-bottom: 1.0%;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  margin-left: 0.5rem;
 }
 
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-3 > li:nth-child(3n) {
@@ -412,7 +427,10 @@ export default {
 .qti3-player-writing-mode-vertical-rl .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-4 > li {
   display:inline-block;
   height: 23.0%;
-  margin-bottom: .25rem;
+  margin-bottom: 1.0%;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  margin-left: 0.5rem;
 }
 
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-4 > li:nth-child(4n) {
@@ -434,8 +452,11 @@ export default {
 
 .qti3-player-writing-mode-vertical-rl .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-5 > li {
   display:inline-block;
-  height: 17.5%;
-  margin-bottom: .25rem;
+  height: 18.0%;
+  margin-bottom: 1.0%;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  margin-left: 0.5rem;
 }
 
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-5 > li:nth-child(5n) {

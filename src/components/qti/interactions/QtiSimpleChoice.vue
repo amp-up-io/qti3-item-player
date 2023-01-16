@@ -287,7 +287,10 @@ export default {
 /* Take a little padding out of the bottom on writing mode vertical-rl */
 .qti3-player-writing-mode-vertical-rl [role="radio"],
 .qti3-player-writing-mode-vertical-rl [role="checkbox"] {
-  padding-bottom: 0;
+  margin-bottom: 0.5rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  padding-bottom: 0.25rem;
 }
 
 [role="checkbox"]::before,
@@ -710,10 +713,15 @@ export default {
   height: 1.5rem;
 }
 
+/* Add some top padding when vertical-rl and labels none */
+.qti3-player-writing-mode-vertical-rl .qti-labels-none:not(.qti-input-control-hidden) .qti-choice-description {
+  margin-top: 1.75rem;
+}
+
 .qti3-player-writing-mode-vertical-rl .qti-labels-cjk-ideographic .control-hidden .qti-choice-label {
   display: inline-block;
   vertical-align: top;
-  width: 2rem;
+  width: 1.75rem;
   height: 2rem;
   margin-top: 0;
 }
