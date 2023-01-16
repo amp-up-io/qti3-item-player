@@ -545,6 +545,11 @@ export default class QtiAttributeValidation {
     }
   }
 
+  parseXmlLangAttribute (xmlLangAttribute) {
+    if (typeof xmlLangAttribute === 'undefined') return null
+    return xmlLangAttribute
+  }
+
   isCharacterALetter (char) {
     return (/[a-zA-Z]/).test(char)
   }
