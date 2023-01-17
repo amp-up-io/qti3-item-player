@@ -354,6 +354,16 @@ export default {
   overflow-wrap: break-word;
 }
 
+.qti3-player-writing-mode-vertical-rl .qti-choice-list.qti-orientation-vertical > li {
+  display: inline-block;
+  height: 99%;
+  margin-bottom: 1.0%;
+  padding-left: 0.1rem;
+  padding-right: 0.25rem;
+  margin-left: 0.5rem;
+  overflow-wrap: break-word;
+}
+
 /*
   Stacking CSS
   No need for a qti-choices-stacking-1 style definition because
