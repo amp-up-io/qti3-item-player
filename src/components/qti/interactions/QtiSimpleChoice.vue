@@ -298,7 +298,7 @@ export default {
 [role="radio"]::before,
 [role="radio"]::after {
   position: absolute;
-  top: 1.05rem;
+  top: 1.1rem;
   left: .70rem;
   transform: translate(-50%, -50%);
   content: '';
