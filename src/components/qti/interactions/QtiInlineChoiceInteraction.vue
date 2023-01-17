@@ -813,6 +813,12 @@ div.inline-choice-wrapper {
   margin-top: -1px;
 }
 
+.qti3-player-writing-mode-vertical-rl div.qti-inline-choice-interaction,
+.qti3-player-writing-mode-vertical-rl div.inline-choice-wrapper {
+  margin-top: .15rem;
+  margin-bottom: .15rem;
+}
+
 .inline-choice-select {
   display: inline-block;
   position: relative;
@@ -837,6 +843,12 @@ div.inline-choice-wrapper {
   border-radius: .25rem;
   transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
   cursor: pointer;
+}
+
+.qti3-player-writing-mode-vertical-rl .inline-choice-select {
+  text-align: left;
+  vertical-align: middle;
+  padding: .25rem 1.6rem .25rem .3rem;
 }
 
 .qti3-player-color-default .inline-choice-select,
