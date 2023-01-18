@@ -813,10 +813,16 @@ div.inline-choice-wrapper {
   margin-top: -1px;
 }
 
-.qti3-player-writing-mode-vertical-rl div.qti-inline-choice-interaction,
-.qti3-player-writing-mode-vertical-rl div.inline-choice-wrapper {
-  margin-top: .15rem;
-  margin-bottom: .15rem;
+div.qti-inline-choice-interaction.qti-orientation-vertical {
+  margin-top: .2rem;
+  margin-bottom: .2rem;
+  margin-right: 0;
+  /* very important to get these lined up vertically */
+  vertical-align: top;
+}
+
+div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wrapper {
+  margin: 0;
 }
 
 .inline-choice-select {
@@ -845,10 +851,12 @@ div.inline-choice-wrapper {
   cursor: pointer;
 }
 
-.qti3-player-writing-mode-vertical-rl .inline-choice-select {
+.qti-orientation-vertical .inline-choice-select {
   text-align: left;
   vertical-align: middle;
-  padding: .25rem 1.6rem .25rem .3rem;
+  padding: 0;
+  margin: 0;
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23fff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
 }
 
 .qti3-player-color-default .inline-choice-select,
@@ -859,32 +867,68 @@ div.inline-choice-wrapper {
   background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23212529' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat right .4rem center/8px 10px;
 }
 
+.qti3-player-color-default .qti-orientation-vertical .inline-choice-select,
+.qti3-player-color-blackwhite .qti-orientation-vertical .inline-choice-select,
+.qti3-player-color-blackrose .qti-orientation-vertical .inline-choice-select,
+.qti3-player-color-blackcyan .qti-orientation-vertical .inline-choice-select,
+.qti3-player-color-blackcream .qti-orientation-vertical .inline-choice-select {
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23212529' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
+}
+
 .qti3-player-color-defaultreverse .inline-choice-select {
   background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23fff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat right .4rem center/8px 10px;
+}
+
+.qti3-player-color-defaultreverse .qti-orientation-vertical .inline-choice-select {
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23fff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
 }
 
 .qti3-player-color-yellowblue .inline-choice-select {
   background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23ffcc00' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat right .4rem center/8px 10px;
 }
 
+.qti3-player-color-yellowblue .qti-orientation-vertical .inline-choice-select {
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23ffcc00' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
+}
+
 .qti3-player-color-blueyellow .inline-choice-select {
   background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23003398' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat right .4rem center/8px 10px;
+}
+
+.qti3-player-color-blueyellow .qti-orientation-vertical .inline-choice-select {
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23003398' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
 }
 
 .qti3-player-color-dgraymgray .inline-choice-select {
   background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23666' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat right .4rem center/8px 10px;
 }
 
+.qti3-player-color-dgraymgray .qti-orientation-vertical .inline-choice-select {
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23666' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
+}
+
 .qti3-player-color-roseblack .inline-choice-select {
   background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23ffd0ff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat right .4rem center/8px 10px;
+}
+
+.qti3-player-color-roseblack .qti-orientation-vertical .inline-choice-select {
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23ffd0ff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
 }
 
 .qti3-player-color-cyanblack .inline-choice-select {
   background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23add8e6' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat right .4rem center/8px 10px;
 }
 
+.qti3-player-color-cyanblack .qti-orientation-vertical .inline-choice-select {
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23add8e6' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
+}
+
 .qti3-player-color-creamblack .inline-choice-select {
   background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23fffacd' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat right .4rem center/8px 10px;
+}
+
+.qti3-player-color-creamblack .qti-orientation-vertical .inline-choice-select {
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23fffacd' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
 }
 
 .inline-choice-select-prompt {
@@ -895,6 +939,10 @@ div.inline-choice-wrapper {
   width: 7.5rem;
   vertical-align: inherit;
   overflow: hidden !important;
+}
+
+.qti-orientation-vertical .inline-choice-select-prompt {
+  writing-mode: vertical-rl;
 }
 
 .inline-choice-select:focus,
@@ -963,6 +1011,10 @@ ul.inline-choice-select-listbox {
   cursor: pointer;
 }
 
+.qti-orientation-vertical [role="option"] {
+  padding-top: 3px;
+}
+
 [role="option"]:last-child {
   padding-bottom: 2px;
 }
@@ -995,12 +1047,34 @@ ul.inline-choice-select-listbox {
   width: 1.0rem;
 }
 
+.qti-orientation-vertical.qti-input-width-1 .inline-choice-select {
+  height: 2.6rem;
+  width: 1.75rem;
+  padding-top: .15rem;
+}
+
+.qti-orientation-vertical.qti-input-width-1 .inline-choice-select-prompt {
+  height: 1.9rem;
+  width: 1.58rem;
+}
+
 .qti-input-width-2 .inline-choice-select {
   width: 3.5rem;
 }
 
 .qti-input-width-2 .inline-choice-select-prompt {
   width: 2.0rem;
+}
+
+.qti-orientation-vertical.qti-input-width-2 .inline-choice-select {
+  height: 3.6rem;
+  width: 1.75rem;
+  padding-top: .15rem;
+}
+
+.qti-orientation-vertical.qti-input-width-2 .inline-choice-select-prompt {
+  height: 2.9rem;
+  width: 1.58rem;
 }
 
 .qti-input-width-3 .inline-choice-select {
@@ -1011,12 +1085,34 @@ ul.inline-choice-select-listbox {
   width: 3.0rem;
 }
 
+.qti-orientation-vertical.qti-input-width-3 .inline-choice-select {
+  height: 4.6rem;
+  width: 1.75rem;
+  padding-top: .15rem;
+}
+
+.qti-orientation-vertical.qti-input-width-3 .inline-choice-select-prompt {
+  height: 3.9rem;
+  width: 1.58rem;
+}
+
 .qti-input-width-4 .inline-choice-select {
   width: 5.5rem;
 }
 
 .qti-input-width-4 .inline-choice-select-prompt {
   width: 4.0rem;
+}
+
+.qti-orientation-vertical.qti-input-width-4 .inline-choice-select {
+  height: 5.6rem;
+  width: 1.75rem;
+  padding-top: .15rem;
+}
+
+.qti-orientation-vertical.qti-input-width-4 .inline-choice-select-prompt {
+  height: 4.9rem;
+  width: 1.58rem;
 }
 
 .qti-input-width-5 .inline-choice-select {
@@ -1027,12 +1123,34 @@ ul.inline-choice-select-listbox {
   width: 5.0rem;
 }
 
+.qti-orientation-vertical.qti-input-width-5 .inline-choice-select {
+  height: 6.6rem;
+  width: 1.75rem;
+  padding-top: .15rem;
+}
+
+.qti-orientation-vertical.qti-input-width-5 .inline-choice-select-prompt {
+  height: 5.9rem;
+  width: 1.58rem;
+}
+
 .qti-input-width-6 .inline-choice-select {
   width: 7.5rem;
 }
 
 .qti-input-width-6 .inline-choice-select-prompt {
   width: 6.0rem;
+}
+
+.qti-orientation-vertical.qti-input-width-6 .inline-choice-select {
+  height: 7.6rem;
+  width: 1.75rem;
+  padding-top: .15rem;
+}
+
+.qti-orientation-vertical.qti-input-width-6 .inline-choice-select-prompt {
+  height: 6.9rem;
+  width: 1.58rem;
 }
 
 .qti-input-width-10 .inline-choice-select {
@@ -1043,12 +1161,34 @@ ul.inline-choice-select-listbox {
   width: 9.5rem;
 }
 
+.qti-orientation-vertical.qti-input-width-10 .inline-choice-select {
+  height: 11.6rem;
+  width: 1.75rem;
+  padding-top: .15rem;
+}
+
+.qti-orientation-vertical.qti-input-width-10 .inline-choice-select-prompt {
+  height: 10.9rem;
+  width: 1.58rem;
+}
+
 .qti-input-width-15 .inline-choice-select {
   width: 16.0rem;
 }
 
 .qti-input-width-15 .inline-choice-select-prompt {
   width: 14.5rem;
+}
+
+.qti-orientation-vertical.qti-input-width-15 .inline-choice-select {
+  height: 16.6rem;
+  width: 1.75rem;
+  padding-top: .15rem;
+}
+
+.qti-orientation-vertical.qti-input-width-15 .inline-choice-select-prompt {
+  height: 15.9rem;
+  width: 1.58rem;
 }
 
 .qti-input-width-20 .inline-choice-select {
@@ -1058,12 +1198,34 @@ ul.inline-choice-select-listbox {
   width: 19.0rem;
 }
 
+.qti-orientation-vertical.qti-input-width-20 .inline-choice-select {
+  height: 21.6rem;
+  width: 1.75rem;
+  padding-top: .15rem;
+}
+
+.qti-orientation-vertical.qti-input-width-20 .inline-choice-select-prompt {
+  height: 20.9rem;
+  width: 1.58rem;
+}
+
 .qti-input-width-25 .inline-choice-select {
   width: 25.0rem;
 }
 
 .qti-input-width-25 .inline-choice-select-prompt {
   width: 23.5rem;
+}
+
+.qti-orientation-vertical.qti-input-width-25 .inline-choice-select {
+  height: 26.6rem;
+  width: 1.75rem;
+  padding-top: .15rem;
+}
+
+.qti-orientation-vertical.qti-input-width-25 .inline-choice-select-prompt {
+  height: 25.9rem;
+  width: 1.58rem;
 }
 
 .qti-input-width-30 .inline-choice-select {
