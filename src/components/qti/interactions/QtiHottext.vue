@@ -69,7 +69,7 @@ export default {
 
   methods: {
 
-    handleClick () {
+    handleClick (event) {
       event.preventDefault()
 
       if (this.isDisabled) return

@@ -447,8 +447,6 @@ export default {
     getPriorState (identifier) {
       const priorState = store.getItemContextStateVariable(identifier)
 
-      console.log('getPriorState:', priorState)
-
       // If priorState is null, we are not restoring anything
       if (priorState === null) return null
 
