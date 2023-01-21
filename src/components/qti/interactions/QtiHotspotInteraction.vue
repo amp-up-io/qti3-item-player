@@ -160,14 +160,18 @@ export default {
       console.log('[ResetValue][identifier]', this.responseIdentifier)
 
       // Uncheck all choices
-      this.choices.forEach((choice) => {
-        choice.setChecked(false)
-      })
+      for (let i=0; i<this.choices.length; i++) {
+        this.setChoiceUnChecked(this.choices[i], this.shapeElements[i])
+      }
 
       this.currentChoice = null
+      this.currentElement = null
 
       // When a new template, smoke the priorState
       this.priorState = null
+      this.setResponse(null)
+      this.setState(this.computeState())
+      this.updateValidity(this.computeIsValid())
     },
 
     /**

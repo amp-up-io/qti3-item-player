@@ -438,6 +438,29 @@ export default class QtiAttributeValidation {
     throw new QtiValidationException('Invalid show-hide attribute: "' + attributeValue + '"  Value must be "show" or "hide".')
   }
 
+  validateShapeAttribute (attributeValue) {
+    if (typeof attributeValue === 'undefined') {
+      return ''
+    }
+    
+    if (attributeValue === 'circle') {
+      return 'circle'
+    }
+    if (attributeValue === 'rect') {
+      return 'rect'
+    }
+    if (attributeValue === 'poly') {
+      return 'poly'
+    }
+    if (attributeValue === 'defalt') {
+      return 'default'
+    }
+    if (attributeValue === 'ellipse') {
+      return 'ellipse'
+    }
+    throw new QtiValidationException('Invalid shape attribute: "' + attributeValue + '"  Value must be "circle", "rect", "poly", "default", or "ellipse".')
+  }
+
   validateToleranceModeAttribute (attributeValue) {
     if (typeof attributeValue === 'undefined') {
       return true

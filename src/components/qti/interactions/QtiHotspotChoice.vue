@@ -1,6 +1,5 @@
 <template>
-  <div ref="hotspotchoice"
-    class="qti-hotspot-choice">
+  <div ref="hotspotchoice" class="qti-hotspot-choice">
     <slot></slot>
   </div>
 </template>
@@ -14,6 +13,9 @@
  * later. The default hotspot, if defined, must appear last.
  */
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
+import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
+
+const qtiAttributeValidation = new QtiAttributeValidation()
 
 export default {
   name: 'QtiHotspotChoice',
@@ -164,7 +166,7 @@ export default {
           return
 
         case 'poly':
-          this.shapeData = this.computePolyShapeData(this.coords)
+          this.shapeData = this.computePolyShapeData(this.transformPolyCoords(data))
           return
 
         case 'ellipse':
@@ -175,14 +177,48 @@ export default {
           return
 
         case 'default':
-          // This signifies the entire image is a hotspot
+          // This signifies (I think?) that the entire image is a hotspot.
+          // Do we ignore the coords?  For now, parse the coords as if
+          // this is a rectangle.
           // TODO:
-          break
-
-        default:
+          if (data.length !== 4) return
+          
+          data[2] = parseInt(data[2]) - parseInt(data[0]);
+          data[3] = parseInt(data[3]) - parseInt(data[1]);
+          this.shapeData = data
+          return
       }
     },
 
+    /**
+     * @description Transform QTI poly coords; e.g., an  array with
+     * format ["x1","y1","x2","y2","x3","y3"] into a string format where
+     * a space separates the points; e.g., "x1,y1 x2,y2, x3,y3"
+     * @param {Array} coords ["x1","y1","x2","y2","x3","y3"]
+     * @result {String} result "x1,y1 x2,y2, x3,y3"
+     */
+    transformPolyCoords (coords) {
+      
+      let result = ''
+
+      // Check for even number of pairs
+      if ((coords.length % 2) != 0) return result
+
+      for (let i = 0; i < coords.length; i += 2) {
+        result += `${coords[i]},${coords[i+1]}`
+
+        if ((i + 2) < coords.length) {
+          result += ' '
+        }
+      }
+
+      return result
+    },
+
+    /**
+     * @description Final transform of coordinates into an SVG path.
+     * @param {String} coords x1,y1 x2,y2, x3,y3...
+     */
     computePolyShapeData (coords) {
       const pos = coords.indexOf(' ')
 			const path = [coords.slice(0, pos), 'L', coords.slice(pos)].join(' ')
@@ -253,6 +289,8 @@ export default {
     },
 
     initialize () {
+      qtiAttributeValidation.validateShapeAttribute(this.shape)
+      
       switch (this.$parent.cardinality) {
         case 'multiple':
           this.isRadio = false
@@ -269,7 +307,14 @@ export default {
   },
 
   created () {
-    this.initialize()
+    try {
+      this.initialize()
+    } catch (err) {
+      this.isQtiValid = false
+      if (err.name === 'QtiValidationException') {
+        throw new QtiValidationException(err.message)
+      }
+    }
   },
 
   mounted () {
