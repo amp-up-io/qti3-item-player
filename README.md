@@ -597,7 +597,7 @@ QTI 3 Player has built-in support for 14 foreground / background color combinati
 
 ## Roadmap
 
-The QTI3 Item Player 2022 development roadmap includes all features and capabilities included in QTI 3 Delivery System Level 1 and Level 2 conformance.
+The QTI3 Item Player 2022-2023 development roadmap includes all features and capabilities included in QTI 3 Delivery System Level 1 and Level 2 conformance.
 
 - [x] Support for the 14 Standard Color Combinations/Themes
 - [x] Support for Template Processing and all Template Rules
@@ -611,9 +611,11 @@ The QTI3 Item Player 2022 development roadmap includes all features and capabili
 - [x] Rubric Block Support
 - [x] QtiStylesheet Support
 - [x] Shared Stimulus Support
-- [ ] QtiMatch, QtiGapMatch, QtiGraphicGapMatch Interaction Support
+- [ ] QtiMatch Interaction Support
+- [ ] QtiGapMatch Interaction Support
+- [ ] QtiGraphicGapMatch Interaction Support
 - [x] QtiHottext Interaction Support
-- [ ] QtiHotspot Interaction Support
+- [x] QtiHotspot Interaction Support
 - [x] QtiOrder Interaction Support
 - [ ] Scoring API Examples
 - [ ] Improved Audio Player
@@ -634,7 +636,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Built With
 
-The QTI3 Item Player is built with the Vue.js (v2) framework.
+The QTI3 Item Player is built with the Vue.js (v2.6) framework.
 
 * [Vue.js](https://vuejs.org/)
 
