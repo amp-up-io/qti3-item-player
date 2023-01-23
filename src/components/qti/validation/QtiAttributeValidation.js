@@ -452,7 +452,7 @@ export default class QtiAttributeValidation {
     if (attributeValue === 'poly') {
       return 'poly'
     }
-    if (attributeValue === 'defalt') {
+    if (attributeValue === 'default') {
       return 'default'
     }
     if (attributeValue === 'ellipse') {

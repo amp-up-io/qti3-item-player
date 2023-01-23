@@ -177,15 +177,9 @@ export default {
           return
 
         case 'default':
-          // This signifies (I think?) that the entire image is a hotspot.
-          // Do we ignore the coords?  For now, parse the coords as if
-          // this is a rectangle.
-          // TODO:
-          if (data.length !== 4) return
-          
-          data[2] = parseInt(data[2]) - parseInt(data[0]);
-          data[3] = parseInt(data[3]) - parseInt(data[1]);
-          this.shapeData = data
+          // This signifies that the entire image is a hotspot.
+          // We ignore the coords
+          this.shapeData = ''
           return
       }
     },
@@ -239,15 +233,14 @@ export default {
   
       switch (this.getShape()) {
         case 'circle':
-          element = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          element = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
           element.setAttribute('cx', shapeData[0])
           element.setAttribute('cy', shapeData[1])
           element.setAttribute('r',  shapeData[2])
           break
 
         case 'rect':
-        case 'default':
-          element = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          element = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
           element.setAttribute('x', shapeData[0])
           element.setAttribute('y', shapeData[1])
           element.setAttribute('width', shapeData[2])
@@ -255,17 +248,28 @@ export default {
           break
 
         case 'poly':
-          element = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          element = document.createElementNS('http://www.w3.org/2000/svg', 'path')
           element.setAttribute('d', shapeData)
           break
 
         case 'ellipse':
           // Ellipse is deprecated
-          element = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+          element = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse')
           element.setAttribute('cx', shapeData[0])
           element.setAttribute('cy', shapeData[1])
           element.setAttribute('rx', shapeData[2])
           element.setAttribute('ry', shapeData[3])
+          break
+
+        case 'default':
+          // For default, no coords should be specified.
+          // Use background image dimensions for the coords.
+          // TODO
+          //element = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+          //element.setAttribute('x', '0')
+          //element.setAttribute('y', '0')
+          //element.setAttribute('width', this.$parent.backgroundImageWidth)
+          //element.setAttribute('height', this.$parent.backgroundImageHeight)
           break
 
         default:

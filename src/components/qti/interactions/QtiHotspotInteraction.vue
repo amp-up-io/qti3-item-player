@@ -84,6 +84,8 @@ export default {
       shapeElements: [],
       currentElement: null,
       backgroundImage: null,
+      backgroundImageWidth: '0',
+      backgroundImageHeight: '0',
       isRadio: true,
       isDisabled: false,
       isQtiValid: true,
@@ -416,6 +418,8 @@ export default {
     },
 
     validateChildren () {
+      this.processBackgroundImage()
+
       // No validation.  Save off our children.
       this.processChildren()
 
@@ -555,7 +559,6 @@ export default {
     },
 
     processGroupUI () {
-      this.processBackgroundImage()
       this.setResponse(null)
       this.setState(this.computeState())
       this.setIsValid(this.computeIsValid())
@@ -578,7 +581,9 @@ export default {
 
       // Set the dimensions and other attributes of the overlay
       this.backgroundImage = bgElement[0]
-      this.$refs.overlay.setAttribute('viewBox', `0 0 ${bgElement[0].clientWidth} ${bgElement[0].clientHeight}`)
+      this.backgroundImageWidth = `${bgElement[0].clientWidth}`
+      this.backgroundImageHeight = `${bgElement[0].clientHeight}`
+      this.$refs.overlay.setAttribute('viewBox', `0 0 ${this.backgroundImageWidth} ${this.backgroundImageHeight}`)
       this.$refs.overlay.setAttribute('tabindex', '-1')
       this.$refs.overlay.setAttribute('role', 'application')
       this.$refs.overlay.setAttribute('focusable','false')
