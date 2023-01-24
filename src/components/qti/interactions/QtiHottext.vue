@@ -195,10 +195,28 @@ export default {
   cursor: pointer;
 }
 
+.qti-unselected-hidden .qti-hottext[aria-checked="false"] {
+  color: inherit;
+  background-color: inherit;
+  border: 0 solid var(--choice-ctrlh-color);
+  border-radius: .25rem;
+  padding: 1px 3px;
+  cursor: pointer;
+}
+
 .qti-hottext[aria-checked="true"] {
   color: var(--choice-ctrlh-checked-color);
   background-color: var(--choice-ctrlh-checked-bgc);
   border: 1px solid var(--choice-ctrlh-checked-bgc);
+  border-radius: .25rem;
+  padding: 1px 3px;
+  cursor: pointer;
+}
+
+.qti-unselected-hidden .qti-hottext[aria-checked="true"] {
+  color: var(--choice-ctrlh-checked-color);
+  background-color: var(--choice-ctrlh-checked-bgc);
+  border: 0 solid var(--choice-ctrlh-checked-bgc);
   border-radius: .25rem;
   padding: 1px 3px;
   cursor: pointer;
@@ -211,8 +229,21 @@ export default {
   box-shadow: var(--choice-control-focus-shadow);
 }
 
+.qti-unselected-hidden .qti-hottext[aria-checked="false"]:focus {
+  border: 0 solid transparent;
+  color: inherit;
+  box-shadow: var(--choice-control-focus-shadow);
+}
+
 .qti-hottext[aria-checked="true"]:focus {
   border: 1px solid transparent;
+  border-color: var(--choice-ctrlh-checked-color);
+  color: var(--choice-ctrlh-checked-color);
+  box-shadow: var(--choice-control-focus-shadow);
+}
+
+.qti-unselected-hidden .qti-hottext[aria-checked="true"]:focus {
+  border: 0 solid transparent;
   border-color: var(--choice-ctrlh-checked-color);
   color: var(--choice-ctrlh-checked-color);
   box-shadow: var(--choice-control-focus-shadow);
@@ -234,5 +265,11 @@ export default {
   filter: var(--choice-ctrlh-hover-brightness);
   padding: 1px 3px;
   cursor: pointer;
+}
+
+.qti-unselected-hidden .qti-hottext:hover {
+  filter: none;
+  border: 0 solid transparent;
+  box-shadow: var(--choice-control-focus-shadow);
 }
 </style>

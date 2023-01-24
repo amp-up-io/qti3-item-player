@@ -27,6 +27,7 @@ import QtiValidationException from '@/components/qti/exceptions/QtiValidationExc
 import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
 import QtiParseException from '@/components/qti/exceptions/QtiParseException'
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
+import HottextPresentationFactory from '@/components/qti/interactions/presentation/HottextInteractionPresentationFactory'
 import QtiPrompt from '@/components/qti/interactions/QtiPrompt'
 import QtiHottext from '@/components/qti/interactions/QtiHottext'
 
@@ -63,7 +64,7 @@ export default {
     }
   },
 
-  inheritAttrs: false,
+  inheritAttrs: true,
 
   data () {
     return {
@@ -78,6 +79,7 @@ export default {
       currentChoice: null,
       isRadio: true,
       isQtiValid: true,
+      presentationFactory: null,
       // If we are restoring, this is where we save the prior variable state
       priorState: null
     }
@@ -420,9 +422,16 @@ export default {
     },
 
     processGroupUI () {
+      this.setUnselectedHidden()
       this.setResponse(null)
       this.setState(this.computeState())
       this.setIsValid(this.computeIsValid())
+    },
+
+    setUnselectedHidden () {
+      if (this.presentationFactory.getUnselectedHidden()) {
+        this.$refs.hottextgroup.setAttribute('class', 'qti3-player-hottext-group qti-unselected-hidden')
+      }
     },
 
     disable () {
@@ -465,6 +474,9 @@ export default {
   created () {
     try {
       this.responseDeclaration = qtiAttributeValidation.validateResponseIdentifierAttribute(store, this.responseIdentifier)
+
+      // Set up a presentation factory
+      this.presentationFactory = new HottextPresentationFactory(this.$vnode.data.staticClass)
 
       // Pull any prior interaction state.
       this.priorState = this.getPriorState(this.responseIdentifier)
