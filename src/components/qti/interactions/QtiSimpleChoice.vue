@@ -691,19 +691,30 @@ export default {
   width: 1.25rem;
 }
 
-/* Add more width to accommodate the wider CJK glyphs */
-.qti-labels-cjk-ideographic .qti-choice-label {
-  display: inline-block;
-  vertical-align: top;
-  width: 2rem;
-}
-
-/* When writing mode is vertical-rl, add more height, add some margin-top */
-.qti3-player-writing-mode-vertical-rl .qti-labels-cjk-ideographic .qti-choice-label {
+/* When writing mode is vertical-rl and labels cjk-ideographic, add more height */
+.qti3-player-writing-mode-vertical-rl .qti-choice-interaction.qti-labels-cjk-ideographic .qti-choice-label {
   display: inline-block;
   vertical-align: top;
   width: 2rem;
   height: 2rem;
+}
+
+.qti3-player-writing-mode-vertical-rl .qti-choice-interaction:not(.qti-labels-cjk-ideographic):not(.qti-labels-suffix-none) .qti-choice-label,
+.qti3-player-writing-mode-vertical-rl .qti-choice-interaction:not(.qti-labels-cjk-ideographic).qti-labels-suffix-none .qti-choice-label {
+  margin-top: 1.5rem;
+  margin-bottom: .75rem;
+  width: 2rem;
+  height: 1.5rem;
+  writing-mode: horizontal-tb;
+  text-align: center;
+}
+
+.qti3-player-writing-mode-vertical-rl .qti-choice-interaction:not(.qti-labels-cjk-ideographic):not(.qti-labels-suffix-none) .qti-choice-label {
+  padding-left: .4rem;
+}
+
+.qti3-player-writing-mode-vertical-rl .qti-choice-interaction:not(.qti-labels-cjk-ideographic).qti-labels-suffix-none .qti-choice-label {
+  padding-left: .15rem;
 }
 
 .qti3-player-writing-mode-vertical-rl .qti-choice-label {
@@ -718,12 +729,16 @@ export default {
   margin-top: 1.75rem;
 }
 
-.qti3-player-writing-mode-vertical-rl .qti-labels-cjk-ideographic .control-hidden .qti-choice-label {
+.qti3-player-writing-mode-vertical-rl .qti-choice-interaction:not(.qti-labels-cjk-ideographic).qti-input-control-hidden .qti-choice-label {
+  margin-top: 0;
+}
+
+.qti3-player-writing-mode-vertical-rl .qti-choice-interaction.qti-labels-cjk-ideographic.qti-input-control-hidden .qti-choice-label {
   display: inline-block;
   vertical-align: top;
   width: 1.75rem;
   height: 2rem;
-  margin-top: 0;
+  margin-top: .25rem;
 }
 
 .qti-choice-label.qti-hidden {
@@ -752,6 +767,10 @@ export default {
   padding-left: 0.25rem;
 }
 
+.qti3-player-writing-mode-vertical-rl .control-hidden .qti-choice-label {
+  margin-top: 0;
+}
+
 .qti3-player-writing-mode-vertical-rl .control-hidden .qti-choice-label,
 .qti3-player-writing-mode-vertical-rl .control-hidden .qti-choice-description {
   padding-right: .25rem;
@@ -769,7 +788,11 @@ export default {
   padding: 0;
 }
 
-.qti3-player-writing-mode-vertical-rl .control-hidden .qti-choice-description {
+.qti3-player-writing-mode-vertical-rl .qti-choice-interaction.qti-labels-none.qti-input-control-hidden .qti-choice-description {
+  padding-top: .25rem;
+}
+
+.qti3-player-writing-mode-vertical-rl .qti-choice-interaction.qti-input-control-hidden .qti-choice-description {
   padding-bottom: .25rem;
 }
 
