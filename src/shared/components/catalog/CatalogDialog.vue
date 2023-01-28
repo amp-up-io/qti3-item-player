@@ -413,10 +413,10 @@ button.qti3-player-cat-dialog-close {
 
 .qti3-player-cat-dialog-body [role="tabpanel"] {
   position: relative;
+  display: grid;
   z-index: 2;
   padding: 0.5em 0.5em 0.7em;
   border: var(--hr-border);
-  /*border: 1px solid hsl(219deg 1% 72%);*/
   border-radius: 0 0.2em 0.2em;
 }
 
@@ -425,8 +425,6 @@ button.qti3-player-cat-dialog-close {
 }
 
 .qti3-player-cat-dialog-body [role="tabpanel"]:focus {
-  /*border-color: hsl(20deg 96% 48%);
-  box-shadow: 0 0 0.2em hsl(20deg 96% 48%);*/
   outline: 0;
 }
 
