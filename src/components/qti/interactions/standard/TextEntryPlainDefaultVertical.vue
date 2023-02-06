@@ -701,36 +701,11 @@ div.text-entry-default-vert-wrapper.focused {
 
 .qti-input-width-20 .text-entry-default-vert,
 .qti-input-width-20 .text-entry-default-vert-ph {
-  width: 20.0rem;
+  height: 20.25rem;
 }
 
 .qti-input-width-25 .text-entry-default-vert,
 .qti-input-width-25 .text-entry-default-vert-ph {
-  height: 25.0rem;
-}
-
-.qti-input-width-30 .text-entry-default-vert,
-.qti-input-width-30 .text-entry-default-vert-ph {
-  height: 30.0rem;
-}
-
-.qti-input-width-35 .text-entry-default-vert,
-.qti-input-width-35 .text-entry-default-vert-ph {
-  height: 35.0rem;
-}
-
-.qti-input-width-40 .text-entry-default-vert,
-.qti-input-width-40 .text-entry-default-vert-ph {
-  height: 40.0rem;
-}
-
-.qti-input-width-45 .text-entry-default-vert,
-.qti-input-width-45 .text-entry-default-vert-ph {
-  height: 45.0rem;
-}
-
-.qti-input-width-50 .text-entry-default-vert,
-.qti-input-width-50 .text-entry-default-vert-ph {
-  height: 50.0rem;
+  height: 25.25rem;
 }
 </style>

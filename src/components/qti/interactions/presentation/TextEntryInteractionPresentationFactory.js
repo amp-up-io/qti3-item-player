@@ -130,7 +130,7 @@ class TextEntryPresentationFactory {
         case this.constants.QTI_INPUT_WIDTH_72:
           this.presentation_WidthClass = this.constants.QTI_INPUT_WIDTH_72
           // Not sure about this
-          this.presentation_MaxLength = 25
+          this.presentation_MaxLength = 500
           break
         default:
       } // end switch
