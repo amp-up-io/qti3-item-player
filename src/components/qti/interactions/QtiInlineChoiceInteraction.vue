@@ -39,6 +39,7 @@ import QtiValidationException from '@/components/qti/exceptions/QtiValidationExc
 import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
 import QtiParseException from '@/components/qti/exceptions/QtiParseException'
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
+import InlineChoicePresentationFactory from '@/components/qti/interactions/presentation/InlineChoiceInteractionPresentationFactory'
 import QtiInlineChoice from '@/components/qti/interactions/QtiInlineChoice'
 import QtiProcessing from '@/components/qti/processing/utils/QtiProcessing'
 
@@ -128,6 +129,8 @@ export default {
       searchIndex: null,
       isShuffle: null,
       isQtiValid: true,
+      presentationFactory: null,
+      isOrientationVertical: false,
       // If we are restoring, this is where we save the prior variable state
       priorState: null
     }
@@ -751,6 +754,10 @@ export default {
   created () {
     try {
       this.responseDeclaration = qtiAttributeValidation.validateResponseIdentifierAttribute(store, this.responseIdentifier)
+
+      // Set up a presentation factory
+      this.presentationFactory = new InlineChoicePresentationFactory(this.$vnode.data.staticClass)
+      this.isOrientationVertical = this.presentationFactory.isOrientationVertical()
 
       // Pull any prior interaction state.
       this.priorState = this.getPriorState(this.responseIdentifier)
