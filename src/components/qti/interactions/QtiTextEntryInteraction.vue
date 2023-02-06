@@ -1,25 +1,11 @@
 <template>
-  <span ref="root" class="qti-text-entry-interaction">
-    <input
+    <component
       ref="input"
-      class="text-entry-input"
-      v-bind="$attrs"
-      v-model="response"
-      type="text"
-      :placeholder="placeholder"
-      autocapitalize="none"
-      :spellcheck="computeSpellcheck"
-      :maxlength="computeMaxlength"
-      v-on:input="handleInput($event)"
+      class="qti-text-entry-interaction"
+      :is="interactionTemplate"
+      v-on:textEntryUpdate="handleTextEntryUpdate"
+      v-on:textEntryReady="handleTextEntryReady"
     />
-    <tooltip
-      ref="tooltip"
-      v-if="hasPatternMask"
-      :target="() => $refs['input']"
-      :message="patternMaskMessage"
-      :color-style="colorStyle"
-    />
-  </span>
 </template>
 
 <script>
@@ -36,16 +22,13 @@ import QtiValidationException from '@/components/qti/exceptions/QtiValidationExc
 import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
 import QtiParseException from '@/components/qti/exceptions/QtiParseException'
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
-import Tooltip from '@/shared/components/Tooltip'
+import TextEntryPresentationFactory from '@/components/qti/interactions/presentation/TextEntryInteractionPresentationFactory'
+import { getTextEntryInteractionSubType, textEntryInteractionAdapter } from './adapters/textentry-interaction-adapter'
 
 const qtiAttributeValidation = new QtiAttributeValidation()
 
 export default {
   name: 'QtiTextEntryInteraction',
-
-  components: {
-    Tooltip
-  },
 
   props: {
     responseIdentifier: {
@@ -118,6 +101,14 @@ export default {
   },
 
   computed: {
+
+    /**
+     * @description Compute a template/component according to the interactionSubType.
+     */
+    interactionTemplate () {
+      return textEntryInteractionAdapter(this.interactionSubType, this.createComponentProperties(), this.$attrs)
+    },
+
     placeholder () {
       return qtiAttributeValidation.validatePlaceholderText(this.placeholderText, '')
     },
@@ -147,19 +138,22 @@ export default {
   data() {
     return {
       response: '',
-      // Used for reverting to the prior response when a patternMask is applied
-      priorResponse: '',
       state: null,
       baseType: 'string',
       cardinality: 'single',
+      interactionSubType: null,
       isValidResponse: false,
       invalidResponseMessage: 'Input Required',
-      // Save provided patternMask as a Regex here
-      appliedRegex: null,
-      // Used to toggle the patternMask message tooltip
-      displayMessage: false,
+      classAttribute: '',
       isQtiValid: true,
-      // If we are restoring, this is where we save the prior variable state
+      presentationFactory: null,
+      /*
+       * Reference to the sub-component
+       */
+      node: null,
+      /*
+       * When restoring, this is where we save the prior variable state.
+       */
       priorState: null
     }
   },
@@ -183,12 +177,19 @@ export default {
      * @param {String} response - string
      */
     setResponse (response) {
-      if (response === null) {
+      if (response === null)
         this.response = ''
-        return
-      }
+      else
+        this.response = response
 
-      this.response = response
+      this.node.setResponse(this.response, true)
+    },
+
+    updateResponse (response) {
+      if (response === null)
+        this.response = ''
+      else
+        this.response = response
     },
 
     /**
@@ -221,6 +222,14 @@ export default {
      */
     setIsValid (isValid) {
       this.isValidResponse = isValid
+    },
+
+    setInteractionSubType (interactionSubType) {
+      this.interactionSubType = interactionSubType
+    },
+
+    getInteractionSubType () {
+      return this.interactionSubType
     },
 
     /**
@@ -323,46 +332,46 @@ export default {
     },
 
     /**
-     * @description For textEntryInteraction with no patternMask, the maxlength
-     * attribute (500) on the Input element is the only gatekeeper.
-     * If a patternMask exists (appliedRegex is not null), use it to enforce the desired input.
+     * @description attempt to parse the interaction component
+     * from the staticClass property of this $vnode.
+     * @param staticClass property of the $vnode.data object
+     * @param format
      */
-    handleInput (event) {
-      event.preventDefault()
-      if (this.appliedRegex !== null)
-        this.applyPatternMask(this.$refs.input.value)
-      else
-        this.setResponse(this.$refs.input.value)
+    detectInteractionSubType (staticClass) {
+      return getTextEntryInteractionSubType(staticClass)
+    },
 
+    createComponentProperties () {
+      // Create default properties
+      const properties = {
+        responseIdentifier: this.responseIdentifier,
+        placeholder: this.placeholder,
+        patternMask: this.patternMask,
+        patternMaskMessage: this.patternMaskMessage,
+        spellcheck: this.computeSpellcheck,
+        maxlength: this.computeMaxlength,
+        widthClass: this.presentationFactory.getWidthClass(),
+        verticalMaxlength: this.presentationFactory.getVerticalMaxLength(),
+        format: this.format
+      }
+
+      return properties
+    },
+
+    handleTextEntryUpdate (data) {
+      this.updateResponse(data.response)
       // Update validity
       this.evaluateValidity()
     },
 
-    applyPatternMask (value) {
-      if (this.appliedRegex.test(value)) {
-        // Pattern mask succeeded.  Update the response
-        // and the new priorResponse.
-        this.setResponse(value)
-        this.priorResponse = value
-        return
-      }
+    handleTextEntryReady (interaction) {
+      // This gives us a handle on the sub-component's methods
+      this.node = interaction.node
 
-      // Pattern mask failed.  Display the message and revert the
-      // control to the priorResponse.
-      this.showPatternMaskMessage()
-      this.setResponse(this.priorResponse)
-      this.$refs.input.value = this.priorResponse
-    },
-
-    showPatternMaskMessage () {
-      this.$refs.tooltip.show()
-      this.hidePatternMaskMessage()
-    },
-
-    hidePatternMaskMessage (timeout=3000) {
-      setTimeout(() => {
-          this.$refs.tooltip.hide()
-        }, timeout)
+      if (this.priorState === null)
+        this.initializeValue()
+      else
+        this.restoreValue(this.priorState)
     },
 
     /**
@@ -393,12 +402,15 @@ export default {
 
       return priorState
     }
-
   },
 
   created () {
     try {
       this.responseDeclaration = qtiAttributeValidation.validateResponseIdentifierAttribute(store, this.responseIdentifier)
+      this.setInteractionSubType(this.detectInteractionSubType(this.$vnode.data.staticClass))
+      
+      // Set up a presentation factory
+      this.presentationFactory = new TextEntryPresentationFactory(this.$vnode.data.staticClass)
 
       // Pull any prior interaction state.
       this.priorState = this.getPriorState(this.responseIdentifier)
@@ -448,113 +460,4 @@ export default {
 </script>
 
 <style>
-input.text-entry-input {
-  margin: 0;
-  vertical-align:inherit;
-  padding: 0 .3rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.6rem;
-  height: calc(1.5em + .35rem);
-  color: var(--foreground);
-  width: 8.6rem;
-  background-color: var(--background);
-  background-clip: padding-box;
-  border-width: 1px;
-  border-color: var(--choice-control-focus-border);
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border-radius: .25rem;
-  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
-
-input.text-entry-input:focus {
-  color: var(--foreground);
-  background-color: var(--background);
-  border-color: var(--choice-control-focus-border);
-  outline: 0;
-  box-shadow: var(--choice-control-focus-shadow);
-}
-
-input.text-entry-input::placeholder {
-  color: var(--foreground);
-  opacity: 0.6;
-  font-style: italic;
-}
-
-.qti-text-entry-interaction.qti-align-center input {
-  text-align: center;
-}
-
-.qti-text-entry-interaction.qti-align-left input {
-  text-align: left;
-}
-
-.qti-text-entry-interaction.qti-align-right input {
-  text-align: right;
-}
-
-.qti-input-width-1 .text-entry-input {
-  width: 1.7rem;
-}
-
-.qti-input-width-2 .text-entry-input {
-  width: 2.7rem;
-}
-
-.qti-input-width-3 .text-entry-input {
-  width: 3.7rem;
-}
-
-.qti-input-width-4 .text-entry-input {
-  width: 4.7rem;
-}
-.qti-input-width-5 .text-entry-input {
-  width: 5.6rem;
-}
-
-.qti-input-width-6 .text-entry-input {
-  width: 6.6rem;
-}
-
-.qti-input-width-10 .text-entry-input {
-  width: 10.4rem;
-}
-
-.qti-input-width-15 .text-entry-input {
-  width: 15.2rem;
-}
-
-.qti-input-width-20 .text-entry-input {
-  width: 20.0rem;
-}
-
-.qti-input-width-25 .text-entry-input {
-  width: 25.0rem;
-}
-
-.qti-input-width-30 .text-entry-input {
-  width: 30.0rem;
-}
-
-.qti-input-width-35 .text-entry-input {
-  width: 35.0rem;
-}
-
-.qti-input-width-40 .text-entry-input {
-  width: 40.0rem;
-}
-
-.qti-input-width-45 .text-entry-input {
-  width: 45.0rem;
-}
-
-.qti-input-width-50 .text-entry-input {
-  width: 50.0rem;
-}
-
-.qti-input-width-72 .text-entry-input {
-  width: 100%;
-}
 </style>
