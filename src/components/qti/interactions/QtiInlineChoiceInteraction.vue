@@ -867,7 +867,7 @@ div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wra
   margin-right: -0.05rem;
   height: 9.75rem;
   width: 1.95rem;
-  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23fff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='5' height='4'%3e%3cpath fill='%23fff' transform='rotate(90 2.5 2.5)' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/10px 8px;
 }
 
 .qti3-player-color-default .inline-choice-select,
@@ -883,7 +883,7 @@ div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wra
 .qti3-player-color-blackrose .qti-orientation-vertical .inline-choice-select,
 .qti3-player-color-blackcyan .qti-orientation-vertical .inline-choice-select,
 .qti3-player-color-blackcream .qti-orientation-vertical .inline-choice-select {
-  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23212529' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='5' height='4'%3e%3cpath fill='%23212529' transform='rotate(90 2.5 2.5)' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/10px 8px;
 }
 
 .qti3-player-color-defaultreverse .inline-choice-select {
@@ -891,7 +891,7 @@ div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wra
 }
 
 .qti3-player-color-defaultreverse .qti-orientation-vertical .inline-choice-select {
-  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23fff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='5' height='4'%3e%3cpath fill='%23fff' transform='rotate(90 2.5 2.5)' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/10px 8px;
 }
 
 .qti3-player-color-yellowblue .inline-choice-select {
@@ -899,7 +899,7 @@ div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wra
 }
 
 .qti3-player-color-yellowblue .qti-orientation-vertical .inline-choice-select {
-  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23ffcc00' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='5' height='4'%3e%3cpath fill='%23ffcc00' transform='rotate(90 2.5 2.5)' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/10px 8px;
 }
 
 .qti3-player-color-blueyellow .inline-choice-select {
@@ -907,7 +907,7 @@ div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wra
 }
 
 .qti3-player-color-blueyellow .qti-orientation-vertical .inline-choice-select {
-  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23003398' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='5' height='4'%3e%3cpath fill='%23003398' transform='rotate(90 2.5 2.5)' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/10px 8px;
 }
 
 .qti3-player-color-dgraymgray .inline-choice-select {
@@ -915,7 +915,7 @@ div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wra
 }
 
 .qti3-player-color-dgraymgray .qti-orientation-vertical .inline-choice-select {
-  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23666' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='5' height='4'%3e%3cpath fill='%23666' transform='rotate(90 2.5 2.5)' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/10px 8px;
 }
 
 .qti3-player-color-roseblack .inline-choice-select {
@@ -923,7 +923,7 @@ div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wra
 }
 
 .qti3-player-color-roseblack .qti-orientation-vertical .inline-choice-select {
-  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23ffd0ff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='5' height='4'%3e%3cpath fill='%23ffd0ff' transform='rotate(90 2.5 2.5)' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/10px 8px;
 }
 
 .qti3-player-color-cyanblack .inline-choice-select {
@@ -931,7 +931,7 @@ div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wra
 }
 
 .qti3-player-color-cyanblack .qti-orientation-vertical .inline-choice-select {
-  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23add8e6' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='5' height='4'%3e%3cpath fill='%23add8e6' transform='rotate(90 2.5 2.5)' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/10px 8px;
 }
 
 .qti3-player-color-creamblack .inline-choice-select {
@@ -939,7 +939,7 @@ div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wra
 }
 
 .qti3-player-color-creamblack .qti-orientation-vertical .inline-choice-select {
-  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23fffacd' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
+  background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='5' height='4'%3e%3cpath fill='%23fffacd' transform='rotate(90 2.5 2.5)' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/10px 8px;
 }
 
 .inline-choice-select-prompt {
@@ -1062,7 +1062,7 @@ ul.inline-choice-select-listbox {
 
 .qti-orientation-vertical.qti-input-width-1 .inline-choice-select {
   height: 2.75rem;
-  width: 1.75rem;
+  width: 1.95rem;
 }
 
 .qti-orientation-vertical.qti-input-width-1 .inline-choice-select-prompt {
@@ -1080,7 +1080,7 @@ ul.inline-choice-select-listbox {
 
 .qti-orientation-vertical.qti-input-width-2 .inline-choice-select {
   height: 3.75rem;
-  width: 1.75rem;
+  width: 1.95rem;
 }
 
 .qti-orientation-vertical.qti-input-width-2 .inline-choice-select-prompt {
@@ -1098,7 +1098,7 @@ ul.inline-choice-select-listbox {
 
 .qti-orientation-vertical.qti-input-width-3 .inline-choice-select {
   height: 4.75rem;
-  width: 1.75rem;
+  width: 1.95rem;
 }
 
 .qti-orientation-vertical.qti-input-width-3 .inline-choice-select-prompt {
@@ -1116,7 +1116,7 @@ ul.inline-choice-select-listbox {
 
 .qti-orientation-vertical.qti-input-width-4 .inline-choice-select {
   height: 5.75rem;
-  width: 1.75rem;
+  width: 1.95rem;
 }
 
 .qti-orientation-vertical.qti-input-width-4 .inline-choice-select-prompt {
@@ -1134,7 +1134,7 @@ ul.inline-choice-select-listbox {
 
 .qti-orientation-vertical.qti-input-width-5 .inline-choice-select {
   height: 6.75rem;
-  width: 1.75rem;
+  width: 1.95rem;
 }
 
 .qti-orientation-vertical.qti-input-width-5 .inline-choice-select-prompt {
@@ -1188,7 +1188,7 @@ ul.inline-choice-select-listbox {
 
 .qti-orientation-vertical.qti-input-width-15 .inline-choice-select {
   height: 16.75rem;
-  width: 1.75rem;
+  width: 1.95rem;
 }
 
 .qti-orientation-vertical.qti-input-width-15 .inline-choice-select-prompt {
@@ -1205,7 +1205,7 @@ ul.inline-choice-select-listbox {
 
 .qti-orientation-vertical.qti-input-width-20 .inline-choice-select {
   height: 21.75rem;
-  width: 1.75rem;
+  width: 1.95rem;
 }
 
 .qti-orientation-vertical.qti-input-width-20 .inline-choice-select-prompt {
@@ -1223,7 +1223,7 @@ ul.inline-choice-select-listbox {
 
 .qti-orientation-vertical.qti-input-width-25 .inline-choice-select {
   height: 26.75rem;
-  width: 1.75rem;
+  width: 1.95rem;
 }
 
 .qti-orientation-vertical.qti-input-width-25 .inline-choice-select-prompt {
