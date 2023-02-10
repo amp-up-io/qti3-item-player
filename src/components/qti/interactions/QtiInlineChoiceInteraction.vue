@@ -823,9 +823,10 @@ div.inline-choice-wrapper {
 div.qti-inline-choice-interaction.qti-orientation-vertical {
   margin-top: .2rem;
   margin-bottom: .2rem;
-  margin-right: 0;
+  margin-right: -0.1rem;
   /* very important to get these lined up vertically */
   vertical-align: top;
+  padding-right: 0.05rem;
 }
 
 div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wrapper {
@@ -861,8 +862,11 @@ div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wra
 .qti-orientation-vertical .inline-choice-select {
   text-align: left;
   vertical-align: middle;
-  padding: 0;
-  margin: 0;
+  padding: .25rem .15rem 0 0;
+  margin-left: 0;
+  margin-right: -0.05rem;
+  height: 9.75rem;
+  width: 1.95rem;
   background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3e%3cpath fill='%23fff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/8px 10px;
 }
 
@@ -950,6 +954,8 @@ div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wra
 
 .qti-orientation-vertical .inline-choice-select-prompt {
   writing-mode: vertical-rl;
+  height: 8.9rem;
+  width: 1.68rem;
 }
 
 .inline-choice-select:focus,
@@ -1055,14 +1061,13 @@ ul.inline-choice-select-listbox {
 }
 
 .qti-orientation-vertical.qti-input-width-1 .inline-choice-select {
-  height: 2.6rem;
+  height: 2.75rem;
   width: 1.75rem;
-  padding-top: .15rem;
 }
 
 .qti-orientation-vertical.qti-input-width-1 .inline-choice-select-prompt {
   height: 1.9rem;
-  width: 1.58rem;
+  width: 1.68rem;
 }
 
 .qti-input-width-2 .inline-choice-select {
@@ -1074,14 +1079,13 @@ ul.inline-choice-select-listbox {
 }
 
 .qti-orientation-vertical.qti-input-width-2 .inline-choice-select {
-  height: 3.6rem;
+  height: 3.75rem;
   width: 1.75rem;
-  padding-top: .15rem;
 }
 
 .qti-orientation-vertical.qti-input-width-2 .inline-choice-select-prompt {
   height: 2.9rem;
-  width: 1.58rem;
+  width: 1.68rem;
 }
 
 .qti-input-width-3 .inline-choice-select {
@@ -1093,14 +1097,13 @@ ul.inline-choice-select-listbox {
 }
 
 .qti-orientation-vertical.qti-input-width-3 .inline-choice-select {
-  height: 4.6rem;
+  height: 4.75rem;
   width: 1.75rem;
-  padding-top: .15rem;
 }
 
 .qti-orientation-vertical.qti-input-width-3 .inline-choice-select-prompt {
   height: 3.9rem;
-  width: 1.58rem;
+  width: 1.68rem;
 }
 
 .qti-input-width-4 .inline-choice-select {
@@ -1112,14 +1115,13 @@ ul.inline-choice-select-listbox {
 }
 
 .qti-orientation-vertical.qti-input-width-4 .inline-choice-select {
-  height: 5.6rem;
+  height: 5.75rem;
   width: 1.75rem;
-  padding-top: .15rem;
 }
 
 .qti-orientation-vertical.qti-input-width-4 .inline-choice-select-prompt {
   height: 4.9rem;
-  width: 1.58rem;
+  width: 1.68rem;
 }
 
 .qti-input-width-5 .inline-choice-select {
@@ -1131,14 +1133,13 @@ ul.inline-choice-select-listbox {
 }
 
 .qti-orientation-vertical.qti-input-width-5 .inline-choice-select {
-  height: 6.6rem;
+  height: 6.75rem;
   width: 1.75rem;
-  padding-top: .15rem;
 }
 
 .qti-orientation-vertical.qti-input-width-5 .inline-choice-select-prompt {
   height: 5.9rem;
-  width: 1.58rem;
+  width: 1.68rem;
 }
 
 .qti-input-width-6 .inline-choice-select {
@@ -1150,14 +1151,13 @@ ul.inline-choice-select-listbox {
 }
 
 .qti-orientation-vertical.qti-input-width-6 .inline-choice-select {
-  height: 7.6rem;
-  width: 1.75rem;
-  padding-top: .15rem;
+  height: 7.75rem;
+  width: 1.95rem;
 }
 
 .qti-orientation-vertical.qti-input-width-6 .inline-choice-select-prompt {
   height: 6.9rem;
-  width: 1.58rem;
+  width: 1.68rem;
 }
 
 .qti-input-width-10 .inline-choice-select {
@@ -1169,14 +1169,13 @@ ul.inline-choice-select-listbox {
 }
 
 .qti-orientation-vertical.qti-input-width-10 .inline-choice-select {
-  height: 11.6rem;
-  width: 1.75rem;
-  padding-top: .15rem;
+  height: 11.75rem;
+  width: 1.95rem;
 }
 
 .qti-orientation-vertical.qti-input-width-10 .inline-choice-select-prompt {
   height: 10.9rem;
-  width: 1.58rem;
+  width: 1.68rem;
 }
 
 .qti-input-width-15 .inline-choice-select {
@@ -1188,14 +1187,13 @@ ul.inline-choice-select-listbox {
 }
 
 .qti-orientation-vertical.qti-input-width-15 .inline-choice-select {
-  height: 16.6rem;
+  height: 16.75rem;
   width: 1.75rem;
-  padding-top: .15rem;
 }
 
 .qti-orientation-vertical.qti-input-width-15 .inline-choice-select-prompt {
   height: 15.9rem;
-  width: 1.58rem;
+  width: 1.68rem;
 }
 
 .qti-input-width-20 .inline-choice-select {
@@ -1206,14 +1204,13 @@ ul.inline-choice-select-listbox {
 }
 
 .qti-orientation-vertical.qti-input-width-20 .inline-choice-select {
-  height: 21.6rem;
+  height: 21.75rem;
   width: 1.75rem;
-  padding-top: .15rem;
 }
 
 .qti-orientation-vertical.qti-input-width-20 .inline-choice-select-prompt {
   height: 20.9rem;
-  width: 1.58rem;
+  width: 1.68rem;
 }
 
 .qti-input-width-25 .inline-choice-select {
@@ -1225,14 +1222,13 @@ ul.inline-choice-select-listbox {
 }
 
 .qti-orientation-vertical.qti-input-width-25 .inline-choice-select {
-  height: 26.6rem;
+  height: 26.75rem;
   width: 1.75rem;
-  padding-top: .15rem;
 }
 
 .qti-orientation-vertical.qti-input-width-25 .inline-choice-select-prompt {
   height: 25.9rem;
-  width: 1.58rem;
+  width: 1.68rem;
 }
 
 .qti-input-width-30 .inline-choice-select {

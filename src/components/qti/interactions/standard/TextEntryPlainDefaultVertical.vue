@@ -587,8 +587,8 @@ export default {
 div.qti-text-entry-interaction.qti-orientation-vertical {
   display: inline-block;
   position: relative;
-  margin-top: .15rem;
-  margin-bottom: .15rem;
+  margin-top: .2rem;
+  margin-bottom: .2rem;
   margin-right: -0.1rem;
   /* very important to get these lined up vertically */
   vertical-align: top;
@@ -647,7 +647,7 @@ div.text-entry-default-vert-wrapper.focused {
   top: .5rem;
   right: .25rem;
   height: 8.25rem;
-  width: calc(1.6rem + .2rem);
+  width: calc(1.6rem);
   color: var(--foreground);
   background: transparent;
   opacity: 0.6;
