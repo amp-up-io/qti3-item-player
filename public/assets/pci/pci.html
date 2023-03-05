@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  --blue: #3d8ef8;
+  --indigo: #564ab1;
+  --purple: #6f42c1;
+  --pink: #e83e8c;
+  --red: #fb4d53;
+  --orange: #f1734f;
+  --yellow: #f1b44c;
+  --green: #11c46e;
+  --teal: #008080;
+  --cyan: #0db4d6;
+  --rose: #ffd0ff;
+  --lblue: #add8e6;
+  --lchiffon: #fffacd;
+  --white: #fff;
+  --gray: #7c8a96;
+  --gray-dark: #343a40;
+  --primary: #3d8ef8;
+  --success: #11c46e;
+  --info: #0db4d6;
+  --warning: #f1b44c;
+  --danger: #fb4d53;
+  --light: #eff2f7;
+  --lighter: #f5f5f5;
+  --dark: #343a40;
+  --darker: #212529;
+  --black: #000;
+  --breakpoint-xs: 0;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --foreground: var(--darker);
+  --background: var(--white);
+  --secondary: #dbdbdb;
+  --secondary-complement: var(--darker);
+  --hr-border: 1px solid var(--black);
+  --table-border-color: var(--black);
+  --well-bg: #f5f5f5;
+  --well-border: 1px solid #e3e3e3;
+  --well-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  --bs-body-font-size: 1rem;
+  --bs-body-font-weight: 400;
+  --bs-body-line-height: 1.6;
+
+  margin: 0;
+  font-family: var(--font-family-sans-serif);
+  color: var(--foreground);
+  background-color: var(--background);
+  font-size: var(--bs-body-font-size);
+  line-height: var(--bs-body-line-height);
+  font-weight: var(--bs-body-font-weight);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(black, 0);
+}
+</style>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"
+  integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script>
+let qtiCustomInteractionContext = {
+	// A field holding the interactions registered during initialization.
+	customInteractions: {},
+	interactions:[],
+
+	/**
+	 * - Communication Bridge API: getInstance
+	 *
+	 * This method can be called by rendering engines to create a new
+	 * instance of a PCI of the specified type.
+	 * For composite items this method could be called multiple times
+	 * on the same web page for the same typeIdentifier.
+	 * @param {string} typeIdentifier the interaction type to create. Must be
+	 * the same value as the custom-interaction-type-identifier attribute of the
+	 * qti-portable-interaction
+	 * @param {HTMLElement} dom The DOM element where the markup from the
+	 * qti-portable-interaction element has been rendered.
+	 * @param {Object.<string, Object>} configuration
+	 * @param {string} state A representation of the state of the interaction which
+	 *                 the customInteraction will later accept in a
+	 *                 getInstance call to recreate an equivalent interaction state.
+	 */
+	getInstance: function(typeIdentifier, dom, configuration, state){
+	  console.log('[PCI Context] Interaction GetInstance: ' + typeIdentifier);
+	  let customInteraction = this.customInteractions[typeIdentifier];
+	  let instance = customInteraction.getInstance(dom, configuration, state);
+	  this.interactions.push(instance);
+	  return instance;
+	},
+
+	/**
+	 * - Communication Bridge API: register
+	 *
+	 * This method is called by Custom Interaction Hooks to register
+	 * with the Rendering Engine for later cloning via a call to getInstance.
+	 * This method is called by Custom Interaction Hooks during the loading of
+	 * the JavaScript implementation.
+	 *
+	 * @param {Object} customInteraction A Custom Interaction object.
+	 */
+	register: function(customInteraction) {
+	  console.log('[PCI Context] Interaction Registered: ' + customInteraction.typeIdentifier);
+	  this.customInteractions[customInteraction.typeIdentifier] = customInteraction;
+	},
+	
+	/**
+	 * - Communication Bridge API: notifyReady
+	 *
+	 * This method must be called by a Custom Interaction Instance
+	 * to inform it is ready to be used.
+	 *
+	 * @callback notifyReady
+	 * @param {Object} customInteraction The Custom Interaction Instance.
+	 * @param {string} state A representation of the state of the interaction which
+	 *                 the customInteraction will later accept in a
+	 *                 getInstance call to recreate an equivalent interaction state.
+	 */
+	notifyReady: function(customInteraction, state) {
+	  console.log('[PCI Context] Interaction Ready: ' + customInteraction.typeIdentifier);
+	  let instanceState = customInteraction.getState(); // Should be the same as state
+	  let response = customInteraction.getResponse(); // Should be undefined
+	  QTI_PCI_API.NotifyPciReady();
+	},
+	
+	/**
+	 * - Communication Bridge API: notifyDone
+	 *
+	 * The notifyDone method is optionally called by a Custom Interaction
+	 * instance to notify its end. The method exists in the event a
+	 * custom interaction has an indeterminate end.
+	 *
+	 * @callback notifyDone
+	 * @param {Object} customInteraction The Custom Interaction Instance.
+	 * @param {Object} response The final response value of the Custom Interaction Instance.
+	 * @param {Object} state The final state of the Custom Interaction Instance.
+	 * @param {Object} status The status of the Custom Interaction Instance.
+	 */
+	notifyDone: function(customInteraction, response, state, status) {
+	  console.log('[PCI Context] Interaction Done: ' + customInteraction.typeIdentifier);
+	  //let response = customInteraction.getResponse();
+	  //let state = customInteraction.getState();
+	},
+	
+	/**
+	 * Allow the delivery engine to notify the PCI instance that it is being
+	 * destroyed via the Communication Bridge.
+	 * If the PCI is interested in being notified it will provide a function
+	 * to implement oncompleted.
+	 */
+	oncompleted: function () {
+	  // iterate through interactions and fire oncompleted if available
+	  for (let i=0; i<this.interactions.length; i++) {
+		if (interaction[i].hasOwnProperty( 'oncompleted') && typeof interaction[i].oncompleted == 'function' ) {
+		  console.log('[PCI Context] Firing Interaction oncompleted: ' + interaction[i].typeIdentifier);
+		  interaction[i].oncompleted();
+		}
+	  }
+	
+	  delete this.interactions;
+	  this.interactions = [];
+	}
+};
+	
+define('qtiCustomInteractionContext',[],function(){
+  return qtiCustomInteractionContext;
+});
+
+
+const QTI_PCI_API = {
+
+  typeIdentifier: '',
+  responseIdentifier: '',
+  pci: null,
+  dom: null,
+  properties: null,
+  moduleResolution: null,
+	
+  getTypeIdentifier: function () {
+	return this.typeIdentifier;
+  },
+	
+  setTypeIdentifier: function (typeIdentifier) {
+	this.typeIdentifier = typeIdentifier;
+  },
+	
+  getResponseIdentifier: function () {
+	return this.responseIdentifier;
+  },
+
+  setResponseIdentifier: function (responseIdentifier) {
+	this.responseIdentifier = responseIdentifier;
+  },
+
+  getPci: function () {
+	return this.pci;
+  },
+
+  setPci: function (pci) {
+	this.pci = pci;
+  },
+
+  getDom: function () {
+	return this.dom;
+  },
+
+  setDom: function (dom) {
+	this.dom = dom;
+  },
+
+  getProperties: function () {
+	return this.properties;
+  },
+
+  setProperties: function (properties) {
+	this.properties = properties;
+  },
+
+  getModuleResolution: function () {
+	return this.moduleResolution;
+  },
+	
+  setModuleResolution: function (moduleResolution) {
+	this.moduleResolution = moduleResolution;
+  },
+	
+  initialize: function (pci) {
+	this.setDom(document.getElementById('qti3-player-pci-element'));
+	this.trackResize(this.getDom());
+	this.setPci(pci);
+	this.setTypeIdentifier(pci.typeIdentifier);
+	this.setProperties(pci.properties);
+	this.setModuleResolution(pci.moduleResolution);
+
+	this.injectClassAttribute()
+	this.injectMarkup();
+	this.loadModules();
+  },
+
+  getResponse: function () {
+	const response = qtiCustomInteractionContext.getResponse();
+	this.NotifyPciResponseReady(JSON.stringify(response));
+  },
+
+  getState: function () {
+	const state = qtiCustomInteractionContext.getState();
+	this.NotifyPciStateReady(JSON.stringify(state));
+  },
+
+  injectClassAttribute: function () {
+	if (this.getPci().classAttribute.length == 0) return
+	let wrapperEl = document.getElementById('qti3-player-pci-wrapper');
+	wrapperEl.classList.add(this.getPci().classAttribute);
+  },
+
+  injectMarkup: function () {
+	this.getDom().innerHTML =
+	  `<div
+		id="qti3-player-pci-markup"
+		class="qti-interaction-markup"
+	   >${this.getPci().markup}</div>`;
+  },
+
+  loadModules: function () {
+	let self = this;
+	let moduleDependencies = this.generateModuleDependencies();
+	console.log('[PCI Context] Interaction Dependencies: ', moduleDependencies);
+	
+	// Load it!
+	require.config(this.getModuleResolution());
+	require(moduleDependencies, function(ctx) {
+		let typeIdentifier = self.getTypeIdentifier();
+		let dom = self.getDom();
+	
+		let configuration = {
+			properties: self.getProperties(),
+			templateVariables: null,
+			contextVariables: null,
+			boundTo: self.getResponseIdentifier(),
+			onready: ctx.notifyReady,
+			ondone: ctx.notifyDone,
+			status: 'interacting'
+		};
+	
+		let instance = ctx.getInstance(typeIdentifier, dom, configuration, null);
+	});
+  },
+
+  generateModuleDependencies: function () {
+	// Init qtiCustomInteractionContext as the first dependency
+	let dependencies = ['qtiCustomInteractionContext'];
+
+	const paths = this.getModuleResolution().paths;
+
+	for (let property in paths) {
+	  dependencies.push(property);
+	};
+
+	return dependencies;
+  },
+
+  NotifyPciChildLoaded: function () {
+	if (self == top) return;
+
+	// Extract the identifier qs param
+	const responseIdentifier = this.getQueryParameterByName('identifier');
+	this.setResponseIdentifier(responseIdentifier);
+	
+	window.parent.postMessage({ message: 'PciChildLoaded', identifier: this.getResponseIdentifier(), success: true },'*');
+  },
+
+  NotifyPciReady: function () {
+	if (self == top) return;
+
+	const height = this.getDom().clientHeight;;
+	const computedHeight = (height) ? height : 0;
+    const width = this.getDom().clientWidth;
+    const computedWidth = (width) ? width : 0;
+
+  	window.parent.postMessage({ message: 'PciReady', identifier: this.getResponseIdentifier(), width: computedWidth, height: computedHeight, success: true },'*');
+  },
+
+  NotifyPciResponseReady: function(stringifiedResponse) {
+	if (self == top) return;
+	window.parent.postMessage({ message: 'PciGetResponse_Reply', identifier: this.getResponseIdentifier(), response: stringifiedResponse, success: true },'*');
+  },
+
+  NotifyPciStateReady: function(stringifiedState) {
+	if (self == top) return;
+	window.parent.postMessage({ message: 'PciGetState_Reply', identifier: this.getResponseIdentifier(), state: stringifiedState, success: true },'*');
+  },
+
+  /**
+   * @description Generic function for parsing URL params.
+   * Via http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+   *
+   * @method getQueryParameterByName
+   * @param {String} name The name of the paramter to get from the URL.
+   */
+  getQueryParameterByName: function (name) {
+    let regex = new RegExp("[\\?&]" + name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]') + '=([^&#]*)');
+    let results = regex.exec(window.location.search);
+
+    if (results === null) return '';
+
+    return decodeURIComponent(results[1].replace(/\+/g, " "));
+  },
+
+  bindWindowEventListener: function (element, eventName, eventHandler) {
+	if (element.addEventListener) {
+	  element.addEventListener(eventName, eventHandler, false);
+	} else if (element.attachEvent) {
+	  // For IE8 and older IE
+	  element.attachEvent('on' + eventName, eventHandler);
+	}
+  },
+
+  trackResize: function (element) {
+    // create a mutation observer instance
+    let observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        let bounds = element.getBoundingClientRect();
+        let width = Math.ceil(bounds.right);
+        let height = Math.ceil(bounds.bottom);
+        if (Math.abs(width - this.width) > 15 || Math.abs(height - this.height) > 15) {
+          this.width = width;
+          this.height = height;
+          let msg = {
+            width: width + 10,
+            height: height + 10
+          };
+          window.parent.postMessage({ message: 'PciResize', identifier: this.getResponseIdentifier(), height: msg.height, width: msg.width, success: true },'*');
+        }
+      }.bind(this));
+    }.bind(this));
+
+    observer.observe(element, {
+      attributes: true,
+      childList: true,
+      characterData: true,
+      subtree: true
+    });
+  }
+};
+	
+window.onload = (event) => {
+  
+  QTI_PCI_API.bindWindowEventListener(window, 'message', function(e) {
+	switch (e.data.message) {
+		case 'PciLoadInteraction':
+			QTI_PCI_API.initialize(JSON.parse(e.data.pci));
+			break;
+	
+		case 'PciGetResponse_Request':
+			QTI_PCI_API.getResponse();
+			break;
+
+		case 'PciGetState_Request':
+			QTI_PCI_API.getState();
+			break;
+	
+		default:
+			console.log('Unknown Parent message',e.data.message);
+	}
+  });
+	
+  QTI_PCI_API.NotifyPciChildLoaded();
+};
+</script>
+<body>
+<div id="qti3-player-pci-wrapper" class="">
+  <div id="qti3-player-pci-element"></div>
+</div>
+</body>
+</html>

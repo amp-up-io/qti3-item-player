@@ -19,6 +19,7 @@ import QtiEndAttemptInteraction from '@/components/qti/interactions/QtiEndAttemp
 import QtiHotspotInteraction from '@/components/qti/interactions/QtiHotspotInteraction'
 import QtiHottextInteraction from '@/components/qti/interactions/QtiHottextInteraction'
 import QtiOrderInteraction from '@/components/qti/interactions/QtiOrderInteraction'
+import QtiPortableCustomInteraction from '@/components/qti/interactions/QtiPortableCustomInteraction'
 import QtiFeedbackInline from '@/components/qti/body/QtiFeedbackInline'
 import QtiFeedbackBlock from '@/components/qti/body/QtiFeedbackBlock'
 import QtiRubricBlock from '@/components/qti/body/QtiRubricBlock'
@@ -43,6 +44,7 @@ Vue.component('qti-end-attempt-interaction', QtiEndAttemptInteraction)
 Vue.component('qti-hotspot-interaction', QtiHotspotInteraction)
 Vue.component('qti-hottext-interaction', QtiHottextInteraction)
 Vue.component('qti-order-interaction', QtiOrderInteraction)
+Vue.component('qti-portable-custom-interaction', QtiPortableCustomInteraction)
 Vue.component('qti-feedback-inline', QtiFeedbackInline)
 Vue.component('qti-feedback-block', QtiFeedbackBlock)
 Vue.component('qti-rubric-block', QtiRubricBlock)
