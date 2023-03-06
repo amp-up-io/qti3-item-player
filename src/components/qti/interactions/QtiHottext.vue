@@ -18,8 +18,8 @@
  * to the candidate as if it were simply part of the surrounding material. In the case of hottext, the 
  * effect of hiding the choice is simply to make the run of text unselectable by the candidate.
  */
- import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
- import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
+import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
+import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
 
 const qtiAttributeValidation = new QtiAttributeValidation()
 
