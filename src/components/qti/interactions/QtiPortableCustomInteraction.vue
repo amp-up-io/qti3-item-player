@@ -147,6 +147,17 @@ export default {
     },
 
     /**
+     * @description Initiate a PciGetState_Request.  When the PCI has 
+     * a reply it will send a PciGetState_Reply message containing the 
+     * state and response.
+     */
+    getStateRequest () {
+      this.pciIframe.contentWindow.postMessage({ 
+          message: 'PciGetState_Request'
+        }, '*')      
+    },
+
+    /**
      * @description Get this interaction's response validity.
      * @return {Boolean} isValidResponse
      */
@@ -181,17 +192,13 @@ export default {
     },
 
     /**
-     * @description Restores this interaction's response.  Also
-     * restores this interaction's response validity.
+     * @description Restores this interaction's response and state.
      * @param {Generic} response
+     * @param {Generic} state
      */
-    restoreValue (response) {
-      if (response === null) return
-
+    restoreValue (response, state) {
       this.setResponse(response)
-      this.setState(this.computeState())
-      // When restoring, manually update validity
-      this.updateValidity(this.computeIsValid())
+      this.setState(state)
     },
 
     /**
@@ -210,7 +217,7 @@ export default {
      * Side effect: sets the model's baseType property.
      * @return {String} - baseType of the response variable
      */
-     getBaseType () {
+    getBaseType () {
       let rv = store.getResponseDeclaration(this.responseIdentifier)
       this.baseType = rv.getBaseType()
       return this.cardinality
@@ -291,7 +298,7 @@ export default {
 
       // Restore priorState - if any
       if (this.priorState !== null) {
-        this.restoreValue(this.priorState.value)
+        this.restoreValue(this.priorState.value, this.priorState.state)
       }
 
       this.initialize()
@@ -723,9 +730,18 @@ export default {
           break
 
         case 'PciResize':
-          console.log('[PCI Parent] PCI Resize: ', + event.data.identifier + ', height:' + event.data.height + ', width:' + event.data.width)
-          // Resize the iframe
+          console.log('[PCI Parent] PCI Resize: ' + event.data.identifier + ', height:' + event.data.height + ', width:' + event.data.width)
           this.resizePciIframe(event.data.height, event.data.width)
+          break
+
+        case 'PciGetState_Reply':
+          // This is the result of a PCI responding to a PciGetState_Request.
+          // event.data contains a serialized state payload which, in turn, contains 
+          //two properties: response and state
+          console.log('[PCI Parent] PCI GetState Reply: ' + event.data.identifier + ', state:', event.data.state)
+          this.saveState(event.data.state)
+          // Notify that we have retrieved a state
+          this.notifyInteractionStateReady()
           break
 
         default:
@@ -734,7 +750,8 @@ export default {
     },
 
     pciInitialize () {
-      // Create an object representing this qti-portable-interaction instance
+      // Create an object representing this 
+      // qti-portable-interaction instance.
       let pci = {
         typeIdentifier: this.customInteractionTypeIdentifier,
         classAttribute: this.getClassAttribute(),
@@ -744,11 +761,49 @@ export default {
         modules: this.getModules(),
         moduleResolution: this.getModuleResolution()
       }
+
+      // Initialize the PciLoadInteraction message
+      let message = { 
+        message: 'PciLoadInteraction', 
+        pci: JSON.stringify(pci)
+      }
+
+      // Add state to the PciLoadInteraction message 
+      // if there is a priorState.
+      if (this.priorState !== null) {
+        message.state = JSON.stringify({
+            response: this.getResponse(),
+            state: this.getState()
+          })
+      }
       
-      this.pciIframe.contentWindow.postMessage({ 
-          message: 'PciLoadInteraction', 
-          pci: JSON.stringify(pci) 
-        }, '*')
+      this.pciIframe.contentWindow.postMessage(message, '*')
+    },
+
+    /**
+     * @description Parse the state string and set the PCI's response and state.
+     * @param {String} state containing two stringified properties: response and state
+     */
+    saveState (state) {
+      const stateObject = JSON.parse(state)
+      if (typeof stateObject.response !== 'undefined') {
+        this.setResponse(stateObject.response)
+      } else {
+        this.setResponse(null)
+      }
+
+      if (typeof stateObject.state !== 'undefined') {
+        this.setState(stateObject.state)
+      } else {
+        this.setState(null)
+      }
+    },
+
+    notifyInteractionStateReady () {
+      // Notify item we have a PCI state ready
+      // An interaction is always in a qti-item-body, which is always
+      // in a qti-assessment-item.  Consequently, we fire at this.$parent.$parent.
+      this.$parent.$parent.$emit('interactionStateReady', { identifier: this.responseIdentifier })
     }
 
   },
