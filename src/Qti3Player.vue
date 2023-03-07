@@ -154,7 +154,7 @@ export default {
      * @param {Object} param - contains an 'item' property (the qti-assessment-item component)
      */
     handleItemReady (param) {
-      console.log('[Qti3Player][ItemReady]', param.item)
+      console.log('[Qti3Player][ItemReady]')
       // Keep a handle on the component.
       this.item = param.item
       // Notify the store

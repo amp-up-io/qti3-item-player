@@ -2,7 +2,8 @@
   <div ref="item" class="qti-assessment-item">
     <event-listener
       @templateProcessingReady="handleTemplateProcessingReady"
-      @itemBodyReady="handleItemBodyReady">
+      @itemBodyReady="handleItemBodyReady"
+      @interactionStateReady="handleInteractionStateReady">
       <div>
         <slot></slot>
       </div>
@@ -98,7 +99,15 @@ export default {
       /*
        * Keep a handle on the CatalogFactory
        */
-      catalogFactory: null
+      catalogFactory: null,
+      /*
+       * Async state map
+       */
+      asyncStateMap: new Map(),
+      /*
+       * Save getResponses callback here
+       */
+      getResponsesCallback: null
     }
   },
 
@@ -116,9 +125,9 @@ export default {
       // Fire response processing.
       // Evaluate outcomes.
       // Show feedback (if sessionControl permits it)
-      this.endAttempt()
-
-      this.notifyAttemptResults(true, target)
+      this.endAttempt(undefined, function() {
+        this.notifyAttemptResults(true, target)
+      }.bind(this))
     },
 
     /**
@@ -128,12 +137,12 @@ export default {
      */
     getSuspendAttempt (target) {
       // Update the store's responses and state of response variables
-      this.getResponses()
-
-      // Examine session control for validateResponses.
-      this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())
-
-      this.notifyAttemptResults(false, target)
+      this.getResponses(function() {
+        // Examine session control for validateResponses.
+        this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())
+        // Notify that we are reading with results
+        this.notifyAttemptResults(false, target)
+      }.bind(this))
     },
 
     notifyAttemptResults (isEndAttempt=true, target) {
@@ -184,6 +193,50 @@ export default {
 
       if (this.isAdaptive) {
         this.evaluateFeedbacks()
+      }
+    },
+
+    /**
+     * @description Handler for async interactions such as PCI's that trigger 
+     * the interactionStateReady event upon completion of a getResponseRequest. 
+     * The interaction that triggers this will pass its response identifier 
+     * in the node parameter.
+     * 
+     * When all responses have been gathered (the asyncStateMap is empty), this 
+     * fires the getResponsesComplete event.
+     * 
+     * @param {Object} node - an object containing an identifier
+     */
+    handleInteractionStateReady (node) {
+      console.log('[InteractionStateReady][Interaction]', node.identifier)
+
+      // Look up the interaction in the store
+      const interaction = store.getInteraction(node.identifier)
+
+      // Should never happen
+      if (typeof interaction === 'undefined') return
+
+      // Look up the interaction in the async map
+      const stateMapValue = this.asyncStateMap.get(interaction.identifier)
+
+      // Should never happen
+      if (typeof stateMapValue === 'undefined') return
+
+      console.log('[GetResponses][' + interaction.identifier + ']:', interaction.node.getResponse())
+
+      // Notify store of our response
+      store.setResponseVariableValue({
+        identifier: interaction.identifier,
+        value: interaction.node.getResponse(),
+        state: interaction.node.getState()
+      })
+
+      // Delete the key from the asyncStateMap
+      this.asyncStateMap.delete(interaction.identifier)
+
+      // If our map is empty, we have collected all outstanding async responses!
+      if (this.asyncStateMap.size === 0) {
+        this.triggerGetResponsesComplete()
       }
     },
 
@@ -354,30 +407,33 @@ export default {
       console.log('[EvaluateTemplates][Completed]')
     },
 
-    endAttempt (stateObject) {
+    endAttempt (stateObject, callback) {
       console.log('[EndAttempt][Start][Identifier]', this.identifier)
 
-      this.getResponses()
+      this.getResponses(function() {
+        // Evaluate response validity if item session control validateResponses=true
+        const isAttemptValid = this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())
+        if (!isAttemptValid) {
+          console.log('[EndAttempt][InvalidResponses][Identifier]', this.identifier)
+          return
+        }
 
-      // Evaluate response validity if item session control validateResponses=true
-      const isAttemptValid = this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())
-      if (!isAttemptValid) {
-        console.log('[EndAttempt][InvalidResponses][Identifier]', this.identifier)
-        return
-      }
+        this.processResponses()
 
-      this.processResponses()
+        if (this.isAdaptive) {
+          this.evaluateItemCompleted()
+        }
 
-      if (this.isAdaptive) {
-        this.evaluateItemCompleted()
-      }
+        // End attempt can be invoked from several different places.  In the event
+        // that this was invoked by a Show Feedback end attempt interaction, this
+        // will disable or enable other end attempt interactions in the UI.
+        this.updateItemBodyUI(stateObject)
 
-      // End attempt can be invoked from several different places.  In the event
-      // that this was invoked by a Show Feedback end attempt interaction, this
-      // will disable or enable other end attempt interactions in the UI.
-      this.updateItemBodyUI(stateObject)
+        console.log('[EndAttempt][Complete][Identifier]', this.identifier)
 
-      console.log('[EndAttempt][Complete][Identifier]', this.identifier)
+        if (callback) callback()
+
+      }.bind(this))
     },
 
     updateItemBodyUI (stateObject) {
@@ -416,7 +472,87 @@ export default {
       }
     },
 
-    getResponses () {
+    getResponses (callback) {
+      console.log('[GetResponses][Start]')
+
+      // Initial setup for saving and callback
+      this.asyncStateMap.clear()
+      this.getResponsesCallback = callback
+
+      let responseVariables = store.getResponseDeclarations()
+
+      for (let i=0; i<responseVariables.length; i++) {
+        const responseVariable = responseVariables[i]
+        const interaction = store.getInteraction(responseVariable.identifier)
+
+        if (typeof interaction === 'undefined') {
+          // Response variable that is not bound to an interaction.
+          // Set this to a default value (if one exists) or NULL - unless
+          // the response is numAttempts or duration
+          if ((responseVariable.identifier !== 'numAttempts' ) && (responseVariable.identifier !== 'duration')) {
+            store.resetResponseVariableValue({
+                identifier: responseVariable.identifier,
+                value: responseVariable.defaultValue,
+                state: null
+              })
+          }
+          continue
+        }
+
+        // Response variable is bound to an interaction.
+        if (interaction.interactionType !== 'PortableCustom') {
+          console.log('[GetResponses][' + responseVariable.identifier + ']:', interaction.node.getResponse())
+          // Notify store of our response
+          store.setResponseVariableValue({
+              identifier: responseVariable.identifier,
+              value: interaction.node.getResponse(),
+              state: interaction.node.getState()
+            })
+          
+          continue
+        }
+        
+        // Must be a PCI.
+        // Add the interaction identifier to the map
+        const stateMapValue = {
+            identifier: interaction.identifier,
+            node: interaction.node
+          }
+        this.asyncStateMap.set(interaction.identifier, stateMapValue)
+
+      }
+
+      this.initiateAsyncGetResponsesRequests()
+    },
+
+    initiateAsyncGetResponsesRequests () {
+
+      // Get out of here right away if we have 
+      // no async GetStateRequests
+      if (this.asyncStateMap.size === 0) {
+        return this.triggerGetResponsesComplete()
+      }
+
+      // Loop through all entries in the asyncStateMap
+      // and fire GetStateRequests
+      for (const [key, value] of this.asyncStateMap.entries()) {
+        console.log('[GetResponses][' + key + '][PCI Initiate]')
+        // This will initiate a GetStateRequest.  Upon completion, an
+        // interactionStateReady event is triggered, passing the
+        // identifier of the interaction that is ready.
+        value.node.getStateRequest()
+      }
+    },
+
+    triggerGetResponsesComplete () {
+      console.log('[GetResponses][Complete]')
+      if (typeof this.getResponsesCallback === 'function') {
+        this.getResponsesCallback()
+      }
+    },
+
+    /*
+    getResponses (callback) {
       console.log('[GetResponses][Start]')
       let responseVariables = store.getResponseDeclarations()
       responseVariables.forEach((responseVariable) => {
@@ -443,8 +579,13 @@ export default {
             })
         }
       })
+
       console.log('[GetResponses][Complete]')
+      if (callback) {
+        callback()
+      }
     },
+    */
 
     evaluateItemCompleted () {
       if (this.isAdaptiveItemCompleted()) {
