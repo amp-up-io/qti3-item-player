@@ -192,7 +192,10 @@ const QTI_PCI_API = {
   properties: null,
   moduleResolution: null,
   instance: null,
+  response: null,
   state: null,
+  width: 0,
+  height: 0,
 
   getInstance: function () {
     return this.instance;
@@ -250,6 +253,14 @@ const QTI_PCI_API = {
 	  this.moduleResolution = moduleResolution;
   },
 
+  setResponse: function (response) {
+    this.response = (typeof response === 'undefined') ? null : response;
+  },
+
+  getResponse: function () {
+    return (this.response === null) ? undefined : this.response;
+  },
+
   getState: function () {
 	  return this.state;
   },
@@ -296,7 +307,13 @@ const QTI_PCI_API = {
     this.trackResize(this.getDom());
     this.injectClassAttribute()
 	  this.injectMarkup();
-    this.launchPci(this.getTypeIdentifier(), this.getDom(), this.getResponseIdentifier(), this.getProperties(), this.getStateFromState());
+    this.launchPci(
+      this.getTypeIdentifier(), 
+      this.getDom(), 
+      this.getResponseIdentifier(), 
+      this.getProperties(),
+      this.getResponse(),
+      this.getStateFromState());
   },
 
   injectClassAttribute: function () {
@@ -335,7 +352,7 @@ const QTI_PCI_API = {
    * @param {Object} properties
 	 * @param {String} state A prior state 
    */
-  launchPci: function (typeIdentifier, dom, responseIdentifier, properties, state) {
+  launchPci: function (typeIdentifier, dom, responseIdentifier, properties, response, state) {
     console.log('[PCI Context] Interaction Dependencies: ', this.getModuleDependencies());
 	
     // Load it!
@@ -346,7 +363,8 @@ const QTI_PCI_API = {
         properties: properties,
         templateVariables: null,
         contextVariables: null,
-        boundTo: responseIdentifier,
+        boundTo: response,
+        responseIdentifier: responseIdentifier,
         onready: ctx.notifyReady,
         ondone: ctx.notifyDone,
         status: 'interacting'
@@ -455,6 +473,11 @@ window.onload = (event) => {
     switch (e.data.message) {
       case 'PciLoadInteraction':
         QTI_PCI_API.setState(e.data.state);
+
+        if ((typeof e.data.state !== 'undefined') && (typeof e.data.state.response !== 'undefined')){
+          QTI_PCI_API.setResponse(e.data.state.response)
+        }
+
         QTI_PCI_API.initialize(JSON.parse(e.data.pci));
         break;
 
