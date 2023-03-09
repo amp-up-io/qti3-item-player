@@ -23,7 +23,8 @@ export const store = {
     templates: [],
     printedVariables: [],
     catalogs: [],
-    scoringRubricBlocks: []
+    scoringRubricBlocks: [],
+    asyncStateMap: new Map()
   },
 
   itemContext: {
@@ -203,7 +204,7 @@ export const store = {
 
   defineStimulusRef (stimulusReference) {
     let srIndex = this.state.stimulusRefs.findIndex(sr => sr.identifier == stimulusReference.identifier)
-console.log("defineStimulusRef", stimulusReference)
+
     if (srIndex > -1) {
       // Found the stimulus reference.
       this.state.stimulusRefs[srIndex] = stimulusReference
@@ -313,6 +314,7 @@ console.log("defineStimulusRef", stimulusReference)
     this.state.printedVariables.splice(0, this.state.printedVariables.length)
     this.state.catalogs.splice(0, this.state.catalogs.length)
     this.state.scoringRubricBlocks.splice(0, this.state.scoringRubricBlocks.length)
+    this.state.asyncStateMap.clear()
     // Reset itemContext
     this.itemContext.guid = null
     this.itemContext.state = null
@@ -577,6 +579,10 @@ console.log("defineStimulusRef", stimulusReference)
     // TODO: Error?
   },
 
+  getAsyncStateMap () {
+    return this.state.asyncStateMap
+  },
+
   getItemContextGuid () {
     return this.itemContext.guid
   },
@@ -678,10 +684,11 @@ console.log("defineStimulusRef", stimulusReference)
    * @param {Object} stateObject - an object containing any desired state.
    */
   NotifyEndAttempt (stateObject) {
-    this.state.item.endAttempt(stateObject)
-    // Report attempt state to listeners.  Any validation messages
-    // will get reported here.
-    this.state.item.notifyAttemptResults(true)
+    this.state.item.endAttempt(stateObject, function() {
+      // Report attempt state to listeners.  Any validation messages
+      // will get reported here.
+      this.state.item.notifyAttemptResults(true)
+    }.bind(this))
   },
 
   /**
@@ -712,11 +719,55 @@ console.log("defineStimulusRef", stimulusReference)
    * that its max-choices or max-selections threshold is about to be exceeded.
    * @param {String} message
    */
-  NotifyInteractionSelectionsLimit(message) {
+  NotifyInteractionSelectionsLimit (message) {
     const event = {
       icon: 'warning',
       message: message
     }
     this.player.displayAlertMessage(event)
-  }
+  },
+
+  /**
+   * @description Method called by async interactions such as PCI's 
+   * upon completion of a getResponseRequest. 
+   * The interaction that triggers this will pass its response identifier 
+   * in the node parameter.
+   * 
+   * When all responses have been gathered (the asyncStateMap is empty), this 
+   * fires the getResponsesComplete event.
+   * 
+   * @param {Object} node - an object containing an identifier
+   */
+  NotifyInteractionStateReady (node) {
+    console.log('[InteractionStateReady][Interaction]', node.identifier)
+
+    // Look up the interaction in the store
+    const interaction = this.getInteraction(node.identifier)
+
+    // Should never happen
+    if (typeof interaction === 'undefined') return
+
+    // Look up the interaction in the async map
+    const stateMapValue = this.getAsyncStateMap().get(interaction.identifier)
+
+    // Should never happen
+    if (typeof stateMapValue === 'undefined') return
+
+    console.log('[GetResponses][' + interaction.identifier + ']:', interaction.node.getResponse())
+
+    // Notify store of our response
+    this.setResponseVariableValue({
+      identifier: interaction.identifier,
+      value: interaction.node.getResponse(),
+      state: interaction.node.getState()
+    })
+
+    // Delete the key from the asyncStateMap
+    this.getAsyncStateMap().delete(interaction.identifier)
+
+    // If our map is empty, we have collected all outstanding async responses!
+    if (this.getAsyncStateMap().size === 0) {
+      this.getItem().triggerGetResponsesComplete()
+    }
+  },
 }

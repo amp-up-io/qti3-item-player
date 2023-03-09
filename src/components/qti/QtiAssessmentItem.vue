@@ -2,8 +2,7 @@
   <div ref="item" class="qti-assessment-item">
     <event-listener
       @templateProcessingReady="handleTemplateProcessingReady"
-      @itemBodyReady="handleItemBodyReady"
-      @interactionStateReady="handleInteractionStateReady">
+      @itemBodyReady="handleItemBodyReady">
       <div>
         <slot></slot>
       </div>
@@ -101,10 +100,6 @@ export default {
        */
       catalogFactory: null,
       /*
-       * Async state map
-       */
-      asyncStateMap: new Map(),
-      /*
        * Save getResponses callback here
        */
       getResponsesCallback: null
@@ -193,50 +188,6 @@ export default {
 
       if (this.isAdaptive) {
         this.evaluateFeedbacks()
-      }
-    },
-
-    /**
-     * @description Handler for async interactions such as PCI's that trigger 
-     * the interactionStateReady event upon completion of a getResponseRequest. 
-     * The interaction that triggers this will pass its response identifier 
-     * in the node parameter.
-     * 
-     * When all responses have been gathered (the asyncStateMap is empty), this 
-     * fires the getResponsesComplete event.
-     * 
-     * @param {Object} node - an object containing an identifier
-     */
-    handleInteractionStateReady (node) {
-      console.log('[InteractionStateReady][Interaction]', node.identifier)
-
-      // Look up the interaction in the store
-      const interaction = store.getInteraction(node.identifier)
-
-      // Should never happen
-      if (typeof interaction === 'undefined') return
-
-      // Look up the interaction in the async map
-      const stateMapValue = this.asyncStateMap.get(interaction.identifier)
-
-      // Should never happen
-      if (typeof stateMapValue === 'undefined') return
-
-      console.log('[GetResponses][' + interaction.identifier + ']:', interaction.node.getResponse())
-
-      // Notify store of our response
-      store.setResponseVariableValue({
-        identifier: interaction.identifier,
-        value: interaction.node.getResponse(),
-        state: interaction.node.getState()
-      })
-
-      // Delete the key from the asyncStateMap
-      this.asyncStateMap.delete(interaction.identifier)
-
-      // If our map is empty, we have collected all outstanding async responses!
-      if (this.asyncStateMap.size === 0) {
-        this.triggerGetResponsesComplete()
       }
     },
 
@@ -476,7 +427,7 @@ export default {
       console.log('[GetResponses][Start]')
 
       // Initial setup for saving and callback
-      this.asyncStateMap.clear()
+      store.getAsyncStateMap().clear()
       this.getResponsesCallback = callback
 
       let responseVariables = store.getResponseDeclarations()
@@ -496,6 +447,7 @@ export default {
                 state: null
               })
           }
+
           continue
         }
 
@@ -512,30 +464,25 @@ export default {
           continue
         }
         
-        // Must be a PCI.
-        // Add the interaction identifier to the map
-        const stateMapValue = {
+        // The interaction must be a PCI.
+        // Add the interaction's identifier to the asyncStateMap.
+        store.getAsyncStateMap().set(interaction.identifier, {
             identifier: interaction.identifier,
             node: interaction.node
-          }
-        this.asyncStateMap.set(interaction.identifier, stateMapValue)
-
+          })
       }
 
       this.initiateAsyncGetResponsesRequests()
     },
 
     initiateAsyncGetResponsesRequests () {
-
-      // Get out of here right away if we have 
-      // no async GetStateRequests
-      if (this.asyncStateMap.size === 0) {
+      // Get out of here right away if we have no async GetStateRequests
+      if (store.getAsyncStateMap().size === 0) {
         return this.triggerGetResponsesComplete()
       }
 
-      // Loop through all entries in the asyncStateMap
-      // and fire GetStateRequests
-      for (const [key, value] of this.asyncStateMap.entries()) {
+      // Loop through all entries in the asyncStateMap and fire GetStateRequests
+      for (const [key, value] of store.getAsyncStateMap().entries()) {
         console.log('[GetResponses][' + key + '][PCI Initiate]')
         // This will initiate a GetStateRequest.  Upon completion, an
         // interactionStateReady event is triggered, passing the
