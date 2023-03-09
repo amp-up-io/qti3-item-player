@@ -80,9 +80,6 @@ body {
 let qtiCustomInteractionContext = {
 	// A field holding the interactions registered during initialization.
 	customInteractions: {},
-	// This is where the instance is saved at the end of getInstance()
-	// This does not need to be an array because only one PCI can be 
-	// loaded in this page.
 	interactions:[],
 
 	/**
@@ -104,10 +101,13 @@ let qtiCustomInteractionContext = {
 	 */
 	getInstance: function(typeIdentifier, dom, configuration, state){
 	  console.log('[PCI Context] Interaction GetInstance: ' + typeIdentifier);
-	  let customInteraction = this.customInteractions[typeIdentifier];
+	  const customInteraction = this.customInteractions[typeIdentifier];
+    //
+    // It is more reliable to get the instance in the onready callback.
+    // See notifyReady.
+    //
 	  let instance = customInteraction.getInstance(dom, configuration, state);
-	  this.interactions.push(instance);
-	  return instance;
+	  //return instance;
 	},
 
 	/**
@@ -139,9 +139,8 @@ let qtiCustomInteractionContext = {
 	 */
 	notifyReady: function(customInteraction, state) {
 	  console.log('[PCI Context] Interaction Ready: ' + customInteraction.typeIdentifier);
-	  //let instanceState = customInteraction.getState(); // Should be the same as state
-	  //let response = customInteraction.getResponse(); // Should be undefined
-	  QTI_PCI_API.NotifyPciReady();
+    // IMPORTANT: Pass the instance back to the QTI_PCI_API
+	  QTI_PCI_API.NotifyPciReady(customInteraction);
 	},
 	
 	/**
@@ -149,7 +148,7 @@ let qtiCustomInteractionContext = {
 	 *
 	 * The notifyDone method is optionally called by a Custom Interaction
 	 * instance to notify its end. The method exists in the event a
-	 * custom interaction has an indeterminate end.
+	 * custom interaction has a determinate end.
 	 *
 	 * @callback notifyDone
 	 * @param {Object} customInteraction The Custom Interaction Instance.
@@ -159,8 +158,7 @@ let qtiCustomInteractionContext = {
 	 */
 	notifyDone: function(customInteraction, response, state, status) {
 	  console.log('[PCI Context] Interaction Done: ' + customInteraction.typeIdentifier);
-	  //let response = customInteraction.getResponse();
-	  //let state = customInteraction.getState();
+    QTI_PCI_API.NotifyPciDone(customInteraction, response, state, status);
 	},
 	
 	/**
@@ -169,17 +167,12 @@ let qtiCustomInteractionContext = {
 	 * If the PCI is interested in being notified it will provide a function
 	 * to implement oncompleted.
 	 */
-	oncompleted: function () {
-	  // iterate through interactions and fire oncompleted if available
-	  for (let i=0; i<this.interactions.length; i++) {
-		if (interaction[i].hasOwnProperty( 'oncompleted') && typeof interaction[i].oncompleted == 'function' ) {
-		  console.log('[PCI Context] Firing Interaction oncompleted: ' + interaction[i].typeIdentifier);
-		  interaction[i].oncompleted();
-		}
+	oncompleted: function (instance) {
+	  // Fire oncompleted if available
+		if ((typeof intance.oncompleted !== 'undefined') && (typeof intance.oncompleted == 'function')) {
+		  console.log('[PCI Context] Firing Interaction oncompleted: ' + instance.typeIdentifier);
+		  instance.oncompleted();
 	  }
-	
-	  delete this.interactions;
-	  this.interactions = [];
 	}
 };
 	
@@ -200,65 +193,73 @@ const QTI_PCI_API = {
   moduleResolution: null,
   instance: null,
   state: null,
+
+  getInstance: function () {
+    return this.instance;
+  },
+
+  setInstance: function (instance) {
+    this.instance = instance;
+  },
 	
   getTypeIdentifier: function () {
-	return this.typeIdentifier;
+	  return this.typeIdentifier;
   },
 	
   setTypeIdentifier: function (typeIdentifier) {
-	this.typeIdentifier = typeIdentifier;
+	  this.typeIdentifier = typeIdentifier;
   },
 	
   getResponseIdentifier: function () {
-	return this.responseIdentifier;
+	  return this.responseIdentifier;
   },
 
   setResponseIdentifier: function (responseIdentifier) {
-	this.responseIdentifier = responseIdentifier;
+	  this.responseIdentifier = responseIdentifier;
   },
 
   getPci: function () {
-	return this.pci;
+	  return this.pci;
   },
 
   setPci: function (pci) {
-	this.pci = pci;
+	  this.pci = pci;
   },
 
   getDom: function () {
-	return this.dom;
+	  return this.dom;
   },
 
   setDom: function (dom) {
-	this.dom = dom;
+	  this.dom = dom;
   },
 
   getProperties: function () {
-	return this.properties;
+	  return this.properties;
   },
 
   setProperties: function (properties) {
-	this.properties = properties;
+	  this.properties = properties;
   },
 
   getModuleResolution: function () {
-	return this.moduleResolution;
+	  return this.moduleResolution;
   },
 	
   setModuleResolution: function (moduleResolution) {
-	this.moduleResolution = moduleResolution;
+	  this.moduleResolution = moduleResolution;
   },
 
   getState: function () {
-	return this.state;
+	  return this.state;
   },
 
   setState: function (state) {
-	this.state = (typeof state === 'undefined') ? null : JSON.parse(state);
+	  this.state = (typeof state === 'undefined') ? null : JSON.parse(state);
   },
 
   getStateFromState: function () {
-	return (this.state === null) ? null : this.state.state;
+	  return (this.state === null) ? null : this.state.state;
   },
 
   /**
@@ -272,9 +273,11 @@ const QTI_PCI_API = {
       state: null
     }
 
-    if (this.instance !== null) {
-      let state = this.instance.getState();
-      let response = this.instance.getResponse();
+    const instance = this.getInstance();
+
+    if (instance !== null) {
+      let state = instance.getState();
+      let response = instance.getResponse();
       // Convert undefined response to null
       obj.response = (typeof response === 'undefined') ? null : response;
       obj.state = state;
@@ -283,16 +286,17 @@ const QTI_PCI_API = {
     this.NotifyPciStateReady(JSON.stringify(obj));
   },
 
-  initialize: function (pci, state) {
+  initialize: function (pci) {
     this.setDom(document.getElementById('qti3-player-pci-element'));
-    this.trackResize(this.getDom());
     this.setPci(pci);
     this.setTypeIdentifier(pci.typeIdentifier);
     this.setProperties(pci.properties);
     this.setModuleResolution(pci.moduleResolution);
+
+    this.trackResize(this.getDom());
     this.injectClassAttribute()
-	this.injectMarkup();
-    this.loadModules();
+	  this.injectMarkup();
+    this.launchPci(this.getTypeIdentifier(), this.getDom(), this.getResponseIdentifier(), this.getProperties(), this.getStateFromState());
   },
 
   injectClassAttribute: function () {
@@ -314,7 +318,6 @@ const QTI_PCI_API = {
     let dependencies = ['qtiCustomInteractionContext'];
 
     const paths = this.getModuleResolution().paths;
-
     for (let property in paths) {
       dependencies.push(property);
     };
@@ -322,29 +325,36 @@ const QTI_PCI_API = {
     return dependencies;
   },
 
-  loadModules: function () {
-    let moduleDependencies = this.getModuleDependencies();
-    console.log('[PCI Context] Interaction Dependencies: ', moduleDependencies);
+  /**
+   * @description This is the final step of the launch sequence.  Require
+   * all moduleDependencies.  This will result in the main module of the PCI to 
+   * register itself in qtiCustomInteractionContext.
+	 * @param {String} typeIdentifier the interaction type to create.
+	 * @param {HTMLElement} dom
+	 * @param {String} responseIdentifier the interaction's responseIdentifier
+   * @param {Object} properties
+	 * @param {String} state A prior state 
+   */
+  launchPci: function (typeIdentifier, dom, responseIdentifier, properties, state) {
+    console.log('[PCI Context] Interaction Dependencies: ', this.getModuleDependencies());
 	
     // Load it!
     require.config(this.getModuleResolution());
-    require(moduleDependencies, function(ctx) {
-      let typeIdentifier = this.getTypeIdentifier();
-      let dom = this.getDom();
-      let configuration = {
-        properties: this.getProperties(),
+    require(this.getModuleDependencies(), function(ctx) {
+
+      const configuration = {
+        properties: properties,
         templateVariables: null,
         contextVariables: null,
-        boundTo: this.getResponseIdentifier(),
+        boundTo: responseIdentifier,
         onready: ctx.notifyReady,
         ondone: ctx.notifyDone,
         status: 'interacting'
-      };
-      let state = this.getStateFromState();
+    };
 
-      // Keep a handle on the instance for later use
-      this.instance = ctx.getInstance(typeIdentifier, dom, configuration, state);
-	}.bind(this));
+      // Launch it with the provided parameters and a configuration!
+      ctx.getInstance(typeIdentifier, dom, configuration, state);
+	  }.bind(this));
   },
 
   NotifyPciChildLoaded: function () {
@@ -357,7 +367,9 @@ const QTI_PCI_API = {
     window.parent.postMessage({ message: 'PciChildLoaded', identifier: this.getResponseIdentifier(), success: true },'*');
   },
 
-  NotifyPciReady: function () {
+  NotifyPciReady: function (instance) {
+    this.setInstance(instance);
+
     if (self == top) return;
 
     const height = this.getDom().clientHeight;;
@@ -366,6 +378,17 @@ const QTI_PCI_API = {
     const computedWidth = (width) ? width : 0;
 
     window.parent.postMessage({ message: 'PciReady', identifier: this.getResponseIdentifier(), width: computedWidth, height: computedHeight, success: true },'*');
+  },
+
+  NotifyPciDone: function (instance, response, state, status) {
+    if (self == top) return;
+
+    const stringifiedState = JSON.stringify({
+      response: (typeof response === 'undefined' ? null : response),
+      state: (typeof state === 'undefined' ? null : state)
+    });
+
+    window.parent.postMessage({ message: 'PciDone', identifier: this.getResponseIdentifier(), state: stringifiedStateObject, status: status, success: true },'*');
   },
 
   NotifyPciStateReady: function(stringifiedStateObject) {

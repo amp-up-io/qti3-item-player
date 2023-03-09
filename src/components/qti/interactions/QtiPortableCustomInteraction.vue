@@ -30,6 +30,7 @@
  */
 import Vue from 'vue'
 import { store } from '@/store/store'
+import { PciModuleResolver } from '@/components/qti/interactions/pci/PciModuleResolver'
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
 import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
 import QtiParseException from '@/components/qti/exceptions/QtiParseException'
@@ -95,11 +96,12 @@ export default {
       cardinality: null,
       isValidResponse: false,
       isQtiValid: true,
+      pciModuleResolver: null,
 
       classAttribute: '',
       modulesNode: null,
       modules: null,
-      moduleResolution: null,
+      configuration: null,
       uniqueId: null,
       pciIframe: null,
       initialWidth: 0,
@@ -301,7 +303,7 @@ export default {
         this.restoreValue(this.priorState.value, this.priorState.state)
       }
 
-      this.initialize()
+      this.initialWidth = this.$refs.root.clientWidth
     },
 
     processChildren () {
@@ -349,214 +351,25 @@ export default {
       return 'pci_' + qtiAttributeValidation.randomString (5, 'a')
     },
 
-    initialize () {
-      this.initialWidth = this.$refs.root.clientWidth
-      const resolvedModules = this.getInteractionModules(this.getItemPathUri())
-      this.setModules(resolvedModules)
+    async initialize () {
+      // Set up the PciModuleResolver
+      this.pciModuleResolver = new PciModuleResolver(this.module, this.modulesNode, this.dataItemPathUri)
+      // Get the PCI's configuration
+      let configuration = await this.pciModuleResolver.getConfiguration()
+      // Save it for later
+      this.setConfiguration(configuration)
+
+      console.log('[PCI Parent] PCI Configuration:', configuration)
+
+      // Bail if we were unable to resolve a good configuration
+      // TODO: Throw an exception?
+      if (configuration === null) return
+
+      // Prior to launch, bind a message listener to this window
       this.bindWindowMessageListener()
 
-      if (this.module.length > 0) {
-
-        // If we have a named module; i.e., a module attribute, load the PCI from
-        // the module_resolution.js file found at the URL in the primaryconfiguration.
-        this.loadPciFromResolutionUrl(this.getModules(), true)
-
-      } else {
-
-        // No module attribute.  Resolve the modules from primary and secondary configs
-        this.resolveModules(this.getModules(), function(moduleResolution) {
-            if (moduleResolution != null) {
-              this.loadPciFromResolutionJson(moduleResolution)
-              return
-            }
-            
-            // Unable to resolve primary and secondary configuration modules
-            // What should we do?  Throw error?
-
-          }.bind(this))
-
-      }
-    },
-
-    resolveModules (modules, callback) {
-      let that = this
-
-      const baseConfig = {
-        waitSeconds: 60,
-        paths: {}
-      }
-
-      this.resolvePrimaryConfigurationModules(baseConfig, modules, function(config) {
-        if (config != null) {
-          callback(config)
-          return
-        }
-        
-        // Unable to resolve primary config modules.  Attempt to resolve secondary config modules
-        that.resolveSecondaryConfigurationModules (baseConfig, modules, function(config) {
-          callback(config)
-        })
-      })
-    },
-
-    resolvePrimaryConfigurationModules (baseConfig, modules, callback) {
-
-      let primaryUrls = []
-
-      if (!('primaryconfiguration' in modules)) {
-        for (let i=0; i<modules.module.length; i++) {
-          primaryUrls.push(this.addPathJs(modules.module[i].primarypath))
-          // Remove .js from fallback path when building a config
-          baseConfig.paths[modules.module[i].id] = this.stripPathJs(modules.module[i].primarypath)
-        }
-
-        this.resolveConfigurationModules(primaryUrls, function(isModulesResolved) {
-          if (isModulesResolved) {
-            callback(baseConfig)
-          } else {
-            callback(null)
-          }
-        })
-
-      } else {
-        // fetch modules primaryconfiguration
-      }
-    },
-
-    resolveSecondaryConfigurationModules (baseConfig, modules, callback) {
-
-      let fallbackUrls = []
-
-      if (!('secondaryconfiguration' in modules)) {
-        for (let i=0; i<modules.module.length; i++) {
-          fallbackUrls.push(this.addPathJs(modules.module[i].fallbackpath))
-          // Remove .js from fallback path when building a config
-          baseConfig.paths[modules.module[i].id] = this.stripPathJs(modules.module[i].fallbackpath)
-        }
-
-        this.resolveConfigurationModules(fallbackUrls, function(isModulesResolved) {
-          if (isModulesResolved) {
-            callback(baseConfig)
-          } else {
-            callback(null)
-          }
-        })
-
-      } else {
-        // fetch modules secondaryconfiguration
-      }
-
-    },
-
-    async resolveConfigurationModules (urls, callback) {
-      // Any problem with resolution will result in a null result
-      const data = await Promise.all(
-        urls.map(url =>
-          fetch(url)
-            .then(response => {
-              if (response.ok) {
-                console.log('[PCI Parent] Module Loader Success:', url)
-                return response
-              }
-              throw new Error(url)
-            })
-        )
-      )
-      .catch((err) => {
-        console.log('[PCI Parent] Module Loader Failure:', err.message)
-        return null
-      })
-
-      if (data === null)
-        callback(false)
-      else
-        callback(true)
-    },
-
-    resolveModule (module) {
-
-      // Fetch module_resolution.
-      fetch(module)
-        .then(this.checkFetchStatus)
-        .then(response => {
-          if(!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`)
-          } else {
-            console.log(`module found: ${module}`)
-          }
-        })
-        .catch(function(error) {
-          console.log( 'module Fetch error:', error)
-        })
-
-    },
-
-    onModuleLoaded (response) {
-      let that = this
-
-      response
-        .then(function(moduleResolution) {
-          // Adjust relative paths to absolute paths
-          let paths = moduleResolution.paths
-          for (let path in paths) {
-            if (paths[path] !== null && !paths[path].startsWith("http")) {
-              paths[path] = that.getItemPathUri() + paths[path]
-            }
-          }
-          that.setModuleResolution(moduleResolution)
-          that.loadPciIframe(that.initialWidth)
-        })
-    },
-
-    loadPciFromResolutionJson (moduleResolutionJson) {
-      this.setModuleResolution(moduleResolutionJson)
+      // Launch!
       this.loadPciIframe(this.initialWidth)
-    },
-
-    loadPciFromResolutionUrl (modules, isPrimary) {
-      const moduleResolutionUrl = 
-        (isPrimary ? modules.primaryconfiguration : modules.fallbackconfiguration)
-
-      // Fetch module_resolution.
-      fetch(moduleResolutionUrl)
-        .then(this.checkFetchStatus)
-        .then(this.onModuleResolutionLoaded.bind(this))
-        .catch(function(error) {
-          console.log((isPrimary ? 'Primary' : 'Fallback') + 'module_resolution Fetch error:', error)
-          
-          // If we die during the primary config fetch, try the fallback config fetch
-          if (isPrimary) {
-            this.loadPciFromResolutionUrl(modules, false)
-          }
-        })
-    },
-
-    checkFetchStatus (response) {
-      if (response.status >= 200 && response.status < 300) {
-        return response
-      }
-
-      let error = new Error(response.statusText)
-      error.response = response
-      throw error
-    },
-
-    onModuleResolutionLoaded (response) {
-      let that = this
-
-      response
-        .json()
-        .then(function(moduleResolution) {
-          // Adjust relative paths to absolute paths
-          let paths = moduleResolution.paths
-          for (let path in paths) {
-            if (paths[path] !== null && !paths[path].startsWith("http")) {
-              paths[path] = that.getItemPathUri() + paths[path]
-            }
-          }
-          that.setModuleResolution(moduleResolution)
-          that.loadPciIframe(that.initialWidth)
-        })
     },
 
     loadPciIframe (width) {
@@ -607,51 +420,12 @@ export default {
       this.modules = modules
     },
 
-    getInteractionModules () {
-      let modules = {}
-
-      if (this.modulesNode != null) {
-
-        if (this.modulesNode.getPrimaryConfiguration().length > 0) {
-          modules.primaryconfiguration = this.modulesNode.getPrimaryConfiguration()
-        }
-        if (this.modulesNode.getSecondaryConfiguration().length > 0) {
-          modules.secondaryconfiguration = this.modulesNode.getSecondaryConfiguration()
-        }
-
-        modules.module = []
-        let moduleNodes = this.modulesNode.getModules()
-        for (let i=0; i<moduleNodes.length; i++) {
-          let m = {
-            id: moduleNodes[i].getId()
-          }
-
-          if (moduleNodes[i].getPrimaryPath().length > 0) {
-            m.primarypath = moduleNodes[i].getPrimaryPath()
-          }
-
-          if (moduleNodes[i].getFallbackPath().length > 0) {
-            m.fallbackpath = moduleNodes[i].getFallbackPath()
-          }
-          modules.module.push(m)
-        }
-      } else {
-        // No qti-interaction-modules present, so apply the default
-        modules = {
-          primaryconfiguration: 'modules/module_resolution.js',
-          fallbackconfiguration: 'modules/fallback_module_resolution.js'
-        }
-      }
-
-      return this.addPackagePath(modules)
+    getConfiguration () {
+      return this.configuration
     },
 
-    getModuleResolution () {
-      return this.moduleResolution
-    },
-
-    setModuleResolution (moduleResolution) {
-      this.moduleResolution = moduleResolution
+    setConfiguration (configuration) {
+      this.configuration = configuration
     },
 
     getClassAttribute () {
@@ -661,29 +435,6 @@ export default {
     setClassAttribute (classAttribute) {
       this.classAttribute = classAttribute
     },
-    
-    addPackagePath (modules) {
-      for (let property in { primaryconfiguration: '', fallbackconfiguration: ''}) {
-        if ((property in modules) && modules[property] !== null && !modules[property].startsWith("http") ) {
-          modules[property] = this.getItemPathUri() + modules[property]
-        }
-      }
-
-      let mods = modules.module
-
-      if (mods !== undefined && mods!== null) {
-        for (let i = 0; i < mods.length; i++) {
-          let mod = mods[i]
-          for (let property in { primarypath: '', fallbackpath: ''}) {
-            if ((property in mod) && mod[property] !== null && !mod[property].startsWith("http") ) {
-              mod[property] = this.getItemPathUri() + mod[property]
-            }
-          }
-        }
-      }
-
-      return modules
-    },
 
     copyAttributes (attributes, collection, element) {
       attributes.forEach(function(name) {
@@ -691,18 +442,6 @@ export default {
         collection[identifier] = element.getAttribute(name)
       })
       return collection
-    },
-
-    stripPathJs (path) {
-      if (path === null) return null
-      if (path.endsWith('.js')) return path.slice(0, path.lastIndexOf('.'))
-      return path
-    },
-
-    addPathJs (path) {
-      if (path === null) return null
-      if ((path.length > 0) && !path.endsWith('.js')) return `${path}.js`
-      return path
     },
 
     bindWindowMessageListener () {
@@ -749,6 +488,11 @@ export default {
       }
     },
 
+    /**
+     * @description Build a PciLoadInteraction message payload and send the
+     * message to the pciIframe.  Optionally, include a priorState in the 
+     * message payload.
+     */
     pciInitialize () {
       // Create an object representing this 
       // qti-portable-interaction instance.
@@ -759,7 +503,7 @@ export default {
         properties: this.getProperties(this.$refs.root),
         module: this.module,
         modules: this.getModules(),
-        moduleResolution: this.getModuleResolution()
+        moduleResolution: this.getConfiguration()
       }
 
       // Initialize the PciLoadInteraction message
@@ -799,11 +543,14 @@ export default {
       }
     },
 
+    /**
+     * @description Notify the item that this PCI's state has been retrieved.
+     * Prior to calling this method, be sure to save the interaction's state
+     * via the saveState method.
+     */
     notifyInteractionStateReady () {
-      // Notify item we have a PCI state ready
-      // An interaction is always in a qti-item-body, which is always
-      // in a qti-assessment-item.  Consequently, we fire at this.$parent.$parent.
-      this.$parent.$parent.$emit('interactionStateReady', { identifier: this.responseIdentifier })
+      // Pass this interaction's responseIdentifier
+      store.NotifyInteractionStateReady({ identifier: this.responseIdentifier })
     }
 
   },
@@ -819,7 +566,6 @@ export default {
       this.priorState = this.getPriorState(this.responseIdentifier)
 
       this.$slots.prompt = this.getPrompt(this.$slots)
-
       this.uniqueId = this.createId()
     } catch (err) {
       this.isQtiValid = false
@@ -837,6 +583,9 @@ export default {
     if (this.isQtiValid) {
       try {
         this.validateChildren()
+
+        // Build a configuration and load the PCI
+        this.initialize()
 
         // Notify store of our new interaction
         store.defineInteraction({
