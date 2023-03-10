@@ -87,18 +87,18 @@ export default {
         let declaration = qtiAttributeValidation.validateVariableIdentifierAttribute (store, this.identifier)
 
         if (typeof declaration === 'undefined') {
-          this.setValue(qtiProcessing.nullValue())
+          this.setValue(qtiProcessing.valueToPciJson(qtiProcessing.nullValue(), undefined, undefined))
           return this.getValue()
         }
 
         if (declaration.value === null) {
           console.log('[QtiContextVariable][' + this.identifier + '] value:', null)
-          this.setValue(qtiProcessing.nullValue())
+          this.setValue(qtiProcessing.valueToPciJson(qtiProcessing.nullValue(), this.getBaseType(), this.getCardinality()))
           return this.getValue()
         }
 
         console.log('[QtiContextVariable][' + this.identifier + '] value:', declaration.value)
-        this.setValue(declaration.value)
+        this.setValue(qtiProcessing.valueToPciJson(declaration.value, this.getBaseType(), this.getCardinality()))
         return this.getValue()
       } catch (err) {
         this.isQtiValid = false

@@ -388,4 +388,49 @@ export default class QtiProcessing {
 		return params
 	}
 
+  valueToPciJson (value, baseType, cardinality) {
+    let result = {
+      "base": null
+    }
+
+    if (value === null) {
+      return result
+    }
+
+    if (cardinality === 'single') {
+      result.base = this.singleValueToPciJson(value, baseType)
+      return result
+    }
+    
+    return result
+  }
+
+  singleValueToPciJson (value, baseType) {
+    let result = {}
+    switch (baseType) {
+      case 'string':
+      case 'identifier':
+      case 'integer':
+      case 'float':
+      case 'duration':
+      case 'boolean':
+      case 'point':
+        result[baseType] = value
+        return result
+
+      case 'pair':
+      case 'directedPair':
+      case 'intOrIdentifier':
+      case 'file':
+      case 'uri':
+        // All of these are unsupported in QTI 3 Player
+        // as of 3/9/2023
+        return null
+
+      default:
+        // What else is there?
+        return null
+    }
+  }
+
 }
