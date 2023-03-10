@@ -38,10 +38,14 @@ import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeVali
 import QtiPrompt from '@/components/qti/interactions/QtiPrompt'
 import QtiInteractionModules from '@/components/qti/interactions/pci/QtiInteractionModules'
 import QtiInteractionMarkup from '@/components/qti/interactions/pci/QtiInteractionMarkup'
+import QtiTemplateVariable from '@/components/qti/interactions/pci/QtiTemplateVariable'
+import QtiContextVariable from '@/components/qti/interactions/pci/QtiContextVariable'
 
 Vue.component('qti-prompt', QtiPrompt)
 Vue.component('qti-interaction-modules', QtiInteractionModules)
 Vue.component('qti-interaction-markup', QtiInteractionMarkup)
+Vue.component('qti-template-variable', QtiTemplateVariable)
+Vue.component('qti-context-variable', QtiContextVariable)
 
 const qtiAttributeValidation = new QtiAttributeValidation()
 
@@ -102,6 +106,8 @@ export default {
       modulesNode: null,
       modules: null,
       configuration: null,
+      templateVariables: [],
+      contextVariables: [],
       uniqueId: null,
       pciIframe: null,
       initialWidth: 0,
@@ -312,6 +318,10 @@ export default {
           this.markup = node.getMarkup()
         } else if (node.$vnode.componentOptions.tag === 'qti-interaction-modules') {
           this.modulesNode = node
+        } else if (node.$vnode.componentOptions.tag === 'qti-template-variable') {
+          this.templateVariables.push(node)
+        } else if (node.$vnode.componentOptions.tag === 'qti-context-variable') {
+          this.contextVariables.push(node)
         }
       })
     },
@@ -412,6 +422,22 @@ export default {
       return properties
     },
 
+    getContextVariables () {
+      let contextVariablesObject = {}
+      for (let i=0; i<this.contextVariables.length; i++) {
+        contextVariablesObject[this.contextVariables[i].getIdentifier()] = this.contextVariables[i].evaluate()
+      }
+      return contextVariablesObject
+    },
+
+    getTemplateVariables () {
+      let templateVariablesObject = {}
+      for (let i=0; i<this.contextVariables.length; i++) {
+        templateVariablesObject[this.templateVariables[i].getIdentifier()] = this.templateVariables[i].evaluate()
+      }
+      return templateVariablesObject
+    },
+
     getModules () {
       return this.modules
     },
@@ -501,6 +527,8 @@ export default {
         classAttribute: this.getClassAttribute(),
         markup: this.markup,
         properties: this.getProperties(this.$refs.root),
+        templateVariables: this.getTemplateVariables(),
+        contextVariables: this.getContextVariables(),
         module: this.module,
         modules: this.getModules(),
         moduleResolution: this.getConfiguration()

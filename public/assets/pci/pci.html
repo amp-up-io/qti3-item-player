@@ -190,6 +190,8 @@ const QTI_PCI_API = {
   pci: null,
   dom: null,
   properties: null,
+  contextVariables: null,
+  templateVariables: null,
   moduleResolution: null,
   instance: null,
   response: null,
@@ -245,20 +247,28 @@ const QTI_PCI_API = {
 	  this.properties = properties;
   },
 
+  getContextVariables: function () {
+	  return this.contextVariables;
+  },
+
+  setContextVariables: function (contextVariables) {
+	  this.contextVariables = contextVariables;
+  },
+
+  getTemplateVariables: function () {
+	  return this.templateVariables;
+  },
+
+  setTemplateVariables: function (templateVariables) {
+	  this.templateVariables = templateVariables;
+  },
+
   getModuleResolution: function () {
 	  return this.moduleResolution;
   },
 	
   setModuleResolution: function (moduleResolution) {
 	  this.moduleResolution = moduleResolution;
-  },
-
-  setResponse: function (response) {
-    this.response = (typeof response === 'undefined') ? null : response;
-  },
-
-  getResponse: function () {
-    return (this.response === null) ? undefined : this.response;
   },
 
   getState: function () {
@@ -271,6 +281,10 @@ const QTI_PCI_API = {
 
   getStateFromState: function () {
 	  return (this.state === null) ? null : this.state.state;
+  },
+
+  getResponseFromState: function () {
+    return (this.state === null) ? undefined : this.state.response;
   },
 
   /**
@@ -303,6 +317,8 @@ const QTI_PCI_API = {
     this.setTypeIdentifier(pci.typeIdentifier);
     this.setProperties(pci.properties);
     this.setModuleResolution(pci.moduleResolution);
+    this.setContextVariables(pci.contextVariables);
+    this.setTemplateVariables(pci.templateVariables);
 
     this.trackResize(this.getDom());
     this.injectClassAttribute()
@@ -312,7 +328,9 @@ const QTI_PCI_API = {
       this.getDom(), 
       this.getResponseIdentifier(), 
       this.getProperties(),
-      this.getResponse(),
+      this.getContextVariables(),
+      this.getTemplateVariables(),
+      this.getResponseFromState(),
       this.getStateFromState());
   },
 
@@ -352,7 +370,16 @@ const QTI_PCI_API = {
    * @param {Object} properties
 	 * @param {String} state A prior state 
    */
-  launchPci: function (typeIdentifier, dom, responseIdentifier, properties, response, state) {
+  launchPci: function (
+      typeIdentifier,
+      dom,
+      responseIdentifier,
+      properties,
+      contextVariables,
+      templateVariables,
+      response,
+      state) {
+
     console.log('[PCI Context] Interaction Dependencies: ', this.getModuleDependencies());
 	
     // Load it!
@@ -361,14 +388,14 @@ const QTI_PCI_API = {
 
       const configuration = {
         properties: properties,
-        templateVariables: null,
-        contextVariables: null,
+        templateVariables: templateVariables,
+        contextVariables: contextVariables,
         boundTo: response,
         responseIdentifier: responseIdentifier,
         onready: ctx.notifyReady,
         ondone: ctx.notifyDone,
         status: 'interacting'
-    };
+      };
 
       // Launch it with the provided parameters and a configuration!
       ctx.getInstance(typeIdentifier, dom, configuration, state);
@@ -473,11 +500,6 @@ window.onload = (event) => {
     switch (e.data.message) {
       case 'PciLoadInteraction':
         QTI_PCI_API.setState(e.data.state);
-
-        if ((typeof e.data.state !== 'undefined') && (typeof e.data.state.response !== 'undefined')){
-          QTI_PCI_API.setResponse(e.data.state.response)
-        }
-
         QTI_PCI_API.initialize(JSON.parse(e.data.pci));
         break;
 
