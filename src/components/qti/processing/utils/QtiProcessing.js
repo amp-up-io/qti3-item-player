@@ -388,24 +388,44 @@ export default class QtiProcessing {
 		return params
 	}
 
+  /**
+   * @description Convert a variable value to a PCI json representation.
+   *              The json definition may be found at
+   *              https://www.imsglobal.org/spec/qti/v3p0/impl#h.1mc9puik2ft6
+   * @param {*} value 
+   * @param {*} baseType 
+   * @param {*} cardinality 
+   * @returns 
+   */
   valueToPciJson (value, baseType, cardinality) {
-    let result = {
-      "base": null
-    }
-
     if (value === null) {
-      return result
+      return { "base": null }
     }
 
     if (cardinality === 'single') {
-      result.base = this.singleValueToPciJson(value, baseType)
-      return result
+      return { "base": this.baseValueToPciJson(value, baseType) }
+    }
+
+    if ((cardinality === 'multiple') || (cardinality === 'ordered')) {
+      return { "list": this.baseValueToPciJson(value, baseType) }
+    }
+
+    if (cardinality === 'record') {
+      return { "record": this.recordValueToPciJson(value) }
     }
     
-    return result
+    // How did we get here?  Return null.
+    return { "base": null }
   }
 
-  singleValueToPciJson (value, baseType) {
+  /**
+   * @description Builds a PCI-compliant object representation
+   *              of a value according to its baseType.
+   * @param {*} value
+   * @param {String} baseType
+   * @returns {Object} { "<baseType>": value }
+   */
+  baseValueToPciJson (value, baseType) {
     let result = {}
     switch (baseType) {
       case 'string':
@@ -415,22 +435,47 @@ export default class QtiProcessing {
       case 'duration':
       case 'boolean':
       case 'point':
+      case 'directedPair':
+      case 'pair':
+      case 'uri':
         result[baseType] = value
         return result
 
-      case 'pair':
-      case 'directedPair':
       case 'intOrIdentifier':
       case 'file':
-      case 'uri':
-        // All of these are unsupported in QTI 3 Player
-        // as of 3/9/2023
-        return null
+        // These are unsupported in QTI 3 Player as of 3/9/2023
+        result[baseType] = null
+        return result
 
       default:
         // What else is there?
-        return null
+        result[baseType] = null
+        return result
     }
+  }
+
+  /**
+   * @description Builds a PCI "Record" Json representation of the value.
+   * @param {Map} value - Map of record field value objects in the record.
+   * @returns {Array} [
+   *   { name: "fieldIdentifier1", base: { fieldIdentifier1_baseValue } }, 
+   *   { name: "fieldIdentifier2", base: { fieldIdentifier2_baseValue } },
+   *   ...
+   * ]
+   */
+  recordValueToPciJson (value) {
+    let result = []
+
+    for (let fieldValue of value.values()) {
+      result.push({
+        "name": fieldValue.fieldIdentifier, 
+        "base": (fieldValue.value === null 
+            ? null 
+            : this.valueToPciJson(fieldValue.value, fieldValue.baseType, fieldValue.cardinality))        
+      })
+    }
+
+    return result
   }
 
 }

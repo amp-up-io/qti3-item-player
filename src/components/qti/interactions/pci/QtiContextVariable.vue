@@ -81,7 +81,6 @@ export default {
       // TODO: ??
     },
 
-    // TODO: convert values to PCI values.
     evaluate () {
       try {
         let declaration = qtiAttributeValidation.validateVariableIdentifierAttribute (store, this.identifier)
@@ -92,13 +91,16 @@ export default {
         }
 
         if (declaration.value === null) {
-          console.log('[QtiContextVariable][' + this.identifier + '] value:', null)
+          console.log('[QtiContextVariable][' + this.identifier + '] value:', { "base": null })
           this.setValue(qtiProcessing.valueToPciJson(qtiProcessing.nullValue(), this.getBaseType(), this.getCardinality()))
           return this.getValue()
         }
 
-        console.log('[QtiContextVariable][' + this.identifier + '] value:', declaration.value)
-        this.setValue(qtiProcessing.valueToPciJson(declaration.value, this.getBaseType(), this.getCardinality()))
+        const pciValue = qtiProcessing.valueToPciJson(declaration.value, this.getBaseType(), this.getCardinality())
+
+        console.log('[QtiContextVariable][' + this.identifier + '] value:', pciValue)
+
+        this.setValue(pciValue)
         return this.getValue()
       } catch (err) {
         this.isQtiValid = false
