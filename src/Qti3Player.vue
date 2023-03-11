@@ -395,6 +395,8 @@ export default {
     // Set up the PnpFactory and the Session Control Factory
     store.initializeItemContextPnp()
     store.initializeItemContextSessionControl()
+    // Set up the PciMessageListener
+    store.initializePciMessageListener()
     // Load the filters once.
     this.xmlFilters = new XmlFilters()
   },

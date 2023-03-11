@@ -579,6 +579,74 @@ export const store = {
     // TODO: Error?
   },
 
+  initializePciMessageListener () {
+    window.addEventListener('message', this.PciMessageListener.bind(this))
+  },
+
+  PciMessageListener (event) {
+    
+    switch (event.data.message) {
+      case 'PciChildLoaded':
+        console.log('[PCI Parent] PCI Frame Loaded: ' + event.data.identifier)
+        
+        // Message we receive from the child frame once the child frame loads
+        this.pciInitialize(event.data.identifier)
+        break
+
+      case 'PciReady':
+        console.log('[PCI Parent] PCI Ready: ' + event.data.identifier + ', height: '+event.data.height + ', width: '+event.data.width)
+        
+        // Message we receive from the PCI at the end of a getInstance.
+        // This message includes a PCI's rendered width and height.
+        this.pciResizeIframe(event.data.identifier, event.data.height, event.data.width, true)
+        break
+
+      case 'PciResize':
+        console.log('[PCI Parent] PCI Resize: ' + event.data.identifier + ', height:' + event.data.height + ', width:' + event.data.width)
+        this.pciResizeIframe(event.data.identifier, event.data.height, event.data.width, false)
+        break
+
+      case 'PciGetState_Reply':
+        console.log('[PCI Parent] PCI GetState Reply: ' + event.data.identifier + ', state:', event.data.state)
+        
+        // This is the result of a PCI responding to a PciGetState_Request.
+        // event.data contains a serialized state payload which, in turn, contains 
+        //two properties: response and state
+        this.pciSaveState(event.data.identifier, event.data.state)
+        break
+
+      default:
+        //console.log('[PCI Parent] Unknown Message: ' + event.data.message)
+    }
+  },
+
+  pciInitialize (identifier) {
+    let interaction = store.getInteraction(identifier)
+    if ((typeof interaction === 'undefined') || 
+        (interaction.interactionType !== 'PortableCustom')) return
+
+    interaction.node.pciInitialize()
+  },
+
+  pciResizeIframe (identifier, height, width, isInitialResize) {
+    let interaction = store.getInteraction(identifier)
+    if ((typeof interaction === 'undefined') || 
+        (interaction.interactionType !== 'PortableCustom')) return
+
+    if (isInitialResize)
+      interaction.node.pciResizeIframe(height, interaction.node.initialWidth)
+    else
+      interaction.node.pciResizeIframe(height, width)
+  },
+
+  pciSaveState (identifier, state) {
+    let interaction = store.getInteraction(identifier)
+    if ((typeof interaction === 'undefined') || 
+        (interaction.interactionType !== 'PortableCustom')) return
+
+    interaction.node.pciSaveState(state)   
+  },
+
   getAsyncStateMap () {
     return this.state.asyncStateMap
   },

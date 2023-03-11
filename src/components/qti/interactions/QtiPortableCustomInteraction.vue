@@ -113,9 +113,6 @@ export default {
       pciIframe: null,
       initialWidth: 0,
 
-      // Use this to determine if we can remove listeners in beforeDestroy
-      hasPciListener: false,
-
       // If we are restoring, this is where we save the prior variable state
       priorState: null
     }
@@ -378,9 +375,6 @@ export default {
         // TODO: Throw an exception?
         if (configuration === null) return
 
-        // Prior to launch, bind a message listener to this window
-        this.bindWindowMessageListener()
-
         // Launch!
         this.loadPciIframe(this.initialWidth)
       }.bind(this))
@@ -404,11 +398,6 @@ export default {
     handleLoadIframe (event) {
       // Save off the iframe element
       this.pciIframe = event.target
-    },
-
-    resizePciIframe (height, width) {
-      this.pciIframe.style.height = `${height}px`
-      this.pciIframe.style.width = `${width}px`
     },
 
     getItemPathUri () {
@@ -484,58 +473,13 @@ export default {
       return collection
     },
 
-    bindWindowMessageListener () {
-      window.addEventListener('message', this.windowMessageListener.bind(this))
-      // Set this so we can be sure to remove the listener on destroy
-      this.hasPciListener = true
-    },
-    
-    windowMessageListener (event) {
-      // Ignore all messages not from our from QtiPortableCustomInteraction
-      if (event.source.name !== this.uniqueId) return
-      
-      switch (event.data.message) {
-        case 'PciChildLoaded':
-          // Message we receive from the child frame once the child frame loads
-          console.log('[PCI Parent] PCI Frame Loaded: ' + event.data.identifier)
-          this.pciInitialize()
-          break
-
-        case 'PciReady':
-          // Message we receive from the PCI at the end of a getInstance.
-          // This message includes a PCI's rendered width and height.
-          console.log('[PCI Parent] PCI Ready: ' + event.data.identifier + ', height: '+event.data.height + ', width: '+event.data.width)
-          this.resizePciIframe(event.data.height, this.initialWidth)
-          break
-
-        case 'PciResize':
-          console.log('[PCI Parent] PCI Resize: ' + event.data.identifier + ', height:' + event.data.height + ', width:' + event.data.width)
-          this.resizePciIframe(event.data.height, event.data.width)
-          break
-
-        case 'PciGetState_Reply':
-          // This is the result of a PCI responding to a PciGetState_Request.
-          // event.data contains a serialized state payload which, in turn, contains 
-          //two properties: response and state
-          console.log('[PCI Parent] PCI GetState Reply: ' + event.data.identifier + ', state:', event.data.state)
-          this.saveState(event.data.state)
-          // Notify that we have retrieved a state
-          this.notifyInteractionStateReady()
-          break
-
-        default:
-          console.log('[PCI Parent] Unknown Message: ' + event.data.message)
-      }
-    },
-
     /**
      * @description Build a PciLoadInteraction message payload and send the
      * message to the pciIframe.  Optionally, include a priorState in the 
      * message payload.
      */
     pciInitialize () {
-      // Create an object representing this 
-      // qti-portable-interaction instance.
+      // Create an object representing this qti-portable-interaction instance
       let pci = {
         typeIdentifier: this.customInteractionTypeIdentifier,
         classAttribute: this.getClassAttribute(),
@@ -564,6 +508,21 @@ export default {
       }
       
       this.pciIframe.contentWindow.postMessage(message, '*')
+    },
+
+    /**
+     * @description Set pciIframe's height and width.
+     * @param {*} height 
+     * @param {*} width 
+     */
+    pciResizeIframe (height, width) {
+      this.pciIframe.style.height = `${height}px`
+      this.pciIframe.style.width = `${width}px`
+    },
+
+    pciSaveState (state) {
+      this.saveState(state)
+      this.notifyInteractionStateReady()
     },
 
     /**
@@ -626,9 +585,6 @@ export default {
       try {
         this.validateChildren()
 
-        // Build a configuration and load the PCI
-        this.initialize()
-
         // Notify store of our new interaction
         store.defineInteraction({
             identifier: this.responseIdentifier,
@@ -641,6 +597,9 @@ export default {
             maxSelectionsMessage: ''
           })
 
+        // Build a configuration and load the PCI
+        this.initialize()
+
         console.log('[' + this.$options.name + '][Identifier]', this.responseIdentifier)
       } catch (err) {
         this.isQtiValid = false
@@ -651,9 +610,7 @@ export default {
   },
 
   beforeDestroy () {
-    if (this.hasPciListener) {
-      console.log('IN BEFORE DESTROY')
-      window.removeEventListener('message', this.windowMessageListener)
+    if (this.pciIframe !== null) {
       this.pciIframe.removeEventListener('load', this.handleLoadIframe)
     }
   }
