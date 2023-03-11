@@ -42,7 +42,7 @@ export class PciModuleResolver {
         }
     }
 
-    async getConfiguration () {
+    async getConfiguration (callback) {
         const resolvedModules = this.getInteractionModules()
         this.setModules(resolvedModules)
 
@@ -60,9 +60,9 @@ export class PciModuleResolver {
             // No module attribute.  Resolve the modules from primary and secondary configs
             configuration = await this.resolveModules(this.getModules())
             
-          }
+        }
 
-        return configuration
+        if (callback) callback(configuration)
     }
 
     async resolveModules (modules) {

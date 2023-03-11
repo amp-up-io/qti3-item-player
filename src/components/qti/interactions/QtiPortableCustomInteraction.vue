@@ -103,6 +103,7 @@ export default {
       pciModuleResolver: null,
 
       classAttribute: '',
+      properties: {},
       modulesNode: null,
       modules: null,
       configuration: null,
@@ -361,25 +362,28 @@ export default {
       return 'pci_' + qtiAttributeValidation.randomString (5, 'a')
     },
 
-    async initialize () {
+    initialize () {
+      // Get properties
+      this.setProperties(this.getPciProperties())
       // Set up the PciModuleResolver
       this.pciModuleResolver = new PciModuleResolver(this.module, this.modulesNode, this.dataItemPathUri)
       // Get the PCI's configuration
-      let configuration = await this.pciModuleResolver.getConfiguration()
-      // Save it for later
-      this.setConfiguration(configuration)
+      this.pciModuleResolver.getConfiguration(function(configuration) {
+        // Save it for later
+        this.setConfiguration(configuration)
 
-      console.log('[PCI Parent] PCI Configuration:', configuration)
+        console.log('[PCI Parent] PCI Configuration:', configuration)
 
-      // Bail if we were unable to resolve a good configuration
-      // TODO: Throw an exception?
-      if (configuration === null) return
+        // Bail if we were unable to resolve a good configuration
+        // TODO: Throw an exception?
+        if (configuration === null) return
 
-      // Prior to launch, bind a message listener to this window
-      this.bindWindowMessageListener()
+        // Prior to launch, bind a message listener to this window
+        this.bindWindowMessageListener()
 
-      // Launch!
-      this.loadPciIframe(this.initialWidth)
+        // Launch!
+        this.loadPciIframe(this.initialWidth)
+      }.bind(this))
     },
 
     loadPciIframe (width) {
@@ -411,8 +415,10 @@ export default {
       return this.dataItemPathUri
     },
 
-    getProperties (pci) {
-      const properties = {};
+    getPciProperties () {
+      let pci = this.$refs.root
+
+      const properties = {}
       for (let key in pci.dataset) {
         if ('uniqueId' !== key) {
           properties[key] = pci.dataset[key]
@@ -420,6 +426,14 @@ export default {
       }
 
       return properties
+    },
+
+    getProperties () {
+      return this.properties
+    },
+
+    setProperties (properties) {
+      this.properties = properties
     },
 
     getContextVariables () {
@@ -432,7 +446,7 @@ export default {
 
     getTemplateVariables () {
       let templateVariablesObject = {}
-      for (let i=0; i<this.contextVariables.length; i++) {
+      for (let i=0; i<this.templateVariables.length; i++) {
         templateVariablesObject[this.templateVariables[i].getIdentifier()] = this.templateVariables[i].evaluate()
       }
       return templateVariablesObject
@@ -477,7 +491,7 @@ export default {
     },
     
     windowMessageListener (event) {
-      // Ignore all messages not from our pci_iframe
+      // Ignore all messages not from our from QtiPortableCustomInteraction
       if (event.source.name !== this.uniqueId) return
       
       switch (event.data.message) {
@@ -526,7 +540,7 @@ export default {
         typeIdentifier: this.customInteractionTypeIdentifier,
         classAttribute: this.getClassAttribute(),
         markup: this.markup,
-        properties: this.getProperties(this.$refs.root),
+        properties: this.getProperties(),
         templateVariables: this.getTemplateVariables(),
         contextVariables: this.getContextVariables(),
         module: this.module,
@@ -638,6 +652,7 @@ export default {
 
   beforeDestroy () {
     if (this.hasPciListener) {
+      console.log('IN BEFORE DESTROY')
       window.removeEventListener('message', this.windowMessageListener)
       this.pciIframe.removeEventListener('load', this.handleLoadIframe)
     }
