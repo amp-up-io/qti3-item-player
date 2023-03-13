@@ -87,9 +87,22 @@ export class PciModuleResolver {
 
         let primaryUrls = []
 
+        console.log('resolving primary configuration, modules:', modules)
+
         if (!('primaryconfiguration' in modules)) {
 
+            // TODO:  should we try to load a module_resolution.js at the default URL
+            // which is itemPathUri/modules/module_resolution.js  ??
+
             for (let i=0; i<modules.module.length; i++) {
+
+                if (typeof modules.module[i].primarypath === 'undefined') {
+                    // If there is no primaryconfiguration in qti-interaction-modules
+                    // AND there is no primary-path on the module, then we cannot resolve
+                    // the primaryconfiguration.  Bail.
+                    return null
+                }
+
                 primaryUrls.push(this.addPathJs(modules.module[i].primarypath))
                 // Remove .js from primary path when building a config
                 baseConfig.paths[modules.module[i].id] = this.stripPathJs(modules.module[i].primarypath)
@@ -101,6 +114,7 @@ export class PciModuleResolver {
         
         } else {
           // fetch modules primaryconfiguration
+          return null
         }
     }
 
@@ -108,9 +122,22 @@ export class PciModuleResolver {
 
         let fallbackUrls = []
 
+        console.log('resolving secondary configuration, modules:', modules)
+
         if (!('secondaryconfiguration' in modules)) {
+
+            // TODO:  should we try to load a module_resolution.js at the default URL
+            // which is itemPathUri/modules/fallback_module_resolution.js  ??
             
             for (let i=0; i<modules.module.length; i++) {
+
+                if (typeof modules.module[i].fallbackpath === 'undefined') {
+                    // If there is no secondaryconfiguration in qti-interaction-modules
+                    // AND there is no fallback-path on the module, then we cannot resolve
+                    // the secondaryconfiguration.  Bail.
+                    return null
+                }
+
                 fallbackUrls.push(this.addPathJs(modules.module[i].fallbackpath))
                 // Remove .js from fallback path when building a config
                 baseConfig.paths[modules.module[i].id] = this.stripPathJs(modules.module[i].fallbackpath)
@@ -122,6 +149,7 @@ export class PciModuleResolver {
         
         } else {
           // fetch modules secondaryconfiguration
+          return null
         }
     }
 
@@ -251,7 +279,7 @@ export class PciModuleResolver {
     }
 
     addPackagePath (modules) {
-        for (let property in { primaryconfiguration: '', fallbackconfiguration: ''}) {
+        for (let property in { primaryconfiguration: '', secondaryconfiguration: ''}) {
             if ((property in modules) && modules[property] !== null && !modules[property].startsWith("http") ) {
                 modules[property] = this.getItemPathUri() + modules[property]
             }
