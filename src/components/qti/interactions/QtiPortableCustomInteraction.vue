@@ -520,16 +520,11 @@ export default {
       this.pciIframe.style.width = `${width}px`
     },
 
-    pciSaveState (state) {
-      this.saveState(state)
-      this.notifyInteractionStateReady()
-    },
-
     /**
-     * @description Parse the state string and set the PCI's response and state.
+     * @description Persist the state passed in the state parameter.
      * @param {String} state containing two stringified properties: response and state
      */
-    saveState (state) {
+    pciSaveState (state) {
       const stateObject = JSON.parse(state)
       if (typeof stateObject.response !== 'undefined') {
         this.setResponse(stateObject.response)
@@ -542,12 +537,15 @@ export default {
       } else {
         this.setState(null)
       }
+
+      // Notify store that we have completed our state saving
+      this.notifyInteractionStateReady()
     },
 
     /**
-     * @description Notify the item that this PCI's state has been retrieved.
-     * Prior to calling this method, be sure to save the interaction's state
-     * via the saveState method.
+     * @description Notify the item that this PCI's state has been retrieved
+     * and persisted. Prior to calling this method, be sure to save the 
+     * interaction's state via the pciSaveState method.
      */
     notifyInteractionStateReady () {
       // Pass this interaction's responseIdentifier
