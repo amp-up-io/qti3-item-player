@@ -160,7 +160,7 @@ export default {
     getStateRequest () {
       this.pciIframe.contentWindow.postMessage({ 
           message: 'PciGetState_Request'
-        }, '*')      
+        }, '*')
     },
 
     /**
@@ -540,6 +540,10 @@ export default {
 
       // Notify store that we have completed our state saving
       this.notifyInteractionStateReady()
+    },
+
+    pciIsLoadSuccess () {
+      return (this.pciIframe !== null)
     },
 
     /**

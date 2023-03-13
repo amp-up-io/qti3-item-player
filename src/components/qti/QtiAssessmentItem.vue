@@ -465,11 +465,21 @@ export default {
         }
         
         // The interaction must be a PCI.
-        // Add the interaction's identifier to the asyncStateMap.
-        store.getAsyncStateMap().set(interaction.identifier, {
-            identifier: interaction.identifier,
-            node: interaction.node
-          })
+        // Add the interaction's identifier to the asyncStateMap
+        // if the PCI successfully loaded.
+        if (interaction.node.pciIsLoadSuccess()) {
+          store.getAsyncStateMap().set(interaction.identifier, {
+              identifier: interaction.identifier,
+              node: interaction.node
+            })
+        } else {
+          // Notify store of our response - presumably null
+           store.setResponseVariableValue({
+              identifier: responseVariable.identifier,
+              value: interaction.node.getResponse(),
+              state: interaction.node.getState()
+            })
+        }
       }
 
       this.initiateAsyncGetResponsesRequests()
