@@ -43,8 +43,7 @@ export class PciModuleResolver {
     }
 
     async getConfiguration (callback) {
-        const resolvedModules = this.getInteractionModules()
-        this.setModules(resolvedModules)
+        this.setModules(this.getInteractionModules())
 
         let configuration = null
         
@@ -52,7 +51,7 @@ export class PciModuleResolver {
             
             // If we have a named module; i.e., a module attribute, load the PCI from
             // the module_resolution.js file found at the URL in the primaryconfiguration
-            // or the fallbackconfiguration
+            // or the secondaryconfiguration
             configuration = await this.getConfigurationFromUrl(this.getModules())
 
         } else {
@@ -87,9 +86,9 @@ export class PciModuleResolver {
 
         let primaryUrls = []
 
-        console.log('resolving primary configuration, modules:', modules)
-
-        if (!('primaryconfiguration' in modules)) {
+        // If no primary-configuration attribute exists in qti-interaction-modules, try
+        // to build and resolve a primary configuration from scratch.
+        if (typeof modules.primaryconfiguration === 'undefined') {
 
             // TODO:  should we try to load a module_resolution.js at the default URL
             // which is itemPathUri/modules/module_resolution.js  ??
@@ -97,7 +96,7 @@ export class PciModuleResolver {
             for (let i=0; i<modules.module.length; i++) {
 
                 if (typeof modules.module[i].primarypath === 'undefined') {
-                    // If there is no primaryconfiguration in qti-interaction-modules
+                    // When there is no primaryconfiguration in qti-interaction-modules
                     // AND there is no primary-path on the module, then we cannot resolve
                     // the primaryconfiguration.  Bail.
                     return null
@@ -112,19 +111,35 @@ export class PciModuleResolver {
 
             return (areModulesResolved ? baseConfig : null)
         
-        } else {
-          // fetch modules primaryconfiguration
-          return null
         }
+        
+        // A primary-configuration attribute exists in qti-interaction-modules.
+        // Try and resolve this configuration, then use it as the base configuration 
+        // with nested module definitions overriding or supplementing the paths.
+        const configuration = await this.fetchConfiguration(modules.primaryconfiguration, true)
+
+        // No configuration found at the URL for modules.primaryconfiguration.  Bail.
+        if (configuration === null) return null
+
+        for (let i=0; i<modules.module.length; i++) {
+            if (typeof modules.module[i].primarypath !== 'undefined') {
+                // Override the path if one exists.  Create a new path if one does not exist.
+                configuration.paths[modules.module[i].id] = this.stripPathJs(this.addPathJs(modules.module[i].primarypath))
+            }
+        }
+
+        // Now loop through the configuration paths and resolve each path
+        let areModulesResolved = await this.resolveConfigurationPathUrls (configuration.paths)
+
+        // If everything resolved, return the configuration
+        return (areModulesResolved ? configuration : null)
     }
 
     async resolveSecondaryConfigurationModules (baseConfig, modules) {
 
         let fallbackUrls = []
 
-        console.log('resolving secondary configuration, modules:', modules)
-
-        if (!('secondaryconfiguration' in modules)) {
+        if (typeof modules.secondaryconfiguration === 'undefined') {
 
             // TODO:  should we try to load a module_resolution.js at the default URL
             // which is itemPathUri/modules/fallback_module_resolution.js  ??
@@ -147,10 +162,39 @@ export class PciModuleResolver {
 
             return (areModulesResolved ? baseConfig : null)
         
-        } else {
-          // fetch modules secondaryconfiguration
-          return null
         }
+        
+        // A secondary-configuration attribute exists in qti-interaction-modules.
+        // Try and resolve this configuration, then use it as the base configuration 
+        // with nested module definitions overriding or supplementing the paths.
+        const configuration = await this.fetchConfiguration(modules.secondaryconfiguration, false)
+
+        // No configuration found at the URL for modules.primaryconfiguration.  Bail.
+        if (configuration === null) return null
+
+        for (let i=0; i<modules.module.length; i++) {
+            if (typeof modules.module[i].fallbackpath !== 'undefined') {
+                // Override the path if one exists.  Create a new path if one does not exist.
+                configuration.paths[modules.module[i].id] = this.stripPathJs(this.addPathJs(modules.module[i].fallbackpath))
+            }
+        }
+
+        // Now loop through the configuration paths and resolve each path
+        let areModulesResolved = await this.resolveConfigurationPathUrls (configuration.paths)
+
+        // If everything resolved, return the configuration
+        return (areModulesResolved ? configuration : null)
+    }
+
+    async resolveConfigurationPathUrls (paths) {
+        let urls = []
+        // Now loop through the configuration paths and resolve each path
+        for (let i=0; i<paths.length; i++) {
+            urls.push(paths[i])
+        }
+
+        let areModulesResolved = await this.resolveConfigurationModules(urls)
+        return areModulesResolved
     }
 
     async resolveConfigurationModules (urls) {
@@ -186,10 +230,9 @@ export class PciModuleResolver {
         // Bail if we found a pimaryconfiguration
         if (configuration !== null) return configuration
 
-        // Unable to find a primaryconfiguration.  Try to fetch
-        // the fallbackconfiguration
-        if (typeof modules.fallbackconfiguration !== 'undefined') {
-            configuration = await this.fetchConfiguration(modules.fallbackconfiguration, false)
+        // Unable to find a primaryconfiguration.  Try to fetch the fallbackconfiguration.
+        if (typeof modules.secondaryconfiguration !== 'undefined') {
+            configuration = await this.fetchConfiguration(modules.secondaryconfiguration, false)
         }
 
         return configuration
@@ -235,7 +278,7 @@ export class PciModuleResolver {
         if (this.modulesNode == null) {
             modules = {
                 primaryconfiguration: 'modules/module_resolution.js',
-                fallbackconfiguration: 'modules/fallback_module_resolution.js'
+                secondaryconfiguration: 'modules/fallback_module_resolution.js'
             }
             return this.addPackagePath(modules)
         }
@@ -243,12 +286,14 @@ export class PciModuleResolver {
         //
         // A qti-interaction-modules Node is present in the XML
         //
-        if (this.modulesNode.getPrimaryConfiguration().length > 0) {
-            modules.primaryconfiguration = this.modulesNode.getPrimaryConfiguration()
+        const primaryConfiguration = this.modulesNode.getPrimaryConfiguration()
+        if (primaryConfiguration.length > 0) {
+            modules.primaryconfiguration = primaryConfiguration
         }
         
-        if (this.modulesNode.getSecondaryConfiguration().length > 0) {
-            modules.secondaryconfiguration = this.modulesNode.getSecondaryConfiguration()
+        const secondaryConfiguration = this.modulesNode.getSecondaryConfiguration()
+        if (secondaryConfiguration.length > 0) {
+            modules.secondaryconfiguration = secondaryConfiguration
         }
 
         modules.module = []
