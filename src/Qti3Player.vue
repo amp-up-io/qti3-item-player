@@ -240,6 +240,11 @@ export default {
         // This sets QTI_CONTEXT - if provided - to override the built-in declaration.
         store.restoreContextVariables()
       }
+
+      // Pull the pciContext if it exists in the configuration.
+      if ('pciContext' in configuration) {
+        store.setPciContext(configuration.pciContext)
+      }
     },
 
     /**
