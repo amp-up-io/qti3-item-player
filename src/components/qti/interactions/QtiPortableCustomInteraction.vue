@@ -111,6 +111,7 @@ export default {
       contextVariables: [],
       uniqueId: null,
       pciIframe: null,
+      isReady: false,
       initialWidth: 0,
 
       // If we are restoring, this is where we save the prior variable state
@@ -153,7 +154,7 @@ export default {
     },
 
     /**
-     * @description Initiate a PciGetState_Request.  When the PCI has 
+     * @description Initiate an async PciGetState_Request.  When the PCI has 
      * a reply it will send a PciGetState_Reply message containing the 
      * state and response.
      */
@@ -516,6 +517,7 @@ export default {
      * @param {*} width 
      */
     pciResizeIframe (height, width) {
+      if (this.pciIframe === null) return
       this.pciIframe.style.height = `${height}px`
       this.pciIframe.style.width = `${width}px`
     },
@@ -542,8 +544,12 @@ export default {
       this.notifyInteractionStateReady()
     },
 
-    pciIsLoadSuccess () {
-      return (this.pciIframe !== null)
+    pciSetReady () {
+      this.isReady = true
+    },
+
+    pciIsReady () {
+      return (this.pciIframe !== null && this.isReady)
     },
 
     /**

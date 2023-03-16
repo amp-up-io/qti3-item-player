@@ -467,7 +467,7 @@ export default {
         // The interaction must be a PCI.
         // Add the interaction's identifier to the asyncStateMap
         // if the PCI successfully loaded.
-        if (interaction.node.pciIsLoadSuccess()) {
+        if (interaction.node.pciIsReady()) {
           store.getAsyncStateMap().set(interaction.identifier, {
               identifier: interaction.identifier,
               node: interaction.node
@@ -507,42 +507,6 @@ export default {
         this.getResponsesCallback()
       }
     },
-
-    /*
-    getResponses (callback) {
-      console.log('[GetResponses][Start]')
-      let responseVariables = store.getResponseDeclarations()
-      responseVariables.forEach((responseVariable) => {
-        const interaction = store.getInteraction(responseVariable.identifier)
-        if (typeof interaction !== 'undefined') {
-          console.log('[GetResponses][' + responseVariable.identifier + ']:', interaction.node.getResponse())
-          // Notify store of our response
-          store.setResponseVariableValue({
-              identifier: responseVariable.identifier,
-              value: interaction.node.getResponse(),
-              state: interaction.node.getState()
-            })
-          return
-        }
-
-        // Response variable that is not bound to an interaction.
-        // Set this to a default value (if one exists) or NULL - unless
-        // the response is numAttempts or duration
-        if ((responseVariable.identifier !== 'numAttempts' ) && (responseVariable.identifier !== 'duration')) {
-          store.resetResponseVariableValue({
-              identifier: responseVariable.identifier,
-              value: responseVariable.defaultValue,
-              state: null
-            })
-        }
-      })
-
-      console.log('[GetResponses][Complete]')
-      if (callback) {
-        callback()
-      }
-    },
-    */
 
     evaluateItemCompleted () {
       if (this.isAdaptiveItemCompleted()) {
