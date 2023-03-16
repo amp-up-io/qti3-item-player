@@ -169,7 +169,7 @@ let qtiCustomInteractionContext = {
 	 */
 	oncompleted: function (instance) {
 	  // Fire oncompleted if available
-		if ((typeof intance.oncompleted !== 'undefined') && (typeof intance.oncompleted == 'function')) {
+		if ((typeof instance.oncompleted !== 'undefined') && (typeof instance.oncompleted == 'function')) {
 		  console.log('[PCI Context] Firing Interaction oncompleted: ' + instance.typeIdentifier);
 		  instance.oncompleted();
 	  }
@@ -324,14 +324,14 @@ const QTI_PCI_API = {
     this.injectClassAttribute()
 	  this.injectMarkup();
     this.launchPci(
-      this.getTypeIdentifier(), 
-      this.getDom(), 
-      this.getResponseIdentifier(), 
-      this.getProperties(),
-      this.getContextVariables(),
-      this.getTemplateVariables(),
-      this.getResponseFromState(),
-      this.getStateFromState());
+    this.getTypeIdentifier(), 
+    this.getDom(), 
+    this.getResponseIdentifier(), 
+    this.getProperties(),
+    this.getContextVariables(),
+    this.getTemplateVariables(),
+    this.getResponseFromState(),
+    this.getStateFromState());
   },
 
   injectClassAttribute: function () {
@@ -412,7 +412,7 @@ const QTI_PCI_API = {
     window.parent.postMessage({ message: 'PciChildLoaded', identifier: this.getResponseIdentifier(), success: true },'*');
   },
 
-  NotifyPciReady: function (instance) {
+  NotifyPciReady: function (instance, state) {
     this.setInstance(instance);
 
     if (self == top) return;
