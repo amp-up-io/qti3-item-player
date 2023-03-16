@@ -24,7 +24,7 @@ export default {
   name: 'QtiTemplateVariable',
 
   props: {
-    identifier: {
+    templateIdentifier: {
       type: String,
       required: true
     }
@@ -42,7 +42,7 @@ export default {
   methods: {
 
     getIdentifier () {
-      return this.identifier
+      return this.templateIdentifier
     },
 
     getValue () {
@@ -83,7 +83,7 @@ export default {
 
     evaluate () {
       try {
-        let declaration = qtiAttributeValidation.validateVariableIdentifierAttribute (store, this.identifier)
+        let declaration = qtiAttributeValidation.validateVariableIdentifierAttribute (store, this.getIdentifier())
 
         if (typeof declaration === 'undefined') {
           this.setValue(qtiProcessing.valueToPciJson(qtiProcessing.nullValue(), undefined, undefined))
@@ -91,14 +91,14 @@ export default {
         }
 
         if (declaration.value === null) {
-          console.log('[QtiTemplateVariable][' + this.identifier + '] value:', { "base": null })
+          console.log('[QtiTemplateVariable][' + this.getIdentifier() + '] value:', { "base": null })
           this.setValue(qtiProcessing.valueToPciJson(qtiProcessing.nullValue(), this.getBaseType(), this.getCardinality()))
           return this.getValue()
         }
 
         const pciValue = qtiProcessing.valueToPciJson(declaration.value, this.getBaseType(), this.getCardinality())
 
-        console.log('[QtiTemplateVariable][' + this.identifier + '] value:', pciValue)
+        console.log('[QtiTemplateVariable][' + this.getIdentifier() + '] value:', pciValue)
 
         this.setValue(pciValue)
         return this.getValue()
@@ -117,7 +117,7 @@ export default {
 
   created () {
     try {
-      let variableDeclaration = qtiAttributeValidation.validateVariableIdentifierAttribute(store, this.identifier)
+      let variableDeclaration = qtiAttributeValidation.validateVariableIdentifierAttribute(store, this.getIdentifier())
       this.valueBaseType = variableDeclaration.baseType
       this.valueCardinality = variableDeclaration.cardinality
     } catch (err) {
