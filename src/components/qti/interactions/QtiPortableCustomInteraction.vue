@@ -391,7 +391,7 @@ export default {
       iframe.style.width = `${width}px`
       // bind before set src attribute!
       iframe.onload = this.handleLoadIframe.bind(this)
-      iframe.src = `${this.renderer}?identifier=${this.responseIdentifier}`
+      iframe.src = `${this.renderer}?identifier=${this.responseIdentifier}&uniqueId=${this.uniqueId}`
 
       // Inject the frame into the container
       this.$refs.ic.appendChild(iframe)
