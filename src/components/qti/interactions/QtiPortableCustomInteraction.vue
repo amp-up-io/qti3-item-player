@@ -102,6 +102,7 @@ export default {
       isQtiValid: true,
       pciModuleResolver: null,
 
+      renderer: '',
       classAttribute: '',
       properties: {},
       modulesNode: null,
@@ -390,7 +391,7 @@ export default {
       iframe.style.width = `${width}px`
       // bind before set src attribute!
       iframe.onload = this.handleLoadIframe.bind(this)
-      iframe.src = `./assets/pci/pci.html?identifier=${this.responseIdentifier}`
+      iframe.src = `${this.renderer}?identifier=${this.responseIdentifier}`
 
       // Inject the frame into the container
       this.$refs.ic.appendChild(iframe)
@@ -567,6 +568,9 @@ export default {
   created () {
     try {
       this.responseDeclaration = qtiAttributeValidation.validateResponseIdentifierAttribute(store, this.responseIdentifier)
+
+      // Initialize the PCI renderer
+      this.renderer = store.getPciContextRenderer()
 
       const staticClass = (typeof this.$vnode.data.staticClass !== 'undefined') ? this.$vnode.data.staticClass : ''
       this.setClassAttribute(staticClass)

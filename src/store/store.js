@@ -35,6 +35,10 @@ export const store = {
     validationMessages: [] // store for validation messages
   },
 
+  pciContext: {
+    renderer2p0: 'assets/pci/pci.html'
+  },
+
   getResponseDeclarations () {
     return this.state.responseDeclarations
   },
@@ -577,6 +581,22 @@ export const store = {
     }
 
     // TODO: Error?
+  },
+
+  getPciContext () {
+    return this.pciContext
+  },
+
+  setPciContext (pciContext) {
+    this.pciContext = pciContext
+  },
+
+  getPciContextRenderer () {
+    return this.pciContext.renderer2p0
+  },
+
+  setPciContextRenderer (renderer) {
+    this.pciContext.renderer2p0 = renderer
   },
 
   initializePciMessageListener () {
