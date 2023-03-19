@@ -47,11 +47,12 @@ export class PciModuleResolver {
 
         let configuration = null
         
-        if (this.moduleAttribute.length > 0) {
-            
-            // If we have a named module; i.e., a module attribute, load the PCI from
-            // the module_resolution.js file found at the URL in the primaryconfiguration
-            // or the secondaryconfiguration
+        // Check the happy path first.  This occurs when there is no 
+        // qti-interaction-modules element and there is a non-empty modules attribute.
+        if ((this.moduleAttribute.length > 0) && (this.modulesNode === null)) {
+
+            // Load the PCI from the module_resolution.js file found at the
+            // URL in the primaryconfiguration or the secondaryconfiguration
             configuration = await this.getConfigurationFromUrl(this.getModules())
 
         } else {
@@ -116,10 +117,15 @@ export class PciModuleResolver {
         // A primary-configuration attribute exists in qti-interaction-modules.
         // Try and resolve this configuration, then use it as the base configuration 
         // with nested module definitions overriding or supplementing the paths.
-        const configuration = await this.fetchConfiguration(modules.primaryconfiguration, true)
+        const configuration = await this.fetchConfiguration(modules.primaryconfiguration, true, true)
 
         // No configuration found at the URL for modules.primaryconfiguration.  Bail.
         if (configuration === null) return null
+
+        // Some put ".js" on their configuration paths.  Remove it.
+        for (const property in configuration.paths) {
+            configuration.paths[property] = this.stripPathJs(configuration.paths[property])
+        }
 
         for (let i=0; i<modules.module.length; i++) {
             if (typeof modules.module[i].primarypath !== 'undefined') {
@@ -129,7 +135,7 @@ export class PciModuleResolver {
         }
 
         // Now loop through the configuration paths and resolve each path
-        let areModulesResolved = await this.resolveConfigurationPathUrls (configuration.paths)
+        let areModulesResolved = await this.resolveConfigurationPathUrls(configuration.paths)
 
         // If everything resolved, return the configuration
         return (areModulesResolved ? configuration : null)
@@ -167,10 +173,15 @@ export class PciModuleResolver {
         // A secondary-configuration attribute exists in qti-interaction-modules.
         // Try and resolve this configuration, then use it as the base configuration 
         // with nested module definitions overriding or supplementing the paths.
-        const configuration = await this.fetchConfiguration(modules.secondaryconfiguration, false)
+        const configuration = await this.fetchConfiguration(modules.secondaryconfiguration, false, true)
 
         // No configuration found at the URL for modules.primaryconfiguration.  Bail.
         if (configuration === null) return null
+
+        // Some put ".js" on their configuration paths.  Remove it.
+        for (const property in configuration.paths) {
+            configuration.paths[property] = this.stripPathJs(configuration.paths[property])
+        }
 
         for (let i=0; i<modules.module.length; i++) {
             if (typeof modules.module[i].fallbackpath !== 'undefined') {
@@ -180,7 +191,7 @@ export class PciModuleResolver {
         }
 
         // Now loop through the configuration paths and resolve each path
-        let areModulesResolved = await this.resolveConfigurationPathUrls (configuration.paths)
+        let areModulesResolved = await this.resolveConfigurationPathUrls(configuration.paths)
 
         // If everything resolved, return the configuration
         return (areModulesResolved ? configuration : null)
@@ -224,7 +235,7 @@ export class PciModuleResolver {
         if (modules === null) return configuration
 
         if (typeof modules.primaryconfiguration !== 'undefined') {
-            configuration = await this.fetchConfiguration(modules.primaryconfiguration, true)
+            configuration = await this.fetchConfiguration(modules.primaryconfiguration, true, false)
         }
 
         // Bail if we found a pimaryconfiguration
@@ -232,24 +243,34 @@ export class PciModuleResolver {
 
         // Unable to find a primaryconfiguration.  Try to fetch the fallbackconfiguration.
         if (typeof modules.secondaryconfiguration !== 'undefined') {
-            configuration = await this.fetchConfiguration(modules.secondaryconfiguration, false)
+            configuration = await this.fetchConfiguration(modules.secondaryconfiguration, false, false)
         }
 
         return configuration
     }
 
-    async fetchConfiguration (url, isPrimary) {
+    async fetchConfiguration (url, isPrimary, isConfigurationRelative) {
         try {
             const response = await fetch(url)
             if (!response.ok) {
                 throw new Error(`HTTP error: ${response.status}`)
             }
-            const configuration = await response.json();
+
+            // Get the config json
+            const configuration = await response.json()
+
             // Adjust relative paths to absolute paths
             let paths = configuration.paths
             for (let path in paths) {
-                if (paths[path] !== null && !paths[path].startsWith("http")) {
-                    paths[path] = this.getItemPathUri() + paths[path]
+                if (paths[path] !== null && !paths[path].startsWith('http')) {
+
+                    if (isConfigurationRelative)
+                        // Paths should be relative to the URL of the configuration
+                        paths[path] = `${this.getConfigurationRelativePath(url)}${paths[path]}`
+                    else
+                        // Paths should be relative to the URL of the item
+                        paths[path] = `${this.getItemPathUri()}${paths[path]}`
+
                 }
             }
             return configuration
@@ -275,7 +296,7 @@ export class PciModuleResolver {
         let modules = {}
         
         // If no qti-interaction-modules present, apply the default
-        if (this.modulesNode == null) {
+        if (this.modulesNode === null) {
             modules = {
                 primaryconfiguration: 'modules/module_resolution.js',
                 secondaryconfiguration: 'modules/fallback_module_resolution.js'
@@ -325,8 +346,8 @@ export class PciModuleResolver {
 
     addPackagePath (modules) {
         for (let property in { primaryconfiguration: '', secondaryconfiguration: ''}) {
-            if ((property in modules) && modules[property] !== null && !modules[property].startsWith("http") ) {
-                modules[property] = this.getItemPathUri() + modules[property]
+            if ((property in modules) && modules[property] !== null && !modules[property].startsWith('http') ) {
+                modules[property] = this.getAbsolutePath(this.getItemPathUri(), modules[property])
             }
         }
 
@@ -336,14 +357,44 @@ export class PciModuleResolver {
             for (let i = 0; i < mods.length; i++) {
                 let mod = mods[i]
                 for (let property in { primarypath: '', fallbackpath: ''}) {
-                    if ((property in mod) && mod[property] !== null && !mod[property].startsWith("http") ) {
-                        mod[property] = this.getItemPathUri() + mod[property]
+                    if ((property in mod) && mod[property] !== null && !mod[property].startsWith('http') ) {
+
+                        mod[property] = this.getAbsolutePath(this.getItemPathUri(), mod[property])
                     }
                 }
             }
         }
 
         return modules
+    }
+
+    getAbsolutePath (base, rel) {
+        let st = base.split('/')
+        let arr = rel.split('/')
+        st.pop()
+        // ignore the current file name (or no string)
+        // (ignore if "base" is the current folder without having slash in trail)
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] == '.') continue
+
+            if (arr[i] == '..') {
+                st.pop()
+            } else {
+                st.push(arr[i])
+            }
+        }
+        return st.join('/')
+    }
+
+    getConfigurationRelativePath (path) {
+        if (path === null) return ''
+        if (path.length === 0) return ''
+
+        const pathLastSlashPos = path.lastIndexOf('/')
+        if (pathLastSlashPos < 0) return ''
+
+        // Get everything up to, and including, the last '/'
+        return path.substring(0,pathLastSlashPos+1)
     }
 
     stripPathJs (path) {
