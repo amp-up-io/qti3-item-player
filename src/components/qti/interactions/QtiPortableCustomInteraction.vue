@@ -216,7 +216,7 @@ export default {
      */
     getCardinality () {
       let rv = store.getResponseDeclaration(this.responseIdentifier)
-      this.cardinality = rv.getCardinality()
+      this.cardinality = rv.cardinality
       return this.cardinality
     },
 
@@ -227,8 +227,8 @@ export default {
      */
     getBaseType () {
       let rv = store.getResponseDeclaration(this.responseIdentifier)
-      this.baseType = rv.getBaseType()
-      return this.cardinality
+      this.baseType = rv.baseType
+      return this.baseType
     },
 
     /**
@@ -476,19 +476,22 @@ export default {
     },
 
     getResponseVariable () {
-      let responseVal = {}
+      let responseValue = {}
       if (this.priorState === null) {
         if (this.cardinality === 'single') {
-          let value = {}
-          value[this.getBaseType()] = this.getResponse()
-          responseVal["base"] = value
+          let value = null
+          if (this.getResponse() !== null) {
+            value = {}
+            value[this.getBaseType()] = this.getResponse()
+          }
+          responseValue["base"] = value
         }
       } else {
-        responseVal = this.getResponse()
+        responseValue = this.getResponse()
       }
 
       let responseVariable = {}
-      responseVariable[this.responseIdentifier] = responseVal
+      responseVariable[this.responseIdentifier] = responseValue
       return responseVariable
     },
 
@@ -595,8 +598,10 @@ export default {
 
       // Pull any prior interaction state.
       this.priorState = this.getPriorState(this.responseIdentifier)
-
       this.$slots.prompt = this.getPrompt(this.$slots)
+
+      this.cardinality = this.getCardinality();
+      this.baseType = this.getBaseType();
       this.uniqueId = this.createId()
     } catch (err) {
       this.isQtiValid = false
