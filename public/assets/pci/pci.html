@@ -34,7 +34,7 @@ let qtiCustomInteractionContext = {
 	 *                 the customInteraction will later accept in a
 	 *                 getInstance call to recreate an equivalent interaction state.
 	 */
-	getInstance: function(typeIdentifier, dom, configuration, state){
+	getInstance: function(typeIdentifier, dom, configuration, state) {
 	  console.log('[PCI Context] Interaction GetInstance: ' + typeIdentifier);
 	  const customInteraction = this.customInteractions[typeIdentifier];
     //
@@ -131,6 +131,7 @@ const QTI_PCI_API = {
   instance: null,
   response: null,
   state: null,
+  boundTo: null,
   width: 0,
   height: 0,
 
@@ -198,6 +199,14 @@ const QTI_PCI_API = {
 	  this.templateVariables = templateVariables;
   },
 
+  getBoundTo: function () {
+    return this.boundTo;
+  },
+
+  setBoundTo: function (boundTo) {
+    this.boundTo =  boundTo;
+  },
+
   getModuleResolution: function () {
 	  return this.moduleResolution;
   },
@@ -254,19 +263,22 @@ const QTI_PCI_API = {
     this.setModuleResolution(pci.moduleResolution);
     this.setContextVariables(pci.contextVariables);
     this.setTemplateVariables(pci.templateVariables);
+    this.setBoundTo(pci.boundTo);
 
     this.trackResize(this.getDom());
     this.injectClassAttribute()
 	  this.injectMarkup();
     this.launchPci(
-    this.getTypeIdentifier(), 
-    this.getDom(), 
-    this.getResponseIdentifier(), 
-    this.getProperties(),
-    this.getContextVariables(),
-    this.getTemplateVariables(),
-    this.getResponseFromState(),
-    this.getStateFromState());
+      this.getTypeIdentifier(), 
+      this.getDom(), 
+      this.getResponseIdentifier(), 
+      this.getProperties(),
+      this.getContextVariables(),
+      this.getTemplateVariables(),
+      this.getResponseFromState(),
+      this.getStateFromState(),
+      this.getBoundTo()
+    );
   },
 
   injectClassAttribute: function () {
@@ -313,7 +325,8 @@ const QTI_PCI_API = {
       contextVariables,
       templateVariables,
       response,
-      state) {
+      state,
+      boundTo) {
 
     console.log('[PCI Context] Interaction Dependencies: ', this.getModuleDependencies());
 	
@@ -325,7 +338,7 @@ const QTI_PCI_API = {
         properties: properties,
         templateVariables: templateVariables,
         contextVariables: contextVariables,
-        boundTo: response,
+        boundTo: boundTo,
         responseIdentifier: responseIdentifier,
         onready: ctx.notifyReady,
         ondone: ctx.notifyDone,
