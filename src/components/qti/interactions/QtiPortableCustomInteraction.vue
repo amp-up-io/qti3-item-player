@@ -475,6 +475,23 @@ export default {
       return collection
     },
 
+    getResponseVariable () {
+      let responseVal = {}
+      if (this.priorState === null) {
+        if (this.cardinality === 'single') {
+          let value = {}
+          value[this.getBaseType()] = this.getResponse()
+          responseVal["base"] = value
+        }
+      } else {
+        responseVal = this.getResponse()
+      }
+
+      let responseVariable = {}
+      responseVariable[this.responseIdentifier] = responseVal
+      return responseVariable
+    },
+
     /**
      * @description Build a PciLoadInteraction message payload and send the
      * message to the pciIframe.  Optionally, include a priorState in the 
@@ -487,6 +504,7 @@ export default {
         classAttribute: this.getClassAttribute(),
         markup: this.markup,
         properties: this.getProperties(),
+        boundTo: this.getResponseVariable(),
         templateVariables: this.getTemplateVariables(),
         contextVariables: this.getContextVariables(),
         module: this.module,
@@ -550,7 +568,7 @@ export default {
     },
 
     pciIsReady () {
-      return (this.pciIframe !== null && this.isReady)
+      return ((this.pciIframe !== null) && this.isReady)
     },
 
     /**
