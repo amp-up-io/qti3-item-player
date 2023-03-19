@@ -35,6 +35,7 @@ import QtiValidationException from '@/components/qti/exceptions/QtiValidationExc
 import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
 import QtiParseException from '@/components/qti/exceptions/QtiParseException'
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
+import QtiProcessing from '@/components/qti/processing/utils/QtiProcessing'
 import QtiPrompt from '@/components/qti/interactions/QtiPrompt'
 import QtiInteractionModules from '@/components/qti/interactions/pci/QtiInteractionModules'
 import QtiInteractionMarkup from '@/components/qti/interactions/pci/QtiInteractionMarkup'
@@ -48,6 +49,7 @@ Vue.component('qti-template-variable', QtiTemplateVariable)
 Vue.component('qti-context-variable', QtiContextVariable)
 
 const qtiAttributeValidation = new QtiAttributeValidation()
+const qtiProcessing = new QtiProcessing()
 
 export default {
   name: 'QtiPortableCustomInteraction',
@@ -476,19 +478,10 @@ export default {
     },
 
     getResponseVariable () {
-      let responseValue = {}
-      if (this.priorState === null) {
-        if (this.cardinality === 'single') {
-          let value = null
-          if (this.getResponse() !== null) {
-            value = {}
-            value[this.getBaseType()] = this.getResponse()
-          }
-          responseValue["base"] = value
-        }
-      } else {
-        responseValue = this.getResponse()
-      }
+      let responseValue = 
+          (this.priorState === null) 
+            ? qtiProcessing.valueToPciJson(this.getResponse(), this.baseType, this.cardinality)
+            : this.getResponse()
 
       let responseVariable = {}
       responseVariable[this.responseIdentifier] = responseValue
