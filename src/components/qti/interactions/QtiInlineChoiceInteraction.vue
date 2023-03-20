@@ -1025,7 +1025,7 @@ ul.inline-choice-select-listbox {
 }
 
 .qti-orientation-vertical [role="option"] {
-  padding-top: 3px;
+  padding: 1.5em .25em 0 .25em;
 }
 
 [role="option"]:last-child {
@@ -1041,6 +1041,13 @@ ul.inline-choice-select-listbox {
   content: '✓';
   position: absolute;
   left: 0.5em;
+}
+
+.qti-orientation-vertical [role="option"][aria-selected="true"]::before {
+  content: '✓';
+  position: absolute;
+  top: 0.25em;
+  right: 0.2em;
 }
 
 [role="option"]:hover {
