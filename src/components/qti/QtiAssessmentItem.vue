@@ -2548,6 +2548,13 @@ code {
   writing-mode: vertical-lr;
 }
 
+/* Enable horizontal scrolling on overflow-x */
+div.qti3-player-writing-mode-vertical-rl,
+div.qti3-player-writing-mode-vertical-lr {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .qti3-player-writing-mode-horizontal-tb {
   writing-mode: horizontal-tb;
 }
