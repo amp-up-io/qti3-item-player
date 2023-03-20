@@ -692,11 +692,25 @@ export default {
 }
 
 /* When writing mode is vertical-rl and labels cjk-ideographic, add more height */
-.qti3-player-writing-mode-vertical-rl .qti-choice-interaction.qti-labels-cjk-ideographic .qti-choice-label {
+.qti3-player-writing-mode-vertical-rl .qti-choice-interaction.qti-labels-cjk-ideographic:not(.qti-labels-suffix-none) .qti-choice-label {
   display: inline-block;
   vertical-align: top;
   width: 2rem;
   height: 2rem;
+  writing-mode: horizontal-tb;
+  text-align: right;
+  padding-right: 0.15rem;
+}
+
+/* When writing mode is vertical-rl and labels cjk-ideographic, add more height */
+.qti3-player-writing-mode-vertical-rl .qti-choice-interaction.qti-labels-cjk-ideographic.qti-labels-suffix-none .qti-choice-label {
+  display: inline-block;
+  vertical-align: top;
+  width: 2rem;
+  height: 2rem;
+  writing-mode: horizontal-tb;
+  text-align: right;
+  padding-right: .4rem;
 }
 
 .qti3-player-writing-mode-vertical-rl .qti-choice-interaction:not(.qti-labels-cjk-ideographic):not(.qti-labels-suffix-none) .qti-choice-label,
@@ -736,9 +750,21 @@ export default {
 .qti3-player-writing-mode-vertical-rl .qti-choice-interaction.qti-labels-cjk-ideographic.qti-input-control-hidden .qti-choice-label {
   display: inline-block;
   vertical-align: top;
-  width: 1.75rem;
+  width: 2rem;
   height: 2rem;
   margin-top: .25rem;
+  text-align: center;
+  padding-right: 0.25rem;
+}
+
+.qti3-player-writing-mode-vertical-rl .qti-choice-interaction.qti-labels-cjk-ideographic.qti-input-control-hidden.qti-labels-suffix-none .qti-choice-label {
+  display: inline-block;
+  vertical-align: top;
+  width: 2rem;
+  height: 2rem;
+  margin-top: .25rem;
+  text-align: center;
+  padding-right: 0.5rem;
 }
 
 .qti-choice-label.qti-hidden {
@@ -773,7 +799,7 @@ export default {
 
 .qti3-player-writing-mode-vertical-rl .control-hidden .qti-choice-label,
 .qti3-player-writing-mode-vertical-rl .control-hidden .qti-choice-description {
-  padding-right: .25rem;
+  padding-right: 0.25rem;
 }
 
 [role="button"].control-hidden .qti-choice-description {
