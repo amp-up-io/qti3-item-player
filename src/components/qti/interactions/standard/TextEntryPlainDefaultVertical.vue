@@ -326,42 +326,6 @@ export default {
       this.setCaretIndex(this.getCaretPos(this.$refs.input))
 
       switch (event.code) {
-        case 'ArrowUp':
-          event.preventDefault()
-          if (this.getCaretIndex() === 0) return
-
-          if (event.shiftKey) {
-            this.newUpRange(this.$refs.input)
-          } else {
-            this.setCaretPos(this.$refs.input, this.getCaretIndex()-1)
-          }
-          break
-
-        case 'ArrowDown':
-          event.preventDefault()
-          if (this.getCaretIndex() === this.getContent().length) return
-
-          if (event.shiftKey) {
-            // Mark all chars down from current Caret
-            this.newDownRange(this.$refs.input)
-          } else {
-            // Move Caret down one char
-            this.setCaretPos(this.$refs.input, this.getCaretIndex()+1)
-          }
-          break
-
-        case 'ArrowLeft':
-          event.preventDefault()
-          // Set Caret at bottom
-          this.setCaretPos(this.$refs.input, this.getContent().length)
-          break
-
-        case 'ArrowRight':
-          event.preventDefault()
-          // Set Caret at top
-          this.setCaretPos(this.$refs.input, 0)
-          break
-
         case 'Enter':
           // Prevent Enter
           event.preventDefault()
