@@ -645,7 +645,7 @@ export const store = {
     }
   },
 
-  WindowResize (event) {
+  WindowResize () {
     // Resize the width of all PCI's
     this.getInteractions().forEach((interaction) => {
       if (interaction.interactionType === 'PortableCustom') {
