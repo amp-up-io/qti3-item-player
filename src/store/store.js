@@ -601,6 +601,7 @@ export const store = {
 
   initializePciMessageListener () {
     window.addEventListener('message', this.PciMessageListener.bind(this))
+    window.addEventListener('resize', this.WindowResize.bind(this))
   },
 
   PciMessageListener (event) {
@@ -642,6 +643,15 @@ export const store = {
       default:
         //console.log('[PCI Parent] Unknown Message: ' + event.data.message)
     }
+  },
+
+  WindowResize (event) {
+    // Resize the width of all PCI's
+    this.getInteractions().forEach((interaction) => {
+      if (interaction.interactionType === 'PortableCustom') {
+        interaction.node.pciResizeIframeWidthToContainer()
+      }
+    })
   },
 
   pciInitialize (identifier) {

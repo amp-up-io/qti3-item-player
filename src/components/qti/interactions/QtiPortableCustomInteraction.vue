@@ -538,6 +538,16 @@ export default {
     },
 
     /**
+     * @description Set pciIframe's width to the width of the iframe 
+     * container element.  This method is called by the store on a 
+     * window resize event.
+     */
+     pciResizeIframeWidthToContainer () {
+      if (this.pciIframe === null) return
+      this.pciIframe.style.width = `${this.$refs.ic.clientWidth}px`
+    },
+
+    /**
      * @description Persist the state passed in the state parameter.
      * @param {String} state containing two stringified properties: response and state
      */
@@ -626,6 +636,7 @@ export default {
           })
 
         // Build a configuration and load the PCI
+        // TODO: Move this to qti-item-body.
         this.initialize()
 
         console.log('[' + this.$options.name + '][Identifier]', this.responseIdentifier)

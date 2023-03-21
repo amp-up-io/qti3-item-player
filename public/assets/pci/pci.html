@@ -424,9 +424,9 @@ const QTI_PCI_API = {
         if (Math.abs(width - this.width) > 15 || Math.abs(height - this.height) > 15) {
           this.width = width;
           this.height = height;
-          let msg = {
-            width: width + 10,
-            height: height + 10
+          const msg = {
+            width: width,
+            height: height
           };
           window.parent.postMessage({ message: 'PciResize', identifier: this.getResponseIdentifier(), height: msg.height, width: msg.width, success: true },'*');
         }
@@ -451,8 +451,11 @@ window.onload = (event) => {
         QTI_PCI_API.initialize(JSON.parse(e.data.pci));
         break;
 
-	  case 'PciGetState_Request':
+      case 'PciGetState_Request':
         QTI_PCI_API.getInteractionState()
+        break;
+      
+      case 'PciResizeContainerWidth':
         break;
 
       default:
