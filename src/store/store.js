@@ -627,7 +627,7 @@ export const store = {
         break
 
       case 'PciResize':
-        console.log('[PCI Parent] PCI Resize: ' + event.data.identifier + ', height:' + event.data.height + ', width:' + event.data.width)
+        console.log('[PCI Parent] PCI Resize: ' + event.data.identifier + ', height: ' + event.data.height + ', width: ' + event.data.width)
         this.pciResizeIframe(event.data.identifier, event.data.height, event.data.width, false)
         break
 
