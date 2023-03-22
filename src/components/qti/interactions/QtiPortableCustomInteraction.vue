@@ -658,7 +658,7 @@ export default {
 
 <style>
 div.qti-portable-custom-interaction {
-  display: inline-block;
+  display: grid;
   width: 100%;
 }
 
@@ -667,8 +667,10 @@ div.qti3-player-pci-group {
 }
 
 div.qti3-player-pci-iframe-container {
-  display: inline-block;
+  display: grid;
   width: 100%;
   overflow: hidden;
+  padding: 0;
+  margin: 0;
 }
 </style>
