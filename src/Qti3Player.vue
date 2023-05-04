@@ -228,6 +228,18 @@ export default {
       return this.item
     },
 
+    /**
+     * @description Method to empty the item's XML and reset the store.
+     */
+    resetItem () {
+      // Step 1: clear out the existing store
+      store.resetAll()
+      // Step 2: reset (close, re-center, etc) Catalog Dialog
+      this.resetCatalogComponents()
+      // Step 3: load empty xml
+      this.itemXml = ''
+    },
+
     loadItemContextFromConfiguration (configuration) {
       if (typeof configuration === 'undefined') return
 
