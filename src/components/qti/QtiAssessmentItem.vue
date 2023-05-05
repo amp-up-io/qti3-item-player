@@ -366,6 +366,7 @@ export default {
         const isAttemptValid = this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())
         if (!isAttemptValid) {
           console.log('[EndAttempt][InvalidResponses][Identifier]', this.identifier)
+          if (callback) callback()
           return
         }
 
