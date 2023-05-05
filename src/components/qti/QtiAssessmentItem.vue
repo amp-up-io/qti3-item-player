@@ -135,7 +135,7 @@ export default {
       this.getResponses(function() {
         // Examine session control for validateResponses.
         this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())
-        // Notify that we are reading with results
+        // Notify that we are ready with results
         this.notifyAttemptResults(false, target)
       }.bind(this))
     },
