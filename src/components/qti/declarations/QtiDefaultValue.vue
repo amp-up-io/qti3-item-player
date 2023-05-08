@@ -8,7 +8,11 @@
 /* An optional default value for the variable. The point at which a variable is set to its
  * default value varies depending on the type of item variable.
  */
+import Vue from 'vue'
+import QtiValue from '@/components/qti/declarations/QtiValue'
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
+
+Vue.component('qti-value', QtiValue)
 
 export default {
   name: 'QtiDefaultValue',
