@@ -100,7 +100,7 @@ export default {
       state: null,
       baseType: null,
       cardinality: null,
-      isValidResponse: false,
+      isValidResponse: true,
       isQtiValid: true,
       pciModuleResolver: null,
 
