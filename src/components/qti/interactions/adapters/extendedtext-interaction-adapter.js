@@ -1,13 +1,16 @@
 import ExtendedTextPlainDefault from '@/components/qti/interactions/standard/ExtendedTextPlainDefault'
 import ExtendedTextPlainLrn from '@/components/qti/interactions/standard/ExtendedTextPlainLrn'
+import ExtendedTextPlainVerticalRl from '@/components/qti/interactions/standard/ExtendedTextPlainVerticalRl'
 import ExtendedTextXhtmlDefault from '@/components/qti/interactions/standard/ExtendedTextXhtmlDefault'
 
 const EXTENDED_TEXT_TYPE = {
   DEFAULT: 'default-plain',
   DEFAULT_SBAC: 'sbac-plain',
   DEFAULT_LRN: 'lrn-plain',
+  DEFAULT_VERTICAL_RL: 'vertical-rl-plain',
   XHTML_DEFAULT: 'default-xhtml',
-  XHTML_SBAC: 'sbac-xhtml'
+  XHTML_SBAC: 'sbac-xhtml',
+  XHTML_VERTICAL_RL: 'vertical-rl-xhtml'
 }
 
 export function extendedTextInteractionAdapter(interactionSubType, props, attrs) {
@@ -27,19 +30,32 @@ export function extendedTextInteractionAdapter(interactionSubType, props, attrs)
           getPassthroughAttrs(attrs) + ` />`,
         components: { ExtendedTextXhtmlDefault }
       }
-      case EXTENDED_TEXT_TYPE.DEFAULT_LRN:
-        return {
-          template: `<extended-text-plain-lrn ` +
-            `response-identifier="` + props.responseIdentifier + `" ` +
-            getExpectedLength(props) +
-            getPatternMask(props) +
-            getPatternMaskMessage(props) +
-            getPlaceholderText(props) +
-            getHeightClass(props) +
-            getCounterStyle(props) +
-            getPassthroughAttrs(attrs) + ` />`,
-          components: { ExtendedTextPlainLrn }
-        }
+    case EXTENDED_TEXT_TYPE.DEFAULT_LRN:
+      return {
+        template: `<extended-text-plain-lrn ` +
+          `response-identifier="` + props.responseIdentifier + `" ` +
+          getExpectedLength(props) +
+          getPatternMask(props) +
+          getPatternMaskMessage(props) +
+          getPlaceholderText(props) +
+          getHeightClass(props) +
+          getCounterStyle(props) +
+          getPassthroughAttrs(attrs) + ` />`,
+        components: { ExtendedTextPlainLrn }
+      }
+    case EXTENDED_TEXT_TYPE.DEFAULT_VERTICAL_RL:
+      return {
+        template: `<extended-text-plain-vertical-rl ` +
+          `response-identifier="` + props.responseIdentifier + `" ` +
+          getExpectedLength(props) +
+          getPatternMask(props) +
+          getPatternMaskMessage(props) +
+          getPlaceholderText(props) +
+          getHeightClass(props) +
+          getCounterStyle(props) +
+          getPassthroughAttrs(attrs) + ` />`,
+        components: { ExtendedTextPlainVerticalRl }
+      }
     default:
       return {
         template: `<extended-text-plain-default ` +
@@ -58,12 +74,17 @@ export function extendedTextInteractionAdapter(interactionSubType, props, attrs)
 
 export function getExtendedTextInteractionSubType(clazz, format) {
   const sbac = isSbacInClass(clazz)
-  const lrn = isLrnInClass(clazz)
+  if (sbac && format === 'plain') return EXTENDED_TEXT_TYPE.DEFAULT_SBAC
+  if (sbac && format === 'xhtml') return EXTENDED_TEXT_TYPE.XHTML_DEFAULT
 
-  if (format === 'plain' && sbac) return EXTENDED_TEXT_TYPE.DEFAULT_SBAC
-  if (format === 'plain' && lrn) return EXTENDED_TEXT_TYPE.DEFAULT_LRN
+  const lrn = isLrnInClass(clazz)
+  if (lrn && format === 'plain') return EXTENDED_TEXT_TYPE.DEFAULT_LRN
+
+  const verticalRL = isVerticalRightLeftInClass(clazz)
+  if (verticalRL && format === 'plain') return EXTENDED_TEXT_TYPE.DEFAULT_VERTICAL_RL
+  if (verticalRL && format === 'xhtml') return EXTENDED_TEXT_TYPE.XHTML_VERTICAL_RL
+
   if (format === 'plain') return EXTENDED_TEXT_TYPE.DEFAULT
-  if (format === 'xhtml' && sbac) return EXTENDED_TEXT_TYPE.XHTML_DEFAULT
   if (format === 'xhtml') return EXTENDED_TEXT_TYPE.XHTML_DEFAULT
   return EXTENDED_TEXT_TYPE.DEFAULT
 }
@@ -124,6 +145,17 @@ function isLrnInClass (clazz) {
   }
 
   return findClass('lrn', clazz)
+}
+
+/**
+ * @description Utility method to sniff for vertical-right-left in the class attribute.
+ */
+function isVerticalRightLeftInClass (clazz) {
+  if ((typeof clazz === 'undefined') || (clazz === null) || (clazz.length == 0)) {
+    return false
+  }
+
+  return findClass('qti-writing-orientation-vertical-rl', clazz)
 }
 
 function findClass (needle, clazz) {

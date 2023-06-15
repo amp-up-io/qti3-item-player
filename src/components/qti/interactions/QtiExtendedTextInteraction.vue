@@ -163,7 +163,7 @@ export default {
       else
         this.response = response
 
-      this.node.setResponse(this.response)
+      this.node.setResponse(this.response, true)
     },
 
     updateResponse (response) {
