@@ -2,6 +2,7 @@ import ExtendedTextPlainDefault from '@/components/qti/interactions/standard/Ext
 import ExtendedTextPlainLrn from '@/components/qti/interactions/standard/ExtendedTextPlainLrn'
 import ExtendedTextPlainVerticalRl from '@/components/qti/interactions/standard/ExtendedTextPlainVerticalRl'
 import ExtendedTextXhtmlDefault from '@/components/qti/interactions/standard/ExtendedTextXhtmlDefault'
+import ExtendedTextXhtmlVerticalRl from '@/components/qti/interactions/standard/ExtendedTextXhtmlVerticalRl'
 
 const EXTENDED_TEXT_TYPE = {
   DEFAULT: 'default-plain',
@@ -55,6 +56,19 @@ export function extendedTextInteractionAdapter(interactionSubType, props, attrs)
           getCounterStyle(props) +
           getPassthroughAttrs(attrs) + ` />`,
         components: { ExtendedTextPlainVerticalRl }
+      }
+    case EXTENDED_TEXT_TYPE.XHTML_VERTICAL_RL:
+      return {
+        template: `<extended-text-xhtml-vertical-rl ` +
+          `response-identifier="` + props.responseIdentifier + `" ` +
+          getExpectedLength(props) +
+          getPatternMask(props) +
+          getPatternMaskMessage(props) +
+          getPlaceholderText(props) +
+          getHeightClass(props) +
+          getCounterStyle(props) +
+          getPassthroughAttrs(attrs) + ` />`,
+        components: { ExtendedTextXhtmlVerticalRl }
       }
     default:
       return {
