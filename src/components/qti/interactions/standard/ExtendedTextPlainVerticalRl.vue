@@ -529,7 +529,7 @@ export default {
   font-size: inherit;
   font-weight: 400;
   line-height: inherit;
-  width: calc(5.8rem + .35rem);
+  width: calc(5.85rem + .35rem);
   color: var(--foreground);
   height: 98%;
   background-color: var(--background);
@@ -566,7 +566,7 @@ export default {
 }
 
 .qti-height-lines-3 .ext-text-default-vert-rl {
-  width: calc(5.75rem + .35rem);
+  width: calc(5.85rem + .35rem);
 }
 
 .qti-height-lines-6 .ext-text-default-vert-rl {
