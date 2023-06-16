@@ -666,16 +666,18 @@ export default {
 
 /* ========================================
    QTI 3 shared css
-   1. Display
-   2. Special Flex styles
-   3. Margin
-   4. Padding
-   5. Height
-   6. Width
-   7. Text-Indent
-   8. List Style
-   9. Layout
-   10. QtiAssessmentItem component utilities
+   1.  Display
+   2.  Special Flex styles
+   3.  Float Styles
+   4.  Margin
+   5.  Padding
+   6.  Height
+   7.  Width
+   8.  Text-Indent
+   9.  List Styles
+   10. Layout
+   11. Vertical Writing Utitlities
+   12. QtiAssessmentItem component utilities
    ======================================== */
 
 /* ==========
@@ -764,6 +766,29 @@ export default {
 
 .qti-flex-grow-0 {
   flex-grow: 0;
+}
+
+/* ============
+   Float styles
+   ============ */
+.qti-float-left {
+  float: left;
+}
+
+.qti-float-right {
+  float: right;
+}
+
+.qti-float-none {
+  float: none;
+}
+
+/* Clearfix Hack to apply to a container of 
+   floated content that overflows the container.*/
+.qti-float-clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
 }
 
 /* =========
@@ -2295,6 +2320,40 @@ export default {
     margin-left: 8.547008547008547%;
     *margin-left: 8.440625568285142%;
   }
+}
+
+/* ======================
+   Vertical Writing Utils
+   ====================== */
+.qti-writing-mode-vertical-rl {
+  writing-mode: vertical-rl;
+}
+
+.qti-writing-mode-vertical-lr {
+  writing-mode: vertical-lr;
+}
+
+/* Enable horizontal scrolling on overflow-x */
+div.qti-writing-mode-vertical-rl,
+div.qti-writing-mode-vertical-lr {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.qti-writing-mode-horizontal-tb {
+  writing-mode: horizontal-tb;
+}
+
+.qti-text-combine-upright-all {
+  text-combine-upright: all;
+}
+
+.qti-text-orientation-upright {
+  text-orientation: upright;
+}
+
+.qti-text-transform-fullwidth {
+  text-transform: full-width;
 }
 
 /* ===========================================
