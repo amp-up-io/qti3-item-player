@@ -543,6 +543,9 @@ export default {
   border-radius: .25rem;
   overflow-x: auto;
   outline: 0;
+  word-wrap: anywhere; 
+  overflow-wrap: anywhere; 
+  white-space: break-spaces;
 }
 
 .ext-text-default-vert-rl:focus {
