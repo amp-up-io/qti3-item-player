@@ -246,25 +246,23 @@ export default {
 
       this.setCaretIndex(this.getCaretPos(this.$refs.textarea) - 1)
 
-      let inputText = this.getContent()
-
-      //console.log('input length:', inputText.length)
-      //for (let i=0; i<inputText.length; i++) {
-      //  console.log(`input code at ${i}:${inputText.charCodeAt(i)}`)
-      //}      
+      let inputText = this.getContent()     
 
       if (this.showCounter && !this.applyLimitCheck(inputText)) return
 
-      if (this.appliedRegex !== null)
+      if (this.appliedRegex !== null) {
         inputSucceeded = this.applyPatternMask(inputText)
-      else
-        this.setResponse(inputText)
+        if (!inputSucceeded) return
+      }
 
-      //console.log('input length:', inputText.length)
-      //if (inputText.length === 1)
-      //  console.log('input code at 0:', inputText.charCodeAt(0));
+      if ((inputText.length == 0) ||
+          ((inputText.length == 1) && (inputText.charCodeAt(0) == 10))) {
+        this.empty()
+        this.updateCounter(0)
+        inputText = ''
+      }
 
-      if (!inputSucceeded) return
+      this.setResponse(inputText)
 
       // Save textarea value for future limit checks
       this.priorResponse = inputText
@@ -281,75 +279,44 @@ export default {
      */
     handlePaste (event) {
       event.preventDefault()
-      
-      // Get the copied text from the clipboard
-      
-      /*
-      const text = event.clipboardData
-        ? (event.originalEvent || event).clipboardData.getData('text/plain')
-        : // For IE
-          window.clipboardData
-          ? window.clipboardData.getData('Text')
-          : ''
-      
-          
-      //if (document.queryCommandSupported('insertText')) {
-      //  document.execCommand('insertText', false, text);
-      //} else {
-        // Insert text at the current position of caret
-        const myrange = document.getSelection().getRangeAt(0)
-        myrange.deleteContents();
-        
-        const textNode = document.createTextNode(text)
-        myrange.insertNode(textNode)
-        myrange.selectNodeContents(textNode)
-        myrange.collapse(false)
-        
-        const selection = window.getSelection()
-        selection.removeAllRanges()
-        selection.addRange(myrange)
-      //}
-      */
-
-      //const content = this.getContent()
-      //console.log('in paste, getContent length=' + content.length)
-      //this.setResponse(content, true)
-
-      // Get user selection, if there is any
-      const range = this.getRange()
-
-      if (range === null) return
-
-      const currentContent = this.getContent()
-      const startOffset = range.startOffset
-      const endOffset = range.endOffset
-
-      let clipboardText = event.clipboardData.getData("text/plain")
-
-      let content = 
-        currentContent.substring(0, startOffset) + 
-        clipboardText + 
-        currentContent.substring(endOffset)
 
       let inputSucceeded = true
 
-      if (this.showCounter && !this.applyLimitCheck(content)) return
+      let text = event.clipboardData.getData('text/plain')
 
-      if (this.appliedRegex !== null)
-        inputSucceeded = this.applyPatternMask(content)
-      else
-        this.setResponse(content, true)
+      // Insert text at the current position of caret
+      const range = document.getSelection().getRangeAt(0)
+      range.deleteContents()
 
-      if (!inputSucceeded) return
+      const textNode = document.createTextNode(text)
+      range.insertNode(textNode)
+      range.selectNodeContents(textNode)
+      range.collapse(false)
 
-      // Save off our new caret index
-      this.setCaretIndex(startOffset + clipboardText.length)
+      const selection = window.getSelection()
+      selection.removeAllRanges()
+      selection.addRange(range)
 
-      // Move the caret to the end of the pasted text
-      this.setCaretPos(this.$refs.textarea, this.getCaretIndex())
+      let inputText = this.getContent()
 
-      // Save input value for future limit checks
-      this.priorResponse = content
+      if (this.showCounter && !this.applyLimitCheck(inputText)) return
+
+      if (this.appliedRegex !== null) {
+        inputSucceeded = this.applyPatternMask(inputText)
+        if (!inputSucceeded) return
+      }
+
+      if ((inputText.length == 0) ||
+          ((inputText.length == 1) && (inputText.charCodeAt(0) == 10))) {
+        this.empty()
+        this.updateCounter(0)
+        inputText = ''
+      }
+
+      this.setResponse(inputText)
+
+      // Save textarea value for future limit checks
+      this.priorResponse = inputText
 
       // Notify parent that we have an update
       this.$parent.$emit('extendedTextUpdate', {
@@ -384,58 +351,6 @@ export default {
         default:
           break
       }
-    },
-
-    /**
-     * @description This selects all characters down from 
-     * the current caret position.
-     * @param {DOMElement} contentEditable element 
-     */
-    newDownRange (element) {
-      const node = element.firstChild
-      const currentRange = this.getRange()
-
-      if (currentRange === null) return
-
-      const startPos = currentRange.startOffset
-      const endPos = currentRange.endOffset
-
-      // Bail if we are already at the end of the response
-      if (endPos === this.getResponse().length) return
-
-      const selection = window.getSelection()
-      selection.removeAllRanges()
-
-      const range = document.createRange()
-      range.setStart(node, startPos)
-      range.setEnd(node, endPos+1)
-      selection.addRange(range)
-    },
-
-    /**
-     * @description This selects all characters up from 
-     * the current caret position.
-     * @param {DOMElement} contentEditable element 
-     */
-    newUpRange (element) {
-      const node = element.firstChild
-      const currentRange = this.getRange()
-
-      if (currentRange === null) return
-
-      const startPos = currentRange.startOffset
-      const endPos = currentRange.endOffset
-
-      //Bail if we are at the beginning of the response
-      if (startPos === 0) return
-
-      const selection = window.getSelection()
-      selection.removeAllRanges()
-
-      const range = document.createRange()
-      range.setStart(node, startPos-1)
-      range.setEnd(node, endPos)
-      selection.addRange(range)
     },
 
     /**
@@ -484,6 +399,10 @@ export default {
 
     getLength () {
       return this.response.length
+    },
+    
+    empty () {
+      this.$refs.textarea.textContent = ''
     },
 
     applyLimitCheck (value) {
