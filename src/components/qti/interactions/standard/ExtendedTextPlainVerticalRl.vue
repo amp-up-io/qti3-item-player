@@ -180,7 +180,7 @@ export default {
      * @return {String}
      */
     getContent () {
-      return this.$refs.textarea.innerText
+      return this.getTextContent(this.$refs.textarea.childNodes)
     },
 
     /**
@@ -189,6 +189,38 @@ export default {
      */
     updateContent (content) {
       this.$refs.textarea.innerText = content
+    },
+    
+    /**
+     * Retrieve the text value of an array of DOM nodes.
+     * @param {Array or Node} elem - an array of childNodes
+     * @return {String} text value of array of childNodes
+     */
+    getTextContent (elem) {
+      let node
+      let ret = ''
+      let i = 0
+      let nodeType = elem.nodeType
+      
+      if (!nodeType) {
+        // If no nodeType, this is expected to be an array
+        while ( (node = elem[i++]) ) {
+          // Recurse
+          ret += this.getTextContent(node)
+        }
+      }
+      
+      if ( nodeType === 1 || nodeType === 11 ) {
+        return elem.textContent
+      }
+      if ( nodeType === 9 ) {
+        return elem.documentElement.textContent
+      }
+      if ( nodeType === 3 || nodeType === 4 ) {
+        return elem.nodeValue
+      }
+      
+      return ret
     },
 
     /**
@@ -215,6 +247,11 @@ export default {
       this.setCaretIndex(this.getCaretPos(this.$refs.textarea) - 1)
 
       let inputText = this.getContent()
+
+      //console.log('input length:', inputText.length)
+      //for (let i=0; i<inputText.length; i++) {
+      //  console.log(`input code at ${i}:${inputText.charCodeAt(i)}`)
+      //}      
 
       if (this.showCounter && !this.applyLimitCheck(inputText)) return
 
@@ -451,7 +488,6 @@ export default {
 
     applyLimitCheck (value) {
       if (value.length > this.computedExpectedLength) {
-        this.showMaxlengthMessage()
         // Revert to the prior response
         this.setResponse(this.priorResponse, true)
         // Set the caret back to where it was
@@ -521,6 +557,7 @@ export default {
 
 <style>
 .ext-text-default-vert-rl {
+  display: inline-block;
   margin: .25rem .5rem;
   writing-mode:vertical-rl;
   vertical-align: top;
