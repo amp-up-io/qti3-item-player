@@ -191,12 +191,15 @@ export default {
 </script>
 
 <style>
-.extendedtext-editor-counter {
-  height: 1.5rem;
+.ext-text-xhtml-vert-rl-counter {
+  margin: .25rem 0 .25rem .5rem;
+  width: 1.5rem;
   line-height: 1.5rem;
   text-align: right;
   font-size: .875rem;
   color: var(--foreground);
-  padding-right: .25rem;
+  padding-bottom: .25rem;
+  text-orientation: upright;
+  letter-spacing: -2px;
 }
 </style>
