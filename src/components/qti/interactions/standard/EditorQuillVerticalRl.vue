@@ -4,7 +4,7 @@
       ref="editor"
       :style="style"
     ></div>
-    <div v-if="showCounter" aria-hidden="true" class="extendedtext-editor-counter">
+    <div v-if="showCounter" aria-hidden="true" class="ext-text-xhtml-vert-rl-counter">
       {{counter}}<span v-if="isCounterUp"> / {{expectedLength}}</span>
     </div>
   </div>
@@ -65,7 +65,8 @@ export default {
         'font-size': 'inherit',
         'line-height': 'inherit',
         'width': this.editorHeight,
-        'minWidth':  undefined
+        'minWidth':  undefined,
+        'display': 'table'
       }
     },
 
@@ -251,14 +252,18 @@ export default {
   font-size: 13px;
   height: 98%;
   margin: auto 0;
+  /* Changed from relative to unset */
   position: unset;
 }
+
 .ql-container.ql-disabled .ql-tooltip {
   visibility: hidden;
 }
+
 .ql-container.ql-disabled .ql-editor ul[data-checked] > li::before {
   pointer-events: none;
 }
+
 .ql-clipboard {
   left: -100000px;
   height: 1px;
@@ -281,8 +286,9 @@ export default {
   tab-size: 4;
   -moz-tab-size: 4;
   text-align: left;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  word-wrap: anywhere; 
+  overflow-wrap: anywhere; 
+  white-space: break-spaces;
 }
 .ql-editor > * {
   cursor: text;
@@ -308,16 +314,22 @@ export default {
 }
 .vertical-rl .ql-editor ol,
 .vertical-rl .ql-editor ul {
-  padding-left: 0;
-  padding-top: 1.4em;
+  padding-right: 0;
+  padding-top: 1em;
 }
 .ql-editor ol > li,
 .ql-editor ul > li {
   list-style-type: none;
 }
+
+.vertical-rl .ql-editor ul > li::before {
+  content: '\2022';
+}
+
 .ql-editor ul > li::before {
   content: '\2022';
 }
+
 .ql-editor ul[data-checked=true],
 .ql-editor ul[data-checked=false] {
   pointer-events: none;
@@ -343,15 +355,35 @@ export default {
   white-space: nowrap;
   width: 1.2em;
 }
-.ql-editor li:not(.ql-direction-rtl)::before {
-  margin-left: -1.5em;
-  margin-right: 0.3em;
+
+.vertical-rl .ql-editor li:not(.ql-direction-rtl)::before {
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: -1.5em;
+  margin-bottom: .25em;
   text-align: right;
 }
+
+.vertical-rl .ql-editor ul > li:not(.ql-direction-rtl)::before {
+  content: '\2022';
+  margin-bottom: 1em;
+}
+
 .ql-editor li.ql-direction-rtl::before {
   margin-left: 0.3em;
   margin-right: -1.5em;
 }
+
+.vertical-rl .ql-editor ol li:not(.ql-direction-rtl) {
+  padding-top: 1.5em;
+  padding-left: 0;
+}
+
+.vertical-rl .ql-editor ul li:not(.ql-direction-rtl) {
+  padding-top: 2em;
+  padding-left: 0;
+}
+
 .ql-editor ol li:not(.ql-direction-rtl),
 .ql-editor ul li:not(.ql-direction-rtl) {
   padding-left: 1.5em;
@@ -364,15 +396,29 @@ export default {
   counter-reset: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
   counter-increment: list-0;
 }
+
+.vertical-rl .ql-editor ol li:before {
+  content: counter(list-0, decimal) '. ';
+  writing-mode: horizontal-tb;
+}
+
 .ql-editor ol li:before {
   content: counter(list-0, decimal) '. ';
 }
+
 .ql-editor ol li.ql-indent-1 {
   counter-increment: list-1;
 }
+
+.vertical-rl .ql-editor ol li.ql-indent-1:before {
+  content: counter(list-0, decimal) '. ';
+  writing-mode: horizontal-tb;
+}
+
 .ql-editor ol li.ql-indent-1:before {
   content: counter(list-1, lower-alpha) '. ';
 }
+
 .ql-editor ol li.ql-indent-1 {
   counter-reset: list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
 }
@@ -600,6 +646,8 @@ export default {
   pointer-events: none;
   position: absolute;
   right: 15px;
+  /* Hide this for now */
+  display: none;
 }
 .ql-snow.ql-toolbar:after,
 .ql-snow .ql-toolbar:after {
