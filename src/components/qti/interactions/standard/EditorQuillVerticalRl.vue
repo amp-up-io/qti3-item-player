@@ -310,7 +310,7 @@ export default {
 }
 .vertical-rl .ql-editor u {
   /* Important to get the underline on the proper side! */
-  text-decoration: overline;
+  text-decoration: underline;
 }
 .vertical-rl .ql-editor ol,
 .vertical-rl .ql-editor ul {
