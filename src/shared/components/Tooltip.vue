@@ -28,6 +28,11 @@ export default {
       required: false,
       type: String,
       default: ''
+    },
+    placement: {
+      required: false,
+      type: String,
+      default: 'top'
     }
   },
 
@@ -58,12 +63,15 @@ export default {
   mounted () {
     this.targetElement = this.target()
 
+    console.log('this.placement:', this.placement)
+
     this.tippy = tippy(this.targetElement, {
       content: this.$refs.template.innerHTML,
       allowHTML: true,
       trigger: 'manual',
       theme: this.colorStyle,
-      zIndex: 101,
+      placement: this.placement,
+      zIndex: 101
     })
   },
 
