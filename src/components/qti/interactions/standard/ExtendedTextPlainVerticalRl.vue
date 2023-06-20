@@ -491,12 +491,12 @@ export default {
   writing-mode:vertical-rl;
   text-align: left;
   vertical-align: top;
-  padding: .25rem .3rem;
+  padding: .5rem .5rem;
   font-family: inherit;
   font-size: inherit;
   font-weight: 400;
   line-height: 1.6;
-  width: calc(5.85rem + .35rem);
+  width: calc(5.55rem + .35rem);
   color: var(--foreground);
   height: 97%;
   background-color: var(--background);
@@ -541,15 +541,15 @@ export default {
 }
 
 .qti-height-lines-3 .ext-text-default-vert-rl {
-  width: calc(5.85rem + .35rem);
+  width: calc(5.55rem + .35rem);
 }
 
 .qti-height-lines-6 .ext-text-default-vert-rl {
-  width: calc(11.15rem + .35rem);
+  width: calc(10.35rem + .35rem);
 }
 
 .qti-height-lines-15 .ext-text-default-vert-rl {
-  width: calc(27.35rem + .35rem);
+  width: calc(24.75rem + .35rem);
 }
 
 .ext-text-default-vert-rl-counter {
