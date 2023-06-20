@@ -461,4 +461,8 @@ export default {
 </script>
 
 <style>
+.qti-extended-text-interaction.qti-writing-orientation-vertical-rl {
+  display: table;
+  height: 100%;
+}
 </style>

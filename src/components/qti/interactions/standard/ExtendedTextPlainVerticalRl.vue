@@ -24,6 +24,7 @@
       :target="() => $refs['textarea']"
       :message="patternMaskMessage"
       :color-style="colorStyle"
+      :placement="tooltipPlacement"
     />
   </div>
 </template>
@@ -104,6 +105,10 @@ export default {
 
     isCounterUp () {
       return (this.counterStyle === 'up')
+    },
+
+    tooltipPlacement () {
+      return 'right'
     }
 
   },
@@ -239,6 +244,10 @@ export default {
       this.caretIndex = caretIndex
     },
 
+    /**
+     * @description Handle input.
+     * @param event The input event object
+     */
     handleInput (event) {
       event.preventDefault()
 
@@ -432,7 +441,7 @@ export default {
       // control to the priorResponse.
       this.showPatternMaskMessage()
       this.setResponse(this.priorResponse, true)
-      //this.setCaretPos(this.$refs.textarea, this.getCaretIndex())
+      this.setCaretPos(this.$refs.textarea, this.getCaretIndex())
       return false
     },
 
@@ -477,17 +486,19 @@ export default {
 <style>
 .ext-text-default-vert-rl {
   display: inline-block;
+  box-sizing: border-box;
   margin: .25rem .5rem;
   writing-mode:vertical-rl;
+  text-align: left;
   vertical-align: top;
   padding: .25rem .3rem;
   font-family: inherit;
   font-size: inherit;
   font-weight: 400;
-  line-height: inherit;
+  line-height: 1.6;
   width: calc(5.85rem + .35rem);
   color: var(--foreground);
-  height: 98%;
+  height: 97%;
   background-color: var(--background);
   background-clip: padding-box;
   border-width: 1px;
@@ -502,6 +513,7 @@ export default {
   word-wrap: anywhere; 
   overflow-wrap: anywhere; 
   white-space: break-spaces;
+  position: relative;
 }
 
 .ext-text-default-vert-rl:focus {
@@ -510,6 +522,10 @@ export default {
   border-color: var(--choice-control-focus-border);
   outline: 0;
   box-shadow: var(--choice-control-focus-shadow);
+}
+
+.ext-text-default-vert-rl > * {
+  cursor: text;
 }
 
 .ext-text-default-vert-rl:empty:before {
