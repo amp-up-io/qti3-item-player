@@ -63,8 +63,6 @@ export default {
   mounted () {
     this.targetElement = this.target()
 
-    console.log('this.placement:', this.placement)
-
     this.tippy = tippy(this.targetElement, {
       content: this.$refs.template.innerHTML,
       allowHTML: true,
