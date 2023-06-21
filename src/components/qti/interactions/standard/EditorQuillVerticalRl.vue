@@ -168,6 +168,7 @@ export default {
         }
 
         this.quill = new Quill(this.$refs.editor, defaultOptions)
+        this.quill.root.setAttribute('spellcheck', false)
         this.quill.on('text-change', this.textChangeHandler)
         this.updateCounter(this.getLength())
         this.quill.enable(true)
