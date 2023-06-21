@@ -1115,6 +1115,7 @@ export default {
 .vertical-rl .ql-toolbar.ql-snow .ql-formats {
   margin-right: 0;
   margin-bottom: 12px;
+  vertical-align: top;
 }
 .ql-toolbar.ql-snow .ql-picker-label {
   border: 1px solid transparent;
