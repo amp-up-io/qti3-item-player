@@ -514,6 +514,7 @@ export default {
   overflow-wrap: anywhere; 
   white-space: break-spaces;
   position: relative;
+  -webkit-user-modify: read-write-plaintext-only;
 }
 
 .ext-text-default-vert-rl:focus {

@@ -593,6 +593,7 @@ div.text-entry-default-vert-wrapper.focused {
   height: 8.25rem;
   color: var(--foreground);
   background-color: var(--background);
+  -webkit-user-modify: read-write-plaintext-only;
 }
 
 .text-entry-default-vert:focus {
