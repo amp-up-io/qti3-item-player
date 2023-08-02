@@ -118,7 +118,7 @@ class OrderInteractionWidget {
   handleDragStart (event) {
     event.preventDefault()
     if (event.button != 0) return
-    this.interactionStart(event.target, event.pageX, event.pageY, false)
+    this.interactionStart(event.target, event.clientX, event.clientY, false)
     return false
   }
 
@@ -145,16 +145,18 @@ class OrderInteractionWidget {
     this.itemTarget = null
 
     // Save our starting coordinates
-    const draggerItemRect = dragger.getBoundingClientRect()
+    const draggerRect = dragger.getBoundingClientRect()
     this.initialX = coordX
     this.initialY = coordY
-    this.startingX = draggerItemRect.left
-    this.startingY = draggerItemRect.top
+    this.startingX = draggerRect.left
+    this.startingY = draggerRect.top
+    this.offsetX = coordX - this.startingX
+    this.offsetY = coordY - this.startingY
 
     dragger.style.userSelect = 'none'
-    dragger.style.width = draggerItemRect.width + 'px'
-    dragger.style.height = draggerItemRect.height + 'px'
-    dragger.style.transform = "translateX(" + draggerItemRect.left + "px) translateY( " + draggerItemRect.top + "px) translateZ(0)"
+    dragger.style.width = draggerRect.width + 'px'
+    dragger.style.height = draggerRect.height + 'px'
+    dragger.style.transform = `translateX(${draggerRect.left}px) translateY(${draggerRect.top}px) translateZ(0)`
 
     // Remove any existing placeholder
     this.removePlaceholder(dragger)
@@ -176,13 +178,13 @@ class OrderInteractionWidget {
 
   handleDragMove (event) {
     event.preventDefault()
-    this.interactionMove(event.pageX, event.pageY)
+    this.interactionMove(event.clientX, event.clientY)
   }
 
   handleTouchMove (event) {
     event.preventDefault()
     if (event.targetTouches.length != 1) return
-    this.interactionMove(event.touches[0].pageX, event.touches[0].pageY)
+    this.interactionMove(event.touches[0].clientX, event.touches[0].clientY)
   }
 
   interactionMove (coordX, coordY) {
@@ -191,8 +193,12 @@ class OrderInteractionWidget {
     this.offsetX = coordX - this.initialX
     this.offsetY = coordY - this.initialY
 
-    dragger.style.transform = "translateX(" + (this.startingX + this.offsetX) + "px) translateY(" + (this.startingY + this.offsetY) + "px) translateZ(0) scale(1)"
+    // Enforce wrapper boundaries on offsetX and offsetY
+    this.constrainDraggerToWrapper(dragger)
 
+    dragger.style.transform = `translateX(${this.startingX + this.offsetX}px) translateY(${this.startingY + this.offsetY}px) translateZ(0) scale(1)`
+
+    // Refresh dragger bounding rectangle following transform
     const draggerRect = dragger.getBoundingClientRect()
 
     // Inspect the targets
@@ -204,12 +210,35 @@ class OrderInteractionWidget {
     }
   }
 
+  constrainDraggerToWrapper (dragger) {
+    const draggerRect = dragger.getBoundingClientRect()
+    const wrapperRect = this.wrapper.getBoundingClientRect()
+
+    const lowerX = this.startingX + this.offsetX - wrapperRect.x
+    const lowerY = this.startingY + this.offsetY - wrapperRect.y
+    const upperX = this.startingX + draggerRect.width + this.offsetX - (wrapperRect.x + wrapperRect.width)
+    const upperY = this.startingY + draggerRect.height + this.offsetY - (wrapperRect.y + wrapperRect.height)
+
+    if (lowerX < 0) {
+      this.offsetX = this.offsetX - lowerX
+    }
+    if (upperX > 0) {
+      this.offsetX = this.offsetX - upperX
+    }
+    if (lowerY < 0) {
+      this.offsetY = this.offsetY - lowerY
+    }
+    if (upperY > 0) {
+      this.offsetY = this.offsetY - upperY
+    }
+  }
+
   handleDragEnd (event) {
-    this.interactionEnd(event.pageX, event.pageY, false)
+    this.interactionEnd(event.clientX, event.clientY, false)
   }
 
   handleTouchEnd (event) {
-    this.interactionEnd(event.changedTouches[0].pageX, event.changedTouches[0].pageY, true)
+    this.interactionEnd(event.changedTouches[0].clientX, event.changedTouches[0].clientY, true)
   }
 
   interactionEnd (coordX, coordY, isTouch) {
@@ -217,10 +246,10 @@ class OrderInteractionWidget {
 
     if (this.itemTarget === null) {
       // No target.  Send it back to its origin
-      dragger.style.transform = "translateX(" + this.startingX + "px) translateY(" + this.startingY + "px) translateZ(0)"
+      dragger.style.transform = `translateX(${this.startingX}px) translateY(${this.startingY}px) translateZ(0)`
     } else {
       // Move it into the target
-      dragger.style.transform = "translateX(" + (this.startingX + this.offsetX) + "px) translateY(" + (this.startingY + this.offsetY) + "px) translateZ(0)"
+      dragger.style.transform = `translateX(${this.startingX + this.offsetX}px) translateY(${this.startingY + this.offsetY}px) translateZ(0)`
     }
 
     // Clean out any hanging style (such as the transform, width, and height)
