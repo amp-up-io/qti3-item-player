@@ -51,6 +51,9 @@ class OrderInteractionWidget {
       this.startingY = 0
       this.currentTargetCount = 0
 
+      // Initialize currentDragger state
+      this.currentDragger = null
+
       this.initializeSources(this.sourcewrapper)
       this.targetwrapper = this.wrapper.querySelector('.qti-order-target-wrapper')
       this.initializeTargets(this.targetwrapper)
@@ -114,7 +117,8 @@ class OrderInteractionWidget {
 
   handleDragStart (event) {
     event.preventDefault()
-    this.interactionStart(event.target, event.pageX, event.pageY, false)
+    if (event.button != 0) return
+    this.interactionStart(event.target, event.clientX, event.clientY, false)
     return false
   }
 
@@ -141,16 +145,18 @@ class OrderInteractionWidget {
     this.itemTarget = null
 
     // Save our starting coordinates
-    const draggerItemRect = dragger.getBoundingClientRect()
+    const draggerRect = dragger.getBoundingClientRect()
     this.initialX = coordX
     this.initialY = coordY
-    this.startingX = draggerItemRect.left
-    this.startingY = draggerItemRect.top
+    this.startingX = draggerRect.left
+    this.startingY = draggerRect.top
+    this.offsetX = coordX - this.startingX
+    this.offsetY = coordY - this.startingY
 
     dragger.style.userSelect = 'none'
-    dragger.style.width = draggerItemRect.width + 'px'
-    dragger.style.height = draggerItemRect.height + 'px'
-    dragger.style.transform = "translateX(" + draggerItemRect.left + "px) translateY( " + draggerItemRect.top + "px) translateZ(0)"
+    dragger.style.width = draggerRect.width + 'px'
+    dragger.style.height = draggerRect.height + 'px'
+    dragger.style.transform = `translateX(${draggerRect.left}px) translateY(${draggerRect.top}px) translateZ(0)`
 
     // Remove any existing placeholder
     this.removePlaceholder(dragger)
@@ -163,30 +169,36 @@ class OrderInteractionWidget {
       dragger.classList.add('dragging')
     }
 
+    // Important! set current selected dragger
+    this.setCurrentDragger(dragger)
+
     // Bind the appropriate handlers
     this.addListeners(dragger, isTouch)
   }
 
   handleDragMove (event) {
     event.preventDefault()
-    this.interactionMove(event.target, event.pageX, event.pageY)
+    this.interactionMove(event.clientX, event.clientY)
   }
 
   handleTouchMove (event) {
     event.preventDefault()
     if (event.targetTouches.length != 1) return
-    this.interactionMove(event.target, event.touches[0].pageX, event.touches[0].pageY)
+    this.interactionMove(event.touches[0].clientX, event.touches[0].clientY)
   }
 
-  interactionMove (dragElement, coordX, coordY) {
-    // Get a handle on the draggable container of the dragElement
-    const dragger = this.getClosestElement(dragElement, 'draggable')
+  interactionMove (coordX, coordY) {
+    const dragger = this.currentDragger
 
     this.offsetX = coordX - this.initialX
     this.offsetY = coordY - this.initialY
 
-    dragger.style.transform = "translateX(" + (this.startingX + this.offsetX) + "px) translateY(" + (this.startingY + this.offsetY) + "px) translateZ(0) scale(1)"
+    // Enforce wrapper boundaries on offsetX and offsetY
+    this.constrainDraggerToWrapper(dragger)
 
+    dragger.style.transform = `translateX(${this.startingX + this.offsetX}px) translateY(${this.startingY + this.offsetY}px) translateZ(0) scale(1)`
+
+    // Refresh dragger bounding rectangle following transform
     const draggerRect = dragger.getBoundingClientRect()
 
     // Inspect the targets
@@ -198,24 +210,46 @@ class OrderInteractionWidget {
     }
   }
 
+  constrainDraggerToWrapper (dragger) {
+    const draggerRect = dragger.getBoundingClientRect()
+    const wrapperRect = this.wrapper.getBoundingClientRect()
+
+    const lowerX = this.startingX + this.offsetX - wrapperRect.x
+    const lowerY = this.startingY + this.offsetY - wrapperRect.y
+    const upperX = this.startingX + draggerRect.width + this.offsetX - (wrapperRect.x + wrapperRect.width)
+    const upperY = this.startingY + draggerRect.height + this.offsetY - (wrapperRect.y + wrapperRect.height)
+
+    if (lowerX < 0) {
+      this.offsetX = this.offsetX - lowerX
+    }
+    if (upperX > 0) {
+      this.offsetX = this.offsetX - upperX
+    }
+    if (lowerY < 0) {
+      this.offsetY = this.offsetY - lowerY
+    }
+    if (upperY > 0) {
+      this.offsetY = this.offsetY - upperY
+    }
+  }
+
   handleDragEnd (event) {
-    this.interactionEnd(event.target, event.pageX, event.pageY, false)
+    this.interactionEnd(event.clientX, event.clientY, false)
   }
 
   handleTouchEnd (event) {
-    this.interactionEnd(event.target, event.changedTouches[0].pageX, event.changedTouches[0].pageY, true)
+    this.interactionEnd(event.changedTouches[0].clientX, event.changedTouches[0].clientY, true)
   }
 
-  interactionEnd (dragElement, coordX, coordY, isTouch) {
-    // Get a handle on the draggable container of the dragElement
-    const dragger = this.getClosestElement(dragElement, 'draggable')
+  interactionEnd (coordX, coordY, isTouch) {
+    const dragger = this.currentDragger
 
     if (this.itemTarget === null) {
       // No target.  Send it back to its origin
-      dragger.style.transform = "translateX(" + this.startingX + "px) translateY(" + this.startingY + "px) translateZ(0)"
+      dragger.style.transform = `translateX(${this.startingX}px) translateY(${this.startingY}px) translateZ(0)`
     } else {
       // Move it into the target
-      dragger.style.transform = "translateX(" + (this.startingX + this.offsetX) + "px) translateY(" + (this.startingY + this.offsetY) + "px) translateZ(0)"
+      dragger.style.transform = `translateX(${this.startingX + this.offsetX}px) translateY(${this.startingY + this.offsetY}px) translateZ(0)`
     }
 
     // Clean out any hanging style (such as the transform, width, and height)
@@ -233,6 +267,9 @@ class OrderInteractionWidget {
     if (this.itemTarget === null) {
       // No target.  Dock the dragger to its pre-drag host.
       this.resetDraggerToItemStart(this.itemStart, dragger)
+      // Reset currentDragger
+      this.setCurrentDragger(null)
+      // Always remove listeners
       this.removeListeners(dragger, isTouch)
       return
     }
@@ -247,6 +284,8 @@ class OrderInteractionWidget {
         this.resetDraggerToItemStart(this.itemStart, dragger)
         // Trigger max selections message event
         this.notifySelectionsLimit()
+        // Reset currentDragger
+        this.setCurrentDragger(null)
         // Always remove listeners
         this.removeListeners(dragger, isTouch)
         return
@@ -272,7 +311,14 @@ class OrderInteractionWidget {
       this.notifyUpdate()
     }
 
+    // Reset currentDragger
+    this.setCurrentDragger(null)
+    // Always remove listeners
     this.removeListeners(dragger, isTouch)
+  }
+
+  setCurrentDragger (dragger) {
+    this.currentDragger = dragger
   }
 
   resetDraggerToItemStart (itemStart, dragger) {
@@ -403,8 +449,10 @@ class OrderInteractionWidget {
       dragger.addEventListener('touchend', this.handleTouchEnd)
     } else {
       this.removeListeners(dragger, isTouch)
-      dragger.addEventListener('mousemove', this.handleDragMove)
-      dragger.addEventListener('mouseup', this.handleDragEnd)
+      // Add event listeners to the *document* to deal with 
+      //the lost dragger issue.
+      document.addEventListener('mousemove', this.handleDragMove)
+      document.addEventListener('mouseup', this.handleDragEnd)
     }
   }
 
@@ -413,8 +461,8 @@ class OrderInteractionWidget {
       dragger.removeEventListener('touchmove', this.handleTouchMove)
       dragger.removeEventListener('touchend', this.handleTouchEnd)
     } else {
-      dragger.removeEventListener('mousemove', this.handleDragMove)
-      dragger.removeEventListener('mouseup', this.handleDragEnd)
+      document.removeEventListener('mousemove', this.handleDragMove)
+      document.removeEventListener('mouseup', this.handleDragEnd)
     }
   }
 
@@ -627,14 +675,20 @@ class OrderInteractionWidget {
 
   destroy () {
     if (this.options.interactionSubType === 'ordermatch') {
+
+      if (this.currentDragger !== null) {
+        document.removeEventListener('mousemove', this.handleDragMove)
+        document.removeEventListener('mouseup', this.handleDragEnd)
+      }
+
       // Remove all dragger event listeners
       this.draggers.forEach((dragger) => {
           dragger.removeEventListener('touchstart', this.handleTouchStart)
           dragger.removeEventListener('touchmove', this.handleTouchMove)
           dragger.removeEventListener('touchend', this.handleTouchEnd)
           dragger.removeEventListener('mousedown', this.handleDragStart)
-          dragger.removeEventListener('mousemove', this.handleDragMove)
-          dragger.removeEventListener('mouseup', this.handleDragEnd)
+          //dragger.removeEventListener('mousemove', this.handleDragMove)
+          //dragger.removeEventListener('mouseup', this.handleDragEnd)
         }, this)
 
       // Remove the target wrapper
