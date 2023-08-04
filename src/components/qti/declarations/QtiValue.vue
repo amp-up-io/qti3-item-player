@@ -70,6 +70,8 @@ export default {
 
         case 'string':
         case 'identifier':
+        case 'directedPair':
+        case 'pair':
           return this.singleValue
 
         default:
@@ -126,6 +128,11 @@ export default {
 
           case 'identifier':
             value = qtiValueValidation.IdentifierValue(textContent)
+            break
+
+          case 'directedPair':
+          case 'pair':
+            value = qtiValueValidation.StringValue(textContent)
             break
 
           default:
