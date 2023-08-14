@@ -473,7 +473,7 @@ ul.qti-order-target-wrapper > li.target {
   -webkit-border-radius: .25rem;
   -moz-border-radius: .25rem;
   border-radius: .25rem;
-  min-height: 5.5rem;
+  min-height: 5.25rem;
   width: 150px;
 }
 
