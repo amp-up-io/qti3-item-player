@@ -18,6 +18,7 @@ import QtiCustomInteraction from '@/components/qti/interactions/QtiCustomInterac
 import QtiEndAttemptInteraction from '@/components/qti/interactions/QtiEndAttemptInteraction'
 import QtiHotspotInteraction from '@/components/qti/interactions/QtiHotspotInteraction'
 import QtiHottextInteraction from '@/components/qti/interactions/QtiHottextInteraction'
+import QtiMatchInteraction from '@/components/qti/interactions/QtiMatchInteraction'
 import QtiOrderInteraction from '@/components/qti/interactions/QtiOrderInteraction'
 import QtiPortableCustomInteraction from '@/components/qti/interactions/QtiPortableCustomInteraction'
 import QtiFeedbackInline from '@/components/qti/body/QtiFeedbackInline'
@@ -43,6 +44,7 @@ Vue.component('qti-custom-interaction', QtiCustomInteraction)
 Vue.component('qti-end-attempt-interaction', QtiEndAttemptInteraction)
 Vue.component('qti-hotspot-interaction', QtiHotspotInteraction)
 Vue.component('qti-hottext-interaction', QtiHottextInteraction)
+Vue.component('qti-match-interaction', QtiMatchInteraction)
 Vue.component('qti-order-interaction', QtiOrderInteraction)
 Vue.component('qti-portable-custom-interaction', QtiPortableCustomInteraction)
 Vue.component('qti-feedback-inline', QtiFeedbackInline)
