@@ -15,6 +15,9 @@ class MatchPresentationFactory {
       QTI_CHOICES_LEFT: 'qti-choices-left',
       QTI_CHOICES_RIGHT: 'qti-choices-right',
 
+      // Indicates a match interaction in a table
+      QTI_MATCH_TABULAR: 'qti-match-tabular',
+
       // Use data- attributes to define these.
       DATA_MAX_SELECTIONS_MESSAGE: 'data-max-selections-message',
       DATA_MIN_SELECTIONS_MESSAGE: 'data-min-selections-message',
@@ -75,6 +78,10 @@ class MatchPresentationFactory {
           this.presentation_Choices_Orientation = clazz
           break
 
+        case this.constants.QTI_MATCH_TABULAR:
+          // Placeholder.  Do Nothing.
+          break
+
         default:
           break
       } // end switch
@@ -86,6 +93,10 @@ class MatchPresentationFactory {
     if (this.interactionSubType === 'default') {
       this.matchSetNode1.$refs.matchset.classList.add('qti-match-source-wrapper')
       this.matchSetNode2.$refs.matchset.classList.add('qti-match-target-wrapper')
+
+      if (this.presentation_Choices_Orientation === null) {
+        this.presentation_Choices_Orientation = this.constants.QTI_CHOICES_TOP
+      }
 
       if (this.presentation_Choices_Orientation === this.constants.QTI_CHOICES_LEFT) {
         this.matchSetNode1.$refs.matchset.classList.add(this.constants.QTI_CHOICES_LEFT)

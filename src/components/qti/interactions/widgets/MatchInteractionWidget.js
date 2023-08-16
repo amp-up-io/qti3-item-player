@@ -20,7 +20,6 @@ class MatchInteractionWidget {
     this.handleTouchStart = this.handleTouchStart.bind(this)
     this.handleTouchMove = this.handleTouchMove.bind(this)
     this.handleTouchEnd = this.handleTouchEnd.bind(this)
-    this.notifyUpdate = this.notifyUpdate.bind(this)
 
     // Initialize variables used to track state
     this.itemTarget = null
@@ -753,8 +752,6 @@ class MatchInteractionWidget {
           dragger.removeEventListener('mousedown', this.handleDragStart)
         }, this)
 
-      // Remove the target wrapper
-      this.targetwrapper.remove()
     }
   }
 
