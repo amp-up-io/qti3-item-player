@@ -136,21 +136,16 @@ class MatchInteractionWidget {
     this.offsetX = coordX - this.startingX
     this.offsetY = coordY - this.startingY
 
+    // Create a new placeholder
+    this.addPlaceholder(dragger)
+
     dragger.style.userSelect = 'none'
     dragger.style.width = draggerRect.width + 'px'
     dragger.style.height = draggerRect.height + 'px'
     dragger.style.transform = `translateX(${draggerRect.left}px) translateY(${draggerRect.top}px) translateZ(0)`
 
-    // Remove any existing placeholder
-    this.removePlaceholder(dragger)
-
-    // Create a new placeholder
-    this.addPlaceholder(dragger)
-
     // Add dragging class
-    if (!dragger.classList.contains('dragging')) {
-      dragger.classList.add('dragging')
-    }
+    dragger.classList.add('dragging')
 
     // Important! set current selected dragger
     this.setCurrentDragger(dragger)
