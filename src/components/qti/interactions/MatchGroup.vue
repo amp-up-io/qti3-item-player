@@ -324,6 +324,8 @@ export default {
 <style>
 .qti-match-interaction-wrapper {
   margin: .75rem 0;
+  display: block;
+  width: 100%;
 }
 
 ul.qti-match-source-wrapper {
@@ -340,13 +342,17 @@ ul.qti-match-source-wrapper {
 ul.qti-match-source-wrapper.qti-choices-left {
   float: left;
   width: 50%;
+  margin-top: .65rem;
   padding: 0 1rem;
+  min-height: 5.25rem;
 }
 
 ul.qti-match-source-wrapper.qti-choices-right {
   float: right;
   width: 50%;
+  margin-top: .65rem;
   padding: 0 1rem;
+  min-height: 5.25rem;
 }
 
 ul.qti-match-source-wrapper.qti-choices-top,
@@ -393,6 +399,7 @@ ul.qti-match-target-wrapper.qti-choices-left,
 ul.qti-match-target-wrapper.qti-choices-right {
   margin: .75rem auto;
   width: 50%;
+  display: inline-block;
 }
 
 ul.qti-match-target-wrapper.qti-choices-top,
@@ -462,7 +469,6 @@ ul.qti-match-target-wrapper > li.target > .dragger-placeholder {
   margin: 0 0 .5rem;
 }
 
-/* Used for default match interaction */
 .choice-description.draggable {
   display: inline-block;
   position: relative;
