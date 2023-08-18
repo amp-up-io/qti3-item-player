@@ -37,6 +37,7 @@ class MatchInteractionTabularWidget {
   options = {
     interactionSubType: 'matchtabular',
     isHeaderHidden: false,
+    isRowCentric: false,
     firstColumnHeader: null,
     cardinality: 'single',
     maxAssociations: 0,
@@ -65,6 +66,7 @@ class MatchInteractionTabularWidget {
   processOptions (options) {
     if ('interactionSubType' in options) this.options.interactionSubType = options.interactionSubType
     if ('isHeaderHidden' in options) this.options.isHeaderHidden = options.isHeaderHidden
+    if ('isRowCentric' in options) this.options.isRowCentric = options.isRowCentric
     if ('firstColumnHeader' in options) this.options.firstColumnHeader = options.firstColumnHeader
     if ('cardinality' in options) this.options.cardinality = options.cardinality
     if ('response' in options) this.options.response = options.response
@@ -277,18 +279,65 @@ class MatchInteractionTabularWidget {
   getHeader (columnWidthStyle) {
     if (this.options.isHeaderHidden) return ''
 
-    let result = `<th scope="col" class="header-cell">${this.options.firstColumnHeader}</th>`
+    let result = `<th scope="col" class="header-cell">${this.options.firstColumnHeader == null ? '' : this.options.firstColumnHeader}</th>`
+
+    // When row-centric, the sources become the column headers
+    if (this.options.isRowCentric) {
+      result += this.getSourceHeader(columnWidthStyle)
+      return `<thead>${result}</thead>`
+    }
+
+    // When not row-centric (default), the targets become the column headers
+    result += this.getTargetHeader(columnWidthStyle)
+    return `<thead>${result}</thead>`
+  }
+
+  getTargetHeader (columnWidthStyle) {
+    let result = ''
 
     this.targets.forEach((target) => {
       result += `<th scope="col" class="header-cell" style="${columnWidthStyle}">${target.innerHTML}</th>`
     })
 
-    return `<thead>${result}</thead>`
+    return result
+  }
+
+  getSourceHeader (columnWidthStyle) {
+    let result = ''
+    
+    this.sources.forEach((source) => {
+      result += `<th scope="col" class="header-cell" style="${columnWidthStyle}">${source.innerHTML}</th>`
+    })
+
+    return result
   }
 
   getBody (columnWidthStyle) {
     let result = ''
 
+    if (this.options.isRowCentric) {
+      this.targets.forEach((target) => {
+        result += `<tr><th scope="row" class="row-header-cell">${target.innerHTML}</th>`
+  
+        const targetMatchMax = target.getAttribute('data-match-max')
+  
+        this.sources.forEach((source) => {
+          const sourceMatchMax = source.getAttribute('data-match-max')
+          const sourceIdentifier = source.getAttribute('data-identifier')
+          const targetIdentifier = target.getAttribute('data-identifier')
+          const pair = `${sourceIdentifier} ${targetIdentifier}`
+          result += `<td class="table-cell" style="${columnWidthStyle}">
+            <div class="control-cell"  aria-checked="false" tabindex="0" role="checkbox"
+              data-source-max="${sourceMatchMax}" data-target-max="${targetMatchMax}" data-pair="${pair}"></div>
+            </td>`
+        })
+  
+        result += `</tr>`
+      })
+      return `<tbody>${result}</tbody>`
+    }
+
+    // When not row-centric (default), the targets become the columns
     this.sources.forEach((source) => {
 
       result += `<tr><th scope="row" class="row-header-cell">${source.innerHTML}</th>`

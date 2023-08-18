@@ -17,8 +17,9 @@ class MatchPresentationFactory {
 
       // Indicates a match interaction in a table
       QTI_MATCH_TABULAR: 'qti-match-tabular',
-
       QTI_HEADER_HIDDEN: 'qti-header-hidden',
+      // When qti-match-tabular - flip the source-target axes
+      ROW_CENTRIC: 'row-centric',
 
       // Use data- attributes to define these.
       DATA_MAX_SELECTIONS_MESSAGE: 'data-max-selections-message',
@@ -38,6 +39,7 @@ class MatchPresentationFactory {
 
     this.presentation_Choices_Orientation = null
     this.presentation_Header_Hidden = false
+    this.presentation_Row_Centric = false
 
     this.presentation_MaxSelectionsMessage = ''
     this.presentation_MinSelectionsMessage = ''
@@ -88,6 +90,10 @@ class MatchPresentationFactory {
 
         case this.constants.QTI_HEADER_HIDDEN:
           this.presentation_Header_Hidden = true
+          break
+
+        case this.constants.ROW_CENTRIC:
+          this.presentation_Row_Centric = true
           break
 
         default:

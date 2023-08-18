@@ -13,6 +13,7 @@
       :interactionSubType="interactionSubType"
       :matchInteractionStaticClass="matchInteractionStaticClass"
       :headerHidden="headerHidden"
+      :rowCentric="rowCentric"
       :dataFirstColumnHeader="dataFirstColumnHeader"
       :priorState="priorState"
       v-on:matchGroupReady="handleMatchGroupReady"
@@ -129,6 +130,13 @@ export default {
        * Do not display the top row of the table where the column headers are displayed.
        */
       headerHidden: 'false',
+      /*
+       * NOT QTI SHARED INTERACTION VOCAB
+       * When matchtabular subtype, rowCentric = true is used to invert the table's row and column headers.
+       * When rowCentric = false (the default), the targets are displayed as column headers and the sources
+       * are displayed as row headers.
+       */
+      rowCentric: 'false',
       isQtiValid: true,
       // If we are restoring, this is where we save the prior variable state
       priorState: null
@@ -423,6 +431,9 @@ export default {
             break
           case 'qti-header-hidden':
             this.headerHidden = 'true'
+            break
+          case 'row-centric':
+            this.rowCentric = 'true'
             break
           default:
         }

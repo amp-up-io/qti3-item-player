@@ -91,6 +91,17 @@ export default {
       default: 'false'
     },
     /*
+     * NOT QTI SHARED INTERACTION VOCAB
+     * When matchtabular subtype, rowCentric = true is used to invert the table's row and column headers.
+     * When rowCentric = false (the default), the targets are displayed as column headers and the sources
+     * are displayed as row headers.
+     */
+    rowCentric: {
+      required: false,
+      type: String,
+      default: 'false'
+    },
+    /*
      * When matchtabular subtype, the custom text to be rendered in the top-left header cell 
      * of the table (headings must be visible - see headerHidden).
      */
@@ -130,6 +141,7 @@ export default {
       response: null,
       isShuffle: null,
       isHeaderHidden: null,
+      isRowCentric: null,
       matchInteractionClassAttribute: null,
       presentationFactory: null,
       matchable: null,
@@ -227,6 +239,7 @@ export default {
           cardinality: this.cardinality,
           maxAssociations: this.computedMaxAssociations,
           isHeaderHidden: this.isHeaderHidden,
+          isRowCentric: this.isRowCentric,
           firstColumnHeader: this.dataFirstColumnHeader,
           response: response,
           onReady: this.handleWidgetReady,
@@ -314,6 +327,7 @@ export default {
 
       this.isShuffle = this.shuffle === 'true' ? true : false
       this.isHeaderHidden = this.headerHidden === 'true' ? true : false
+      this.isRowCentric = this.rowCentric === 'true' ? true : false
       this.initializeMatchGroup()
     } catch (err) {
       this.isQtiValid = false
@@ -527,8 +541,16 @@ table.matchtabular .header-cell {
   overflow-wrap: break-word;
 }
 
+table.matchtabular.row-centric .header-cell {
+  overflow-wrap: anywhere;
+}
+
 table.matchtabular .row-header-cell {
   overflow-wrap: anywhere;
+}
+
+table.matchtabular.row-centric .row-header-cell {
+  overflow-wrap: break-word;
 }
 
 table.matchtabular .table-cell {
