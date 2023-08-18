@@ -12,6 +12,7 @@ import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationExc
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
 import MatchPresentationFactory from '@/components/qti/interactions/presentation/MatchInteractionPresentationFactory'
 import MatchInteractionWidget from '@/components/qti/interactions/widgets/MatchInteractionWidget'
+import MatchInteractionTabularWidget from '@/components/qti/interactions/widgets/MatchInteractionTabularWidget'
 
 const qtiAttributeValidation = new QtiAttributeValidation()
 
@@ -81,13 +82,22 @@ export default {
       default: ''
     },
     /*
+     * When matchtabular subtype, it can be advantageous to hide the column headers.  This attribute enables 
+     * this presentation.  Do not display the top row of the table where the column headers are displayed.
+     */
+    headerHidden: {
+      required: false,
+      type: String,
+      default: 'false'
+    },
+    /*
      * When matchtabular subtype, the custom text to be rendered in the top-left header cell 
-     * of the table (headings must be visible).
+     * of the table (headings must be visible - see headerHidden).
      */
     dataFirstColumnHeader: {
       required: false,
       type: String,
-      default: ''
+      default: null
     },
     /*
      * NOT A QTI ATTRIBUTE
@@ -119,6 +129,7 @@ export default {
       orders: [],
       response: null,
       isShuffle: null,
+      isHeaderHidden: null,
       matchInteractionClassAttribute: null,
       presentationFactory: null,
       matchable: null,
@@ -198,19 +209,31 @@ export default {
       // Other than shuffling, this handles all of the QTI presentation vocab.
       this.presentationFactory.initialize(this.interactionSubType, this.$refs.root, this, this.matchsets[0], this.matchsets[1])
 
-      // Bind to the MatchInteraction widget.
-      // 1) handeWidgetReady is called upon completion of instantiation.
-      // 2) handleWidgetUpdate is called any time the candidate changes
-      //    the matching of the choices.
-      this.matchable = new MatchInteractionWidget(this.$refs.root, {
-        interactionSubType: this.interactionSubType,
-        cardinality: this.cardinality,
-        maxAssociations: this.computedMaxAssociations,
-        response: response,
-        onReady: this.handleWidgetReady,
-        onUpdate: this.handleWidgetUpdate,
-        onAssociationsLimit: this.handleAssociationsLimit
-      })
+      if (this.interactionSubType === 'default') {
+        // Bind to the MatchInteraction widget.
+        this.matchable = new MatchInteractionWidget(this.$refs.root, {
+          interactionSubType: this.interactionSubType,
+          cardinality: this.cardinality,
+          maxAssociations: this.computedMaxAssociations,
+          response: response,
+          onReady: this.handleWidgetReady,
+          onUpdate: this.handleWidgetUpdate,
+          onAssociationsLimit: this.handleAssociationsLimit
+        })
+      } else if (this.interactionSubType === 'matchtabular') {
+        // Bind to the MatchInteractionTabular widget.
+        this.matchable = new MatchInteractionTabularWidget(this.$refs.root, {
+          interactionSubType: this.interactionSubType,
+          cardinality: this.cardinality,
+          maxAssociations: this.computedMaxAssociations,
+          isHeaderHidden: this.isHeaderHidden,
+          firstColumnHeader: this.dataFirstColumnHeader,
+          response: response,
+          onReady: this.handleWidgetReady,
+          onUpdate: this.handleWidgetUpdate,
+          onAssociationsLimit: this.handleAssociationsLimit
+        })        
+      }
     },
 
     saveContainerOrders (container0, container1) {
@@ -290,6 +313,7 @@ export default {
       }
 
       this.isShuffle = this.shuffle === 'true' ? true : false
+      this.isHeaderHidden = this.headerHidden === 'true' ? true : false
       this.initializeMatchGroup()
     } catch (err) {
       this.isQtiValid = false
@@ -317,6 +341,13 @@ export default {
         }
       }
     }
+  },
+
+  beforeDestroy () {
+    if (this.matchable !== null) {
+      this.matchable.destroy()
+      this.matchable = null
+    }
   }
 }
 </script>
@@ -337,6 +368,11 @@ ul.qti-match-source-wrapper {
   border: 1px solid;
   border-color: var(--background);
   border-radius: .25rem;
+}
+
+ul.qti-match-source-wrapper.matchset-hidden,
+ul.qti-match-target-wrapper.matchset-hidden {
+  display: none;
 }
 
 ul.qti-match-source-wrapper.qti-choices-left {
@@ -483,5 +519,106 @@ ul.qti-match-target-wrapper > li.target > .dragger-placeholder {
   overflow: hidden;
   text-decoration: none;
   border-radius: .25rem;
+}
+
+table.matchtabular .header-cell {
+  text-align: center;
+  vertical-align: middle;
+  overflow-wrap: break-word;
+}
+
+table.matchtabular .row-header-cell {
+  overflow-wrap: anywhere;
+}
+
+table.matchtabular .table-cell {
+  vertical-align: middle;
+}
+
+table.matchtabular [role="radio"].control-cell,
+table.matchtabular [role="checkbox"].control-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: 0 auto;
+  padding: 0;
+  outline: none;
+  border: 1px dashed transparent;
+  width: 40px;
+  height: 32px;
+  cursor: pointer;
+
+}
+
+table.matchtabular [role="checkbox"].control-cell::before,
+table.matchtabular [role="radio"].control-cell::before {
+  width: 1rem;
+  height: 1rem;
+  /* Default inner color of the control */
+  background-color: var(--choice-control-bgc);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  /* The pale gray border around the control */
+  border: var(--choice-control-border);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+table.matchtabular [role="checkbox"].control-cell::before,
+table.matchtabular [role="checkbox"].control-cell::after,
+table.matchtabular [role="radio"].control-cell::before,
+table.matchtabular [role="radio"].control-cell::after {
+  position: absolute;
+  top: 15px;
+  left: 19px;
+  transform: translate(-50%, -50%);
+  content: '';
+}
+
+table.matchtabular [role="radio"].control-cell::before {
+  border-radius: 50%;
+}
+
+table.matchtabular [role="checkbox"].control-cell::before {
+  border-radius: 0.25rem;
+}
+
+table.matchtabular [role="checkbox"].control-cell:active::before,
+table.matchtabular [role="radio"].control-cell:active::before {
+  filter: brightness(90%);
+}
+
+/* Choice focus */
+table.matchtabular [role="checkbox"].control-cell:focus,
+table.matchtabular [role="radio"].control-cell:focus {
+  border: 1px solid transparent;
+  border-radius: 0.15rem;
+  border-color: var(--choice-focus-border);
+}
+
+/* Radio/Checkbox control focus */
+table.matchtabular [role="checkbox"].control-cell:focus::before,
+table.matchtabular [role="radio"].control-cell:focus::before {
+  border-color: var(--choice-control-focus-border);
+  outline: 0;
+  /* Puts pale blue box shadow around the control */
+  box-shadow: var(--choice-control-focus-shadow);
+}
+
+/* Radio/Checkbox control checked */
+table.matchtabular [role="checkbox"][aria-checked="true"].control-cell::before,
+table.matchtabular [role="radio"][aria-checked="true"].control-cell::before {
+  background-color: var(--choice-control-checked-bg);
+  border-color: var(--choice-control-checked-bc);
+}
+
+/* Radio control checked */
+table.matchtabular [role="radio"][aria-checked="true"].control-cell::before {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='currentColor' /%3e%3c/svg%3e");
 }
 </style>

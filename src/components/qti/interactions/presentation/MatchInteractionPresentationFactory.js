@@ -18,6 +18,8 @@ class MatchPresentationFactory {
       // Indicates a match interaction in a table
       QTI_MATCH_TABULAR: 'qti-match-tabular',
 
+      QTI_HEADER_HIDDEN: 'qti-header-hidden',
+
       // Use data- attributes to define these.
       DATA_MAX_SELECTIONS_MESSAGE: 'data-max-selections-message',
       DATA_MIN_SELECTIONS_MESSAGE: 'data-min-selections-message',
@@ -26,6 +28,7 @@ class MatchPresentationFactory {
 
     this.interactionSubType = 'default'
     this.parentClass = ''
+    this.clazzTokens = []
     this.matchWrapperElement = null
     this.matchGroupNode = null
     this.matchSetNode1 = null
@@ -34,6 +37,7 @@ class MatchPresentationFactory {
     this.choices2 = []
 
     this.presentation_Choices_Orientation = null
+    this.presentation_Header_Hidden = false
 
     this.presentation_MaxSelectionsMessage = ''
     this.presentation_MinSelectionsMessage = ''
@@ -82,17 +86,25 @@ class MatchPresentationFactory {
           // Placeholder.  Do Nothing.
           break
 
+        case this.constants.QTI_HEADER_HIDDEN:
+          this.presentation_Header_Hidden = true
+          break
+
         default:
           break
       } // end switch
     } // end for
+
+    // Save it for later
+    this.clazzTokens = clazzTokens
   }
 
   processPresentation () {
+
+    this.matchSetNode1.$refs.matchset.classList.add('qti-match-source-wrapper')
+    this.matchSetNode2.$refs.matchset.classList.add('qti-match-target-wrapper')
     
     if (this.interactionSubType === 'default') {
-      this.matchSetNode1.$refs.matchset.classList.add('qti-match-source-wrapper')
-      this.matchSetNode2.$refs.matchset.classList.add('qti-match-target-wrapper')
 
       if (this.presentation_Choices_Orientation === null) {
         this.presentation_Choices_Orientation = this.constants.QTI_CHOICES_TOP
@@ -117,14 +129,21 @@ class MatchPresentationFactory {
       }
 
       this.updateMatchSetChoices(this.matchSetNode1, true)
-      this.updateMatchSetChoices(this.matchSetNode2, false)      
+      this.updateMatchSetChoices(this.matchSetNode2, false)  
+
+    } else if (this.interactionSubType === 'matchtabular') {
+      this.createMatchTable()
+
+      // Hide the matchsets
+      this.matchSetNode1.$refs.matchset.classList.add('matchset-hidden')
+      this.matchSetNode2.$refs.matchset.classList.add('matchset-hidden')
     }
 
   }
 
   updateMatchSetChoices (matchSetNode, isSource) {
     const choices = matchSetNode.getChoices()
-    for (let i=0; i<choices.length; i++) {
+    for (let i=0; i < choices.length; i++) {
       if (isSource) {
         choices[i].$refs.choice.classList.add('source')
         choices[i].$refs.description.classList.add('draggable')
@@ -133,6 +152,21 @@ class MatchPresentationFactory {
         choices[i].$refs.description.classList.add('match-target-label')
       }
     }    
+  }
+
+  createMatchTable () {
+      // Create and insert a table element
+      const tableElement = document.createElement('table')
+
+      this.clazzTokens.forEach((token) => {
+        tableElement.classList.add(token)
+      })
+
+      // Add extra's
+      tableElement.classList.add('matchtabular', 'table', 'table-bordered')
+
+      // Insert it
+      this.matchWrapperElement.insertBefore(tableElement, this.matchSetNode1.$refs.matchset)
   }
 
 }

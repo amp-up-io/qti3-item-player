@@ -253,7 +253,7 @@ class MatchInteractionWidget {
       this.itemTarget.classList.remove('active')
 
       // We have an active target. Before we dock, check if we are up
-      // against maxChoices limit.
+      // against maxAssociations limit.
       if (this.isExceedingMaxAssociations(this.itemStart, this.itemTarget, dragger)) {
         // Dock the dragger to its pre-drag host.
         this.resetDraggerToItemStart(this.itemStart, dragger)

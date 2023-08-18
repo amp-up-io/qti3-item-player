@@ -12,6 +12,8 @@
       :minAssociations="minAssociations"
       :interactionSubType="interactionSubType"
       :matchInteractionStaticClass="matchInteractionStaticClass"
+      :headerHidden="headerHidden"
+      :dataFirstColumnHeader="dataFirstColumnHeader"
       :priorState="priorState"
       v-on:matchGroupReady="handleMatchGroupReady"
       @matchGroupUpdate="handleMatchGroupUpdate"
@@ -100,7 +102,7 @@ export default {
     dataFirstColumnHeader: {
       required: false,
       type: String,
-      default: ''
+      default: null
     }
   },
 
@@ -122,6 +124,11 @@ export default {
        * May be one of 'default' | 'matchtabular'
        */
       interactionSubType: 'default',
+      /*
+       * For certain presentations, it can be advantageous to hide the column headers.  This class enables this presentation.  
+       * Do not display the top row of the table where the column headers are displayed.
+       */
+      headerHidden: 'false',
       isQtiValid: true,
       // If we are restoring, this is where we save the prior variable state
       priorState: null
@@ -399,8 +406,10 @@ export default {
      * @return {String} one of 'default' | 'matchtabular'
      */
     getMatchInteractionSubType (clazz) {
+      let subtype = 'default'
+
       if ((typeof clazz === 'undefined') || (clazz === null) || (clazz.length == 0)) {
-        return 'default'
+        return subtype
       }
 
       this.matchInteractionStaticClass = clazz
@@ -410,12 +419,16 @@ export default {
       for (let index = 0; index < clazzTokens.length; index++) {
         switch (clazzTokens[index]) {
           case 'qti-match-tabular':
-            return 'matchtabular'
+            subtype = 'matchtabular'
+            break
+          case 'qti-header-hidden':
+            this.headerHidden = 'true'
+            break
           default:
         }
       }
 
-      return 'default'
+      return subtype
     },
 
     /**
