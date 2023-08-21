@@ -611,7 +611,7 @@ The QTI3 Item Player 2022-2023 development roadmap includes all features and cap
 - [x] Rubric Block Support
 - [x] QtiStylesheet Support
 - [x] Shared Stimulus Support
-- [ ] QtiMatch Interaction Support
+- [x] QtiMatch Interaction Support
 - [ ] QtiGapMatch Interaction Support
 - [ ] QtiGraphicGapMatch Interaction Support
 - [x] QtiHottext Interaction Support
