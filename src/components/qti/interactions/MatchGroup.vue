@@ -474,6 +474,16 @@ ul.qti-match-target-wrapper > li.target {
   width: 150px;
 }
 
+ul.qti-match-target-wrapper.qti-choices-top > li.target:last-child,
+ul.qti-match-target-wrapper.qti-choices-bottom > li.target:last-child {
+  margin-right: 0
+}
+
+ul.qti-match-target-wrapper.qti-choices-top > li.target:first-child,
+ul.qti-match-target-wrapper.qti-choices-bottom > li.target:first-child {
+  margin-left: 0
+}
+
 ul.qti-match-target-wrapper > li.target.target-active {
   color: var(--order-target-active-color);
   background-color: var(--order-target-active-bgc);

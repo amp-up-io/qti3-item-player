@@ -1,6 +1,10 @@
+import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
+
 class MatchInteractionWidget {
 
   constructor (container, options) {
+
+    this.qtiAttributeValidation = new QtiAttributeValidation()
 
     // container should be the overall wrapper of our Match interaction
     this.wrapper = container
@@ -38,10 +42,7 @@ class MatchInteractionWidget {
 
     this.initializeSources(this.sourcewrapper)
     this.initializeTargets(this.targetwrapper)
-
-    // Move the source qti-simple-associable-choices into targets
-    this.restoreResponse()
-
+    this.restoreResponse(this.options.response)
     this.notifyReady()
     return this
   }
@@ -170,8 +171,8 @@ class MatchInteractionWidget {
     this.offsetX = coordX - this.initialX
     this.offsetY = coordY - this.initialY
 
-    // Enforce wrapper boundaries on offsetX and offsetY
-    this.constrainDraggerToWrapper(dragger)
+    // Enforce wrapper boundaries on this.offsetX and this.offsetY
+    this.constrainDraggerToWrapper(dragger, this.wrapper)
 
     dragger.style.transform = `translateX(${this.startingX + this.offsetX}px) translateY(${this.startingY + this.offsetY}px) translateZ(0) scale(1)`
 
@@ -187,9 +188,15 @@ class MatchInteractionWidget {
     }
   }
 
-  constrainDraggerToWrapper (dragger) {
+  /**
+   * @description Constrain the given dragger to the bounding dimensions of the given wrapper.
+   * This is accomplished by limiting this.offsetX and this.offsetY.
+   * @param DomElement dragger - the dragger to constrain
+   * @param DomElement wrapper - interaction wrapper constraining the dragger
+   */
+  constrainDraggerToWrapper (dragger, wrapper) {
     const draggerRect = dragger.getBoundingClientRect()
-    const wrapperRect = this.wrapper.getBoundingClientRect()
+    const wrapperRect = wrapper.getBoundingClientRect()
 
     const lowerX = this.startingX + this.offsetX - wrapperRect.x
     const lowerY = this.startingY + this.offsetY - wrapperRect.y
@@ -285,12 +292,21 @@ class MatchInteractionWidget {
       // dragger in its original order in the sourcewrapper.
       if (this.itemTarget.classList.contains('source')) {
         this.itemTarget.classList.add('full')
+        if (this.itemTarget.dataset.matchMax*1 > 0) {
+          this.incrementRemaining(this.itemTarget)
+        }
         this.decrementAssociationsCount()
         this.sortContainerElements(this.sourcewrapper)
       }
 
       if (this.itemStart.classList.contains('source')) {
-        this.itemStart.classList.remove('full')
+        if (this.itemStart.dataset.matchMax*1 > 0) {
+          const remaining = this.decrementRemaining(this.itemStart)
+          if (remaining === 0) {
+            this.itemStart.classList.remove('full')
+          }
+        }
+
         this.incrementAssociationsCount()
       }
 
@@ -326,15 +342,29 @@ class MatchInteractionWidget {
   }
 
   setDraggerToItemTarget (itemTarget, dragger) {
+    if (itemTarget.classList.contains('source')) {
+      if (itemTarget.classList.contains('full')) {
+        // replace child
+        // current source
+        const childElement = itemTarget.querySelector('.draggable')
+        if (childElement != null) {
+          itemTarget.replaceChild(dragger, childElement)
+        }
+        return
+      }
+
+      itemTarget.append(dragger)
+      return
+    }
+
+    // We are adding to a target, not a source
     itemTarget.append(dragger)
 
-    if (itemTarget.classList.contains('target')) {
-      // Set the dragger's width to 100% of its container li
-      dragger.setAttribute('style', 'width:100%')
+    // Set the dragger's width to 100% of its container li
+    dragger.setAttribute('style', 'width:100%')
 
-      if (this.isTargetFull(itemTarget)) {
-        itemTarget.classList.add('full')
-      }
+    if (this.isTargetFull(itemTarget)) {
+      itemTarget.classList.add('full')
     }
   }
 
@@ -372,9 +402,8 @@ class MatchInteractionWidget {
         draggerRect.bottom - dragger.offsetHeight / 2 > sourceWrapperRect.top &&
         draggerRect.left + dragger.offsetWidth / 2 < sourceWrapperRect.right) {
 
-      // Find the first empty source item
-      for (let i=0; i<this.sources.length; i++) {
-        if (!this.sources[i].classList.contains('full')) {
+      for (let i=0; i < this.sources.length; i++) {
+        if (this.sources[i].dataset.identifier === dragger.dataset.identifier) {
           this.sources[i].classList.add('active')
           this.itemTarget = this.sources[i]
           break
@@ -383,15 +412,53 @@ class MatchInteractionWidget {
 
     } else {
       // Find the first active source item
-      for (let i=0; i<this.sources.length; i++) {
+      for (let i=0; i < this.sources.length; i++) {
         if (this.sources[i].classList.contains('active')) {
           this.sources[i].classList.remove('active')
         }
       }
     }
-  }  
+  }
 
   addPlaceholder (draggableItem) {
+
+    // If we are NOT coming from a source, use a generic placeholder
+    if (!draggableItem.parentNode.classList.contains('source')) {
+      this.addGenericPlaceholder(draggableItem)
+      return
+    }
+    
+    //
+    // Coming from a source.
+    //
+    const draggerMatchMax = draggableItem.parentNode.dataset.matchMax*1
+
+    // If matchMax = 1, use a generic placeholder
+    if (draggerMatchMax === 1) {
+      this.addGenericPlaceholder(draggableItem)
+      return
+    }
+
+    // If matchMax = 0, use a clone placeholder
+    if (draggerMatchMax === 0) {
+      this.addClonePlaceholder(draggableItem)
+      return
+    }
+
+    // matchMax must be > 1, examine remaining matches
+    const remaining = this.getRemaining(draggableItem.parentNode)
+
+    if (remaining === 1) {
+      // This is the last one.  Use a generic placeholder
+      this.addGenericPlaceholder(draggableItem)
+      return
+    }
+
+    // Remaining > 1, use a clone placeholder
+    this.addClonePlaceholder(draggableItem)
+  }
+
+  addGenericPlaceholder (draggableItem) {
     const draggableItemRect = draggableItem.getBoundingClientRect()
 
     // Create the element
@@ -404,7 +471,32 @@ class MatchInteractionWidget {
     draggableItem.parentNode.insertBefore(spacerElement, draggableItem)
   }
 
+  addClonePlaceholder (draggableItem) {
+    const cloneElement = draggableItem.cloneNode(true)
+    this.deepCloneId(cloneElement)
+    cloneElement.classList.add('clone')
+    draggableItem.parentNode.insertBefore(cloneElement, draggableItem)
+    cloneElement.addEventListener('mousedown', this.handleDragStart)
+    cloneElement.addEventListener('touchstart', this.handleTouchStart)
+  }
+
   removePlaceholder (draggableItem) {
+    if (draggableItem.parentNode.classList.contains('target')) {
+
+      const placeholderElement = draggableItem.parentNode.querySelector('.dragger-placeholder')
+
+      if (placeholderElement === null) return
+
+      draggableItem.parentNode.removeChild(placeholderElement)
+      return
+    }
+
+    // Must be cominig from a source.
+    const draggerMatchMax = draggableItem.parentNode.dataset.matchMax*1
+    
+    // Never remove the placeholder on sources with matchMax = 0
+    if (draggerMatchMax === 0) return
+
     const placeholderElement = draggableItem.parentNode.querySelector('.dragger-placeholder')
 
     if (placeholderElement === null) return
@@ -414,8 +506,23 @@ class MatchInteractionWidget {
 
   replacePlaceholder (draggableItem) {
     const parentNode = draggableItem.parentNode
-    const placeholderElement = parentNode.querySelector('.dragger-placeholder')
 
+    let placeholderElement = placeholderElement = parentNode.querySelector('.dragger-placeholder')
+
+    if (parentNode.classList.contains('source')) {
+      // Inside source list, a placeholder may be a draggable or a placeholder
+      // If the placeholderElement is null thus far, try to find a draggable to replace.
+      if (placeholderElement == null) {
+        placeholderElement = parentNode.querySelector('.draggable')
+      }
+
+      if (placeholderElement === null) return
+
+      parentNode.replaceChild(draggableItem, placeholderElement)
+      return
+    }
+
+    // Must be inside a target list
     if (placeholderElement === null) return
 
     parentNode.replaceChild(draggableItem, placeholderElement)
@@ -427,6 +534,8 @@ class MatchInteractionWidget {
     // Assume all sources are initialized with a dragger
     this.sources.forEach((source) => {
         source.classList.add('full')
+        const matchMax = source.dataset.matchMax*1
+        this.setRemaining(source, (matchMax === 0 ? 1000 : matchMax))
       }, this)
 
     this.draggers = sourcewrapper.querySelectorAll('.draggable')
@@ -449,12 +558,13 @@ class MatchInteractionWidget {
   }
 
   identifyTargets (highlight) {
-    for (let i=0; i<this.targets.length; i++) {
+    for (let i=0; i < this.targets.length; i++) {
       if (highlight && !this.targets[i].classList.contains('full')) {
         this.targets[i].classList.add('target-active')
       }
     }
 
+    // Only highlight sourcewrapper if we did not start in the sourcewrapper.
     if (highlight && !this.isItemStartSource) {
       this.sourcewrapper.classList.add('target-active')
     }
@@ -514,8 +624,7 @@ class MatchInteractionWidget {
       for (let i=0; i<elements.length; i++) {
         const dragger = elements[i].querySelector('div.draggable')
         if (dragger) {
-          const order = dragger.getAttribute('data-order')
-          sortArray.push([1*order, elements[i]])
+          sortArray.push([1*dragger.dataset.order, elements[i]])
         }
       }
   
@@ -538,23 +647,13 @@ class MatchInteractionWidget {
   computeResponse () {
     let data = []
 
-    switch (this.options.interactionSubType) {
-      case 'default':
-        // Iterate through the targets and pluck the data-identifiers of any
-        // draggers that have been placed in a target.
-        this.targets.forEach((target) => {
-            const draggers = target.querySelectorAll('.draggable')
-            draggers.forEach((dragger) => {
-              const draggerIdentifier = dragger.getAttribute('data-identifier')
-              const targetIdentifier = target.getAttribute('data-identifier')
-              data.push(`${draggerIdentifier} ${targetIdentifier}`)
-            })
-        })
-
-        break
-
-      default:
-    }
+    // Iterate through the targets and get the data-identifiers of any
+    // draggers that have been placed in a target.
+    this.targets.forEach((target) => {
+        target.querySelectorAll('.draggable').forEach((dragger) => {
+            data.push(`${dragger.dataset.identifier} ${target.dataset.identifier}`)
+          })
+    })
 
     if (data.length === 0) return null
 
@@ -563,57 +662,118 @@ class MatchInteractionWidget {
     return data
   }
 
-  restoreResponse () {
-    if (this.options.response === null) return
+  /**
+   * @description Main method to restore the UI with a response
+   * @param {*} response - can be null, a directedPair string, or an array of directedPair strings
+   * @returns 
+   */
+  restoreResponse (response) {
+    if (response === null) return
 
     if (this.options.cardinality === 'single') {
-      const directedPair = this.getPair(this.options.response)
-      if (directedPair === null) return
+      this.restoreResponsePair(response)
+    } else {
+      response.forEach((response) => {
+        this.restoreResponsePair(response)
+      }, this)
+    }
+  }
 
-      // 1. find source dragger
-      const dragger = this.findSourceDraggerByIdentifier(directedPair.source)
-      // 2. empty dragger parent
-      this.emptyDraggerParent(dragger)
-      // 3. find target
-      const target = this.findTargetByIdentifier(directedPair.target)
-      // 4. add dragger to target
-      this.addSourceDraggerToTarget(target, dragger)
+  restoreResponsePair (response) {
+    const directedPair = this.getPair(response)
+    if (directedPair === null) return
+
+    // 1. find source
+    const source = this.findSourceByIdentifier(directedPair.source)
+    // 2. find target
+    const target = this.findTargetByIdentifier(directedPair.target)
+
+    // Bail if either is not found (should never happen)
+    if ((source === null) || (target === null)) return
+
+    // 3. find source dragger
+    const dragger = source.querySelector('.draggable')
+    if (dragger === null) return
+
+    // 4. Clone or empty source dragger - depending on maxChoices and remaining
+    this.cloneOrEmptySourceDragger(source, dragger)
+
+    // 5. Add dragger to target
+    this.addSourceDraggerToTarget(target, dragger)
+  }
+
+  /**
+   * @description Clone or empty a given source parent of a given dragger
+   * @param {*} source parent of the dragger
+   * @param {*} dragger 
+   * @returns Updated source parent as empty or containing a dragger clone
+   */
+  cloneOrEmptySourceDragger (source, dragger) {
+    const draggerMatchMax = source.dataset.matchMax*1
+
+    // If matchMax = 1, empty the parent
+    if (draggerMatchMax === 1) {
+      source.classList.remove('full')
+      this.decrementRemaining(source)
       return
     }
 
-    this.options.response.forEach((response) => {
-      const directedPair = this.getPair(response)
-      if (directedPair === null) return
+    // If matchMax = 0, use a clone placeholder
+    if (draggerMatchMax === 0) {
+      this.addClonePlaceholder(dragger)
+      return
+    }
 
-      // 1. find source dragger
-      const dragger = this.findSourceDraggerByIdentifier(directedPair.source)
-      // 2. empty dragger parent
-      this.emptyDraggerParent(dragger)
-      // 3. find target
-      const target = this.findTargetByIdentifier(directedPair.target)
-      // 4. add dragger to target
-      this.addSourceDraggerToTarget(target, dragger)
-    }, this)
+    // matchMax must be > 1
+    const remaining = this.getRemaining(source)
+
+    if (remaining === 1) {
+      // This is the last one.
+      source.classList.remove('full')
+      this.decrementRemaining(source)
+      return
+    }
+
+    this.decrementRemaining(source)
+    // Remaining > 1, use a clone placeholder
+    this.addClonePlaceholder(dragger)
   }
 
-  findSourceDraggerByIdentifier (identifier) {
-    for (let i=0; i<this.draggers.length; i++) {
-      if (identifier === this.draggers[i].getAttribute('data-identifier')) {
-        return this.draggers[i]
+  /**
+   * Retrieve a source element with the given identifier.
+   * @param {*} identifier - identifier of source element
+   * @returns source element or null
+   */
+  findSourceByIdentifier (identifier) {
+    for (let i=0; i < this.sources.length; i++) {
+      if (identifier === this.sources[i].dataset.identifier) {
+        return this.sources[i]
       }
     }
     return null
   }
 
+  /**
+   * Retrieve a target element with the given identifier.
+   * @param {*} identifier - identifier of source element
+   * @returns target element or null
+   */
   findTargetByIdentifier (identifier) {
-    for (let i=0; i<this.targets.length; i++) {
-      if (identifier === this.targets[i].getAttribute('data-identifier')) {
+    for (let i=0; i < this.targets.length; i++) {
+      if (identifier === this.targets[i].dataset.identifier) {
         return this.targets[i]
       }
     }
     return null
   }
 
+  /**
+   * @description Given a directedPair string, split the pair and return an object with 
+   * source and target properties.
+   * Example:  "a b" --> { source: "a", target: "b" }
+   * @param {*} directedPair 
+   * @returns Object - { source: "a", target: "b" }
+   */
   getPair (directedPair) {
     if (directedPair === null) return null
 
@@ -625,23 +785,19 @@ class MatchInteractionWidget {
     return { source: splitPair[0], target: splitPair[1] }
   }
 
-  addSourceDraggerToTargetAtIndex (index, dragger) {
-    const target = this.targets[index]
-    target.append(dragger)
-    if (this.isTargetFull(target)) {
-      target.classList.add('full')
-    }
-  }
-
-  addTargetDraggerToSourceAtIndex (index, dragger) {
-    const source = this.sources[index]
-    source.append(dragger)
-    source.classList.add('full')
-  }
-
+  /**
+   * @description Utility method to append a dragger to a target.
+   * @param {*} target - target to which the dragger is appended.
+   * @param {*} dragger - dragger to append to the target
+   * @returns 
+   */
   addSourceDraggerToTarget (target, dragger) {
     if ((target === null) || (dragger === null)) return
+
     target.append(dragger)
+
+    // Set the dragger's width to 100% of its container li
+    dragger.setAttribute('style', 'width:100%')
 
     if (this.isTargetFull(target)) {
       target.classList.add('full')
@@ -650,22 +806,11 @@ class MatchInteractionWidget {
 
   isTargetFull (target) {
     if (target == null) return false
-    const draggers = target.querySelectorAll('.draggable')
-    const matchMax = target.getAttribute('data-match-max') * 1
-    return ((matchMax > 0) && (matchMax == draggers.length)) ? true : false
+    return target.classList.contains('full')
   }
 
   emptyDraggerParent (dragger) {
     dragger.parentNode.classList.remove('full')
-  }
-
-  findSourceByIdentifier (identifier) {
-    for (let i=0; i<this.sources.length; i++) {
-      if (identifier === this.sources[i].getAttribute('data-identifier')) {
-        return this.sources[i]
-      }
-    }
-    return null
   }
 
   isExceedingMaxAssociations(startItem, target) {
@@ -688,26 +833,69 @@ class MatchInteractionWidget {
     return true
   }
 
+  /**
+   * @description Utility method to set currentAssociationsCount to 0
+   */
   initializeAssociationsCount () {
     this.currentAssociationsCount = 0
   }
 
+  /**
+   * @description Utility method to increment currentAssociationsCount
+   */
   incrementAssociationsCount () {
     this.currentAssociationsCount += 1
   }
 
+  /**
+   * @description Utility method to decrement currentAssociationsCount
+   */
   decrementAssociationsCount () {
     if (this.currentAssociationsCount === 0) return
     this.currentAssociationsCount -= 1
   }
 
-  reset () {
-    if (this.options.interactionSubType === 'default') {
-      this.resetDraggersToSources()
-      this.initializeAssociationsCount()
+  getRemaining (element) {
+    return element.dataset.remaining*1
+  }
+
+  setRemaining (element, remaining) {
+    element.setAttribute('data-remaining', remaining)
+  }
+
+  incrementRemaining (element) {
+    const remaining = element.dataset.remaining*1 + 1
+    element.setAttribute('data-remaining', remaining)
+    return remaining
+  }
+
+  decrementRemaining (element) {
+    let remaining = element.dataset.remaining*1 - 1
+    remaining = remaining >= 0 ? remaining : 0
+    element.setAttribute('data-remaining', remaining)
+    return remaining
+  }
+
+  /**
+   * @description Method to generate new id's on elements that are cloned.
+   * @param DomElement element 
+   */
+  deepCloneId (element) {
+    if (element.id) {
+      element.id = `clone_${this.qtiAttributeValidation.randomString (5, 'a')}`
     }
 
+    // Clone any id's in any children of this element
+    for (let i=0; i < element.children.length; i++) {
+      this.deepCloneId(element.children[i])
+    }
+  }
+
+  reset () {
+    this.resetDraggersToSources()
+    this.initializeAssociationsCount()
     this.destroy()
+    // TODO: bind sources
   }
 
   resetDraggersToSources () {
@@ -737,22 +925,20 @@ class MatchInteractionWidget {
   }
 
   destroy () {
-    if (this.options.interactionSubType === 'default') {
-
-      if (this.currentDragger !== null) {
-        document.removeEventListener('mousemove', this.handleDragMove)
-        document.removeEventListener('mouseup', this.handleDragEnd)
-      }
-
-      // Remove all dragger event listeners
-      this.draggers.forEach((dragger) => {
-          dragger.removeEventListener('touchstart', this.handleTouchStart)
-          dragger.removeEventListener('touchmove', this.handleTouchMove)
-          dragger.removeEventListener('touchend', this.handleTouchEnd)
-          dragger.removeEventListener('mousedown', this.handleDragStart)
-        }, this)
-
+    if (this.currentDragger !== null) {
+      document.removeEventListener('mousemove', this.handleDragMove)
+      document.removeEventListener('mouseup', this.handleDragEnd)
     }
+
+    const draggers = this.wrapper.querySelectorAll('.draggable')
+
+    // Remove all dragger event listeners
+    draggers.forEach((dragger) => {
+        dragger.removeEventListener('touchstart', this.handleTouchStart)
+        dragger.removeEventListener('touchmove', this.handleTouchMove)
+        dragger.removeEventListener('touchend', this.handleTouchEnd)
+        dragger.removeEventListener('mousedown', this.handleDragStart)
+      }, this)
   }
 
 }
