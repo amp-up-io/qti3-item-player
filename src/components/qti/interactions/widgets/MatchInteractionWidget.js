@@ -363,9 +363,10 @@ class MatchInteractionWidget {
     // Set the dragger's width to 100% of its container li
     dragger.setAttribute('style', 'width:100%')
 
-    if (this.isTargetFull(itemTarget)) {
+    if (this.isTargetFull(itemTarget))
       itemTarget.classList.add('full')
-    }
+    else
+      itemTarget.classList.remove('full')
   }
 
   findDraggerItemTarget (dragger, draggerRect, items) {
@@ -806,7 +807,10 @@ class MatchInteractionWidget {
 
   isTargetFull (target) {
     if (target == null) return false
-    return target.classList.contains('full')
+
+    const draggers = target.querySelectorAll('.draggable')
+    const matchMax = target.dataset.matchMax*1
+    return (matchMax === 0) ? false : (draggers.length >= matchMax)
   }
 
   emptyDraggerParent (dragger) {
