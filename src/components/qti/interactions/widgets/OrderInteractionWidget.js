@@ -687,8 +687,6 @@ class OrderInteractionWidget {
           dragger.removeEventListener('touchmove', this.handleTouchMove)
           dragger.removeEventListener('touchend', this.handleTouchEnd)
           dragger.removeEventListener('mousedown', this.handleDragStart)
-          //dragger.removeEventListener('mousemove', this.handleDragMove)
-          //dragger.removeEventListener('mouseup', this.handleDragEnd)
         }, this)
 
       // Remove the target wrapper
