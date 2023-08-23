@@ -16,6 +16,7 @@ import QtiExtendedTextInteraction from '@/components/qti/interactions/QtiExtende
 import QtiCustomInteraction from '@/components/qti/interactions/QtiCustomInteraction'
 */
 import QtiEndAttemptInteraction from '@/components/qti/interactions/QtiEndAttemptInteraction'
+import QtiGapMatchInteraction from '@/components/qti/interactions/QtiGapMatchInteraction'
 import QtiHotspotInteraction from '@/components/qti/interactions/QtiHotspotInteraction'
 import QtiHottextInteraction from '@/components/qti/interactions/QtiHottextInteraction'
 import QtiMatchInteraction from '@/components/qti/interactions/QtiMatchInteraction'
@@ -42,6 +43,7 @@ Vue.component('qti-extended-text-interaction', QtiExtendedTextInteraction)
 Vue.component('qti-custom-interaction', QtiCustomInteraction)
 */
 Vue.component('qti-end-attempt-interaction', QtiEndAttemptInteraction)
+Vue.component('qti-gap-match-interaction', QtiGapMatchInteraction)
 Vue.component('qti-hotspot-interaction', QtiHotspotInteraction)
 Vue.component('qti-hottext-interaction', QtiHottextInteraction)
 Vue.component('qti-match-interaction', QtiMatchInteraction)
