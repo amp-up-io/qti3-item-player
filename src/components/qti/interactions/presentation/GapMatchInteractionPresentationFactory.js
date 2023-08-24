@@ -22,7 +22,6 @@ class GapMatchPresentationFactory {
     }
 
     this.parentClass = staticClass
-
     this.clazzTokens = []
     this.gapMatchGroupElement = null
     this.gapChoiceWrapperElement = null
@@ -60,7 +59,7 @@ class GapMatchPresentationFactory {
         case this.constants.QTI_CHOICES_BOTTOM:
         case this.constants.QTI_CHOICES_LEFT:
         case this.constants.QTI_CHOICES_RIGHT:
-          this.presentation_Choices_Orientation = clazz
+          this.presentation_Choices_Orientation = clazzTokens[index]
           break
 
         default:
@@ -81,11 +80,11 @@ class GapMatchPresentationFactory {
       this.gapChoiceWrapperElement.classList.add(this.constants.QTI_CHOICES_LEFT)
       this.gapTargetWrapperElement.classList.add(this.constants.QTI_CHOICES_LEFT)
     } else if (this.presentation_Choices_Orientation === this.constants.QTI_CHOICES_TOP) {
-      this.gapChoiceWrapperElement.classList.add(this.constants.QTI_CHOICES_LEFT)
-      this.gapTargetWrapperElement.classList.add(this.constants.QTI_CHOICES_LEFT)
+      this.gapChoiceWrapperElement.classList.add(this.constants.QTI_CHOICES_TOP)
+      this.gapTargetWrapperElement.classList.add(this.constants.QTI_CHOICES_TOP)
     } else if (this.presentation_Choices_Orientation === this.constants.QTI_CHOICES_RIGHT) {
-      this.gapChoiceWrapperElement.classList.add(this.constants.QTI_CHOICES_BOTTOM)
-      this.gapTargetWrapperElement.classList.add(this.constants.QTI_CHOICES_BOTTOM)
+      this.gapChoiceWrapperElement.classList.add(this.constants.QTI_CHOICES_RIGHT)
+      this.gapTargetWrapperElement.classList.add(this.constants.QTI_CHOICES_RIGHT)
       // place target wrapper before choices wrapper
       this.gapMatchGroupElement.insertBefore(this.gapTargetWrapperElement, this.gapChoiceWrapperElement)
     } else if (this.presentation_Choices_Orientation === this.constants.QTI_CHOICES_BOTTOM) {

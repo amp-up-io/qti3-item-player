@@ -571,7 +571,7 @@ div.qti-match-target-wrapper.qti-choices-bottom {
   border-radius: .25rem;
 }
 
-.choice-description.draggable {
+.gap-choice-text.draggable {
   display: inline-block;
   position: relative;
   font-weight: 400;

@@ -81,7 +81,7 @@ class MatchPresentationFactory {
         case this.constants.QTI_CHOICES_BOTTOM:
         case this.constants.QTI_CHOICES_LEFT:
         case this.constants.QTI_CHOICES_RIGHT:
-          this.presentation_Choices_Orientation = clazz
+          this.presentation_Choices_Orientation = clazzTokens[index]
           break
 
         case this.constants.QTI_MATCH_TABULAR:
