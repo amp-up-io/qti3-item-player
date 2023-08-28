@@ -491,8 +491,8 @@ class MatchInteractionWidget {
       draggableItem.parentNode.removeChild(placeholderElement)
       return
     }
-
-    // Must be cominig from a source.
+    
+    // Must be coming from a source.
     const draggerMatchMax = draggableItem.parentNode.dataset.matchMax*1
     
     // Never remove the placeholder on sources with matchMax = 0
@@ -508,7 +508,7 @@ class MatchInteractionWidget {
   replacePlaceholder (draggableItem) {
     const parentNode = draggableItem.parentNode
 
-    let placeholderElement = placeholderElement = parentNode.querySelector('.dragger-placeholder')
+    let placeholderElement = parentNode.querySelector('.dragger-placeholder')
 
     if (parentNode.classList.contains('source')) {
       // Inside source list, a placeholder may be a draggable or a placeholder
