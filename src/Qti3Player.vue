@@ -942,7 +942,7 @@ export default {
   /* Order colors */
   --order-target-active-color: var(--foreground);
   --order-target-active-bgc: #bbcef1;
-  --order-placeholder-color: var(--foreground);
+  --order-placeholder-color: #d3d5d7;
 }
 
 .qti3-player-color-yellowblue {
@@ -1059,7 +1059,7 @@ export default {
   /* Order colors */
   --order-target-active-color: var(--foreground);
   --order-target-active-bgc: #bbcef1;
-  --order-placeholder-color: var(--background);
+  --order-placeholder-color: #dbdbdb;
 }
 
 .qti3-player-color-blackcyan {
@@ -1114,9 +1114,9 @@ export default {
   --ed-bc: var(--gray-dark);
   --ed-bq-color: #999;
   /* Order colors */
-  --order-target-active-color: var(--foreground);
-  --order-target-active-bgc: var(--secondary);
-  --order-placeholder-color: #d8ade6;
+  --order-target-active-color: var(--darker);
+  --order-target-active-bgc: #d8ade6;
+  --order-placeholder-color: #bbcef1;
 }
 
 .qti3-player-color-cyanblack {

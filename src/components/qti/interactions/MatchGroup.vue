@@ -513,7 +513,7 @@ ul.qti-match-target-wrapper > li.target > .draggable {
 }
 
 .dragger-placeholder {
-  border: 1px solid var(--order-placeholder-color);
+  border: 1px solid var(--foreground);
   background-color: var(--order-placeholder-color);
   border-radius: .25rem;
 }

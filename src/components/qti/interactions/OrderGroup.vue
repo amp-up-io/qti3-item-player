@@ -516,7 +516,7 @@ ul.qti-order-target-wrapper.qti-orientation-vertical > li.target {
 }
 
 .dragger-placeholder {
-  border: 1px solid var(--order-placeholder-color);
+  border: 1px solid var(--foreground);
   background-color: var(--order-placeholder-color);
   border-radius: .25rem;
 }
