@@ -1,7 +1,7 @@
 <template>
   <div 
     ref="root" 
-    class="qti-gap-match-group-wrapper qti-choices-left">
+    class="qti-gap-match-group-wrapper">
     <slot></slot>
   </div>
 </template>
@@ -13,6 +13,7 @@ import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationExc
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
 import QtiProcessing from '@/components/qti/processing/utils/QtiProcessing'
 import GapMatchPresentationFactory from '@/components/qti/interactions/presentation/GapMatchInteractionPresentationFactory'
+import GapMatchInteractionWidget from '@/components/qti/interactions/widgets/GapMatchInteractionWidget'
 import QtiGapText from '@/components/qti/interactions/QtiGapText'
 import QtiGapImg from '@/components/qti/interactions/QtiGapImg'
 import QtiGap from '@/components/qti/interactions/QtiGap'
@@ -205,7 +206,7 @@ export default {
      * @description Main workhorse method to initialize this Match Group's UI.
      * @param {Array} response - a prior response or null
      */
-    processGroupUI (/*response*/) {
+    processGroupUI (response) {
       let gapChoiceWrapperElement = this.createGapChoiceWrapper()
 
       if (gapChoiceWrapperElement == null) return
@@ -225,34 +226,17 @@ export default {
           this.choices,
           this.gaps)
 
-      /*
-      if (this.interactionSubType === 'default') {
-        // Bind to the MatchInteraction widget.
-        this.matchable = new MatchInteractionWidget(this.$refs.root, {
-          interactionSubType: this.interactionSubType,
-          cardinality: this.cardinality,
-          maxAssociations: this.computedMaxAssociations,
-          response: response,
-          onReady: this.handleWidgetReady,
-          onUpdate: this.handleWidgetUpdate,
-          onAssociationsLimit: this.handleAssociationsLimit
-        })
-      } else if (this.interactionSubType === 'matchtabular') {
-        // Bind to the MatchInteractionTabular widget.
-        this.matchable = new MatchInteractionTabularWidget(this.$refs.root, {
-          interactionSubType: this.interactionSubType,
-          cardinality: this.cardinality,
-          maxAssociations: this.computedMaxAssociations,
-          isHeaderHidden: this.isHeaderHidden,
-          isRowCentric: this.isRowCentric,
-          firstColumnHeader: this.dataFirstColumnHeader,
-          response: response,
-          onReady: this.handleWidgetReady,
-          onUpdate: this.handleWidgetUpdate,
-          onAssociationsLimit: this.handleAssociationsLimit
-        })        
-      }
-      */
+      
+      // Bind to the GapMatchInteraction widget.
+      this.matchable = new GapMatchInteractionWidget(this.$refs.root, {
+        interactionSubType: this.interactionSubType,
+        cardinality: this.cardinality,
+        maxAssociations: this.computedMaxAssociations,
+        response: response,
+        onReady: this.handleWidgetReady,
+        onUpdate: this.handleWidgetUpdate,
+        onAssociationsLimit: this.handleAssociationsLimit
+      })
     },
 
     /**
@@ -485,8 +469,8 @@ export default {
 
 ul.qti-gap-match-source-wrapper {
   list-style: none;
-  margin: 1rem auto;
-  padding: 0;
+  margin: .5rem auto;
+  padding: 12px 0 6px 0;
   width: 100%;
   text-align: center;
   border: 1px solid;
@@ -508,8 +492,8 @@ ul.qti-gap-match-source-wrapper.qti-choices-right {
 
 ul.qti-gap-match-source-wrapper.qti-choices-top,
 ul.qti-gap-match-source-wrapper.qti-choices-bottom {
-  display: block;
-  min-height: 4.15rem;
+  float: left;
+  min-height: 2.75rem;
 }
 
 ul.qti-gap-match-source-wrapper.target-active {
@@ -523,14 +507,15 @@ ul.qti-gap-match-source-wrapper.qti-choices-left > li.source,
 ul.qti-gap-match-source-wrapper.qti-choices-right > li.source,
 ul.qti-gap-match-source-wrapper.qti-choices-top > li.source,
 ul.qti-gap-match-source-wrapper.qti-choices-bottom > li.source {
+  float: left;
   display: none;
 }
 
 ul.qti-gap-match-source-wrapper > li.source.full {
-    display: inline-block;
-    padding: .75rem .25rem;
-    margin: 0 .15rem .15rem;
-    vertical-align: top;
+  display: inline-block;
+  padding: 0;
+  margin: 0 .15rem .15rem;
+  vertical-align: top;
 }
 
 ul.qti-gap-match-source-wrapper.qti-choices-left > li.source,
@@ -545,15 +530,15 @@ div.qti-gap-match-target-wrapper {
   width: 100%;
 }
 
-div.qti-match-target-wrapper.qti-choices-left,
-div.qti-match-target-wrapper.qti-choices-right {
+div.qti-gap-match-target-wrapper.qti-choices-left,
+div.qti-gap-match-target-wrapper.qti-choices-right {
   margin: .75rem auto;
   width: 50%;
   display: inline-block;
 }
 
-div.qti-match-target-wrapper.qti-choices-top,
-div.qti-match-target-wrapper.qti-choices-bottom {
+div.qti-gap-match-target-wrapper.qti-choices-top,
+div.qti-gap-match-target-wrapper.qti-choices-bottom {
   display: block;
 }
 
@@ -566,24 +551,49 @@ div.qti-match-target-wrapper.qti-choices-bottom {
 }
 
 .dragger-placeholder {
-  border: 1px solid var(--order-placeholder-color);
+  border: 1px solid var(--foreground);
   background-color: var(--order-placeholder-color);
   border-radius: .25rem;
+  opacity: 0.5
 }
 
 .gap-choice-text.draggable {
   display: inline-block;
   position: relative;
-  font-weight: 400;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 22px;
   cursor: move;
-  padding: .25rem;
+  padding: 0 .25rem;
   margin: 0;
   vertical-align: top;
   color: var(--choice-ctrlh-color);
   background-color: var(--choice-ctrlh-bgc);
   border: 1px solid var(--choice-ctrlh-color);
-  overflow: hidden;
   text-decoration: none;
   border-radius: .25rem;
+  min-height: 22px;
+}
+
+div.qti-gap-match-target-wrapper .gap-match-gap {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  border: 1px solid;
+  width: 100px;
+  min-height: 26px;
+  height: 26px;
+  max-height: 26px;
+  padding: 0;
+}
+
+div.qti-gap-match-target-wrapper .gap-match-gap.target-active {
+  background-color: var(--order-target-active-bgc);
+  border: 1px dashed var(--ea-button-secondary-bgc);
+}
+
+div.qti-match-target-wrapper .gap-match-gap.target-active.active {
+  background-color: var(--order-placeholder-color);
+  border: 1px dashed var(--ea-button-secondary-bgc);
 }
 </style>

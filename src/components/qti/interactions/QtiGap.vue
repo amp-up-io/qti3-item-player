@@ -1,10 +1,10 @@
 <template>
-  <div ref="gap"
+  <span ref="gap"
     :data-identifier="identifier"
     :data-required="isRequired"
+    data-match-max="1"
     class="gap-match-gap">
-      <slot></slot>
-  </div>
+  </span>
 </template>
 
 <script>

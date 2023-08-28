@@ -90,9 +90,17 @@ class GapMatchPresentationFactory {
     } else if (this.presentation_Choices_Orientation === this.constants.QTI_CHOICES_BOTTOM) {
       this.gapChoiceWrapperElement.classList.add(this.constants.QTI_CHOICES_BOTTOM)
       this.gapTargetWrapperElement.classList.add(this.constants.QTI_CHOICES_BOTTOM)
-      // place matchSetNode2 before matchSetNode1
+      // place target wrapper before choices wrapper
       this.gapMatchGroupElement.insertBefore(this.gapTargetWrapperElement, this.gapChoiceWrapperElement)
     }
+
+    this.updateGaps()
+  }
+
+  updateGaps () {
+    for (let i=0; i < this.gaps.length; i++) {
+      this.gaps[i].$refs.gap.classList.add('target')
+    }    
   }
 
 }
