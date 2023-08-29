@@ -476,16 +476,24 @@ export default {
   width: 100%;
 }
 
+/* 
+  For qti-choices-left and right, use a two-column layout 
+  with a 2rem gap separator.
+*/
 .qti-gap-match-group-wrapper.qti-choices-left,
 .qti-gap-match-group-wrapper.qti-choices-right {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+    display: flex;
+    column-gap: 2rem;
+}
+
+.qti-gap-match-group-wrapper.qti-choices-left > *,
+.qti-gap-match-group-wrapper.qti-choices-right > * {
+    width:calc(50% - 1rem);
 }
 
 ul.qti-gap-match-source-wrapper {
   list-style: none;
-  margin: .5rem auto;
+  margin: 0 auto;
   padding: 12px 0;
   width: 100%;
   text-align: center;
@@ -494,21 +502,10 @@ ul.qti-gap-match-source-wrapper {
   border-radius: .25rem;
 }
 
+ul.qti-gap-match-source-wrapper.qti-choices-top,
+ul.qti-gap-match-source-wrapper.qti-choices-bottom,
 ul.qti-gap-match-source-wrapper.qti-choices-left,
 ul.qti-gap-match-source-wrapper.qti-choices-right {
-  display: flex;
-  flex-direction: column;
-  flex-basis: 100%;
-  flex: 1;
-  width: 50%;
-  margin-top: .65rem;
-  padding: 0 1rem;
-  min-height: 5.25rem;
-}
-
-ul.qti-gap-match-source-wrapper.qti-choices-top,
-ul.qti-gap-match-source-wrapper.qti-choices-bottom {
-  float: left;
   min-height: 58px;
 }
 
@@ -534,23 +531,11 @@ ul.qti-gap-match-source-wrapper > li.source.full {
   vertical-align: top;
 }
 
-ul.qti-gap-match-source-wrapper.qti-choices-left > li.source,
-ul.qti-gap-match-source-wrapper.qti-choices-right > li.source {
-  padding: .25rem;
-}
-
 div.qti-gap-match-target-wrapper {
   margin-top: .5rem;
   margin-bottom: .5rem;
   padding: 0;
   width: 100%;
-}
-
-div.qti-gap-match-target-wrapper.qti-choices-left,
-div.qti-gap-match-target-wrapper.qti-choices-right {
-  margin: .75rem auto;
-  width: 50%;
-  display: inline-block;
 }
 
 div.qti-gap-match-target-wrapper.qti-choices-top,

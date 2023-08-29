@@ -79,12 +79,14 @@ class GapMatchPresentationFactory {
     if (this.presentation_Choices_Orientation === this.constants.QTI_CHOICES_LEFT) {
       this.gapChoiceWrapperElement.classList.add(this.constants.QTI_CHOICES_LEFT)
       this.gapTargetWrapperElement.classList.add(this.constants.QTI_CHOICES_LEFT)
+      this.gapMatchGroupElement.classList.add(this.constants.QTI_CHOICES_LEFT)
     } else if (this.presentation_Choices_Orientation === this.constants.QTI_CHOICES_TOP) {
       this.gapChoiceWrapperElement.classList.add(this.constants.QTI_CHOICES_TOP)
       this.gapTargetWrapperElement.classList.add(this.constants.QTI_CHOICES_TOP)
     } else if (this.presentation_Choices_Orientation === this.constants.QTI_CHOICES_RIGHT) {
       this.gapChoiceWrapperElement.classList.add(this.constants.QTI_CHOICES_RIGHT)
       this.gapTargetWrapperElement.classList.add(this.constants.QTI_CHOICES_RIGHT)
+      this.gapMatchGroupElement.classList.add(this.constants.QTI_CHOICES_RIGHT)
       // place target wrapper before choices wrapper
       this.gapMatchGroupElement.insertBefore(this.gapTargetWrapperElement, this.gapChoiceWrapperElement)
     } else if (this.presentation_Choices_Orientation === this.constants.QTI_CHOICES_BOTTOM) {
