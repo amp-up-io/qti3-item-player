@@ -96,4 +96,24 @@ export default {
 </script>
 
 <style>
+.gap-match-gap {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  border: 1px solid;
+  width: 100px;
+  line-height: 28px;
+  min-height: 29.6px;
+  padding: 0;
+}
+
+.gap-match-gap.target-active {
+  background-color: var(--order-target-active-bgc);
+  border: 1px dashed var(--ea-button-secondary-bgc);
+}
+
+.gap-match-gap.target-active.active {
+  background-color: var(--order-placeholder-color);
+  border: 1px dashed var(--ea-button-secondary-bgc);
+}
 </style>

@@ -305,7 +305,7 @@ export default {
       }
 
       // If priorState is not null, rebuild a container of Choices
-      // from the orders[index] in priorState.state
+      // from the order array in priorState.state
       const order = priorState.state.order
       order.forEach((identifier) => {
         const choice = this.findChoiceByIdentifier(identifier, this.choices)
@@ -350,6 +350,22 @@ export default {
       })
 
       this.order = order
+    },
+
+    /**
+     * @description Utility method for selecting a choice by identifier
+     * @param {String} identifier - the identifier of the choice
+     * @param {Array} choices - array of qti-gap-choice nodes
+     * @return {Component} choice or an exception if not found
+     */
+    findChoiceByIdentifier (identifier, choices) {
+      for (let i = 0; i < choices.length; i++) {
+        if (choices[i].$el.getAttribute('data-identifier') === identifier) {
+          return choices[i]
+        }
+      }
+
+      throw new QtiEvaluationException('Gap Match Interaction State Invalid.  Choice identifier "' + identifier + '" not found.')
     },
 
     /**
@@ -470,7 +486,7 @@ export default {
 ul.qti-gap-match-source-wrapper {
   list-style: none;
   margin: .5rem auto;
-  padding: 12px 0 6px 0;
+  padding: 12px 0;
   width: 100%;
   text-align: center;
   border: 1px solid;
@@ -493,7 +509,7 @@ ul.qti-gap-match-source-wrapper.qti-choices-right {
 ul.qti-gap-match-source-wrapper.qti-choices-top,
 ul.qti-gap-match-source-wrapper.qti-choices-bottom {
   float: left;
-  min-height: 2.75rem;
+  min-height: 58px;
 }
 
 ul.qti-gap-match-source-wrapper.target-active {
@@ -560,9 +576,9 @@ div.qti-gap-match-target-wrapper.qti-choices-bottom {
 .gap-choice-text.draggable {
   display: inline-block;
   position: relative;
-  font-weight: bold;
+  font-weight:400;
   font-size: 14px;
-  line-height: 22px;
+  line-height: 26px;
   cursor: move;
   padding: 0 .25rem;
   margin: 0;
@@ -572,28 +588,6 @@ div.qti-gap-match-target-wrapper.qti-choices-bottom {
   border: 1px solid var(--choice-ctrlh-color);
   text-decoration: none;
   border-radius: .25rem;
-  min-height: 22px;
-}
-
-div.qti-gap-match-target-wrapper .gap-match-gap {
-  display: inline-block;
-  vertical-align: middle;
-  text-align: center;
-  border: 1px solid;
-  width: 100px;
   min-height: 26px;
-  height: 26px;
-  max-height: 26px;
-  padding: 0;
-}
-
-div.qti-gap-match-target-wrapper .gap-match-gap.target-active {
-  background-color: var(--order-target-active-bgc);
-  border: 1px dashed var(--ea-button-secondary-bgc);
-}
-
-div.qti-match-target-wrapper .gap-match-gap.target-active.active {
-  background-color: var(--order-placeholder-color);
-  border: 1px dashed var(--ea-button-secondary-bgc);
 }
 </style>

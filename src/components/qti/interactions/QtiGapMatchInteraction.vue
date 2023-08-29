@@ -299,9 +299,9 @@ export default {
     computeState () {
       if (this.priorState !== null) return this.priorState.state
 
-      // The state (orders) is the order of the choices in the matchsets
+      // The state (order) is the order of the qti-gap-text or qti-gap-img choices
       const state = {
-        orders: this.orders
+        order: this.order
       }
 
       return state
@@ -413,10 +413,7 @@ export default {
      *   identifier: [String],
      *   value: [String or Array]
      *   state: {
-     *     orders: [
-     *       [MatchSet Order0 Array of Identifiers],
-     *       [MatchSet Order1 Array of Identifiers]
-     *     ]
+     *     order: [Array of Identifiers]
      *   }
      * }
      * @param {String} identifier - of a response variable
@@ -435,8 +432,8 @@ export default {
       if (!('state' in priorState)) {
         throw new QtiEvaluationException('Gap Match Interaction State Invalid.  "state" property not found.')
       }
-      if (!('orders' in priorState.state)) {
-        throw new QtiEvaluationException('Gap Match Interaction State Invalid.  "orders" property not found.')
+      if (!('order' in priorState.state)) {
+        throw new QtiEvaluationException('Gap Match Interaction State Invalid.  "order" property not found.')
       }
 
       return priorState
