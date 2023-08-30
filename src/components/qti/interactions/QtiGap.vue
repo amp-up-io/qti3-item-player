@@ -122,4 +122,68 @@ export default {
 .gap-match-gap .dragger-placeholder {
   margin-bottom: 0;
 }
+
+.gap-match-gap.qti-input-width-1 {
+  width: 1.7rem;
+}
+
+.gap-match-gap.qti-input-width-2 {
+  width: 2.7rem;
+}
+
+.gap-match-gap.qti-input-width-3 {
+  width: 3.7rem;
+}
+
+.gap-match-gap.qti-input-width-4 {
+  width: 4.7rem;
+}
+
+.gap-match-gap.qti-input-width-5 {
+  width: 5.6rem;
+}
+
+.gap-match-gap.qti-input-width-6 {
+  width: 6.6rem;
+}
+
+.gap-match-gap.qti-input-width-10 {
+  width: 10.4rem;
+}
+
+.gap-match-gap.qti-input-width-15 {
+  width: 15.2rem;
+}
+
+.gap-match-gap.qti-input-width-20 {
+  width: 20.0rem;
+}
+
+.gap-match-gap.qti-input-width-25 {
+  width: 25.0rem;
+}
+
+.gap-match-gap.qti-input-width-30 {
+  width: 30.0rem;
+}
+
+.gap-match-gap.qti-input-width-35 {
+  width: 35.0rem;
+}
+
+.gap-match-gap.qti-input-width-40 {
+  width: 40.0rem;
+}
+
+.gap-match-gap.qti-input-width-45 {
+  width: 45.0rem;
+}
+
+.gap-match-gap.qti-input-width-50 {
+  width: 50.0rem;
+}
+
+.gap-match-gap.qti-input-width-72 {
+  width: 100%;
+}
 </style>
