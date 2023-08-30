@@ -26,6 +26,7 @@ class GapMatchPresentationFactory {
     this.gapMatchGroupElement = null
     this.gapChoiceWrapperElement = null
     this.gapTargetWrapperElement = null
+    this.choicesContainerWidth = null
     this.gapChoices = []
     this.gaps = []
 
@@ -35,10 +36,11 @@ class GapMatchPresentationFactory {
     this.presentation_MinSelectionsMessage = ''
   }
 
-  initialize (gapMatchGroupElement, gapChoiceWrapperElement, gapTargetWrapperElement, gapChoices, gaps) {
+  initialize (gapMatchGroupElement, gapChoiceWrapperElement, gapTargetWrapperElement, choicesContainerWidth, gapChoices, gaps) {
     this.gapMatchGroupElement = gapMatchGroupElement
     this.gapChoiceWrapperElement = gapChoiceWrapperElement
     this.gapTargetWrapperElement = gapTargetWrapperElement
+    this.choicesContainerWidth = choicesContainerWidth
     this.gapChoices = gapChoices
     this.gaps = gaps
 
@@ -96,10 +98,16 @@ class GapMatchPresentationFactory {
       this.gapMatchGroupElement.insertBefore(this.gapTargetWrapperElement, this.gapChoiceWrapperElement)
     }
 
-    this.updateGaps()
+    this.processChoicesContainerWidth()
+    this.processGaps()
   }
 
-  updateGaps () {
+  processChoicesContainerWidth () {
+    if (this.choicesContainerWidth === null) return
+    this.gapChoiceWrapperElement.style.width = `${this.choicesContainerWidth}px`
+  }
+
+  processGaps () {
     for (let i=0; i < this.gaps.length; i++) {
       this.gaps[i].$refs.gap.classList.add('target')
     }    

@@ -116,4 +116,10 @@ export default {
   background-color: var(--order-placeholder-color);
   border: 1px dashed var(--ea-button-secondary-bgc);
 }
+
+/* dragger-placeholder has default .15rem bottom margin.
+   Remove the margin-bottom when inside a gap. */
+.gap-match-gap .dragger-placeholder {
+  margin-bottom: 0;
+}
 </style>

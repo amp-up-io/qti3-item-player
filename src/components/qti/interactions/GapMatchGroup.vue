@@ -223,6 +223,7 @@ export default {
           this.$refs.root,
           gapChoiceWrapperElement,
           gapTargetWrapperElement,
+          this.dataChoicesContainerWidth,
           this.choices,
           this.gaps)
 
@@ -477,9 +478,9 @@ export default {
 }
 
 /* 
-  For qti-choices-left and right, use a two-column layout 
-  with a 2rem gap separator.
-*/
+ * For qti-choices-left and right, use a two-column
+ * layout with a 2rem gap separator.
+ */
 .qti-gap-match-group-wrapper.qti-choices-left,
 .qti-gap-match-group-wrapper.qti-choices-right {
     display: flex;
@@ -500,13 +501,12 @@ ul.qti-gap-match-source-wrapper {
   border: 1px solid;
   border-color: var(--background);
   border-radius: .25rem;
+  min-height: 58px;
 }
 
 ul.qti-gap-match-source-wrapper.qti-choices-top,
-ul.qti-gap-match-source-wrapper.qti-choices-bottom,
-ul.qti-gap-match-source-wrapper.qti-choices-left,
-ul.qti-gap-match-source-wrapper.qti-choices-right {
-  min-height: 58px;
+ul.qti-gap-match-source-wrapper.qti-choices-bottom {
+  text-align: left;
 }
 
 ul.qti-gap-match-source-wrapper.target-active {
@@ -516,11 +516,7 @@ ul.qti-gap-match-source-wrapper.target-active {
 }
 
 /* Hide sources when not containing a dragger */
-ul.qti-gap-match-source-wrapper.qti-choices-left > li.source,
-ul.qti-gap-match-source-wrapper.qti-choices-right > li.source,
-ul.qti-gap-match-source-wrapper.qti-choices-top > li.source,
-ul.qti-gap-match-source-wrapper.qti-choices-bottom > li.source {
-  float: left;
+ul.qti-gap-match-source-wrapper > li.source {
   display: none;
 }
 
@@ -555,6 +551,10 @@ div.qti-gap-match-target-wrapper.qti-choices-bottom {
   border: 1px solid var(--foreground);
   background-color: var(--order-placeholder-color);
   border-radius: .25rem;
+  font-size: 14px;
+  line-height: 26px;
+  padding: 0;
+  margin: 0 0 1.25px;
   opacity: 0.5
 }
 
