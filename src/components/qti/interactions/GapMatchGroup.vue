@@ -547,7 +547,7 @@ div.qti-gap-match-target-wrapper.qti-choices-bottom {
   z-index: 1;
 }
 
-.dragger-placeholder {
+.qti-gap-match-group-wrapper .dragger-placeholder {
   border: 1px solid var(--foreground);
   background-color: var(--order-placeholder-color);
   border-radius: .25rem;
@@ -562,7 +562,7 @@ div.qti-gap-match-target-wrapper.qti-choices-bottom {
   display: inline-block;
   position: relative;
   font-weight:400;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 26px;
   cursor: move;
   padding: 0 .25rem;
