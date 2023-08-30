@@ -52,16 +52,16 @@ export default {
       default: 'false'
     },
     /*
-     * The maximum number of choices that the candidate may select and order
-     * when responding to the interaction. Used in conjunction with minChoices,
-     * if specified, maxChoices must be greater than or equal to minChoices
+     * The maximum number of associations that the candidate may make
+     * when responding to the interaction. Used in conjunction with minAssociations,
+     * if specified, maxAssociations must be greater than or equal to minAssociations
      * and must not exceed the number of choices available. If unspecified,
-     * all of the choices may be ordered.
+     * all of the choices may be matched.
      */
     maxAssociations: {
       required: false,
       type: String,
-      default: '0'
+      default: '1'
     },
     /*
      * The minimum number of associations that the candidate is required to make to form a valid response. 
