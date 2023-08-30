@@ -52,7 +52,7 @@ export default {
     maxAssociations: {
       required: false,
       type: String,
-      default: '0'
+      default: '1'
     },
     /*
      * The minimum number of associations that the candidate is required to make to form a valid response. 
