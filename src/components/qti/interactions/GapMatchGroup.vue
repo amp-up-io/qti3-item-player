@@ -495,13 +495,13 @@ export default {
 ul.qti-gap-match-source-wrapper {
   list-style: none;
   margin: 0 auto;
-  padding: 12px 0;
+  padding: 12px 0 4px;
   width: 100%;
   text-align: center;
   border: 1px solid;
   border-color: var(--background);
   border-radius: .25rem;
-  min-height: 58px;
+  min-height: 3.4rem;
 }
 
 ul.qti-gap-match-source-wrapper.qti-choices-top,
