@@ -383,18 +383,18 @@ export default {
      * @param staticClass property of the $vnode.data object
      */
     detectInteractionSubType (staticClass) {
-      return this.getMatchInteractionSubType(staticClass)
+      return this.computeInteractionSubType(staticClass)
     },
 
     /**
-     * @description Order interactions have a considerable amount of shared
+     * @description Gap Match's have a considerable amount of shared
      * vocabulary that is expressed via the interaction's class attribute.
      * This determines whether nor not the interaction has choices separated
      * from targets.
      * @param {String} clazz - the interaction's class attribute
-     * @return {String} one of 'default' | 'matchtabular'
+     * @return {String} 'default'
      */
-    getMatchInteractionSubType (clazz) {
+    computeInteractionSubType (clazz) {
       let subtype = 'default'
 
       if ((typeof clazz === 'undefined') || (clazz === null) || (clazz.length == 0)) {

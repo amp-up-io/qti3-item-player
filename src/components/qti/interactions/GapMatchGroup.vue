@@ -93,7 +93,7 @@ export default {
     /*
      * NOT A QTI ATTRIBUTE
      */
-     gapMatchInteractionStaticClass: {
+    gapMatchInteractionStaticClass: {
       required: true,
       type: String
     },
@@ -203,7 +203,7 @@ export default {
     },
 
     /**
-     * @description Main workhorse method to initialize this Match Group's UI.
+     * @description Main workhorse method to initialize this Gap Match Group's UI.
      * @param {Array} response - a prior response or null
      */
     processGroupUI (response) {
@@ -385,7 +385,7 @@ export default {
      * A response is computed and passed in the data parameter.
      * @param {Object} data - object containing a 'response' property
      */
-     handleWidgetReady (data) {
+    handleWidgetReady (data) {
       this.setResponse(data.response)
 
       // Important: Notify parent qti-gap-match-interaction component
