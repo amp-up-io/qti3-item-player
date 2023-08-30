@@ -12,6 +12,7 @@
       :maxChoices="maxChoices"
       :minChoices="minChoices"
       :interactionSubType="interactionSubType"
+      :dataChoicesContainerWidth="dataChoicesContainerWidth"
       :priorState="priorState"
       @orderGroupReady="handleOrderGroupReady"
       @orderGroupUpdate="handleOrderGroupUpdate"
@@ -102,6 +103,14 @@ export default {
     dataMinSelectionsMessage: {
       required: false,
       type: String
+    },
+    /*
+     * The choices container width in pixels. Example: data-choices-container-width="100"
+     */
+    dataChoicesContainerWidth: {
+      required: false,
+      type: String,
+      default: null
     }
   },
 
