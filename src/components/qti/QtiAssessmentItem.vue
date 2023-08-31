@@ -2448,9 +2448,14 @@ figure {
   margin: 0 0 1rem;
 }
 
+/* All images shared these two properties */
 img {
   vertical-align: middle;
   border-style: none;
+}
+
+/* When NOT in a GGM, permit image responsiveness */
+img:not(.qti-ggm-group-wrapper *)  {
   max-width: 100%;
   height: auto;
 }

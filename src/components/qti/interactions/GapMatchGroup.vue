@@ -392,7 +392,6 @@ export default {
       // that our gapMatchGroup is ready
       this.$emit('gapMatchGroupReady', {
         response: this.getResponse(),
-        //matchsets: this.matchsets,
         order: this.order
       })
     },
