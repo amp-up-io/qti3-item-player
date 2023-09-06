@@ -9,11 +9,11 @@ class GraphicGapMatchInteractionWidget {
     // container should be the overall wrapper of our Match interaction
     this.wrapper = container
     // Get a handle on the element that wraps the source qti-gap-text's or qti-gap-img's
-    this.sourcewrapper = this.wrapper.querySelector('.qti-gap-match-source-wrapper')
-    // Get a handle on the element that wraps the target qti-gaps
-    this.targetwrapper = this.wrapper.querySelector('.qti-gap-match-target-wrapper')
+    this.sourcewrapper = this.wrapper.querySelector('.qti-ggm-source-wrapper')
+    // Get a handle on the element that wraps the target qti-associable-hotspots
+    this.targetwrapper = this.wrapper.querySelector('.qti-ggm-target-wrapper')
 
-    // options is an object containing the interactionSubType, matchsets, and
+    // options is an object containing the interactionSubType and
     // an update callback function.
     this.processOptions(options)
 
@@ -49,7 +49,7 @@ class GraphicGapMatchInteractionWidget {
 
   options = {
     interactionSubType: 'default',
-    cardinality: 'single',
+    cardinality: 'multiple',
     maxAssociations: 0,
     response: null,
     onReady: null,
@@ -334,39 +334,54 @@ class GraphicGapMatchInteractionWidget {
 
   resetDraggerToItemStart (itemStart, dragger) {
     this.replacePlaceholder(dragger)
-
-    if (!itemStart.classList.contains('source')) {
-      // Set the dragger's width to 100% of its container li
-      dragger.setAttribute('style', 'width:100%')
-    }
   }
 
   setDraggerToItemTarget (itemTarget, dragger) {
     if (itemTarget.classList.contains('source')) {
-      if (itemTarget.classList.contains('full')) {
-        // replace child
-        // current source
-        const childElement = itemTarget.querySelector('.draggable')
-        if (childElement != null) {
-          itemTarget.replaceChild(dragger, childElement)
-        }
-        return
-      }
-
-      itemTarget.append(dragger)
+      this.appendDraggerToSourceTarget(itemTarget, dragger)
       return
     }
 
-    // We are adding to a target, not a source
-    itemTarget.append(dragger)
-
-    // Set the dragger's width to 100% of its container li
-    dragger.setAttribute('style', 'width:100%')
+    // We are adding to a target, not a source.
+    this.appendDraggerToGapTarget(itemTarget, dragger)
 
     if (this.isTargetFull(itemTarget))
       itemTarget.classList.add('full')
     else
       itemTarget.classList.remove('full')
+  }
+
+  /**
+   * @description Utility method to append a dragger to 
+   * a source itemTarget
+   * @param {*} itemTarget - should be a gap-choice
+   * @param {*} dragger - dragger to append
+   * @returns 
+   */
+  appendDraggerToSourceTarget (sourceTarget, dragger) {
+    console.log('sourceTarget', sourceTarget)
+    if (sourceTarget.classList.contains('full')) {
+      // replace child
+      // current source
+      const childElement = sourceTarget.querySelector('.draggable')
+      if (childElement != null) {
+        sourceTarget.replaceChild(dragger, childElement)
+      }
+      return
+    }
+
+    sourceTarget.append(dragger)
+  }
+
+  /**
+   * @description Utility method to append a dragger to 
+   * a gap (not a source) itemTarget
+   * @param {*} itemTarget - should be a qti-associable-hotspot gap
+   * @param {*} dragger - dragger to append
+   * @returns 
+   */
+  appendDraggerToGapTarget (itemTarget, dragger) {
+    itemTarget.append(dragger)
   }
 
   findDraggerItemTarget (dragger, draggerRect, items) {
@@ -422,10 +437,9 @@ class GraphicGapMatchInteractionWidget {
   }
 
   addPlaceholder (draggableItem) {
-
     // If we are NOT coming from a source, use a generic placeholder
     if (!draggableItem.parentNode.classList.contains('source')) {
-      this.addGenericPlaceholder(draggableItem)
+      this.addPlaceholderElement(draggableItem, false)
       return
     }
     
@@ -436,55 +450,48 @@ class GraphicGapMatchInteractionWidget {
 
     // If matchMax = 1, use a generic placeholder
     if (draggerMatchMax === 1) {
-      this.addGenericPlaceholder(draggableItem)
+      this.addPlaceholderElement(draggableItem, false)
       return
     }
 
     // If matchMax = 0, use a clone placeholder
     if (draggerMatchMax === 0) {
-      this.addClonePlaceholder(draggableItem)
+      this.addPlaceholderElement(draggableItem, true)
       return
     }
 
-    // matchMax must be > 1, examine remaining matches
+    // matchMax must be >= 1, examine remaining matches
     const remaining = this.getRemaining(draggableItem.parentNode)
 
     if (remaining === 1) {
       // This is the last one.  Use a generic placeholder
-      this.addGenericPlaceholder(draggableItem)
+      this.addPlaceholderElement(draggableItem, false)
       return
     }
 
-    // Remaining > 1, use a clone placeholder
-    this.addClonePlaceholder(draggableItem)
+    // Remaining >= 1, use a clone placeholder
+    this.addPlaceholderElement(draggableItem, true)
   }
 
-  addGenericPlaceholder (draggableItem) {
-    const draggableItemRect = draggableItem.getBoundingClientRect()
-
-    // Create the element
-    const spacerElement = document.createElement('div')
-    spacerElement.classList.add('dragger-placeholder')
-    spacerElement.style.width = `${draggableItemRect.width}px`
-    spacerElement.style.height = `${draggableItemRect.height}px`
-
-    // Append the element before the active draggable item
-    draggableItem.parentNode.insertBefore(spacerElement, draggableItem)
-  }
-
-  addClonePlaceholder (draggableItem) {
-    const cloneElement = draggableItem.cloneNode(true)
-    this.deepCloneId(cloneElement)
-    cloneElement.classList.add('clone')
-    draggableItem.parentNode.insertBefore(cloneElement, draggableItem)
-    cloneElement.addEventListener('mousedown', this.handleDragStart)
-    cloneElement.addEventListener('touchstart', this.handleTouchStart)
+  addPlaceholderElement (draggableItem, isClone) {
+    const placeholderElement = draggableItem.cloneNode(true)
+    this.deepCloneId(placeholderElement)
+    if (isClone) {
+      placeholderElement.classList.add('clone')
+      // Make clones draggable
+      placeholderElement.addEventListener('mousedown', this.handleDragStart)
+      placeholderElement.addEventListener('touchstart', this.handleTouchStart)
+    } else {
+      placeholderElement.classList.add('ggm-dragger-placeholder')
+    }
+    
+    draggableItem.parentNode.insertBefore(placeholderElement, draggableItem)
   }
 
   removePlaceholder (draggableItem) {
     if (draggableItem.parentNode.classList.contains('target')) {
 
-      const placeholderElement = draggableItem.parentNode.querySelector('.dragger-placeholder')
+      const placeholderElement = draggableItem.parentNode.querySelector('.ggm-dragger-placeholder')
 
       if (placeholderElement === null) return
 
@@ -498,7 +505,7 @@ class GraphicGapMatchInteractionWidget {
     // Never remove the placeholder on sources with matchMax = 0
     if (draggerMatchMax === 0) return
 
-    const placeholderElement = draggableItem.parentNode.querySelector('.dragger-placeholder')
+    const placeholderElement = draggableItem.parentNode.querySelector('.ggm-dragger-placeholder')
 
     if (placeholderElement === null) return
 
@@ -508,7 +515,7 @@ class GraphicGapMatchInteractionWidget {
   replacePlaceholder (draggableItem) {
     const parentNode = draggableItem.parentNode
 
-    let placeholderElement = parentNode.querySelector('.dragger-placeholder')
+    let placeholderElement = parentNode.querySelector('.ggm-dragger-placeholder')
 
     if (parentNode.classList.contains('source')) {
       // Inside source list, a placeholder may be a draggable or a placeholder
@@ -796,9 +803,6 @@ class GraphicGapMatchInteractionWidget {
     if ((target === null) || (dragger === null)) return
 
     target.append(dragger)
-
-    // Set the dragger's width to 100% of its container li
-    dragger.setAttribute('style', 'width:100%')
 
     if (this.isTargetFull(target)) {
       target.classList.add('full')
