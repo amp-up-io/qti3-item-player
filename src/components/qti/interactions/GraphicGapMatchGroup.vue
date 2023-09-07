@@ -72,7 +72,7 @@ export default {
       default: '0'
     },
     /*
-     * The gap choices container width in pixels. Example: data-choices-container-width="100"
+     * The graphic choices container width in pixels. Example: data-choices-container-width="100"
      */
     dataChoicesContainerWidth: {
       required: false,
@@ -473,7 +473,7 @@ export default {
 
 <style>
 .qti-ggm-group-wrapper {
-  margin: .75rem 0;
+  margin: 1rem 0;
   display: block;
   width: 100%;
 }
@@ -496,7 +496,7 @@ export default {
 ul.qti-ggm-source-wrapper {
   list-style: none;
   margin: 0 auto;
-  padding: 12px 0 4px;
+  padding: .75rem .5rem .25rem 0;
   width: 100%;
   text-align: center;
   background-color: var(--well-bg);
@@ -509,6 +509,14 @@ ul.qti-ggm-source-wrapper {
 ul.qti-ggm-source-wrapper.qti-choices-top,
 ul.qti-ggm-source-wrapper.qti-choices-bottom {
   text-align: left;
+}
+
+ul.qti-ggm-source-wrapper.qti-choices-top {
+  margin-bottom: .5rem;
+}
+
+ul.qti-ggm-source-wrapper.qti-choices-bottom {
+  margin-top: .5rem;
 }
 
 ul.qti-ggm-source-wrapper.target-active {
@@ -525,7 +533,7 @@ ul.qti-ggm-source-wrapper > li.source {
 ul.qti-ggm-source-wrapper > li.source.full {
   display: inline-block;
   padding: 0;
-  margin: 0 .5rem .15rem;
+  margin: 0 0 .5rem .5rem;
   vertical-align: top;
 }
 
