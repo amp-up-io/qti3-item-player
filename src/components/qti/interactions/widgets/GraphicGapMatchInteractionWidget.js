@@ -29,6 +29,7 @@ class GraphicGapMatchInteractionWidget {
     this.itemTarget = null
     this.itemStart = null
     this.isItemStartSource = true
+    this.savedGapZindex = '' // empty string is same as 'auto'
     this.initialX = 0
     this.initialY = 0
     this.offsetX = 0
@@ -54,7 +55,8 @@ class GraphicGapMatchInteractionWidget {
     response: null,
     onReady: null,
     onUpdate: null,
-    onSelectionsLimit: null
+    onSelectionsLimit: null,
+    zindex: 1000
   }
 
   /**
@@ -121,6 +123,10 @@ class GraphicGapMatchInteractionWidget {
 
     this.isItemStartSource = this.itemStart.classList.contains('source')
 
+    if (!this.isItemStartSource) {
+      this.saveGapZindex(this.itemStart)
+    }
+
     // Look for targets
     this.identifyTargets(true)
 
@@ -139,13 +145,13 @@ class GraphicGapMatchInteractionWidget {
     // Create a new placeholder
     this.addPlaceholder(dragger)
 
+    // Add dragging class
+    dragger.classList.add('dragging')
+
     dragger.style.userSelect = 'none'
     dragger.style.width = draggerRect.width + 'px'
     dragger.style.height = draggerRect.height + 'px'
     dragger.style.transform = `translateX(${draggerRect.left}px) translateY(${draggerRect.top}px) translateZ(0)`
-
-    // Add dragging class
-    dragger.classList.add('dragging')
 
     // Important! set current selected dragger
     this.setCurrentDragger(dragger)
@@ -311,6 +317,12 @@ class GraphicGapMatchInteractionWidget {
       }
 
       if (this.itemStart.classList.contains('target')) {
+
+        // Important! Without this, the itemStart gap will
+        // retain the high z-index which will result in z-index
+        // context problems later.
+        this.restoreGapZindex(this.itemStart)
+
         if (this.isTargetFull(this.itemStart)) {
           this.itemStart.classList.add('full')
         } else {
@@ -333,6 +345,10 @@ class GraphicGapMatchInteractionWidget {
   }
 
   resetDraggerToItemStart (itemStart, dragger) {
+    if (itemStart.classList.contains('target')) {
+      this.restoreGapZindex(itemStart)
+    }
+
     this.replacePlaceholder(dragger)
   }
 
@@ -359,7 +375,6 @@ class GraphicGapMatchInteractionWidget {
    * @returns 
    */
   appendDraggerToSourceTarget (sourceTarget, dragger) {
-    console.log('sourceTarget', sourceTarget)
     if (sourceTarget.classList.contains('full')) {
       // replace child
       // current source
@@ -484,6 +499,8 @@ class GraphicGapMatchInteractionWidget {
     } else {
       placeholderElement.classList.add('ggm-dragger-placeholder')
     }
+    // Fade the placeholder
+    placeholderElement.classList.add('placeholder-fade')
     
     draggableItem.parentNode.insertBefore(placeholderElement, draggableItem)
   }
@@ -501,13 +518,19 @@ class GraphicGapMatchInteractionWidget {
     
     // Must be coming from a source.
     const draggerMatchMax = draggableItem.parentNode.dataset.matchMax*1
-    
-    // Never remove the placeholder on sources with matchMax = 0
-    if (draggerMatchMax === 0) return
 
     const placeholderElement = draggableItem.parentNode.querySelector('.ggm-dragger-placeholder')
 
-    if (placeholderElement === null) return
+    if (placeholderElement === null) {
+      const placeholderClone = draggableItem.parentNode.querySelector('.clone')
+      if (placeholderClone === null) return
+      // Restore full opacity
+      placeholderClone.classList.remove('placeholder-fade')
+      return
+    }
+
+    // Never remove the placeholder on sources with matchMax = 0
+    if (draggerMatchMax === 0) return
 
     draggableItem.parentNode.removeChild(placeholderElement)
   }
@@ -646,6 +669,15 @@ class GraphicGapMatchInteractionWidget {
       for (let i=0; i<sortArray.length; i++) {
         container.appendChild(sortArray[i][1])
       }
+  }
+
+  saveGapZindex (gap) {
+    this.savedGapZindex = gap.style.zIndex
+    gap.style.zIndex = this.options.zindex
+  }
+
+  restoreGapZindex (gap) {
+    gap.style.zIndex = this.savedGapZindex
   }
 
   getResponse () {

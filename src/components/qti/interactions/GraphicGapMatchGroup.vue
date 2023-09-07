@@ -566,7 +566,6 @@ div.qti-ggm-target-wrapper.qti-choices-bottom {
   left: 0;
   top: 0;
   will-change: transform;
-  z-index: 1;
 }
 
 .gap-choice-text.draggable {
@@ -585,5 +584,9 @@ div.qti-ggm-target-wrapper.qti-choices-bottom {
   text-decoration: none;
   border-radius: .25rem;
   min-height: 26px;
+}
+
+.placeholder-fade {
+  opacity: 0.5;
 }
 </style>

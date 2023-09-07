@@ -224,7 +224,7 @@ export default {
   border: 1px transparent;
   margin: 0;
   padding: 0;
-  z-index: 0;
+  z-index: auto;
 }
 
 .ggm-gap.target-active {
@@ -239,7 +239,7 @@ export default {
   opacity: .8;
 }
 
-/* dragger-placeholder has default .15rem bottom margin.
+/* ggm-dragger-placeholder has default .15rem bottom margin.
    Remove the margin-bottom when inside a gap. */
 .ggm-gap .ggm-dragger-placeholder {
   margin-bottom: 0;
