@@ -129,7 +129,7 @@ class GraphicGapMatchPresentationFactory {
 
   processChoicesContainerWidth () {
     if (this.choicesContainerWidth === null) return
-    this.gapChoiceWrapperElement.style.width = `${this.choicesContainerWidth}px`
+    this.ggmChoiceWrapperElement.style.width = `${this.choicesContainerWidth}px`
   }
   
   processGaps () {
