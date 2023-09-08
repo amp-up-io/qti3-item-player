@@ -581,6 +581,7 @@ export default {
 
       // Set the dimensions and other attributes of the overlay
       this.backgroundImage = bgElement[0]
+      this.backgroundImage.setAttribute('draggable','false')
       this.backgroundImageWidth = `${bgElement[0].clientWidth}`
       this.backgroundImageHeight = `${bgElement[0].clientHeight}`
       this.$refs.overlay.setAttribute('viewBox', `0 0 ${this.backgroundImageWidth} ${this.backgroundImageHeight}`)
