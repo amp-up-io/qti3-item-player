@@ -3,6 +3,7 @@
     :data-identifier="identifier"
     :data-match-max="matchMax"
     :data-match-min="matchMin"
+    :data-match-group="matchGroup"
     class="qti-gap-choice qti-gap-img source">
     <div
       ref="image"
@@ -14,9 +15,6 @@
 
 <script>
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
-//import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
-
-//const qtiAttributeValidation = new QtiAttributeValidation()
 
 export default {
   name: 'QtiGapImg',

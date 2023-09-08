@@ -3,6 +3,7 @@
     :data-identifier="identifier"
     :data-match-max="matchMax"
     :data-match-min="matchMin"
+    :data-match-group="matchGroup"
     class="ggm-gap">
   </div>
 </template>
