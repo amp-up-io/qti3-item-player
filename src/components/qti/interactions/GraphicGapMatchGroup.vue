@@ -496,7 +496,7 @@ export default {
 ul.qti-ggm-source-wrapper {
   list-style: none;
   margin: 0 auto;
-  padding: .75rem .5rem .25rem 0;
+  padding: 8px 6px 0;
   width: 100%;
   text-align: center;
   background-color: var(--well-bg);
@@ -533,7 +533,7 @@ ul.qti-ggm-source-wrapper > li.source {
 ul.qti-ggm-source-wrapper > li.source.full {
   display: inline-block;
   padding: 0;
-  margin: 0 0 .5rem .5rem;
+  margin: 0 4px 8px;
   vertical-align: top;
 }
 
