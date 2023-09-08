@@ -324,10 +324,17 @@ class GraphicGapMatchInteractionWidget {
         this.restoreGapZindex(this.itemStart)
 
         if (this.isTargetFull(this.itemStart)) {
-          this.itemStart.classList.add('full')
+          this.itemStart.classList.add('full', 'contains-choice')
         } else {
           this.itemStart.classList.remove('full')
+
+          if (this.containsChoices(this.itemStart))
+            this.itemStart.classList.add('contains-choice')
+          else
+            this.itemStart.classList.remove('contains-choice')
+
         }
+
       }
 
       // Important: callback when we have an update.
@@ -396,6 +403,7 @@ class GraphicGapMatchInteractionWidget {
    * @returns 
    */
   appendDraggerToGapTarget (itemTarget, dragger) {
+    itemTarget.classList.add('contains-choice')
     itemTarget.append(dragger)
   }
 
@@ -834,7 +842,7 @@ class GraphicGapMatchInteractionWidget {
   addSourceDraggerToTarget (target, dragger) {
     if ((target === null) || (dragger === null)) return
 
-    target.append(dragger)
+    this.appendDraggerToGapTarget(target, dragger)
 
     if (this.isTargetFull(target)) {
       target.classList.add('full')
@@ -849,8 +857,11 @@ class GraphicGapMatchInteractionWidget {
     return (matchMax === 0) ? false : (draggers.length >= matchMax)
   }
 
-  emptyDraggerParent (dragger) {
-    dragger.parentNode.classList.remove('full')
+  containsChoices (target) {
+    if (target == null) return false
+
+    const draggers = target.querySelectorAll('.draggable')
+    return (draggers.length === 0) ? false : true
   }
 
   isExceedingMaxAssociations(startItem, target) {
@@ -949,10 +960,7 @@ class GraphicGapMatchInteractionWidget {
         
         if (source.classList.contains('full')) return
 
-        // 1) Empty the target
-        target.classList.remove('full')
-
-        // 2) Attach dragger to source, or delete it from the target.
+        // Attach dragger to source, or delete it from the target.
         if (!source.classList.contains('full')) {
           source.append(dragger)
           source.classList.add('full')
@@ -961,6 +969,10 @@ class GraphicGapMatchInteractionWidget {
         }
 
       }, this)
+
+      // Empty the target
+      target.classList.remove('full', 'contains-choice')
+
     }, this)
   }
 

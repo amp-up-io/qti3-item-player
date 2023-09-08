@@ -227,16 +227,46 @@ export default {
   z-index: auto;
 }
 
-.ggm-gap.target-active {
+.ggm-gap.qti-selections-dark:not(.qti-unselected-hidden) {
+  border: 1px solid var(--choice-ctrlh-color);
+}
+
+.ggm-gap.qti-selections-light:not(.qti-unselected-hidden) {
+  border: 1px solid orange;
+}
+
+.ggm-gap.qti-selections-dark.qti-unselected-hidden.contains-choice {
+  border: 1px solid var(--choice-ctrlh-color);
+}
+
+.ggm-gap.qti-selections-light.qti-unselected-hidden.contains-choice {
+  border: 1px solid orange;
+}
+
+.ggm-gap.target-active,
+.ggm-gap.qti-selections-dark.target-active {
   background-color: var(--order-target-active-bgc);
   border: 1px dashed;
   opacity: .8;
 }
 
-.ggm-gap.target-active.active {
+.ggm-gap.target-active.active,
+.ggm-gap.qti-selections-dark.target-active.active {
   background-color: var(--order-placeholder-color);
   border: 1px dashed;
   opacity: .8;
+}
+
+.ggm-gap.qti-selections-light.target-active {
+  background-color: orange;
+  border: 1px dashed yellow;
+  opacity: .3;
+}
+
+.ggm-gap.qti-selections-light.target-active.active {
+  background-color: orange;
+  border: 1px dashed yellow;
+  opacity: .7;
 }
 
 /* ggm-dragger-placeholder has default .15rem bottom margin.
@@ -257,13 +287,5 @@ export default {
   display: inline;
   float: left;
   margin: 0 1px 2px 0;
-}
-
-.ggm-gap.qti-selections-dark {
-  border: 1px solid var(--choice-ctrlh-color);
-}
-
-.ggm-gap.qti-selections-light {
-  border: 1px solid orange;
 }
 </style>

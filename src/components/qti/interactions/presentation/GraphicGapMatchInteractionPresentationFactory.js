@@ -40,6 +40,8 @@ class GraphicGapMatchPresentationFactory {
 
     // Default is dark / blue theme
     this.presentation_Theme = this.constants.QTI_SELECTIONS_DARK
+    // Default show gaps
+    this.presentation_UnselectedHidden = false
 
     this.presentation_MaxSelectionsMessage = ''
     this.presentation_MinSelectionsMessage = ''
@@ -77,8 +79,11 @@ class GraphicGapMatchPresentationFactory {
 
         case this.constants.QTI_SELECTIONS_DARK:
         case this.constants.QTI_SELECTIONS_LIGHT:
-        case this.constants.QTI_UNSELECTED_HIDDEN:
           this.presentation_Theme = clazzTokens[index]
+          break
+
+        case this.constants.QTI_UNSELECTED_HIDDEN:
+          this.presentation_UnselectedHidden = true
           break
 
         default:
@@ -115,12 +120,12 @@ class GraphicGapMatchPresentationFactory {
       this.ggmGroupElement.insertBefore(this.ggmTargetWrapperElement, this.ggmChoiceWrapperElement)
     }
     
-    this.processImage()
+    this.processBackgroundImage()
     this.processChoicesContainerWidth()
     this.processGaps()
   }
 
-  processImage () {
+  processBackgroundImage () {
     if (this.image === null) return
     const rect = this.image.getBoundingClientRect()
     this.ggmTargetWrapperElement.style.width = `${rect.width}px`
@@ -137,8 +142,11 @@ class GraphicGapMatchPresentationFactory {
     for (let i=0; i < this.gaps.length; i++) {
       const gap = this.gaps[i]
       this.setGapStyle(gap, gap.getShape(), gap.getShapeData())
-      this.gaps[i].$refs.gap.classList.add('target')
-      this.gaps[i].$refs.gap.classList.add(this.presentation_Theme)
+      this.gaps[i].$refs.gap.classList.add('target', this.presentation_Theme)
+
+      if (this.presentation_UnselectedHidden) {
+        this.gaps[i].$refs.gap.classList.add(this.constants.QTI_UNSELECTED_HIDDEN)
+      }
     }
   }
 
