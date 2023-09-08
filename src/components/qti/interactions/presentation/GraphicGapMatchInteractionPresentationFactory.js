@@ -127,6 +127,7 @@ class GraphicGapMatchPresentationFactory {
 
   processBackgroundImage () {
     if (this.image === null) return
+    this.image.setAttribute('draggable','false')
     const rect = this.image.getBoundingClientRect()
     this.ggmTargetWrapperElement.style.width = `${rect.width}px`
     this.ggmTargetWrapperElement.style.height = `${rect.height}px`
