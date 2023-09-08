@@ -3,6 +3,7 @@
     :data-identifier="identifier"
     :data-required="isRequired"
     data-match-max="1"
+    :data-match-group="matchGroup"
     class="gap-match-gap">
   </span>
 </template>
