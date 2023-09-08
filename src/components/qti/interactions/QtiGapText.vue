@@ -3,7 +3,8 @@
     :data-identifier="identifier"
     :data-match-max="matchMax"
     :data-match-min="matchMin"
-    class="qti-gap-choice qti-gap-text source full">
+    :data-match-group="matchGroup"
+    class="qti-gap-choice qti-gap-text source">
     <div
       ref="text"
       class="gap-choice-text draggable">
@@ -14,9 +15,6 @@
 
 <script>
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
-//import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
-
-//const qtiAttributeValidation = new QtiAttributeValidation()
 
 export default {
   name: 'QtiGapText',
