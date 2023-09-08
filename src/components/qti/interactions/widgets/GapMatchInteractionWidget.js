@@ -122,7 +122,7 @@ class GapMatchInteractionWidget {
     this.isItemStartSource = this.itemStart.classList.contains('source')
 
     // Look for targets
-    this.identifyTargets(true)
+    this.identifyTargets(this.itemStart, true)
 
     // Clear out any prior located target
     this.itemTarget = null
@@ -386,6 +386,9 @@ class GapMatchInteractionWidget {
         // Full items are not active
         if (item.classList.contains('full')) return
 
+        // Non-matching match-group's are not active
+        if (!this.hasMatchingMatchGroup(dragger.parentNode, item)) return
+
         item.classList.add('active')
         this.itemTarget = item
 
@@ -558,10 +561,12 @@ class GapMatchInteractionWidget {
     })
   }
 
-  identifyTargets (highlight) {
+  identifyTargets (itemStart, highlight) {
     for (let i=0; i < this.targets.length; i++) {
-      if (highlight && !this.targets[i].classList.contains('full')) {
-        this.targets[i].classList.add('target-active')
+      if (highlight 
+          && !this.targets[i].classList.contains('full')
+          && this.hasMatchingMatchGroup(itemStart, this.targets[i])) {
+          this.targets[i].classList.add('target-active')
       }
     }
 
@@ -803,6 +808,11 @@ class GapMatchInteractionWidget {
     if (this.isTargetFull(target)) {
       target.classList.add('full')
     }
+  }
+
+  hasMatchingMatchGroup (itemStart, target) {
+    if (itemStart === null || target === null) return false
+    return (itemStart.dataset.matchGroup === target.dataset.matchGroup)
   }
 
   isTargetFull (target) {
