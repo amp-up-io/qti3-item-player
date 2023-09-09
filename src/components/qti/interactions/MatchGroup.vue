@@ -512,14 +512,8 @@ ul.qti-match-target-wrapper > li.target > .draggable {
   z-index: 1;
 }
 
-.dragger-placeholder {
-  border: 1px solid var(--foreground);
-  background-color: var(--order-placeholder-color);
-  border-radius: .25rem;
-}
-
-ul.qti-match-target-wrapper > li.target > .dragger-placeholder {
-  margin-bottom: .25rem;
+.match-dragger-placeholder {
+  cursor: none;
 }
 
 .match-target-label {

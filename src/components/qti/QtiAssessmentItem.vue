@@ -2600,6 +2600,11 @@ code {
   float: left;
 }
 
+/* For match interaction placeholders */
+.placeholder-fade {
+  opacity: 0.5;
+}
+
 /* ===========================================
    QtiAssessmentItem component utility classes
    to support Chinese, Japanese, Korean and

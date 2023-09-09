@@ -546,6 +546,11 @@ div.qti-gap-match-target-wrapper.qti-choices-bottom {
   z-index: 1;
 }
 
+.gm-dragger-placeholder {
+  cursor: none;
+}
+
+/*
 .qti-gap-match-group-wrapper .dragger-placeholder {
   border: 1px solid var(--foreground);
   background-color: var(--order-placeholder-color);
@@ -556,6 +561,7 @@ div.qti-gap-match-target-wrapper.qti-choices-bottom {
   margin: 0 0 1.25px;
   opacity: 0.5
 }
+*/
 
 .gap-choice-text.draggable {
   display: inline-block;

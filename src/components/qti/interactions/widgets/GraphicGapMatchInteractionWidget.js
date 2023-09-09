@@ -245,10 +245,8 @@ class GraphicGapMatchInteractionWidget {
     // Clean out any hanging style (such as the transform, width, and height)
     dragger.removeAttribute('style')
 
-    // Removes dragging class
-    if (dragger.classList.contains('dragging')) {
-      dragger.classList.remove('dragging')
-    }
+    // Remove dragging class
+    dragger.classList.remove('dragging')
 
     this.clearTargetHighlights()
 
@@ -564,10 +562,19 @@ class GraphicGapMatchInteractionWidget {
       return
     }
 
-    // Must be inside a target list
+    // Must be inside a target
     if (placeholderElement === null) return
 
     parentNode.replaceChild(draggableItem, placeholderElement)
+  }
+
+  addClonePlaceholder (draggableItem) {
+    const cloneElement = draggableItem.cloneNode(true)
+    this.deepCloneId(cloneElement)
+    cloneElement.classList.add('clone')
+    draggableItem.parentNode.insertBefore(cloneElement, draggableItem)
+    cloneElement.addEventListener('mousedown', this.handleDragStart)
+    cloneElement.addEventListener('touchstart', this.handleTouchStart)
   }
 
   initializeSources (sourcewrapper) {
@@ -600,13 +607,13 @@ class GraphicGapMatchInteractionWidget {
   }
 
   identifyTargets (itemStart, highlight) {
-    for (let i=0; i < this.targets.length; i++) {
+    this.targets.forEach((target) => {
       if (highlight 
-          && !this.targets[i].classList.contains('full')
-          && this.hasMatchingMatchGroup(itemStart, this.targets[i])) {
-          this.targets[i].classList.add('target-active')
+        && !target.classList.contains('full')
+        && this.hasMatchingMatchGroup(itemStart, target)) {
+        target.classList.add('target-active')
       }
-    }
+    }, this)
 
     // Only highlight sourcewrapper if we did not start in the sourcewrapper.
     if (highlight && !this.isItemStartSource) {

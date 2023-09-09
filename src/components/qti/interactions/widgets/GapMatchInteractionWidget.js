@@ -239,10 +239,8 @@ class GapMatchInteractionWidget {
     // Clean out any hanging style (such as the transform, width, and height)
     dragger.removeAttribute('style')
 
-    // Removes dragging class
-    if (dragger.classList.contains('dragging')) {
-      dragger.classList.remove('dragging')
-    }
+    // Remove dragging class
+    dragger.classList.remove('dragging')
 
     this.clearTargetHighlights()
 
@@ -425,10 +423,9 @@ class GapMatchInteractionWidget {
   }
 
   addPlaceholder (draggableItem) {
-
     // If we are NOT coming from a source, use a generic placeholder
     if (!draggableItem.parentNode.classList.contains('source')) {
-      this.addGenericPlaceholder(draggableItem)
+      this.addPlaceholderElement(draggableItem, false)
       return
     }
     
@@ -439,55 +436,50 @@ class GapMatchInteractionWidget {
 
     // If matchMax = 1, use a generic placeholder
     if (draggerMatchMax === 1) {
-      this.addGenericPlaceholder(draggableItem)
+      this.addPlaceholderElement(draggableItem, false)
       return
     }
 
     // If matchMax = 0, use a clone placeholder
     if (draggerMatchMax === 0) {
-      this.addClonePlaceholder(draggableItem)
+      this.addPlaceholderElement(draggableItem, true)
       return
     }
 
-    // matchMax must be > 1, examine remaining matches
+    // matchMax must be >= 1, examine remaining matches
     const remaining = this.getRemaining(draggableItem.parentNode)
 
     if (remaining === 1) {
       // This is the last one.  Use a generic placeholder
-      this.addGenericPlaceholder(draggableItem)
+      this.addPlaceholderElement(draggableItem, false)
       return
     }
 
-    // Remaining > 1, use a clone placeholder
-    this.addClonePlaceholder(draggableItem)
+    // Remaining >= 1, use a clone placeholder
+    this.addPlaceholderElement(draggableItem, true)
   }
 
-  addGenericPlaceholder (draggableItem) {
-    const draggableItemRect = draggableItem.getBoundingClientRect()
-
-    // Create the element
-    const spacerElement = document.createElement('div')
-    spacerElement.classList.add('dragger-placeholder')
-    spacerElement.style.width = `${draggableItemRect.width}px`
-    spacerElement.style.height = `${draggableItemRect.height}px`
-
-    // Append the element before the active draggable item
-    draggableItem.parentNode.insertBefore(spacerElement, draggableItem)
-  }
-
-  addClonePlaceholder (draggableItem) {
-    const cloneElement = draggableItem.cloneNode(true)
-    this.deepCloneId(cloneElement)
-    cloneElement.classList.add('clone')
-    draggableItem.parentNode.insertBefore(cloneElement, draggableItem)
-    cloneElement.addEventListener('mousedown', this.handleDragStart)
-    cloneElement.addEventListener('touchstart', this.handleTouchStart)
+  addPlaceholderElement (draggableItem, isClone) {
+    const placeholderElement = draggableItem.cloneNode(true)
+    this.deepCloneId(placeholderElement)
+    if (isClone) {
+      placeholderElement.classList.add('clone')
+      // Make clones draggable
+      placeholderElement.addEventListener('mousedown', this.handleDragStart)
+      placeholderElement.addEventListener('touchstart', this.handleTouchStart)
+    } else {
+      placeholderElement.classList.add('gm-dragger-placeholder')
+    }
+    // Fade the placeholder
+    placeholderElement.classList.add('placeholder-fade')
+    
+    draggableItem.parentNode.insertBefore(placeholderElement, draggableItem)
   }
 
   removePlaceholder (draggableItem) {
     if (draggableItem.parentNode.classList.contains('target')) {
 
-      const placeholderElement = draggableItem.parentNode.querySelector('.dragger-placeholder')
+      const placeholderElement = draggableItem.parentNode.querySelector('.gm-dragger-placeholder')
 
       if (placeholderElement === null) return
 
@@ -497,13 +489,19 @@ class GapMatchInteractionWidget {
     
     // Must be coming from a source.
     const draggerMatchMax = draggableItem.parentNode.dataset.matchMax*1
-    
+
+    const placeholderElement = draggableItem.parentNode.querySelector('.gm-dragger-placeholder')
+
+    if (placeholderElement === null) {
+      const placeholderClone = draggableItem.parentNode.querySelector('.clone')
+      if (placeholderClone === null) return
+      // Restore full opacity
+      placeholderClone.classList.remove('placeholder-fade')
+      return
+    }
+
     // Never remove the placeholder on sources with matchMax = 0
     if (draggerMatchMax === 0) return
-
-    const placeholderElement = draggableItem.parentNode.querySelector('.dragger-placeholder')
-
-    if (placeholderElement === null) return
 
     draggableItem.parentNode.removeChild(placeholderElement)
   }
@@ -511,7 +509,7 @@ class GapMatchInteractionWidget {
   replacePlaceholder (draggableItem) {
     const parentNode = draggableItem.parentNode
 
-    let placeholderElement = parentNode.querySelector('.dragger-placeholder')
+    let placeholderElement = parentNode.querySelector('.gm-dragger-placeholder')
 
     if (parentNode.classList.contains('source')) {
       // Inside source list, a placeholder may be a draggable or a placeholder
@@ -526,10 +524,19 @@ class GapMatchInteractionWidget {
       return
     }
 
-    // Must be inside a target list
+    // Must be inside a target
     if (placeholderElement === null) return
 
     parentNode.replaceChild(draggableItem, placeholderElement)
+  }
+
+  addClonePlaceholder (draggableItem) {
+    const cloneElement = draggableItem.cloneNode(true)
+    this.deepCloneId(cloneElement)
+    cloneElement.classList.add('clone')
+    draggableItem.parentNode.insertBefore(cloneElement, draggableItem)
+    cloneElement.addEventListener('mousedown', this.handleDragStart)
+    cloneElement.addEventListener('touchstart', this.handleTouchStart)
   }
 
   initializeSources (sourcewrapper) {
@@ -562,13 +569,13 @@ class GapMatchInteractionWidget {
   }
 
   identifyTargets (itemStart, highlight) {
-    for (let i=0; i < this.targets.length; i++) {
+    this.targets.forEach((target) => {
       if (highlight 
-          && !this.targets[i].classList.contains('full')
-          && this.hasMatchingMatchGroup(itemStart, this.targets[i])) {
-          this.targets[i].classList.add('target-active')
+        && !target.classList.contains('full')
+        && this.hasMatchingMatchGroup(itemStart, target)) {
+        target.classList.add('target-active')
       }
-    }
+    }, this)
 
     // Only highlight sourcewrapper if we did not start in the sourcewrapper.
     if (highlight && !this.isItemStartSource) {
@@ -821,10 +828,6 @@ class GapMatchInteractionWidget {
     const draggers = target.querySelectorAll('.draggable')
     const matchMax = target.dataset.matchMax*1
     return (matchMax === 0) ? false : (draggers.length >= matchMax)
-  }
-
-  emptyDraggerParent (dragger) {
-    dragger.parentNode.classList.remove('full')
   }
 
   isExceedingMaxAssociations(startItem, target) {

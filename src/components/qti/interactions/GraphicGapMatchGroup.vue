@@ -593,8 +593,4 @@ div.qti-ggm-target-wrapper.qti-choices-bottom {
   border-radius: .25rem;
   min-height: 26px;
 }
-
-.placeholder-fade {
-  opacity: 0.5;
-}
 </style>
