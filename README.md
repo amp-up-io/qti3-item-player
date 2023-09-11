@@ -613,7 +613,7 @@ The QTI3 Item Player 2022-2023 development roadmap includes all features and cap
 - [x] Shared Stimulus Support
 - [x] QtiMatch Interaction Support
 - [x] QtiGapMatch Interaction Support
-- [ ] QtiGraphicGapMatch Interaction Support
+- [x] QtiGraphicGapMatch Interaction Support
 - [x] QtiHottext Interaction Support
 - [x] QtiHotspot Interaction Support
 - [x] QtiOrder Interaction Support
