@@ -739,27 +739,33 @@ class GraphicGapMatchInteractionWidget {
     }
   }
 
+  /**
+   * @description Main workhorse method to split a directed pair, then append 
+   * the source to a target gap.
+   * @param {*} response 
+   * @returns 
+   */
   restoreResponsePair (response) {
     const directedPair = this.getPair(response)
     if (directedPair === null) return
 
-    // 1. find source
+    // 1. Find source in sourcelist
     const source = this.findSourceByIdentifier(directedPair.source)
-    // 2. find target
-    const target = this.findTargetByIdentifier(directedPair.target)
+    // 2. Find target gap
+    const target = this.findTargetGapByIdentifier(directedPair.target)
 
     // Bail if either is not found (should never happen)
     if ((source === null) || (target === null)) return
 
-    // 3. find source dragger
+    // 3. Find inner source dragger
     const dragger = source.querySelector('.draggable')
     if (dragger === null) return
 
     // 4. Clone or empty source dragger - depending on maxChoices and remaining
     this.cloneOrEmptySourceDragger(source, dragger)
 
-    // 5. Add dragger to target
-    this.addSourceDraggerToTarget(target, dragger)
+    // 5. Add dragger to target gap
+    this.restoreSourceDraggerToTarget(target, dragger)
   }
 
   /**
@@ -784,7 +790,7 @@ class GraphicGapMatchInteractionWidget {
       return
     }
 
-    // matchMax must be > 1
+    // MatchMax must be > 1
     const remaining = this.getRemaining(source)
 
     if (remaining === 1) {
@@ -814,11 +820,11 @@ class GraphicGapMatchInteractionWidget {
   }
 
   /**
-   * Retrieve a target element with the given identifier.
+   * @description Retrieve a target gap element with the given identifier.
    * @param {*} identifier - identifier of source element
    * @returns target element or null
    */
-  findTargetByIdentifier (identifier) {
+  findTargetGapByIdentifier (identifier) {
     for (let i=0; i < this.targets.length; i++) {
       if (identifier === this.targets[i].dataset.identifier) {
         return this.targets[i]
@@ -846,15 +852,16 @@ class GraphicGapMatchInteractionWidget {
   }
 
   /**
-   * @description Utility method to append a dragger to a target.
+   * @description Utility method to restore a dragger to a target.
    * @param {*} target - target to which the dragger is appended.
    * @param {*} dragger - dragger to append to the target
    * @returns 
    */
-  addSourceDraggerToTarget (target, dragger) {
+  restoreSourceDraggerToTarget (target, dragger) {
     if ((target === null) || (dragger === null)) return
 
     this.appendDraggerToGapTarget(target, dragger)
+    this.incrementAssociationsCount()
 
     if (this.isTargetFull(target)) {
       target.classList.add('full')

@@ -593,4 +593,8 @@ div.qti-ggm-target-wrapper.qti-choices-bottom {
   border-radius: .25rem;
   min-height: 26px;
 }
+
+.gap-choice-text.draggable.ggm-dragger-placeholder {
+  cursor: none;
+}
 </style>
