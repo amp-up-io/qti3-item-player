@@ -9,10 +9,10 @@
 </template>
 
 <script>
+/*
+ * This defines the gap structure that must only appear within a qti-gap-match-interaction.
+ */
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
-//import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
-
-//const qtiAttributeValidation = new QtiAttributeValidation()
 
 export default {
   name: 'QtiGap',
