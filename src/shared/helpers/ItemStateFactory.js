@@ -47,6 +47,7 @@ export class ItemStateFactory {
       let obj = {
         identifier: responseVariable.identifier,
         cardinality: responseVariable.cardinality,
+        baseType: responseVariable.baseType,
         value: this.serializeVariableValue(responseVariable.cardinality, responseVariable.value),
         state: this.serializeVariableState(responseVariable.state)
       }
@@ -68,6 +69,7 @@ export class ItemStateFactory {
       variableArray.push({
         identifier: variable.identifier,
         cardinality: variable.cardinality,
+        baseType: variable.baseType,
         value: this.serializeVariableValue(variable.cardinality, variable.value)
       })
     })
