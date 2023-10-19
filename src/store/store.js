@@ -2,6 +2,7 @@ import { RecordField } from '@/shared/helpers/RecordField'
 import { PnpFactory } from '@/shared/helpers/PnpFactory'
 import { SessionControlFactory } from '@/shared/helpers/SessionControlFactory'
 import { ItemStateFactory } from '@/shared/helpers/ItemStateFactory'
+import { ItemTimer } from '@/shared/helpers/ItemTimer'
 
 export const store = {
 
@@ -34,6 +35,8 @@ export const store = {
     state: null,
     validationMessages: [] // store for validation messages
   },
+
+  itemTimer: new ItemTimer(),
 
   pciContext: {
     renderer2p0: 'assets/pci/pci.html'
@@ -319,6 +322,7 @@ export const store = {
     this.state.catalogs.splice(0, this.state.catalogs.length)
     this.state.scoringRubricBlocks.splice(0, this.state.scoringRubricBlocks.length)
     this.state.asyncStateMap.clear()
+    this.resetItemTimer()
     // Reset itemContext
     this.itemContext.guid = null
     this.itemContext.state = null
@@ -539,6 +543,30 @@ export const store = {
   incrementNumAttempts () {
     let rdIndex = this.state.responseDeclarations.findIndex(rd => rd.identifier == 'numAttempts')
     this.state.responseDeclarations[rdIndex].value += 1
+  },
+
+  /**
+   * Snapshot the Item Timer, augment the 'duration' response variable,
+   * then restart the Item Timer. 
+   */
+  updateItemDuration () {
+    const duration = this.getResponseDeclaration('duration')
+    duration.value += this.itemTimer.getTime()
+    this.restartItemTimer()
+  },
+
+  /**
+   * Set the Item Timer time back to 0 and start the Timer.
+   */
+  restartItemTimer () {
+    this.itemTimer.startTimer()
+  },
+
+  /**
+   * Stop the Item Timer and set the Timer time back to 0.
+   */
+  resetItemTimer () {
+    this.itemTimer.resetTimer()
   },
 
   setTemplateVariableValue (valueObject) {
@@ -822,6 +850,13 @@ export const store = {
    */
   NotifyItemReady (itemNode) {
     this.setItem(itemNode)
+
+    // Start the Timer if the item isn't adaptive
+    if (!(this.getItem().isAdaptive)) this.restartItemTimer()
+
+    // Item is adaptive, but is it completed?
+    // If not completed, start the Timer.
+    if (!(this.getItem().isAdaptiveItemCompleted())) this.restartItemTimer()
   },
 
   /**

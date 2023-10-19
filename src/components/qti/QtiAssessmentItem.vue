@@ -131,6 +131,9 @@ export default {
      * @return object with two properties: state which is an itemState class and target
      */
     getSuspendAttempt (target) {
+      // Update duration before calling getResponses
+      store.updateItemDuration()
+
       // Update the store's responses and state of response variables
       this.getResponses(function() {
         // Examine session control for validateResponses.
@@ -243,6 +246,8 @@ export default {
       this.resetOutcomeDeclarations()
       // 10) Evaluate all feedbacks
       this.evaluateFeedbacks()
+      // 11) Restart the item timer
+      store.restartItemTimer()
       console.log('[QtiAssessmentItem][NewTemplate][Completed]')
     },
 
@@ -360,6 +365,9 @@ export default {
 
     endAttempt (stateObject, callback) {
       console.log('[EndAttempt][Start][Identifier]', this.identifier)
+
+      // Update duration before calling getResponses
+      store.updateItemDuration()
 
       this.getResponses(function() {
         // Evaluate response validity if item session control validateResponses=true
@@ -511,6 +519,9 @@ export default {
 
     evaluateItemCompleted () {
       if (this.isAdaptiveItemCompleted()) {
+        // Stop the item timer
+        store.resetItemTimer()
+        // Notify the Player that completionStatus=complete
         this.$parent.$emit('itemCompleted')
       }
     },
@@ -2448,7 +2459,7 @@ figure {
   margin: 0 0 1rem;
 }
 
-/* All images shared these two properties */
+/* All images share these two properties */
 img {
   vertical-align: middle;
   border-style: none;
