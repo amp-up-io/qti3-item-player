@@ -127,7 +127,7 @@ export default {
     },
 
     /**
-     * @description  Initiate an getEndAttempt request in the QtiAssessmentItem
+     * @description  Initiate a getEndAttempt request in the QtiAssessmentItem
      * component.  When the method completes the Item will trigger the
      * 'itemEndAttemptReady' event - handled by the 'handleEndAttemptReady' method.
      * @param {String} target - used for tracking the invoker of this method.
@@ -172,6 +172,7 @@ export default {
     */
     handleItemCompleted () {
       console.log('[Qti3Player][ItemCompleted]')
+      // Notify listener that completionStatus=completed
       this.$emit('notifyQti3ItemCompleted')
     },
 
