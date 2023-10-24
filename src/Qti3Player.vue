@@ -8,6 +8,7 @@
       @itemCompleted="handleItemCompleted"
       @itemSuspendAttemptReady="handleSuspendAttemptReady"
       @itemEndAttemptReady="handleEndAttemptReady"
+      @itemScoreAttemptReady="handleScoreAttemptReady"
       @itemCatalogEvent="handleCatalogEvent"
       @itemNewTemplate="handleNewTemplate"
       v-bind:is="processedXml">
@@ -149,6 +150,17 @@ export default {
     },
 
     /**
+    * @description Initiate a getScoreAttempt request in the QtiAssessmentItem
+     * component.  When the method completes the Item will trigger the
+     * 'itemScoreAttemptReady' event - handled by the 'handleScoreAttemptReady' method.
+     * @param {String} target - used for tracking the invoker of this method.
+     */
+    scoreAttempt (target) {
+      console.log('[Qti3Player][ScoreAttempt][' + target + ']')
+      this.item.getScoreAttempt(target)
+    },
+
+    /**
      * @description Event handler for the itemReady Event triggered by
      * the qti-assessment-item component when the component is loaded.
      * @param {Object} param - contains an 'item' property (the qti-assessment-item component)
@@ -196,6 +208,15 @@ export default {
       this.displayInvalidResponseMessages(itemState.state.validationMessages)
       // Notify listener that an Item State object is ready.
       this.$emit('notifyQti3EndAttemptCompleted', itemState)
+    },
+
+    /**
+     * @description event handler for the scoreAttemptReady event.
+     * @param {Object} itemState - object containing a 'state' property and a 'target' property.
+     */
+     handleScoreAttemptReady (itemState) {
+      // Notify listener that an Item State object is ready.
+      this.$emit('notifyQti3ScoreAttemptCompleted', itemState)
     },
 
     /**

@@ -121,7 +121,7 @@ export default {
       // Evaluate outcomes.
       // Show feedback (if sessionControl permits it)
       this.endAttempt(undefined, function() {
-        this.notifyAttemptResults(true, target)
+        this.notifyAttemptResults('itemEndAttemptReady', target)
       }.bind(this))
     },
 
@@ -139,16 +139,32 @@ export default {
         // Examine session control for validateResponses.
         this.evaluateAttemptValidity(store.getItemContextSessionControl().getValidateResponses())
         // Notify that we are ready with results
-        this.notifyAttemptResults(false, target)
+        this.notifyAttemptResults('itemSuspendAttemptReady', target)
       }.bind(this))
     },
 
-    notifyAttemptResults (isEndAttempt=true, target) {
+    /**
+     * @description Score an attempt.  This executes response processing and reports the 
+     * serialized state of the variables.
+     * @param target - string which identifies a callback target
+     * @return object with two properties: state which is an itemState class and target
+     */
+    getScoreAttempt (target) {
+      this.processResponses(true)
+      // Notify that we are ready with results
+      this.notifyAttemptResults('itemScoreAttemptReady', target)
+    },
+
+    /**
+     * @description Utility method to serialize state and emit an event with serialized state.
+     * @param eventType - 'itemEndAttemptReady' |
+     *                             'itemSuspendAttemptReady' |
+     *                             'itemScoreAttemptReady'
+     * @param target - string which identifies a callback target
+     */
+    notifyAttemptResults (eventType, target) {
       // Pull state from the store
       const state = new ItemStateFactory(this.identifier, store)
-
-      // Compute whether or not this is an endAttempt or a suspendAttempt
-      const eventType = isEndAttempt ? 'itemEndAttemptReady' : 'itemSuspendAttemptReady'
 
       this.$parent.$emit(eventType, {
         "state": state.getSerializedState(),
@@ -531,9 +547,12 @@ export default {
       return outcomeDeclaration.value === 'completed'
     },
 
-    processResponses () {
+    processResponses (isScoreAttempt=false) {
       console.log('[ProcessResponses][Started]')
-      store.incrementNumAttempts()
+
+      if (!isScoreAttempt) {
+        store.incrementNumAttempts()
+      }
 
       console.log('[ProcessResponses][IsAdaptive]', this.isAdaptive)
       if (!this.isAdaptive) {
@@ -545,13 +564,15 @@ export default {
         responseProcessing.evaluate()
       }
 
-      // For debugging purposes
-      this.printOutcomeDeclarations()
+      if (!isScoreAttempt) {
+        // For debugging purposes
+        this.printOutcomeDeclarations()
 
-      this.evaluatePrintedVariables()
-      // Show feedbacks if itemSessionControl.showFeedback=true
-      if (store.getItemContextSessionControl().getShowFeedback()) {
-        this.evaluateFeedbacks()
+        this.evaluatePrintedVariables()
+        // Show feedbacks if itemSessionControl.showFeedback=true
+        if (store.getItemContextSessionControl().getShowFeedback()) {
+          this.evaluateFeedbacks()
+        }
       }
 
       console.log('[ProcessResponses][Completed]')
