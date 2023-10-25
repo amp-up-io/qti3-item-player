@@ -299,7 +299,11 @@ export default {
         }
       })
 
-      return response
+      // Single Cardinality
+      if (this.isRadio) return response
+
+      // Multiple Cardinality
+      return (response.length === 0) ? null : response
     },
 
     /**
