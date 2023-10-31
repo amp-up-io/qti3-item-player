@@ -87,6 +87,7 @@ import 'qti3-item-player/dist/qti3Player.css'
   @notifyQti3ItemReady="handleItemReady"
   @notifyQti3SuspendAttemptCompleted="handleSuspendAttemptCompleted"
   @notifyQti3EndAttemptCompleted="handleEndAttemptCompleted"
+  @notifyQti3ScoreAttemptCompleted="handleScoreAttemptCompleted"
   @notifyQti3ItemAlertEvent="displayItemAlertEvent"
   @notifyQti3ItemCatalogEvent="handleItemCatalogEvent"
 />
@@ -214,7 +215,9 @@ After item XML is loaded and an attempt has begun, a test controller may retriev
 
 * **endAttempt**
 
-  This performs response validation (if validateResponses=true), ends the attempt, _executes response processing_, and produces the state of all item variables.  Typical use is when `submissionMode: "individual"`, or when you want to generate a raw score from the responses and the response processing.  Note that Feedback (inline, block, modal) is also displayed if `showFeedback: true`
+  This performs response validation (if validateResponses=true), ends the attempt, _executes response processing_, and produces the state of all item variables.  Typical use is when `submissionMode: "individual"`, or when you want to generate a raw score from the responses and the response processing.  Note that Feedback (inline, block, modal) is also displayed if `showFeedback: true`.
+
+  QTI 3 Player supports the _full QTI 3 response processing_ expression vocabulary.
 
 * **suspendAttempt**
 
@@ -272,7 +275,8 @@ handleSuspendAttemptCompleted (data) {
 
 #### Item State Object Structure
 
-The `endAttempt` and `suspendAttempt` methods produce a `state` object with the following properties/structure:
+The `endAttempt`, `suspendAttempt`, and `scoreAttempt` methods produce a `state` object 
+with the following properties/structure:
 
 ```js
 "state": {
@@ -363,7 +367,59 @@ In this item, there are two qti-choice-interaction's, each with single cardinali
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-### 8. Item Session 'Alert' Messages and the notifyQti3ItemAlertEvent
+### 8. Scoring API
+
+There are scenarios where an encapsulating application may load item XML - along with a provided Item State - into QTI 3 Player and then score the Item State by executing response processing.  Such a scenario exists when a Test Part's `submission-mode` is set to `simultaneous`.  Another use-case is when a scoring system is batch-scoring a collection of items and a candidate's Item States from a submitted Test. For these scenarios, use the `scoreAttempt` method:
+
+* **scoreAttempt**
+
+  Given an Item State, _executes response processing_ with the item's XML, and produces the state of all item variables upon completion of response processing.  No response validation is performed.  Typical use is when `submissionMode: "simultaneous"`, or when you want to generate a raw score from the responses and the response processing _without_ invoking the endAttempt method (which has some side-effects - such as incrementing the numAttempts variable - that may be undesirable when simply trying to get a machine score from the given Item State).
+
+  QTI 3 Player supports the _full QTI 3 response processing_ expression vocabulary.
+
+The `scoreAttempt` method may take a considerable amount of time to complete.  QTI 3 Player triggers the `notifyQti3ScoreAttemptCompleted` event upon completion of a `scoreAttempt` method invocation.
+
+```html
+<Qti3Player
+  ref="qti3player"
+  @notifyQti3ScoreAttemptCompleted="handleScoreAttemptCompleted"
+/>
+```
+
+#### 8a) Calling scoreAttempt and handling the notifyQti3ScoreAttemptCompleted event
+
+```js
+// Call the scoreAttempt method, passing a string/target action that will be
+// echoed back in the notifyQti3ScoreAttemptCompleted event payload.
+this.qti3Player.scoreAttempt('itemScoreReady')
+```
+
+```js
+/**
+ * @description Example event handler for the QTI3Player component's 'notifyQti3ScoreAttemptCompleted'
+ * event.  This event is fired upon completion of the scoreAttempt method.
+ * @param {Object} data - the item's state, including outcomes from response processing
+ */
+handleScoreAttemptCompleted (data) {
+  // 'data' contains the item state in a 'state' property, including response variable values, 
+  // outcome variable values, template variable values, and context variable values.
+  // 'data' also has a 'target' property that echos the value (if any) of the target string
+  // parameter passed into the originaging scoreAttempt call.
+  // ... do something ...
+  console.log('SCORE ATTEMPT OUTCOMES', data.state)
+  const itemState = data.state
+  const target = data.target
+  // Echo all Outcome variables in the Item State
+  itemState.outcomeVariables.forEach((outcomeVariable) => {
+    console.log(`[Outcome][${outcomeVariable.identifier}][Value=${outcomeVariable.value}]`)
+  })
+}
+```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+### 9. Item Session 'Alert' Messages and the notifyQti3ItemAlertEvent
 
 An item session 'alert' message is triggered by QTI 3 Player when a person exceeds an interaction's max-choices or max-associations threshold.  QTI 3 Player uses a built-in messaging/toast component to display such alerts to the candidate.  
 
@@ -401,7 +457,7 @@ displayItemAlertEvent (event) {
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-### 9. Item Session 'Invalid Response' Messages
+### 10. Item Session 'Invalid Response' Messages
 
 An item session 'invalid response' message is triggered by QTI 3 Player when,  
 
@@ -443,7 +499,7 @@ This permits an encapsulating application to handle and display validation messa
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-### 10. Item 'Catalog' Events
+### 11. Item 'Catalog' Events
 
 An item 'catalog' event is triggered by QTI 3 Player when a user selects a control (such as a highlighted term) within the item's presentation that is bound to an item's catalog.  As of QTI 3 Player version 0.3.1, the only supported catalog event () is a 'glossary' event.  QTI 3 Player will display its own Catalog Glossary Dialog component when a user selects a control within the item's presentation that is bound to a 'glossary' event.
 
@@ -509,7 +565,7 @@ As of the 0.3.4 release, QTI 3 Player supports the following IS0 639 language co
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-### 11. About Dynamic Catalog Rebinding
+### 12. About Dynamic Catalog Rebinding
 
 Under most use-cases, a PNP is passed into QTI 3 Player as part of the configuration (see 4b Constructing a Configuration) as an item's XML is loaded.  However, _after an item is loaded_, an encapsulating application may update PNP settings and then force a catalog rebinding with the updated PNP settings.  QTI 3 Player implements a `bindCatalog` API method for this use-case.
 
@@ -533,7 +589,6 @@ this.qti3Player.bindCatalog()
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
 
 
 ## QTI 3 Player Presentation Attributes
@@ -618,7 +673,7 @@ The QTI3 Item Player 2022-2023 development roadmap includes all features and cap
 - [x] QtiHotspot Interaction Support
 - [x] QtiOrder Interaction Support
 - [x] QtiPortableCustom Interaction Support
-- [ ] Scoring API Examples
+- [x] Scoring API Examples
 - [ ] Improved Audio Player
 - [ ] Improved Video Player
 

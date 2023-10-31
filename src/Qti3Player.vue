@@ -151,8 +151,10 @@ export default {
 
     /**
     * @description Initiate a getScoreAttempt request in the QtiAssessmentItem
-     * component.  When the method completes the Item will trigger the
-     * 'itemScoreAttemptReady' event - handled by the 'handleScoreAttemptReady' method.
+     * component.  This executes response processing and reports the 
+     * serialized state of the variables. When the method completes the Item will
+     *  trigger the 'itemScoreAttemptReady' event - handled by the 
+     * 'handleScoreAttemptReady' method.
      * @param {String} target - used for tracking the invoker of this method.
      */
     scoreAttempt (target) {
