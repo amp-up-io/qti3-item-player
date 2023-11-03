@@ -1,16 +1,21 @@
-# amp-up.io QTI 3 Player Component
+# Amp-up.io QTI 3 Player Component
 
 <div id="top"></div>
 
 [![MIT License][license-shield]][license-url]
 
-The amp-up.io QTI 3 Player Component ("QTI 3 Player") is a 100% JavaScript component that aims to encapsulate the best practices and behaviors of the IMS Global QTI 3 Assessment Item specification.  A conforming QTI 3 authoring or exporting system can construct a QTI 3 Item XML solution that will "play" authentically and reliably in the QTI 3 Player - according to the Best Practices Implementation Guide which can be found here:
+<a href="https://site.imsglobal.org/certifications/amp-upio/amp-upio-qti-3-test-player" target="_blank">
+<img align="right" src="https://site.imsglobal.org/sites/default/files/media/images/logo_ims/1edtech_trusted-apps-certified.svg" width="187" height="200" border="1" alt="1EdTech Certified">
+</a>
 
-[IMS Global QTI v3 Best Practices and Implementation Guide](https://www.imsglobal.org/spec/qti/v3p0/impl)
+The Amp-up.io QTI 3 Player Component ("QTI 3 Player") is a 100% JavaScript component that aims to encapsulate the best practices and behaviors of the IMS Global/1EdTech QTI 3 Assessment Item specification.  A conforming QTI 3 authoring or exporting system can construct a QTI 3 Item XML solution that will "play" authentically and reliably in the QTI 3 Player - according to the Best Practices Implementation Guide which can be found here:
+
+[1EdTech QTI v3 Best Practices and Implementation Guide](https://www.imsglobal.org/spec/qti/v3p0/impl)
+
+QTI 3 Player has achieved both <a href="https://site.imsglobal.org/certifications/amp-upio/amp-upio-qti-3-test-player" target="_blank">QTI 3 Basic and QTI 3 Advanced "Delivery" Conformance</a> Certification from 1EdTech.  Furthermore, QTI 3 Player supports many so-called "Elective" capabilities that go beyond Advanced delivery conformance.
 
 For a complete list of the QTI3 XML elements supported by the QTI 3 Player component, please refer to the [QTI 3 Player Item Reference](https://docs.google.com/document/d/1KCImUAk-2uBqSOHRO1lJa1orrzF4b8cl/#heading=h.gjdgxs).
 
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 
 ## About The Project
@@ -652,7 +657,7 @@ QTI 3 Player has built-in support for 14 foreground / background color combinati
 
 ## Roadmap
 
-The QTI3 Item Player 2022-2023 development roadmap includes all features and capabilities included in QTI 3 Delivery System Level 1 and Level 2 conformance + PCI support.
+The QTI3 Item Player 2022-2023 development roadmap includes all features and capabilities included in QTI 3 Delivery System "Basic" and "Advanced" conformance + PCI support.
 
 - [x] Support for the 14 Standard Color Combinations/Themes
 - [x] Support for Template Processing and all Template Rules
