@@ -97,6 +97,7 @@ export default {
       currentChoice: null,
       isRadio: true,
       isShuffle: false,
+      isDisabled: false,
       isQtiValid: true,
       // If we are restoring, this is where we save the prior variable state
       priorState: null
@@ -152,6 +153,25 @@ export default {
      */
     setIsValid (isValid) {
       this.isValidResponse = isValid
+    },
+
+    disable () {
+      this.toggleDisableChoices (true)
+    },
+
+    enable () {
+      this.toggleDisableChoices (false)
+    },
+
+    /**
+     * @description Utility method to disable/enable this interaction's choices.
+     * @param {Boolean} isDisabled 
+     */
+    toggleDisableChoices (isDisabled) {
+      this.isDisabled = isDisabled
+      this.choices.forEach((choice) => {
+        choice.setIsDisabled(isDisabled)
+      })
     },
 
     /**
@@ -571,6 +591,56 @@ export default {
       }
 
       return priorState
+    },
+
+    showSolution (correctResponse) {
+      this.disable()
+
+      // Bail if there is no correct response
+      if (correctResponse === null) return
+      
+      if (this.isRadio) {
+        this.choices.forEach((choice) => {
+          this.setChoiceSolution(choice, correctResponse)
+        }, this)
+        return
+      }
+
+      // Checkboxes
+      this.choices.forEach((choice) => {
+          const identifier = 
+            this.findIdentifierInCorrectResponse(choice.identifier, correctResponse)
+          this.setChoiceSolution(choice, identifier)
+        }, this)      
+
+    },
+
+    setChoiceSolution (choice, identifier) {
+      if (choice.isChecked()) {
+        if (choice.identifier === identifier)
+          choice.setCorrectSolution()
+        else
+          choice.setIncorrectSolution()
+      } else {
+        if (choice.identifier === identifier)
+          choice.setExpectedSolution()
+        else
+          choice.setIgnoreSolution()            
+      }
+    },
+
+    /**
+     * @description Examine the correctResponse array.  Return the matching
+     * identifier or null if not found.
+     * @param {String} identifier 
+     * @param {Array} correctResponse 
+     * @return {String} identifier or null
+     */
+    findIdentifierInCorrectResponse (identifier, correctResponse) {
+      for (let i=0; i<correctResponse.length; i++) {
+        if (identifier === correctResponse[i]) return identifier
+      }
+      return null
     }
   },
 
