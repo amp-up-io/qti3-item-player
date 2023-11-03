@@ -12,6 +12,7 @@
     class="qti-simple-choice"
     :class="{ source: role=='button' }">
     <div
+      class="qti-simple-choice-wrapper"
       :class="{ draggable: role=='button' }"
       style="width:100%;">
       <div
@@ -82,7 +83,8 @@ export default {
       isRadio: true,
       role: 'radio',
       tabIndex: '-1',
-      hasMath: false
+      hasMath: false,
+      isDisabled: false
     }
   },
 
@@ -91,6 +93,8 @@ export default {
   methods: {
 
     handleClick () {
+      if (this.isDisabled) return
+
       if (this.isRadio) {
         this.$parent.$emit('setChecked', { 'identifier': this.identifier, 'checked': 'true' })
       } else {
@@ -104,14 +108,18 @@ export default {
 
       switch (event.code) {
         case 'Space':
-          this.toggleChecked()
-          this.$parent.$emit('setChecked', { 'identifier': this.identifier, 'checked': this.checked })
+          if (!this.isDisabled) {
+            this.toggleChecked()
+            this.$parent.$emit('setChecked', { 'identifier': this.identifier, 'checked': this.checked })
+          }
           flag = true
           break
 
         case 'Enter':
-          this.toggleChecked()
-          this.$parent.$emit('setChecked', { 'identifier': this.identifier, 'checked': this.checked })
+        if (!this.isDisabled) {
+            this.toggleChecked()
+            this.$parent.$emit('setChecked', { 'identifier': this.identifier, 'checked': this.checked })
+          }
           flag = true
           break
 
@@ -206,6 +214,10 @@ export default {
       this.$refs.choice.classList.add('control-hidden')
     },
 
+    setIsDisabled (isDisabled) {
+      this.isDisabled = isDisabled
+    },
+
     initializeChoice () {
       switch (this.$parent.cardinality) {
         case 'ordered':
@@ -253,6 +265,36 @@ export default {
       // Node does not have an authored id.  Create one.
       this.id = 'choice_' + qtiAttributeValidation.randomString (5, 'a') + '_' + this.identifier
       this.$refs.choice.setAttribute('id', this.id)
+    },
+    
+    setExpectedSolution () {
+      this.$refs.choice.classList
+        .add(
+          'player-show-solution',
+          'player-choice-expected')
+    },
+
+    setCorrectSolution () {
+      this.$refs.choice.classList
+        .add(
+          'player-show-solution',
+          'player-choice-correct')
+    },
+
+    setIncorrectSolution () {
+      this.$refs.choice.classList
+        .add(
+          'player-show-solution',
+          'player-choice-incorrect')
+    },
+
+    setIgnoreSolution () {
+      this.$refs.choice.classList
+        .remove(
+          'player-show-solution',
+          'player-choice-incorrect',
+          'player-choice-correct',
+          'player-choice-expected')
     }
 
   },
@@ -275,9 +317,12 @@ export default {
 [role="checkbox"] {
   display: inline-block;
   position: relative;
-  padding: 0.25rem 0.25rem 0.25rem 1.8rem;
+  padding: 0.25rem 0.25rem 0.25rem 2.10rem;
   outline: none;
-  border: 1px dashed transparent;
+  border-top: 1px dashed transparent;
+  border-bottom: 1px dashed transparent;
+  border-left: 3px solid transparent;
+  border-right: 1px dashed transparent;
   /* IMPORTANT: Must have following in order to work
      around Chrome-only column wrapping bug */
   -webkit-column-break-inside: avoid;
@@ -299,7 +344,7 @@ export default {
 [role="radio"]::after {
   position: absolute;
   top: 1.1rem;
-  left: .70rem;
+  left: .95rem;
   transform: translate(-50%, -50%);
   content: '';
 }
@@ -360,7 +405,8 @@ export default {
 
   [role="radio"],
   [role="checkbox"] {
-    padding: 0.25rem 0.25rem 0.25rem 1.5rem;
+    /* padding: 0.25rem 0.25rem 0.25rem 1.5rem; */
+    padding: 0.25rem 0.25rem 0.25rem 2rem;
   }
 
   [role="radio"].sbac {
@@ -385,7 +431,11 @@ export default {
 /* Choice focus */
 [role="checkbox"]:not(.control-hidden):focus,
 [role="radio"]:not(.control-hidden):focus {
-  border: 1px solid transparent;
+  /* border: 1px solid transparent; */
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-left: 3px solid transparent;
+  border-right: 1px solid transparent;
   border-radius: 0.15rem;
   border-color: var(--choice-focus-border);
 }
@@ -507,8 +557,7 @@ export default {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  -webkit-print-color-adjust: exact;
-  color-adjust: exact;
+  print-color-adjust: exact;
 }
 
 [role="radio"].sbac::after {
@@ -785,7 +834,57 @@ export default {
 .qti-choice-description {
   display: inline-block;
   vertical-align: top;
-  width: 80%;
+  width: calc(100% - 1.25em);
+}
+
+.player-show-solution .qti-simple-choice-wrapper::after {
+  display: inline-block;
+  content: " ";
+  width: 26px;
+  height: 26px;
+  vertical-align: middle;
+  margin-top: -1px;
+}
+
+.player-show-solution.player-choice-incorrect .qti-simple-choice-wrapper::after {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' height='26' width='26' viewBox='0 0 384 512'%3e%3cpath fill='%23dd002f' stroke='%23dd002f' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z'/%3e%3c/svg%3e");
+}
+
+.player-show-solution.player-choice-correct .qti-simple-choice-wrapper::after,
+.player-show-solution.player-choice-expected .qti-simple-choice-wrapper::after {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%234a700a' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+}
+
+.qti3-player-color-whiteblack .player-show-solution.player-choice-correct .qti-simple-choice-wrapper::after,
+.qti3-player-color-whiteblack .player-show-solution.player-choice-expected .qti-simple-choice-wrapper::after,
+.qti3-player-color-defaultreverse .player-show-solution.player-choice-correct .qti-simple-choice-wrapper::after,
+.qti3-player-color-defaultreverse .player-show-solution.player-choice-expected .qti-simple-choice-wrapper::after,
+.qti3-player-color-roseblack .player-show-solution.player-choice-correct .qti-simple-choice-wrapper::after,
+.qti3-player-color-roseblack .player-show-solution.player-choice-expected .qti-simple-choice-wrapper::after,
+.qti3-player-color-creamblack .player-show-solution.player-choice-correct .qti-simple-choice-wrapper::after,
+.qti3-player-color-creamblack .player-show-solution.player-choice-expected .qti-simple-choice-wrapper::after,
+.qti3-player-color-cyanblack .player-show-solution.player-choice-correct .qti-simple-choice-wrapper::after,
+.qti3-player-color-cyanblack .player-show-solution.player-choice-expected .qti-simple-choice-wrapper::after,
+.qti3-player-color-yellowblue .player-show-solution.player-choice-correct .qti-simple-choice-wrapper::after,
+.qti3-player-color-yellowblue .player-show-solution.player-choice-expected .qti-simple-choice-wrapper::after,
+.qti3-player-color-mgraydgray .player-show-solution.player-choice-correct .qti-simple-choice-wrapper::after,
+.qti3-player-color-mgraydgray .player-show-solution.player-choice-expected .qti-simple-choice-wrapper::after {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%2398fb98' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+}
+
+.player-show-solution.player-choice-correct {
+  border-left: 3px solid #4a700a;
+  /*background-color: #f0f8ed;*/
+}
+
+.player-show-solution.player-choice-incorrect {
+  border-left: 3px solid #dd002f;
+  /*background-color: #fbc3e3;*/
+}
+
+.player-show-solution.player-choice-expected {
+  border-left: 3px solid #888;
+  /*background-color: #fcfcd3;*/
 }
 
 .control-hidden .qti-choice-label,
