@@ -355,6 +355,24 @@ export default {
       })
     },
 
+    /**
+     * @description Show all interactions' solution state.  This calls
+     * each interaction's internal showSolution method - if one exists.
+     */
+    showSolutionInteractions () {
+      // NOOP if session control showSolution = false (default)
+      if (!store.getItemContextSessionControl().getShowSolution()) return
+
+      // NOOP if Item lifecycle is not 'solution'
+      if (store.getItemLifecycleState() !== 'solution') return
+
+      store.getInteractions().forEach((interaction) => {
+        if ('showSolution' in interaction) {
+          interaction.showSolution(store.getResponseVariableCorrectResponse(interaction.identifier))
+        }
+      })
+    },
+
     evaluateFeedbacks () {
       console.log('[EvaluateFeedback][Started]')
       store.getFeedbacks().forEach((feedback) => {

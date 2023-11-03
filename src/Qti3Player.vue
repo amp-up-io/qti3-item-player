@@ -271,6 +271,7 @@ export default {
       if ('guid' in configuration) this.setItemContextGuid(configuration.guid)
       if ('pnp' in configuration) this.setItemContextPnp(configuration.pnp)
       if ('sessionControl' in configuration) this.setItemContextSessionControl(configuration.sessionControl)
+      if ('lifecycle' in configuration) this.setItemLifecycleState(configuration.lifecycle)
       if ('state' in configuration) {
         this.setItemContextState(configuration.state)
         // This sets QTI_CONTEXT - if provided - to override the built-in declaration.
@@ -319,6 +320,15 @@ export default {
      */
     setItemContextState (state) {
       store.setItemContextState(state)
+    },
+
+    /**
+     * @description Method to inject a test controller's item lifecycle state.
+     * @param {String} state - a state string from the set of:
+     *                         { null | 'closed' | 'review' | 'solution' }
+     */
+    setItemLifecycleState (state) {
+      store.setItemLifecycleState(state)
     },
 
     /**

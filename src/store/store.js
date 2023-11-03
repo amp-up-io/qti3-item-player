@@ -33,7 +33,8 @@ export const store = {
     pnp: null,
     sc: null, // itemSessionControl
     state: null,
-    validationMessages: [] // store for validation messages
+    validationMessages: [], // store for validation messages
+    lifecycleState: null // interacting, closed, review, solution
   },
 
   itemTimer: new ItemTimer(),
@@ -327,6 +328,7 @@ export const store = {
     this.itemContext.guid = null
     this.itemContext.state = null
     this.itemContext.validationMessages.splice(0, this.itemContext.validationMessages.length)
+    this.itemContext.lifecycleState = null
     // For now, do not reset pnp and sessionControl
     // this.itemContext.pnp = null
     // this.itemContext.sc = null
@@ -473,6 +475,15 @@ export const store = {
     }
 
     declaration.value = null
+  },
+
+  getResponseVariableCorrectResponse (identifier) {
+    let rdIndex = this.state.responseDeclarations.findIndex(rd => rd.identifier == identifier)
+
+    if (rdIndex < 0) return null
+
+    // Found the response variable, get its correct response property
+    return this.state.responseDeclarations[rdIndex].correctResponse
   },
 
   setResponseVariableCorrectResponse (valueObject) {
@@ -803,6 +814,14 @@ export const store = {
 
   resetItemContextValidationMessages () {
     this.itemContext.validationMessages.splice(0, this.itemContext.validationMessages.length)
+  },
+
+  getItemLifecycleState () {
+    return this.lifecycleState
+  },
+
+  setItemLifecycleState (lifecycleState) {
+    this.lifecycleState = lifecycleState
   },
 
   /**
