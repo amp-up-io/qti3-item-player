@@ -820,6 +820,11 @@ export const store = {
     return this.lifecycleState
   },
 
+  /**
+   * @description Method to save lifecycleState in the store.
+   * @param {String} lifecycleState - a state string from the set of:
+   *                                  { null | 'closed' | 'review' | 'solution' }
+   */
   setItemLifecycleState (lifecycleState) {
     this.lifecycleState = lifecycleState
   },
