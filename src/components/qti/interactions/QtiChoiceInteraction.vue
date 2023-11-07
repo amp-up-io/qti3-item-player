@@ -594,8 +594,6 @@ export default {
     },
 
     showSolution (correctResponse) {
-      this.disable()
-
       // Bail if there is no correct response
       if (correctResponse === null) return
       
@@ -611,8 +609,7 @@ export default {
           const identifier = 
             this.findIdentifierInCorrectResponse(choice.identifier, correctResponse)
           this.setChoiceSolution(choice, identifier)
-        }, this)      
-
+        }, this)
     },
 
     setChoiceSolution (choice, identifier) {
