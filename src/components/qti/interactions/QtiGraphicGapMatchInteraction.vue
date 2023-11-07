@@ -200,6 +200,14 @@ export default {
       return this.minSelectionsMessage
     },
 
+    disable () {
+      this.$refs.ggmgroup.disable()      
+    },
+
+    enable () {
+      this.$refs.ggmgroup.enable()
+    },
+
     /**
      * @description Method to initialize this interaction's response, state,
      * and validity. This method is called upon receipt of an 'matchGroupReady'

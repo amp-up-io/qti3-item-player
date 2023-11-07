@@ -37,6 +37,7 @@ class GraphicGapMatchInteractionWidget {
     this.startingX = 0
     this.startingY = 0
     this.currentAssociationsCount = 0
+    this.isDisabled = false
 
     // Initialize currentDragger state
     this.currentDragger = null
@@ -100,8 +101,20 @@ class GraphicGapMatchInteractionWidget {
     this.options.onAssociationsLimit()
   }
 
+  toggleDisable (isDisabled) {
+    this.isDisabled = isDisabled
+
+    this.draggers.forEach((dragger) => {
+      if (isDisabled)
+        dragger.classList.add('disabled')
+      else
+        dragger.classList.remove('disabled')
+    })
+  }
+
   handleDragStart (event) {
     event.preventDefault()
+    if (this.isDisabled) return
     if (event.button != 0) return
     this.interactionStart(event.target, event.clientX, event.clientY, false)
     return false
@@ -109,6 +122,7 @@ class GraphicGapMatchInteractionWidget {
 
   handleTouchStart (event) {
     event.preventDefault()
+    if (this.isDisabled) return
     if (event.targetTouches.length != 1) return false
     this.interactionStart(event.target, event.touches[0].pageX, event.touches[0].pageY, true)
     return false
@@ -162,11 +176,13 @@ class GraphicGapMatchInteractionWidget {
 
   handleDragMove (event) {
     event.preventDefault()
+    if (this.isDisabled) return
     this.interactionMove(event.clientX, event.clientY)
   }
 
   handleTouchMove (event) {
     event.preventDefault()
+    if (this.isDisabled) return
     if (event.targetTouches.length != 1) return
     this.interactionMove(event.touches[0].clientX, event.touches[0].clientY)
   }
@@ -224,10 +240,12 @@ class GraphicGapMatchInteractionWidget {
   }
 
   handleDragEnd (event) {
+    if (this.isDisabled) return
     this.interactionEnd(event.clientX, event.clientY, false)
   }
 
   handleTouchEnd (event) {
+    if (this.isDisabled) return
     this.interactionEnd(event.changedTouches[0].clientX, event.changedTouches[0].clientY, true)
   }
 

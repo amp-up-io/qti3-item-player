@@ -157,6 +157,16 @@ export default {
       this.response = response
     },
 
+    disable () {
+      if (this.matchable === null) return
+      this.matchable.toggleDisable(true)
+    },
+
+    enable () {
+      if (this.matchable === null) return
+      this.matchable.toggleDisable(false)
+    },
+
     getChoices () {
         return this.choices
     },
@@ -596,5 +606,10 @@ div.qti-ggm-target-wrapper.qti-choices-bottom {
 
 .gap-choice-text.draggable.ggm-dragger-placeholder {
   cursor: none;
+}
+
+.gap-choice-img.draggable.disabled,
+.gap-choice-text.draggable.disabled {
+  cursor: default;
 }
 </style>
