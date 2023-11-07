@@ -152,6 +152,7 @@ The `configuration` object is used to specify runtime context to QTI 3 Player du
 configuration: {
   guid: <{String} identifier used to track item state>,
   pnp: <{Object} used to define Personal Needs and Preferences>,
+  status: <{String} use to define Item Lifecycle Status>,
   sessionControl: <{Object} used to define Item Session Control>,
   state: <{Object} used to RESTORE prior state saved from a prior Item Session>
 }
@@ -186,6 +187,12 @@ const pnp = {
 
 // Set the configuration's 'pnp' property
 configuration.pnp = pnp
+
+// OPTIONAL
+// Use 'status' to reflect the current QTI Item Lifecycle Status, which is an 
+// enumerated vocabulary from the set of:
+// { 'initial' | 'interacting' | 'closed' | 'review' | 'solution'}
+configuration.status = 'interacting'
 
 // QTI 3 Player includes a helper class called 'SessionControlFactory' which can be
 // used to build an Item Session Control definition.
