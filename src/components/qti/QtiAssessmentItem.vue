@@ -208,6 +208,15 @@ export default {
       if (this.isAdaptive) {
         this.evaluateFeedbacks()
       }
+
+      if ((store.getItemLifecycleStatus() === 'closed') ||
+          (store.getItemLifecycleStatus() === 'review') ||
+          (store.getItemLifecycleStatus() === 'solution')) {
+        // Kill the timer and reset it to 0
+        store.resetItemTimer()
+        // Disable all interactions
+        this.disableInteractions()
+      }
     },
 
     /**
@@ -355,6 +364,14 @@ export default {
       })
     },
 
+    disableInteractions () {
+      store.getInteractions().forEach((interaction) => {
+        if (interaction.node.disable) {
+          interaction.node.disable()
+        }
+      })
+    },
+
     /**
      * @description Show all interactions' solution state.  This calls
      * each interaction's internal showSolution method - if one exists.
@@ -367,8 +384,8 @@ export default {
       if (store.getItemLifecycleState() !== 'solution') return
 
       store.getInteractions().forEach((interaction) => {
-        if ('showSolution' in interaction) {
-          interaction.showSolution(store.getResponseVariableCorrectResponse(interaction.identifier))
+        if (interaction.node.showSolution) {
+          interaction.node.showSolution(store.getResponseVariableCorrectResponse(interaction.identifier))
         }
       })
     },

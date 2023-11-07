@@ -34,7 +34,7 @@ export const store = {
     sc: null, // itemSessionControl
     state: null,
     validationMessages: [], // store for validation messages
-    lifecycleState: null // interacting, closed, review, solution
+    lifecycleStatus: null // initial, interacting, closed, review, solution
   },
 
   itemTimer: new ItemTimer(),
@@ -816,17 +816,18 @@ export const store = {
     this.itemContext.validationMessages.splice(0, this.itemContext.validationMessages.length)
   },
 
-  getItemLifecycleState () {
-    return this.lifecycleState
+  getItemLifecycleStatus () {
+    return this.lifecycleStatus
   },
 
   /**
-   * @description Method to save lifecycleState in the store.
-   * @param {String} lifecycleState - a state string from the set of:
-   *                                  { null | 'closed' | 'review' | 'solution' }
+   * @description Method to save lifecycleStatus in the store.
+   * @param {String} status - String from the set of:
+   *                          { null | 'initial', 'interacting' |
+   *                            'closed' | 'review' | 'solution' }
    */
-  setItemLifecycleState (lifecycleState) {
-    this.lifecycleState = lifecycleState
+  setItemLifecycleStatus (status) {
+    this.lifecycleStatus = status
   },
 
   /**
