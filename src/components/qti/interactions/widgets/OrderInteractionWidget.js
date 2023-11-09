@@ -8,6 +8,10 @@ class OrderInteractionWidget {
     this.wrapper = container
     // Get a handle on the element that wraps the qti-simple-choices
     this.sourcewrapper = this.wrapper.querySelector('.qti-order-source-wrapper')
+    // Init sortable
+    this.sortable = null
+    // Init disabled state
+    this.isDisabled = false
 
     // options is an object containing the interactionSubType and
     // an update callback function.
@@ -115,8 +119,26 @@ class OrderInteractionWidget {
     this.options.onSelectionsLimit()
   }
 
+  toggleDisable (isDisabled) {
+    this.isDisabled = isDisabled
+
+    if ((this.options.interactionSubType === 'default') && (this.sortable !== null)) {
+      // Disable sortable
+      this.sortable.option('disabled', isDisabled)
+
+      // Update the class of all draggers
+      const draggers = this.sourcewrapper.querySelectorAll('.draggable')
+      this.enableDisableDraggers(draggers, isDisabled)
+      return
+    }
+    
+    // Subtype is presumed 'ordermatch'
+    this.enableDisableDraggers(this.draggers, isDisabled)
+  }
+
   handleDragStart (event) {
     event.preventDefault()
+    if (this.isDisabled) return
     if (event.button != 0) return
     this.interactionStart(event.target, event.clientX, event.clientY, false)
     return false
@@ -124,6 +146,7 @@ class OrderInteractionWidget {
 
   handleTouchStart (event) {
     event.preventDefault()
+    if (this.isDisabled) return
     if (event.targetTouches.length != 1) return false
     this.interactionStart(event.target, event.touches[0].pageX, event.touches[0].pageY, true)
     return false
@@ -178,11 +201,13 @@ class OrderInteractionWidget {
 
   handleDragMove (event) {
     event.preventDefault()
+    if (this.isDisabled) return
     this.interactionMove(event.clientX, event.clientY)
   }
 
   handleTouchMove (event) {
     event.preventDefault()
+    if (this.isDisabled) return
     if (event.targetTouches.length != 1) return
     this.interactionMove(event.touches[0].clientX, event.touches[0].clientY)
   }
@@ -234,10 +259,12 @@ class OrderInteractionWidget {
   }
 
   handleDragEnd (event) {
+    if (this.isDisabled) return
     this.interactionEnd(event.clientX, event.clientY, false)
   }
 
   handleTouchEnd (event) {
+    if (this.isDisabled) return
     this.interactionEnd(event.changedTouches[0].clientX, event.changedTouches[0].clientY, true)
   }
 
@@ -407,6 +434,15 @@ class OrderInteractionWidget {
     draggableItem.parentNode.removeChild(placeholderElement)
   }
 
+  enableDisableDraggers (draggers, isDisabled) {
+    draggers.forEach((dragger) => {
+      if (isDisabled)
+        dragger.classList.add('disabled')
+      else
+        dragger.classList.remove('disabled')
+    })
+  }
+
   initializeSources (sourcewrapper) {
     this.sources = sourcewrapper.querySelectorAll('.source')
 
@@ -421,6 +457,7 @@ class OrderInteractionWidget {
         const sourceIdentifier = dragger.parentNode.getAttribute('data-identifier')
         dragger.setAttribute('data-identifier', sourceIdentifier)
         dragger.setAttribute('data-order', index)
+        dragger.setAttribute('tabindex', 0)
         dragger.addEventListener('mousedown', this.handleDragStart)
         dragger.addEventListener('touchstart', this.handleTouchStart)
       }, this)
@@ -428,6 +465,9 @@ class OrderInteractionWidget {
 
   initializeTargets (targetwrapper) {
     this.targets = targetwrapper.querySelectorAll('.target')
+    this.targets.forEach((target) => {
+      target.setAttribute('tabindex', 0)
+    })
   }
 
   identifyTargets (highlight) {

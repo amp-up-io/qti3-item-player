@@ -135,6 +135,16 @@ export default {
       this.response = response
     },
 
+    disable () {
+      if (this.sortable === null) return
+      this.sortable.toggleDisable(true)
+    },
+
+    enable () {
+      if (this.sortable === null) return
+      this.sortable.toggleDisable(false)
+    },
+
     validateChildren () {
       this.$slots.default.forEach((slot) => {
         if (qtiAttributeValidation.isValidSlot(slot)) {
@@ -428,6 +438,10 @@ ul.qti-order-source-wrapper.qti-choices-bottom > li.source {
   display: none;
 }
 
+ul.qti-order-source-wrapper > li.source > .draggable.disabled {
+  cursor: default;
+}
+
 ul.qti-order-source-wrapper > li.source.full {
   display: inline-block;
   padding: .75rem .25rem;
@@ -501,6 +515,10 @@ ul.qti-order-target-wrapper > li.target.full > .draggable {
   /* Make sure long draggables wrap and fit in the target */
   overflow-wrap: break-word;
   margin: 0;
+}
+
+ul.qti-order-target-wrapper > li.target.full > .draggable.disabled {
+  cursor: default;
 }
 
 ul.qti-order-target-wrapper.qti-orientation-vertical > li.target {

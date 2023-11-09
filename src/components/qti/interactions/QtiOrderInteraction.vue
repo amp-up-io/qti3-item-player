@@ -203,6 +203,14 @@ export default {
       return this.minSelectionsMessage
     },
 
+    disable () {
+      this.$refs.ordergroup.disable()      
+    },
+
+    enable () {
+      this.$refs.ordergroup.enable()
+    },
+
     /**
      * @description Method to initialize this interaction's response, state,
      * and validity. This method is called upon receipt of an 'orderGroupReady'
