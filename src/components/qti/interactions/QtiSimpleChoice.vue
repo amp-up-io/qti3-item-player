@@ -716,8 +716,8 @@ export default {
    Disabled styles
    ===============*/
 
-[role="radio"].disabled,
-[role="checkbox"].disabled {
+[role="radio"].disabled:not(.control-cell),
+[role="checkbox"].disabled:not(.control-cell) {
   pointer-events: none;
   filter: none;
   opacity: 0.6;

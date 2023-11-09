@@ -12,6 +12,8 @@ class MatchInteractionTabularWidget {
     this.targetwrapper = this.wrapper.querySelector('.qti-match-target-wrapper')
     // Init associations
     this.currentAssociationsCount = 0
+    // Init disabled flag
+    this.isDisabled = false
 
     // options is an object containing the interactionSubType, matchsets, and
     // an update callback function.
@@ -102,7 +104,20 @@ class MatchInteractionTabularWidget {
     this.options.onAssociationsLimit()
   }
 
+  toggleDisable (isDisabled) {
+    this.isDisabled = isDisabled
+
+    this.controls.forEach((control) => {
+      if (isDisabled)
+        control.classList.add('disabled')
+      else
+        control.classList.remove('disabled')
+    })
+  }
+
   handleClick (event) {
+    if (this.isDisabled) return
+
     if (this.isRadio(event.target)) {
       // For radio buttons, we always set check state to true on a click.
       this.setControlChecked(event.target)
@@ -119,8 +134,10 @@ class MatchInteractionTabularWidget {
     switch (event.code) {
       case 'Space':
       case 'Enter':
-        // Toggle check state - even if it's a radio button
-        this.toggleControl(event.target)
+        if (!this.isDisabled) {
+          // Toggle check state - even if it's a radio button
+          this.toggleControl(event.target)
+        }
         flag = true
         break
 

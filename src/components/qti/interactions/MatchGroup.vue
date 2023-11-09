@@ -175,6 +175,16 @@ export default {
       this.response = response
     },
 
+    disable () {
+      if (this.matchable === null) return
+      this.matchable.toggleDisable(true)
+    },
+
+    enable () {
+      if (this.matchable === null) return
+      this.matchable.toggleDisable(false)
+    },
+
     validateChildren () {
       let matchSetCount = 0
 
@@ -512,6 +522,10 @@ ul.qti-match-target-wrapper > li.target > .draggable {
   z-index: 1;
 }
 
+ul.qti-match-target-wrapper > li.target > .draggable.disabled {
+  cursor: default;
+}
+
 .match-dragger-placeholder {
   cursor: none;
 }
@@ -537,6 +551,10 @@ ul.qti-match-target-wrapper > li.target > .draggable {
   overflow: hidden;
   text-decoration: none;
   border-radius: .25rem;
+}
+
+.choice-description.draggable.disabled {
+  cursor: default;
 }
 
 table.matchtabular .header-cell {
@@ -574,7 +592,11 @@ table.matchtabular [role="checkbox"].control-cell {
   width: 40px;
   height: 32px;
   cursor: pointer;
+}
 
+table.matchtabular [role="radio"].control-cell.disabled,
+table.matchtabular [role="checkbox"].control-cell.disabled {
+  cursor: default;
 }
 
 table.matchtabular [role="checkbox"].control-cell::before,
