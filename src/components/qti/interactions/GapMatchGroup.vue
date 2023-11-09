@@ -158,6 +158,16 @@ export default {
       this.response = response
     },
 
+    disable () {
+      if (this.matchable === null) return
+      this.matchable.toggleDisable(true)
+    },
+
+    enable () {
+      if (this.matchable === null) return
+      this.matchable.toggleDisable(false)
+    },
+
     getChoices () {
         return this.choices
     },
@@ -550,19 +560,6 @@ div.qti-gap-match-target-wrapper.qti-choices-bottom {
   cursor: none;
 }
 
-/*
-.qti-gap-match-group-wrapper .dragger-placeholder {
-  border: 1px solid var(--foreground);
-  background-color: var(--order-placeholder-color);
-  border-radius: .25rem;
-  font-size: 14px;
-  line-height: 26px;
-  padding: 0;
-  margin: 0 0 1.25px;
-  opacity: 0.5
-}
-*/
-
 .gap-choice-text.draggable {
   display: inline-block;
   position: relative;
@@ -579,5 +576,9 @@ div.qti-gap-match-target-wrapper.qti-choices-bottom {
   text-decoration: none;
   border-radius: .25rem;
   min-height: 26px;
+}
+
+.gap-choice-text.draggable.disabled {
+  cursor: default;
 }
 </style>

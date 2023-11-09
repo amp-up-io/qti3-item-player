@@ -190,6 +190,14 @@ export default {
       return this.minSelectionsMessage
     },
 
+    disable () {
+      this.$refs.gapmatchgroup.disable()      
+    },
+
+    enable () {
+      this.$refs.gapmatchgroup.enable()
+    },
+
     /**
      * @description Method to initialize this interaction's response, state,
      * and validity. This method is called upon receipt of an 'matchGroupReady'
