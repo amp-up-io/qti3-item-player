@@ -356,11 +356,12 @@ export default {
 
 .qti3-player-writing-mode-vertical-rl .qti-choice-list.qti-orientation-vertical > li {
   display: inline-block;
-  height: 99%;
-  margin-bottom: 1.0%;
-  padding-left: 0.1rem;
-  padding-right: 0.25rem;
-  margin-left: 0.5rem;
+  height: calc(100% - .4rem);
+  margin-top: .2rem;
+  margin-bottom: .2rem;
+  padding-left: .1rem;
+  padding-right: .25rem;
+  margin-left: .5rem;
   overflow-wrap: break-word;
 }
 
@@ -384,11 +385,12 @@ export default {
 
 .qti3-player-writing-mode-vertical-rl .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-2 > li {
   display:inline-block;
-  height: 48%;
-  margin-bottom: 1.0%;
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-  margin-left: 0.5rem;
+  height: calc(50% - .65rem);
+  margin-top: .25rem;
+  margin-bottom: .25rem;
+  padding-left: .25rem;
+  padding-right: .25rem;
+  margin-left: .5rem;
 }
 
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-2 > li:nth-child(2n) {
@@ -410,11 +412,12 @@ export default {
 
 .qti3-player-writing-mode-vertical-rl .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-3 > li {
   display:inline-block;
-  height: 31.0%;
-  margin-bottom: 1.0%;
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-  margin-left: 0.5rem;
+  height: calc(33.2% - .6rem);
+  margin-top: .2rem;
+  margin-bottom: .2rem;
+  padding-left: .25rem;
+  padding-right: .25rem;
+  margin-left: .5rem;
 }
 
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-3 > li:nth-child(3n) {
@@ -436,11 +439,12 @@ export default {
 
 .qti3-player-writing-mode-vertical-rl .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-4 > li {
   display:inline-block;
-  height: 23.0%;
-  margin-bottom: 1.0%;
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-  margin-left: 0.5rem;
+  height: calc(24.3% - .5rem);
+  margin-top: .2rem;
+  margin-bottom: .2rem;
+  padding-left: .25rem;
+  padding-right: .25rem;
+  margin-left: .5rem;
 }
 
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-4 > li:nth-child(4n) {
@@ -462,11 +466,12 @@ export default {
 
 .qti3-player-writing-mode-vertical-rl .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-5 > li {
   display:inline-block;
-  height: 18.0%;
-  margin-bottom: 1.0%;
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-  margin-left: 0.5rem;
+  height: calc(19% - .35rem);
+  margin-top: .15rem;
+  margin-bottom: .15rem;
+  padding-left: .25rem;
+  padding-right: .25rem;
+  margin-left: .5rem;
 }
 
 .qti-choice-list.qti-orientation-horizontal.qti-choices-stacking-5 > li:nth-child(5n) {

@@ -336,6 +336,8 @@ export default {
   padding-left: 0.25rem;
   padding-right: 0.25rem;
   padding-bottom: 0.25rem;
+  border-left: 1px dashed transparent;
+  border-top: 3px solid transparent;
 }
 
 [role="checkbox"]::before,
@@ -354,7 +356,7 @@ export default {
 .qti3-player-writing-mode-vertical-rl [role="radio"]:not(.control-hidden)::before,
 .qti3-player-writing-mode-vertical-rl [role="radio"]:not(.control-hidden)::after {
   position: absolute;
-  top: .75rem;
+  top: .95rem;
   left: auto;
   right: 0.15rem;
   transform: translate(-50%, -50%);
@@ -431,12 +433,18 @@ export default {
 /* Choice focus */
 [role="checkbox"]:not(.control-hidden):focus,
 [role="radio"]:not(.control-hidden):focus {
-  /* border: 1px solid transparent; */
   border-top: 1px solid transparent;
   border-bottom: 1px solid transparent;
   border-left: 3px solid transparent;
   border-right: 1px solid transparent;
   border-radius: 0.15rem;
+  border-color: var(--choice-focus-border);
+}
+
+.qti3-player-writing-mode-vertical-rl [role="radio"]:not(.control-hidden):focus,
+.qti3-player-writing-mode-vertical-rl [role="checkbox"]:not(.control-hidden):focus {
+  border-top: 3px solid transparent;
+  border-left: 1px solid transparent;
   border-color: var(--choice-focus-border);
 }
 
@@ -626,6 +634,7 @@ export default {
 
 .qti3-player-writing-mode-vertical-rl [role="radio"].control-hidden,
 .qti3-player-writing-mode-vertical-rl [role="checkbox"].control-hidden {
+  padding-top: .3rem;
   margin-left: .75rem;
 }
 
@@ -745,7 +754,7 @@ export default {
   display: inline-block;
   vertical-align: top;
   width: 2rem;
-  height: 2rem;
+  height: 2.15rem;
   writing-mode: horizontal-tb;
   text-align: right;
   padding-right: 0.15rem;
@@ -756,7 +765,7 @@ export default {
   display: inline-block;
   vertical-align: top;
   width: 2rem;
-  height: 2rem;
+  height: 2.15rem;
   writing-mode: horizontal-tb;
   text-align: right;
   padding-right: .4rem;
@@ -764,7 +773,7 @@ export default {
 
 .qti3-player-writing-mode-vertical-rl .qti-choice-interaction:not(.qti-labels-cjk-ideographic):not(.qti-labels-suffix-none) .qti-choice-label,
 .qti3-player-writing-mode-vertical-rl .qti-choice-interaction:not(.qti-labels-cjk-ideographic).qti-labels-suffix-none .qti-choice-label {
-  margin-top: 1.5rem;
+  margin-top: 1.65rem;
   margin-bottom: .75rem;
   width: 2rem;
   height: 1.5rem;
@@ -789,7 +798,7 @@ export default {
 
 /* Add some top padding when vertical-rl and labels none */
 .qti3-player-writing-mode-vertical-rl .qti-labels-none:not(.qti-input-control-hidden) .qti-choice-description {
-  margin-top: 1.75rem;
+  margin-top: 1.95rem;
 }
 
 .qti3-player-writing-mode-vertical-rl .qti-choice-interaction:not(.qti-labels-cjk-ideographic).qti-input-control-hidden .qti-choice-label {
@@ -801,7 +810,7 @@ export default {
   vertical-align: top;
   width: 2rem;
   height: 2rem;
-  margin-top: .25rem;
+  margin-top: 0;
   text-align: center;
   padding-right: 0.25rem;
 }
