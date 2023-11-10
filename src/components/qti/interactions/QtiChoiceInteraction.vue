@@ -156,11 +156,11 @@ export default {
     },
 
     disable () {
-      this.toggleDisableChoices (true)
+      this.toggleDisableChoices(true)
     },
 
     enable () {
-      this.toggleDisableChoices (false)
+      this.toggleDisableChoices(false)
     },
 
     /**
