@@ -1,6 +1,10 @@
 <template>
   <div ref="root" class="qti-inline-choice-interaction">
     <div class="inline-choice-wrapper">
+      <div ref="label" 
+        class="inline-choice-select-label select-element-hidden">
+        {{dataPrompt}}
+      </div>
       <button ref="button"
         aria-haspopup="listbox"
         :aria-labelledby="buttonAriaLabelledbyId"
@@ -128,6 +132,7 @@ export default {
       keysSoFar: '',
       searchIndex: null,
       isShuffle: null,
+      isDisabled: false,
       isQtiValid: true,
       presentationFactory: null,
       isOrientationVertical: false,
@@ -194,6 +199,33 @@ export default {
      */
     getInvalidResponseMessage () {
       return this.minSelectionsMessage
+    },
+
+    disable () {
+      this.toggleDisable(true)
+    },
+
+    enable () {
+      this.toggleDisable(false)
+    },
+
+    /**
+     * @description Utility method to disable/enable this interaction.
+     * @param {Boolean} isDisabled 
+     */
+    toggleDisable (isDisabled) {
+      this.isDisabled = isDisabled
+
+      if (isDisabled) {
+        this.$refs.label.classList.remove('select-element-hidden')
+        this.$refs.label.setAttribute('tabIndex', 0)
+        this.$refs.button.classList.add('select-element-hidden')
+        this.$refs.listbox.classList.add('inline-choice-select-listbox-hidden')
+      } else {
+        this.$refs.label.classList.add('select-element-hidden')
+        this.$refs.label.setAttribute('tabIndex', -1)
+        this.$refs.button.classList.remove('select-element-hidden')      
+      }
     },
 
     /**
@@ -331,6 +363,7 @@ export default {
     },
 
     handleButtonClick () {
+      if (this.isDisabled) return
       this.showListbox()
     },
 
@@ -339,6 +372,7 @@ export default {
         case 'ArrowUp':
         case 'ArrowDown':
           event.preventDefault()
+          if (this.isDisabled) return
           this.showListbox()
           break
 
@@ -378,6 +412,7 @@ export default {
 
     handleFocusChange (focusedOption) {
       this.$refs.prompt.innerHTML = focusedOption.innerHTML
+      this.$refs.label.innerHTML = focusedOption.innerHTML
     },
 
     showListbox () {
@@ -859,6 +894,27 @@ div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wra
   cursor: pointer;
 }
 
+.inline-choice-select-label {
+  display: inline-block;
+  position: relative;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0 0.15rem;
+  min-height: calc(1.6rem + .35rem);
+  padding: .15rem .3rem 0 .3rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6rem;
+  color: var(--foreground);
+  width: 9rem;
+  vertical-align: inherit;
+  border: 1px solid var(--choice-control-focus-border);
+  border-radius: .25rem;
+  transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  cursor: default;
+}
+
 .qti-orientation-vertical .inline-choice-select {
   text-align: left;
   vertical-align: middle;
@@ -868,6 +924,28 @@ div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wra
   height: 9.75rem;
   width: 1.95rem;
   background: var(--background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='5' height='4'%3e%3cpath fill='%23fff' transform='rotate(90 2.5 2.5)' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3e") no-repeat bottom .3rem center/10px 8px;
+}
+
+.qti-orientation-vertical .inline-choice-select-label {
+  display: inline-block;
+  position: relative;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: .25rem .15rem 0 0;
+  margin-left: 0;
+  margin-right: -0.05rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6rem;
+  color: var(--foreground);
+  height: 9.75rem;
+  width: 1.95rem;
+  vertical-align: middle;
+  border: 1px solid var(--choice-control-focus-border);
+  border-radius: .25rem;
+  transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  cursor: default;
 }
 
 .qti3-player-color-default .inline-choice-select,
@@ -959,7 +1037,8 @@ div.qti-inline-choice-interaction.qti-orientation-vertical div.inline-choice-wra
 }
 
 .inline-choice-select:focus,
-.inline-choice-select[aria-expanded="true"] {
+.inline-choice-select[aria-expanded="true"],
+.inline-choice-select-label:focus {
   color: var(--foreground);
   background-color: var(--background);
   border-color: var(--choice-control-focus-border);
@@ -1055,12 +1134,18 @@ ul.inline-choice-select-listbox {
   background: var(--ic-focus-bc);
 }
 
-.inline-choice-select-listbox-hidden {
+.inline-choice-select-listbox-hidden,
+.select-element-hidden,
+.qti-orientation-vertical .select-element-hidden {
   display: none;
 }
 
 .qti-input-width-1 .inline-choice-select {
   width: 2.5rem;
+}
+
+.qti-input-width-1 .inline-choice-select-label {
+  width: 1.55rem;
 }
 
 .qti-input-width-1 .inline-choice-select-prompt {
@@ -1069,6 +1154,11 @@ ul.inline-choice-select-listbox {
 
 .qti-orientation-vertical.qti-input-width-1 .inline-choice-select {
   height: 2.75rem;
+  width: 1.95rem;
+}
+
+.qti-orientation-vertical.qti-input-width-1 .inline-choice-select-label {
+  height: 1.0rem;
   width: 1.95rem;
 }
 
@@ -1081,12 +1171,21 @@ ul.inline-choice-select-listbox {
   width: 3.5rem;
 }
 
+.qti-input-width-2 .inline-choice-select-label {
+  width: 2.4rem;
+}
+
 .qti-input-width-2 .inline-choice-select-prompt {
   width: 2.0rem;
 }
 
 .qti-orientation-vertical.qti-input-width-2 .inline-choice-select {
   height: 3.75rem;
+  width: 1.95rem;
+}
+
+.qti-orientation-vertical.qti-input-width-2 .inline-choice-select-label {
+  height: 2.7rem;
   width: 1.95rem;
 }
 
@@ -1099,12 +1198,21 @@ ul.inline-choice-select-listbox {
   width: 4.8rem;
 }
 
+.qti-input-width-3 .inline-choice-select-label {
+  width: 3.3rem;
+}
+
 .qti-input-width-3 .inline-choice-select-prompt {
   width: 3.0rem;
 }
 
 .qti-orientation-vertical.qti-input-width-3 .inline-choice-select {
   height: 4.75rem;
+  width: 1.95rem;
+}
+
+.qti-orientation-vertical.qti-input-width-3 .inline-choice-select-label {
+  height: 3.7rem;
   width: 1.95rem;
 }
 
@@ -1117,12 +1225,21 @@ ul.inline-choice-select-listbox {
   width: 5.5rem;
 }
 
+.qti-input-width-4 .inline-choice-select-label {
+  width: 4.1rem;
+}
+
 .qti-input-width-4 .inline-choice-select-prompt {
   width: 4.0rem;
 }
 
 .qti-orientation-vertical.qti-input-width-4 .inline-choice-select {
   height: 5.75rem;
+  width: 1.95rem;
+}
+
+.qti-orientation-vertical.qti-input-width-4 .inline-choice-select-label {
+  height: 4.7rem;
   width: 1.95rem;
 }
 
@@ -1135,12 +1252,21 @@ ul.inline-choice-select-listbox {
   width: 6.5rem;
 }
 
+.qti-input-width-5 .inline-choice-select-label {
+  width: 4.9rem;
+}
+
 .qti-input-width-5 .inline-choice-select-prompt {
   width: 5.0rem;
 }
 
 .qti-orientation-vertical.qti-input-width-5 .inline-choice-select {
   height: 6.75rem;
+  width: 1.95rem;
+}
+
+.qti-orientation-vertical.qti-input-width-5 .inline-choice-select-label {
+  height: 5.7rem;
   width: 1.95rem;
 }
 
@@ -1153,6 +1279,10 @@ ul.inline-choice-select-listbox {
   width: 7.5rem;
 }
 
+.qti-input-width-6 .inline-choice-select-label {
+  width: 5.8rem;
+}
+
 .qti-input-width-6 .inline-choice-select-prompt {
   width: 6.0rem;
 }
@@ -1162,13 +1292,22 @@ ul.inline-choice-select-listbox {
   width: 1.95rem;
 }
 
+.qti-orientation-vertical.qti-input-width-6 .inline-choice-select-label {
+  height: 6.7rem;
+  width: 1.95rem;
+}
+
 .qti-orientation-vertical.qti-input-width-6 .inline-choice-select-prompt {
   height: 6.9rem;
   width: 1.68rem;
 }
 
-.qti-input-width-10 .inline-choice-select {
+.qti-input-width-10 .inline-choice-select{
   width: 11.5rem;
+}
+
+.qti-input-width-10 .inline-choice-select-label {
+  width: 9.1rem;
 }
 
 .qti-input-width-10 .inline-choice-select-prompt {
@@ -1177,6 +1316,11 @@ ul.inline-choice-select-listbox {
 
 .qti-orientation-vertical.qti-input-width-10 .inline-choice-select {
   height: 11.75rem;
+  width: 1.95rem;
+}
+
+.qti-orientation-vertical.qti-input-width-10 .inline-choice-select-label {
+  height: 10.7rem;
   width: 1.95rem;
 }
 
@@ -1189,12 +1333,21 @@ ul.inline-choice-select-listbox {
   width: 16.0rem;
 }
 
+.qti-input-width-15 .inline-choice-select-label {
+  width: 13.3rem;
+}
+
 .qti-input-width-15 .inline-choice-select-prompt {
   width: 14.5rem;
 }
 
 .qti-orientation-vertical.qti-input-width-15 .inline-choice-select {
   height: 16.75rem;
+  width: 1.95rem;
+}
+
+.qti-orientation-vertical.qti-input-width-15 .inline-choice-select-label {
+  height: 15.7rem;
   width: 1.95rem;
 }
 
@@ -1206,12 +1359,22 @@ ul.inline-choice-select-listbox {
 .qti-input-width-20 .inline-choice-select {
   width: 20.5rem;
 }
+
+.qti-input-width-20 .inline-choice-select-label {
+  width: 17.4rem;
+}
+
 .qti-input-width-20 .inline-choice-select-prompt {
   width: 19.0rem;
 }
 
 .qti-orientation-vertical.qti-input-width-20 .inline-choice-select {
   height: 21.75rem;
+  width: 1.95rem;
+}
+
+.qti-orientation-vertical.qti-input-width-20 .inline-choice-select-label {
+  height: 20.7rem;
   width: 1.95rem;
 }
 
@@ -1224,12 +1387,21 @@ ul.inline-choice-select-listbox {
   width: 25.0rem;
 }
 
+.qti-input-width-25 .inline-choice-select-label {
+  width: 21.55rem;
+}
+
 .qti-input-width-25 .inline-choice-select-prompt {
   width: 23.5rem;
 }
 
 .qti-orientation-vertical.qti-input-width-25 .inline-choice-select {
   height: 26.75rem;
+  width: 1.95rem;
+}
+
+.qti-orientation-vertical.qti-input-width-25 .inline-choice-select-label {
+  height: 25.7rem;
   width: 1.95rem;
 }
 
@@ -1242,12 +1414,20 @@ ul.inline-choice-select-listbox {
   width: 29.5rem;
 }
 
+.qti-input-width-30 .inline-choice-select-label {
+  width: 25.7rem;
+}
+
 .qti-input-width-30 .inline-choice-select-prompt {
   width: 28.0rem;
 }
 
 .qti-input-width-35 .inline-choice-select {
   width: 34.0rem;
+}
+
+.qti-input-width-35 .inline-choice-select-label {
+  width: 30.0rem;
 }
 
 .qti-input-width-35 .inline-choice-select-prompt {
@@ -1258,12 +1438,20 @@ ul.inline-choice-select-listbox {
   width: 38.5rem;
 }
 
+.qti-input-width-40 .inline-choice-select-label {
+  width: 34.1rem;
+}
+
 .qti-input-width-40 .inline-choice-select-prompt {
   width: 37.0rem;
 }
 
 .qti-input-width-45 .inline-choice-select {
   width: 43.0rem;
+}
+
+.qti-input-width-45 .inline-choice-select-label {
+  width: 38.3rem;
 }
 
 .qti-input-width-45 .inline-choice-select-prompt {
@@ -1274,14 +1462,23 @@ ul.inline-choice-select-listbox {
   width: 47.5rem;
 }
 
+.qti-input-width-50 .inline-choice-select-label {
+  width: 42.4rem;
+}
+
 .qti-input-width-50 .inline-choice-select-prompt {
   width: 46.0rem;
 }
 
 div.qti-inline-choice-interaction.qti-input-width-72,
 .qti-input-width-72 div.inline-choice-wrapper,
-.qti-input-width-72 .inline-choice-select {
-  width: 100%;
+.qti-input-width-72 .inline-choice-select,
+.qti-input-width-72 .inline-choice-select-label {
+  width: calc(100% - 0.1rem);
+}
+
+.qti-input-width-72 .inline-choice-select-label {
+  width: calc(100% - 0.3rem);
 }
 
 .qti-input-width-72 .inline-choice-select-prompt {
