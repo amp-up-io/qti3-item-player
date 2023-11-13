@@ -129,7 +129,7 @@ export default {
       this.$refs.hottext.focus()
     },
 
-    disable (isDisabled) {
+    setIsDisabled (isDisabled) {
       this.isDisabled = isDisabled
     },
 

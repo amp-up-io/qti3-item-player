@@ -78,6 +78,7 @@ export default {
       choices: [],
       currentChoice: null,
       isRadio: true,
+      isDisabled: false,
       isQtiValid: true,
       presentationFactory: null,
       // If we are restoring, this is where we save the prior variable state
@@ -134,6 +135,25 @@ export default {
      */
     setIsValid (isValid) {
       this.isValidResponse = isValid
+    },
+
+    disable () {
+      this.toggleDisableChoices(true)
+    },
+
+    enable () {
+      this.toggleDisableChoices(false)
+    },
+
+    /**
+     * @description Utility method to disable/enable this interaction's choices.
+     * @param {Boolean} isDisabled 
+     */
+    toggleDisableChoices (isDisabled) {
+      this.isDisabled = isDisabled
+      this.choices.forEach((choice) => {
+        choice.setIsDisabled(isDisabled)
+      })
     },
 
     /**
@@ -436,12 +456,6 @@ export default {
       if (this.presentationFactory.getUnselectedHidden()) {
         this.$refs.hottextgroup.setAttribute('class', 'qti3-player-hottext-group qti-unselected-hidden')
       }
-    },
-
-    disable () {
-      this.choices.forEach((hottextChoice) => {
-        hottextChoice.disable(true)
-      })
     },
 
     /**
