@@ -147,6 +147,22 @@ export default {
       this.isValidResponse = isValid
     },
 
+    disable () {
+      this.toggleDisableChoices(true)
+    },
+
+    enable () {
+      this.toggleDisableChoices(false)
+    },
+
+    /**
+     * @description Utility method to disable/enable this interaction's choices.
+     * @param {Boolean} isDisabled 
+     */
+    toggleDisableChoices (isDisabled) {
+      this.isDisabled = isDisabled
+    },
+
     /**
      * @description Get this interaction's invalid response message.
      * @return {String} minSelectionsMessage or custom message
@@ -328,7 +344,7 @@ export default {
      * state properties as of 1/5/1023.
      * @return {Object} state object
      */
-     computeState () {
+    computeState () {
       const state = {}
       return state
     },
@@ -603,10 +619,6 @@ export default {
 
     setShapeColorProperties (shapeColorProperties) {
       this.shapeColorProperties = shapeColorProperties
-    },
-
-    disable () {
-      this.isDisabled = true
     },
 
     /**
