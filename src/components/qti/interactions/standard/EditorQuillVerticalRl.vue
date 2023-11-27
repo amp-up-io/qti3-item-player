@@ -1,5 +1,9 @@
 <template>
   <div ref="root" class="quill-editor vertical-rl">
+    <div ref="label"
+        :style="styleLabel"
+        class="extendedtext-xhtml-vert-label qti-hidden">
+    </div>
     <div
       ref="editor"
       :style="style"
@@ -44,7 +48,15 @@ export default {
       required: false,
       type: String,
       default: 'none'
-    }
+    },
+
+    labelHeight: {
+      required: false,
+      type: String,
+      default: '6.7rem'
+    },
+
+    disabled: Boolean
 
   },
 
@@ -65,8 +77,17 @@ export default {
         'font-size': 'inherit',
         'line-height': 'inherit',
         'width': this.editorHeight,
-        'minWidth':  undefined,
-        'display': 'table'
+        'minWidth':  undefined
+      }
+    },
+
+    styleLabel () {
+      return {
+        'font-family': 'inherit',
+        'font-size': 'inherit',
+        'line-height': 'inherit',
+        'width': this.labelHeight,
+        'minWidth':  undefined
       }
     },
 
@@ -84,6 +105,10 @@ export default {
     // Watch content change
     content () {
       this.setEditorContent()
+    },
+    // Watch disabled change
+    disabled () {
+      this.toggleEditorDisabled()
     }
   },
 
@@ -106,6 +131,26 @@ export default {
         this.updateCounter(this.getLength())
         // Turn on the text-change listener
         this.quill.on('text-change', this.textChangeHandler)
+      }
+    },
+
+    toggleEditorDisabled () {
+      if (this.disabled) {
+        this.$refs.label.innerHTML = this.content
+        this.$refs.label.classList.remove('qti-hidden')
+        this.$refs.label.setAttribute('tabIndex', 0)
+        this.$refs.editor.classList.add('qti-hidden')
+        const toolbar = this.$refs.root.querySelector('.ql-toolbar')
+        if (toolbar !== null) toolbar.classList.add('qti-hidden')
+        this.quill.enable(false)
+      } else {
+        this.$refs.label.innerHTML = ''
+        this.$refs.label.classList.add('qti-hidden')
+        this.$refs.label.setAttribute('tabIndex', -1)
+        this.$refs.editor.classList.remove('qti-hidden')
+        const toolbar = this.$refs.root.querySelector('.ql-toolbar')
+        if (toolbar !== null) toolbar.classList.remove('qti-hidden')
+        this.quill.enable(true)
       }
     },
 
@@ -246,6 +291,39 @@ export default {
 </script>
 
 <style>
+.extendedtext-xhtml-vert-label {
+  writing-mode: vertical-rl;
+  line-height: 1.6;
+  height: 98%;
+  margin: auto 0;
+  outline: none;
+  overflow-x: auto;
+  padding: .5rem 0;
+  color: var(--foreground);
+  background-color: var(--background);
+  border: 1px solid var(--choice-control-focus-border);  
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  text-align: left;
+  word-wrap: anywhere; 
+  overflow-wrap: anywhere; 
+  white-space: break-spaces;
+  cursor: default;
+}
+
+.extendedtext-xhtml-vert-label:focus {
+  color: var(--foreground);
+  background-color: var(--background);
+  border-color: var(--choice-control-focus-border);
+  outline: 0;
+  box-shadow: var(--choice-control-focus-shadow);
+}
+
+.extendedtext-xhtml-vert-label p {
+  margin-left: .15rem;
+  margin-right: .15rem;
+}
+
 .vertical-rl .ql-container {
   writing-mode: vertical-rl;
   box-sizing: border-box;

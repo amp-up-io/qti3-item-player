@@ -126,6 +126,7 @@ export default {
       isValidResponse: false,
       invalidResponseMessage: 'Input Required',
       classAttribute: '',
+      isDisabled: false,
       isQtiValid: true,
       presentationFactory: null,
       /*
@@ -211,6 +212,23 @@ export default {
 
     getInteractionSubType () {
       return this.interactionSubType
+    },
+
+    disable () {
+      this.toggleDisable(true)
+    },
+
+    enable () {
+      this.toggleDisable(false)
+    },
+
+    /**
+     * @description Utility method to disable/enable this interaction's choices.
+     * @param {Boolean} isDisabled 
+     */
+    toggleDisable (isDisabled) {
+      this.isDisabled = isDisabled
+      this.node.setIsDisabled(isDisabled)
     },
 
     /**

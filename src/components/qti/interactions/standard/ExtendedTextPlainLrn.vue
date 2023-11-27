@@ -18,6 +18,7 @@
       v-bind="$attrs"
       v-model="response"
       :placeholder="placeholder"
+      :disabled="disabled"
       autocapitalize="none"
       :spellcheck="computeSpellcheck"
       maxlength="maxLength"
@@ -133,15 +134,22 @@ export default {
     },
 
     showCopy() {
+      if (this.isDisabled) return false
       return (typeof this.dataToolbarButtons !== 'undefined') ? this.dataToolbarButtons.includes('copy') : false
     },
 
     showCut () {
+      if (this.isDisabled) return false
       return (typeof this.dataToolbarButtons !== 'undefined') ? this.dataToolbarButtons.includes('cut') : false
     },
 
     showPaste () {
+      if (this.isDisabled) return false
       return (typeof this.dataToolbarButtons !== 'undefined') ? this.dataToolbarButtons.includes('paste') : false
+    },
+
+    disabled () {
+      return this.isDisabled
     }
 
   },
@@ -159,7 +167,9 @@ export default {
       // Current word counter
       counter: 0,
       // Handle on currently selected text.  Used for cut and copy operations.
-      selectedText: ''
+      selectedText: '',
+      // Maintain disabled state
+      isDisabled: false
     }
   },
 
@@ -204,6 +214,10 @@ export default {
      */
     setState (state) {
       this.state = state
+    },
+
+    setIsDisabled (isDisabled) {
+      this.isDisabled = isDisabled
     },
 
     handleInput (event) {

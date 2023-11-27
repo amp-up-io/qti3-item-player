@@ -1,11 +1,15 @@
 <template>
   <div ref="root">
+    <div ref="label" 
+        class="extendedtext-plain-default-label extendedtext-element-hidden">
+    </div>
     <textarea
       ref="textarea"
       class="extendedtext-plain-default"
       v-bind="$attrs"
       v-model="response"
       :placeholder="placeholder"
+      :disabled="disabled"
       autocapitalize="none"
       spellcheck="false"
       maxlength="maxLength"
@@ -100,6 +104,10 @@ export default {
 
     isCounterUp () {
       return (this.counterStyle === 'up')
+    },
+
+    disabled () {
+      return this.isDisabled
     }
 
   },
@@ -115,7 +123,9 @@ export default {
       // Used to toggle the patternMask message tooltip
       displayMessage: false,
       // Current character counter
-      counter: 0
+      counter: 0,
+      // Maintain disabled state
+      isDisabled: false
     }
   },
 
@@ -160,6 +170,28 @@ export default {
      */
     setState (state) {
       this.state = state
+    },
+
+    setIsDisabled (isDisabled) {
+      this.isDisabled = isDisabled
+
+      if (isDisabled) {
+        this.$refs.label.innerHTML = 
+          this.replaceNewLines(this.getResponse())
+
+        this.$refs.label.classList.remove('extendedtext-element-hidden')
+        this.$refs.label.setAttribute('tabIndex', 0)
+        this.$refs.textarea.classList.add('extendedtext-element-hidden')
+      } else {
+        this.$refs.label.classList.add('extendedtext-element-hidden')
+        this.$refs.label.setAttribute('tabIndex', -1)
+        this.$refs.textarea.classList.remove('extendedtext-element-hidden')      
+      }
+    },
+
+    replaceNewLines (value) {
+      if (value === null) return ''
+      return value.replace(/\r\n|\r|\n/g,'<br />')
     },
 
     handleInput (event) {
@@ -255,7 +287,8 @@ export default {
 </script>
 
 <style>
-.extendedtext-plain-default {
+.extendedtext-plain-default,
+.extendedtext-plain-default-label {
   margin: 0;
   vertical-align:inherit;
   padding: 0 .3rem;
@@ -267,17 +300,19 @@ export default {
   color: var(--foreground);
   width: 100%;
   background-color: var(--background);
-  background-clip: padding-box;
-  border-width: 1px;
-  border-color: var(--choice-control-focus-border);
-  -webkit-appearance: none;
-  -moz-appearance: none;
+  border: 1px solid var(--choice-control-focus-border);
   appearance: none;
   border-radius: .25rem;
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-.extendedtext-plain-default:focus {
+.extendedtext-plain-default-label {
+  overflow-y:scroll;
+  cursor: default;
+}
+
+.extendedtext-plain-default:focus,
+.extendedtext-plain-default-label:focus {
   color: var(--foreground);
   background-color: var(--background);
   border-color: var(--choice-control-focus-border);
@@ -291,15 +326,18 @@ export default {
   font-style: italic;
 }
 
-.qti-height-lines-3 .extendedtext-plain-default {
+.qti-height-lines-3 .extendedtext-plain-default,
+.qti-height-lines-3 .extendedtext-plain-default-label {
   height: calc(4.8rem + .35rem);
 }
 
-.qti-height-lines-6 .extendedtext-plain-default {
+.qti-height-lines-6 .extendedtext-plain-default,
+.qti-height-lines-6 .extendedtext-plain-default-label {
   height: calc(9.6rem + .35rem);
 }
 
-.qti-height-lines-15 .extendedtext-plain-default {
+.qti-height-lines-15 .extendedtext-plain-default,
+.qti-height-lines-15 .extendedtext-plain-default-label {
   height: calc(24rem + .35rem);
 }
 
@@ -311,5 +349,9 @@ export default {
   font-size: .875rem;
   color: var(--foreground);
   padding-right: .25rem;
+}
+
+.extendedtext-element-hidden {
+  display: none;
 }
 </style>

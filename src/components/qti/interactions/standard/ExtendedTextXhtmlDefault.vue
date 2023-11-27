@@ -1,11 +1,14 @@
 <template>
   <div ref="root">
     <EditorQuill
+      ref="editor"
       :content="content"
       :placeholder="placeholder"
       :editorHeight="editorHeight"
+      :labelHeight="labelHeight"
       :counterStyle="counterStyle"
       :expectedLength="computedExpectedLength"
+      :disabled="disabled"
       @input="handleInput"
       @editorReady="handleEditorReady"
     />
@@ -74,8 +77,20 @@ export default {
       return '5.8rem'
     },
 
+    labelHeight () {
+      if (this.heightClass === 'qti-height-lines-15') return '29.4rem'
+      if (this.heightClass === 'qti-height-lines-6') return '12.1rem'
+      if (this.heightClass === 'sbac-height-lines-95') return '29.4rem'
+      // If anything else, return Height for qti-height-lines-3
+      return '6.4rem'
+    },
+
     maxLength () {
       return 10000
+    },
+
+    disabled () {
+      return this.isDisabled
     }
 
   },
@@ -85,7 +100,8 @@ export default {
       response: '',
       content: '',
       state: null,
-      editor: null
+      editor: null,
+      isDisabled: false
     }
   },
 
@@ -159,6 +175,10 @@ export default {
         text: text
       }
       return state
+    },
+
+    setIsDisabled (isDisabled) {
+      this.isDisabled = isDisabled
     },
 
     handleInput (data) {
