@@ -1,5 +1,8 @@
 <template>
   <span ref="root">
+    <span ref="label" 
+        class="text-entry-default-label qti-hidden">
+    </span>
     <input
       ref="input"
       class="text-entry-default"
@@ -7,6 +10,7 @@
       v-model="response"
       type="text"
       :placeholder="placeholder"
+      :disabled="disabled"
       autocapitalize="none"
       :spellcheck="spellcheck"
       :maxlength="maxlength"
@@ -92,6 +96,10 @@ export default {
     colorStyle () {
       const pnp = store.getItemContextPnp()
       return pnp.getColorStyle()
+    },
+
+    disabled () {
+      return this.isDisabled
     }
 
   },
@@ -105,7 +113,9 @@ export default {
       // Save provided patternMask as a Regex here
       appliedRegex: null,
       // Used to toggle the patternMask message tooltip
-      displayMessage: false
+      displayMessage: false,
+      // Maintain disabled state
+      isDisabled: false
     }
   },
 
@@ -148,6 +158,28 @@ export default {
      */
     setState (state) {
       this.state = state
+    },
+
+    setIsDisabled (isDisabled) {
+      this.isDisabled = isDisabled
+
+      if (isDisabled) {
+        const response = this.getResponse()
+        this.$refs.label.innerHTML = (response === null) ? '' : response
+        this.$refs.label.classList.remove('qti-hidden')
+        this.$refs.label.setAttribute('tabIndex', 0)
+        this.$refs.input.classList.add('qti-hidden')
+
+        // Add some padding to create the appearance of a 
+        if ((response === null) || (response.length === 0)) {
+          this.$refs.label.style.paddingRight = '1.1rem'
+        }
+
+      } else {
+        this.$refs.label.classList.add('qti-hidden')
+        this.$refs.label.setAttribute('tabIndex', -1)
+        this.$refs.input.classList.remove('qti-hidden')
+      }
     },
 
     /**
@@ -236,27 +268,41 @@ input.text-entry-default {
   width: 8.6rem;
   background-color: var(--background);
   background-clip: padding-box;
-  border-width: 1px;
-  border-color: var(--choice-control-focus-border);
-  -webkit-appearance: none;
-  -moz-appearance: none;
+  border: 1px solid var(--choice-control-focus-border);
   appearance: none;
   border-radius: .25rem;
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
-
-input.text-entry-default:focus {
-  color: var(--foreground);
-  background-color: var(--background);
-  border-color: var(--choice-control-focus-border);
-  outline: 0;
-  box-shadow: var(--choice-control-focus-shadow);
 }
 
 input.text-entry-default::placeholder {
   color: var(--foreground);
   opacity: 0.6;
   font-style: italic;
+}
+
+.text-entry-default-label {
+  text-align: inherit;
+  overflow-wrap: break-word;
+  margin: 0 0.15rem;
+  padding: 0.3rem .3rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6rem;
+  color: var(--foreground);
+  vertical-align: inherit;
+  border: 1px solid var(--choice-control-focus-border);
+  border-radius: .25rem;
+  transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  cursor: default;
+}
+
+input.text-entry-default:focus,
+.text-entry-default-label:focus {
+  color: var(--foreground);
+  background-color: var(--background);
+  border-color: var(--choice-control-focus-border);
+  outline: 0;
+  box-shadow: var(--choice-control-focus-shadow);
 }
 
 .qti-text-entry-interaction.qti-align-center input {

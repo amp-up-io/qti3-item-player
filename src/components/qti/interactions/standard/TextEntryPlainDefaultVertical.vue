@@ -1,5 +1,10 @@
 <template>
   <div ref="root" class="text-entry-default-vert-wrapper">
+    <div ref="label" 
+      class="text-entry-default-vert-label qti-hidden"
+      @focus="handleFocus"
+      @blur="handleBlur">
+    </div>
     <div 
       ref="input"
       class="text-entry-default-vert"
@@ -9,6 +14,7 @@
       autocapitalize="false"
       :spellcheck="spellcheck"
       :maxlength="maxlength"
+      :disabled="disabled"
       @input="handleInput"
       @blur="handleBlur"
       @focus="handleFocus"
@@ -40,7 +46,6 @@
 import { store } from '@/store/store'
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
 import Tooltip from '@/shared/components/Tooltip'
-//     <label ref="placeholder" class="text-entry-default-vert-placeholder">Foo</label>
 const qtiAttributeValidation = new QtiAttributeValidation()
 
 export default {
@@ -112,6 +117,10 @@ export default {
     colorStyle () {
       const pnp = store.getItemContextPnp()
       return pnp.getColorStyle()
+    },
+
+    disabled () {
+      return this.isDisabled
     }
 
   },
@@ -129,7 +138,9 @@ export default {
       // Track current caret index
       caretIndex: 0,
       // MaxlengthMessage
-      maxlengthMessage: ''
+      maxlengthMessage: '',
+      // Maintain disabled state
+      isDisabled: false
     }
   },
 
@@ -172,6 +183,28 @@ export default {
      */
     setState (state) {
       this.state = state
+    },
+
+    setIsDisabled (isDisabled) {
+      this.isDisabled = isDisabled
+
+      if (isDisabled) {
+        const response = this.getResponse()
+        this.$refs.label.innerHTML = (response === null) ? '' : response
+        this.$refs.label.classList.remove('qti-hidden')
+        this.$refs.label.setAttribute('tabIndex', 0)
+        this.$refs.input.classList.add('qti-hidden')
+        this.hidePlaceholder()
+      } else {
+        this.$refs.label.classList.add('qti-hidden')
+        this.$refs.label.setAttribute('tabIndex', -1)
+        this.$refs.input.classList.remove('qti-hidden')
+
+        if (this.getContent().length === 0)
+          this.showPlaceholder()
+        else
+          this.hidePlaceholder()
+      }
     },
 
     /**
@@ -580,7 +613,8 @@ div.text-entry-default-vert-wrapper.focused {
   box-shadow: var(--choice-control-focus-shadow);
 }
 
-.text-entry-default-vert {
+.text-entry-default-vert,
+.text-entry-default-vert-label {
   display: inline-block;
   position: relative;
   margin-top: 0.25rem;
@@ -596,14 +630,20 @@ div.text-entry-default-vert-wrapper.focused {
   -webkit-user-modify: read-write-plaintext-only;
 }
 
-.text-entry-default-vert:focus {
+.text-entry-default-vert-label {
+  -webkit-user-modify: unset;
+  cursor: default;
+}
+
+.text-entry-default-vert:focus,
+.text-entry-default-vert-label:focus {
   color: var(--foreground);
   background-color: var(--background);
   outline: 0;
 }
 
 .text-entry-default-vert[contenteditable='true'] {
-    caret-color: var(--foreground);
+  caret-color: var(--foreground);
 }
 
 .text-entry-default-vert-ph {
@@ -626,51 +666,61 @@ div.text-entry-default-vert-wrapper.focused {
 }
 
 .qti-input-width-1 .text-entry-default-vert,
-.qti-input-width-1 .text-entry-default-vert-ph {
+.qti-input-width-1 .text-entry-default-vert-ph,
+.qti-input-width-1 .text-entry-default-vert-label {
   height: 1.25rem;
 }
 
 .qti-input-width-2 .text-entry-default-vert,
-.qti-input-width-2 .text-entry-default-vert-ph {
+.qti-input-width-2 .text-entry-default-vert-ph,
+.qti-input-width-2 .text-entry-default-vert-label  {
   height: 2.25rem;
 }
 
 .qti-input-width-3 .text-entry-default-vert,
-.qti-input-width-3 .text-entry-default-vert-ph {
+.qti-input-width-3 .text-entry-default-vert-ph,
+.qti-input-width-3 .text-entry-default-vert-label {
   height: 3.25rem;
 }
 
 .qti-input-width-4 .text-entry-default-vert,
-.qti-input-width-4 .text-entry-default-vert-ph {
+.qti-input-width-4 .text-entry-default-vert-ph,
+.qti-input-width-4 .text-entry-default-vert-label {
   height: 4.25rem;
 }
 .qti-input-width-5 .text-entry-default-vert,
-.qti-input-width-5 .text-entry-default-vert-ph {
+.qti-input-width-5 .text-entry-default-vert-ph,
+.qti-input-width-5 .text-entry-default-vert-label {
   height: 5.25rem;
 }
 
 .qti-input-width-6 .text-entry-default-vert,
-.qti-input-width-6 .text-entry-default-vert-ph {
+.qti-input-width-6 .text-entry-default-vert-ph,
+.qti-input-width-6 .text-entry-default-vert-label {
   height: 6.25rem;
 }
 
 .qti-input-width-10 .text-entry-default-vert,
-.qti-input-width-10 .text-entry-default-vert-ph {
+.qti-input-width-10 .text-entry-default-vert-ph,
+.qti-input-width-10 .text-entry-default-vert-label {
   height: 10.25rem;
 }
 
 .qti-input-width-15 .text-entry-default-vert,
-.qti-input-width-15 .text-entry-default-vert-ph {
-  height: 15.0rem;
+.qti-input-width-15 .text-entry-default-vert-ph,
+.qti-input-width-15 .text-entry-default-vert-label {
+  height: 15.25rem;
 }
 
 .qti-input-width-20 .text-entry-default-vert,
-.qti-input-width-20 .text-entry-default-vert-ph {
+.qti-input-width-20 .text-entry-default-vert-ph,
+.qti-input-width-20 .text-entry-default-vert-label {
   height: 20.25rem;
 }
 
 .qti-input-width-25 .text-entry-default-vert,
-.qti-input-width-25 .text-entry-default-vert-ph {
+.qti-input-width-25 .text-entry-default-vert-ph,
+.qti-input-width-25 .text-entry-default-vert-label {
   height: 25.25rem;
 }
 </style>
