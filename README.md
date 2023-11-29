@@ -194,6 +194,10 @@ configuration.pnp = pnp
 // { 'initial' | 'interacting' | 'closed' | 'review' | 'solution'}
 configuration.status = 'interacting'
 
+// Set 'status' to 'review' in order to disable interactions; i.e., interactions
+// can no longer be altered.
+// configuration.status = 'review'
+
 // QTI 3 Player includes a helper class called 'SessionControlFactory' which can be
 // used to build an Item Session Control definition.
 // The Default sessionControl object in the SessionControlFactory is:
@@ -701,6 +705,7 @@ The QTI3 Item Player 2022-2023 development roadmap includes all features and cap
 - [x] QtiOrder Interaction Support
 - [x] QtiPortableCustom Interaction Support
 - [x] Scoring API Examples
+- [x] Support for Interaction "Review" Status
 - [ ] Improved Audio Player
 - [ ] Improved Video Player
 
