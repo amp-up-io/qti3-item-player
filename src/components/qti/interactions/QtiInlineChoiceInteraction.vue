@@ -2,7 +2,7 @@
   <div ref="root" class="qti-inline-choice-interaction">
     <div class="inline-choice-wrapper">
       <div ref="label" 
-        class="inline-choice-select-label select-element-hidden">
+        class="inline-choice-select-label qti-hidden">
         {{dataPrompt}}
       </div>
       <button ref="button"
@@ -217,14 +217,20 @@ export default {
       this.isDisabled = isDisabled
 
       if (isDisabled) {
-        this.$refs.label.classList.remove('select-element-hidden')
+
+        // Clean out the label when the response is null
+        if (this.getResponse() === null) {
+          this.$refs.label.innerHTML = ''
+        }
+
+        this.$refs.label.classList.remove('qti-hidden')
         this.$refs.label.setAttribute('tabIndex', 0)
-        this.$refs.button.classList.add('select-element-hidden')
+        this.$refs.button.classList.add('qti-hidden')
         this.$refs.listbox.classList.add('inline-choice-select-listbox-hidden')
       } else {
-        this.$refs.label.classList.add('select-element-hidden')
+        this.$refs.label.classList.add('qti-hidden')
         this.$refs.label.setAttribute('tabIndex', -1)
-        this.$refs.button.classList.remove('select-element-hidden')      
+        this.$refs.button.classList.remove('qti-hidden')
       }
     },
 
@@ -1135,8 +1141,7 @@ ul.inline-choice-select-listbox {
 }
 
 .inline-choice-select-listbox-hidden,
-.select-element-hidden,
-.qti-orientation-vertical .select-element-hidden {
+.qti-orientation-vertical .inline-choice-select-label.qti-hidden {
   display: none;
 }
 
