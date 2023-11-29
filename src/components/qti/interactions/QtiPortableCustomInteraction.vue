@@ -329,6 +329,11 @@ export default {
     },
 
     disable () {
+      // NOOP
+    },
+
+    enable () {
+      // NOOP
     },
 
     /**
