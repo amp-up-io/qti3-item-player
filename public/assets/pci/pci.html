@@ -345,6 +345,8 @@ const QTI_PCI_API = {
         status: 'interacting'
       };
 
+      console.log('[PCI Context] Configuration: ', configuration)
+
       // Launch it with the provided parameters and a configuration!
       ctx.getInstance(typeIdentifier, dom, configuration, state);
 	  }.bind(this));
