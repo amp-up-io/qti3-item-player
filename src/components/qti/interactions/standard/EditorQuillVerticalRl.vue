@@ -330,7 +330,7 @@ export default {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 13px;
   height: 98%;
-  margin: auto .25rem;
+  margin: auto 0 auto .25rem;
   /* Changed from relative to unset */
   position: unset;
 }
