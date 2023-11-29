@@ -361,6 +361,10 @@ export default {
         if (interaction.resetValue) {
           interaction.resetValue()
         }
+        // Enable the interaction in case it was previously disabled.
+        if (interaction.node.enable) {
+          interaction.node.enable()
+        }
       })
     },
 
