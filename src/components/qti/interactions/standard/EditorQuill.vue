@@ -2,13 +2,13 @@
   <div ref="root" class="quill-editor">
     <div ref="label"
         :style="styleLabel"
-        class="extendedtext-xhtml-default-label qti-hidden">
+        class="ext-text-xhtml-default-label qti-hidden">
     </div>
     <div
       ref="editor"
       :style="style"
     ></div>
-    <div v-if="showCounter" aria-hidden="true" class="extendedtext-editor-counter">
+    <div v-if="showCounter" aria-hidden="true" class="ext-text-editor-counter">
       {{counter}}<span v-if="isCounterUp"> / {{expectedLength}}</span>
     </div>
   </div>
@@ -279,8 +279,8 @@ export default {
 </script>
 
 <style>
-.extendedtext-xhtml-default-label {
-  margin: 0;
+.ext-text-xhtml-default-label {
+  margin: .25rem auto;
   vertical-align:inherit;
   padding: .3rem .5rem;
   color: var(--foreground);
@@ -292,11 +292,11 @@ export default {
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
   white-space: pre-wrap;
   word-wrap: break-word;
-  overflow-y: scroll;
+  overflow-y: auto;
   cursor: default;
 }
 
-.extendedtext-xhtml-default-label:focus {
+.ext-text-xhtml-default-label:focus {
   color: var(--foreground);
   background-color: var(--background);
   border-color: var(--choice-control-focus-border);
@@ -304,7 +304,7 @@ export default {
   box-shadow: var(--choice-control-focus-shadow);
 }
 
-.extendedtext-xhtml-default-label p {
+.ext-text-xhtml-default-label p {
   margin-bottom: .1rem;
 }
 

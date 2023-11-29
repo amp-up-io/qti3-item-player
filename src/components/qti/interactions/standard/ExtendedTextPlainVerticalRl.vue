@@ -1,5 +1,8 @@
 <template>
   <div ref="root">
+    <div ref="label"
+      class="ext-text-default-vert-rl-label qti-hidden">
+    </div>
     <div
       ref="textarea"
       class="ext-text-default-vert-rl"
@@ -109,6 +112,10 @@ export default {
 
     tooltipPlacement () {
       return 'right'
+    },
+
+    disabled () {
+      return this.isDisabled
     }
 
   },
@@ -128,7 +135,9 @@ export default {
       // Track current caret index
       caretIndex: 0,
       // MaxlengthMessage
-      maxlengthMessage: ''
+      maxlengthMessage: '',
+      // Maintain disabled state
+      isDisabled: false
     }
   },
 
@@ -178,6 +187,27 @@ export default {
      */
     setState (state) {
       this.state = state
+    },
+
+    setIsDisabled (isDisabled) {
+      this.isDisabled = isDisabled
+
+      if (isDisabled) {
+        this.$refs.label.innerHTML = 
+          this.replaceNewLines(this.getResponse())
+        this.$refs.label.classList.remove('qti-hidden')
+        this.$refs.label.setAttribute('tabIndex', 0)
+        this.$refs.textarea.classList.add('qti-hidden')
+      } else {
+        this.$refs.label.classList.add('qti-hidden')
+        this.$refs.label.setAttribute('tabIndex', -1)
+        this.$refs.textarea.classList.remove('qti-hidden')      
+      }
+    },
+
+    replaceNewLines (value) {
+      if (value === null) return ''
+      return value.replace(/\r\n|\r|\n/g,'<br />')
     },
 
     /**
@@ -484,7 +514,8 @@ export default {
 </script>
 
 <style>
-.ext-text-default-vert-rl {
+.ext-text-default-vert-rl,
+.ext-text-default-vert-rl-label {
   display: inline-block;
   box-sizing: border-box;
   margin: .25rem .5rem;
@@ -517,7 +548,13 @@ export default {
   -webkit-user-modify: read-write-plaintext-only;
 }
 
-.ext-text-default-vert-rl:focus {
+.ext-text-default-vert-rl-label {
+  -webkit-user-modify: unset;
+  cursor: default;
+}
+
+.ext-text-default-vert-rl:focus,
+.ext-text-default-vert-rl-label:focus {
   color: var(--foreground);
   background-color: var(--background);
   border-color: var(--choice-control-focus-border);
@@ -541,15 +578,18 @@ export default {
   white-space: nowrap;
 }
 
-.qti-height-lines-3 .ext-text-default-vert-rl {
+.qti-height-lines-3 .ext-text-default-vert-rl,
+.qti-height-lines-3 .ext-text-default-vert-rl-label {
   width: calc(5.55rem + .35rem);
 }
 
-.qti-height-lines-6 .ext-text-default-vert-rl {
+.qti-height-lines-6 .ext-text-default-vert-rl,
+.qti-height-lines-6 .ext-text-default-vert-rl-label {
   width: calc(10.35rem + .35rem);
 }
 
-.qti-height-lines-15 .ext-text-default-vert-rl {
+.qti-height-lines-15 .ext-text-default-vert-rl,
+.qti-height-lines-15 .ext-text-default-vert-rl-label {
   width: calc(24.75rem + .35rem);
 }
 

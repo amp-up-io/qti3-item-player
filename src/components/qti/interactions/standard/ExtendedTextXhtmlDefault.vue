@@ -212,7 +212,7 @@ export default {
 </script>
 
 <style>
-.extendedtext-editor-counter {
+.ext-text-editor-counter {
   height: 1.5rem;
   line-height: 1.5rem;
   text-align: right;

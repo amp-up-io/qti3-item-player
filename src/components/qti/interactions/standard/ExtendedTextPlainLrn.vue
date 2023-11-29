@@ -1,8 +1,8 @@
 <template>
   <div ref="root">
-    <div ref="toolbar" class="extendedtext-toolbar">
+    <div ref="toolbar" class="ext-text-toolbar">
       <div v-if="showCounter" aria-hidden="true" class="toolbar-right">
-        <span class="extendedtext-toolbar-counter">
+        <span class="ext-text-toolbar-counter">
           {{counter}}<span v-if="isCounterUp"> / {{expectedLength}}</span> Word(s)
         </span>
       </div>
@@ -14,7 +14,7 @@
     </div>
     <textarea
       ref="textarea"
-      class="extendedtext-plain-lrn"
+      class="ext-text-plain-lrn"
       v-bind="$attrs"
       v-model="response"
       :placeholder="placeholder"
@@ -400,7 +400,7 @@ export default {
 </script>
 
 <style>
-.extendedtext-toolbar {
+.ext-text-toolbar {
   border: 1px solid;
   border-color: var(--ed-bc);
   box-sizing: border-box;
@@ -409,18 +409,18 @@ export default {
   min-height: 2.85rem;
 }
 
-.extendedtext-toolbar .toolbar-right {
+.ext-text-toolbar .toolbar-right {
   display: inline-block;
   vertical-align: middle;
   float: right;
 }
 
-.extendedtext-toolbar .toolbar-left {
+.ext-text-toolbar .toolbar-left {
   display: inline-block;
   vertical-align: middle;
 }
 
-.extendedtext-toolbar .toolbar-left button {
+.ext-text-toolbar .toolbar-left button {
   color: var(--foreground);
   background: var(--background);
   border: none;
@@ -442,13 +442,13 @@ export default {
   -ms-user-select: none;
 }
 
-.extendedtext-toolbar .toolbar-left button:hover,
-.extendedtext-toolbar .toolbar-left button:focus {
+.ext-text-toolbar .toolbar-left button:hover,
+.ext-text-toolbar .toolbar-left button:focus {
     color: #06c;
     filter: var(--choice-ctrlh-hover-brightness);
 }
 
-.extendedtext-toolbar-counter {
+.ext-text-toolbar-counter {
   display: inline-block;
   min-height: 2.6rem;
   line-height: 1.5rem;
@@ -459,7 +459,7 @@ export default {
   padding: .6rem .5rem;
 }
 
-.extendedtext-plain-lrn {
+.ext-text-plain-lrn {
   margin: 0;
   vertical-align:inherit;
   padding: .75rem .9rem;
@@ -481,7 +481,7 @@ export default {
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-.extendedtext-plain-lrn:focus {
+.ext-text-plain-lrn:focus {
   color: var(--foreground);
   background-color: var(--background);
   border-color: var(--choice-control-focus-border);
@@ -489,21 +489,21 @@ export default {
   box-shadow: var(--choice-control-focus-shadow);
 }
 
-.extendedtext-plain-lrn::placeholder {
+.ext-text-plain-lrn::placeholder {
   color: var(--foreground);
   opacity: 0.6;
   font-style: italic;
 }
 
-.qti-height-lines-3 .extendedtext-plain-lrn {
+.qti-height-lines-3 .ext-text-plain-lrn {
   height: calc(5.45rem + .35rem);
 }
 
-.qti-height-lines-6 .extendedtext-plain-lrn {
+.qti-height-lines-6 .ext-text-plain-lrn {
   height: calc(9.7rem + .35rem);
 }
 
-.qti-height-lines-15 .extendedtext-plain-lrn {
+.qti-height-lines-15 .ext-text-plain-lrn {
   height: calc(22.5rem + .35rem);
 }
 </style>

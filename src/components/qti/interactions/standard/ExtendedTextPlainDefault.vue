@@ -1,11 +1,11 @@
 <template>
   <div ref="root">
     <div ref="label" 
-        class="extendedtext-plain-default-label extendedtext-element-hidden">
+        class="ext-text-plain-default-label qti-hidden">
     </div>
     <textarea
       ref="textarea"
-      class="extendedtext-plain-default"
+      class="ext-text-plain-default"
       v-bind="$attrs"
       v-model="response"
       :placeholder="placeholder"
@@ -15,7 +15,7 @@
       maxlength="maxLength"
       @input="handleInput"
     />
-    <div v-if="showCounter" aria-hidden="true" class="extendedtext-plain-counter">
+    <div v-if="showCounter" aria-hidden="true" class="ext-text-plain-counter">
       {{counter}}<span v-if="isCounterUp"> / {{expectedLength}}</span>
     </div>
     <tooltip
@@ -178,14 +178,13 @@ export default {
       if (isDisabled) {
         this.$refs.label.innerHTML = 
           this.replaceNewLines(this.getResponse())
-
-        this.$refs.label.classList.remove('extendedtext-element-hidden')
+        this.$refs.label.classList.remove('qti-hidden')
         this.$refs.label.setAttribute('tabIndex', 0)
-        this.$refs.textarea.classList.add('extendedtext-element-hidden')
+        this.$refs.textarea.classList.add('qti-hidden')
       } else {
-        this.$refs.label.classList.add('extendedtext-element-hidden')
+        this.$refs.label.classList.add('qti-hidden')
         this.$refs.label.setAttribute('tabIndex', -1)
-        this.$refs.textarea.classList.remove('extendedtext-element-hidden')      
+        this.$refs.textarea.classList.remove('qti-hidden')      
       }
     },
 
@@ -287,8 +286,8 @@ export default {
 </script>
 
 <style>
-.extendedtext-plain-default,
-.extendedtext-plain-default-label {
+.ext-text-plain-default,
+.ext-text-plain-default-label {
   margin: 0;
   vertical-align:inherit;
   padding: 0 .3rem;
@@ -306,13 +305,14 @@ export default {
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-.extendedtext-plain-default-label {
-  overflow-y:scroll;
+.ext-text-plain-default-label {
+  overflow-y: auto;
   cursor: default;
+  margin-bottom: .25rem;
 }
 
-.extendedtext-plain-default:focus,
-.extendedtext-plain-default-label:focus {
+.ext-text-plain-default:focus,
+.ext-text-plain-default-label:focus {
   color: var(--foreground);
   background-color: var(--background);
   border-color: var(--choice-control-focus-border);
@@ -320,28 +320,28 @@ export default {
   box-shadow: var(--choice-control-focus-shadow);
 }
 
-.extendedtext-plain-default::placeholder {
+.ext-text-plain-default::placeholder {
   color: var(--foreground);
   opacity: 0.6;
   font-style: italic;
 }
 
-.qti-height-lines-3 .extendedtext-plain-default,
-.qti-height-lines-3 .extendedtext-plain-default-label {
+.qti-height-lines-3 .ext-text-plain-default,
+.qti-height-lines-3 .ext-text-plain-default-label {
   height: calc(4.8rem + .35rem);
 }
 
-.qti-height-lines-6 .extendedtext-plain-default,
-.qti-height-lines-6 .extendedtext-plain-default-label {
+.qti-height-lines-6 .ext-text-plain-default,
+.qti-height-lines-6 .ext-text-plain-default-label {
   height: calc(9.6rem + .35rem);
 }
 
-.qti-height-lines-15 .extendedtext-plain-default,
-.qti-height-lines-15 .extendedtext-plain-default-label {
+.qti-height-lines-15 .ext-text-plain-default,
+.qti-height-lines-15 .ext-text-plain-default-label {
   height: calc(24rem + .35rem);
 }
 
-.extendedtext-plain-counter {
+.ext-text-plain-counter {
   margin-top: -6px;
   height: 1.5rem;
   line-height: 1.5rem;
@@ -349,9 +349,5 @@ export default {
   font-size: .875rem;
   color: var(--foreground);
   padding-right: .25rem;
-}
-
-.extendedtext-element-hidden {
-  display: none;
 }
 </style>

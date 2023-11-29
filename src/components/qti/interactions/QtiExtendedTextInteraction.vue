@@ -223,7 +223,7 @@ export default {
     },
 
     /**
-     * @description Utility method to disable/enable this interaction's choices.
+     * @description Utility method to disable/enable this interaction.
      * @param {Boolean} isDisabled 
      */
     toggleDisable (isDisabled) {

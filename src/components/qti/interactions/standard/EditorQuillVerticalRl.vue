@@ -2,7 +2,7 @@
   <div ref="root" class="quill-editor vertical-rl">
     <div ref="label"
         :style="styleLabel"
-        class="extendedtext-xhtml-vert-label qti-hidden">
+        class="ext-text-xhtml-vert-label qti-hidden">
     </div>
     <div
       ref="editor"
@@ -291,11 +291,11 @@ export default {
 </script>
 
 <style>
-.extendedtext-xhtml-vert-label {
+.ext-text-xhtml-vert-label {
   writing-mode: vertical-rl;
-  line-height: 1.6;
+  line-height: 1.6rem;
   height: 98%;
-  margin: auto 0;
+  margin: auto .25rem;
   outline: none;
   overflow-x: auto;
   padding: .5rem 0;
@@ -311,7 +311,7 @@ export default {
   cursor: default;
 }
 
-.extendedtext-xhtml-vert-label:focus {
+.ext-text-xhtml-vert-label:focus {
   color: var(--foreground);
   background-color: var(--background);
   border-color: var(--choice-control-focus-border);
@@ -319,7 +319,7 @@ export default {
   box-shadow: var(--choice-control-focus-shadow);
 }
 
-.extendedtext-xhtml-vert-label p {
+.ext-text-xhtml-vert-label p {
   margin-left: .15rem;
   margin-right: .15rem;
 }
@@ -330,7 +330,7 @@ export default {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 13px;
   height: 98%;
-  margin: auto 0;
+  margin: auto .25rem;
   /* Changed from relative to unset */
   position: unset;
 }
