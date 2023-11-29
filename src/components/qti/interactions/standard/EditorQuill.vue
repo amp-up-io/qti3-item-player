@@ -142,7 +142,6 @@ export default {
         this.$refs.editor.classList.add('qti-hidden')
         const toolbar = this.$refs.root.querySelector('.ql-toolbar')
         if (toolbar !== null) toolbar.classList.add('qti-hidden')
-        this.quill.enable(false)
       } else {
         this.$refs.label.innerHTML = ''
         this.$refs.label.classList.add('qti-hidden')
@@ -150,7 +149,6 @@ export default {
         this.$refs.editor.classList.remove('qti-hidden')
         const toolbar = this.$refs.root.querySelector('.ql-toolbar')
         if (toolbar !== null) toolbar.classList.remove('qti-hidden')
-        this.quill.enable(true)
       }
     },
 
