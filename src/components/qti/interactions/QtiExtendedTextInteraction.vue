@@ -265,14 +265,14 @@ export default {
     initializeValue () {
       this.setResponse(null)
       this.setState(this.computeState())
-      this.setIsValid(false)
+      this.setIsValid(this.computeIsValid())
     },
 
     resetValue () {
       console.log('[ResetValue][identifier]', this.responseIdentifier)
       this.setResponse(null)
       this.setState(this.computeState())
-      this.setIsValid(false)
+      this.setIsValid(this.computeIsValid())
     },
 
     /**
