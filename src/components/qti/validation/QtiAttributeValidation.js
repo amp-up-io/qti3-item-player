@@ -307,6 +307,14 @@ export default class QtiAttributeValidation {
     }
   }
 
+  validateMaxMinStrings (maxStrings, minStrings) {
+    let maxStringsValue = this.validatePositiveIntegerAttribute('max-strings', maxStrings)
+    let minStringsValue = this.validatePositiveIntegerAttribute('min-strings', minStrings)
+    if ((maxStringsValue > 0) && (minStringsValue > maxStringsValue)) {
+      throw new QtiValidationException('Invalid min-strings attribute "' + minStrings + '". Must be less than or equal to max-strings attribute when max-strings attribute is greater than 0')
+    }
+  }
+
   validatePattern (attributeName, pattern) {
     if (typeof pattern === 'undefined') {
       return null
