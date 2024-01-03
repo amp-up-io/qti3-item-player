@@ -123,6 +123,7 @@ export default {
   data () {
     return {
       response: '',
+      state: null,
       // Used for reverting to the prior response when a patternMask is applied
       // or when a counter limit is being enforced.
       priorResponse: '',
@@ -157,19 +158,24 @@ export default {
      * @description Set this interaction's response
      * @param {String} response - string
      */
-    setResponse (response, restore=false) {
+    setResponse (response) {
       if (response === null) {
-        this.response = ''
-        this.updateCounter(0)
-        return
-      }
-        
-      this.response = response
-
-      if (restore) {
-        this.updateContent(this.response)
+        response = ''
       }
       
+      this.response = response
+
+      this.updateCounter(this.response.length)
+    },
+
+    /**
+     * @description Method to use when we want to update the response but
+     * not trigger any content model updates.
+     * @param {String} response - text, not html
+     */
+    updateResponse (response) {
+      this.response = response
+
       this.updateCounter(this.response.length)
     },
 
@@ -183,10 +189,24 @@ export default {
 
     /**
      * @description Set/restore this interaction's state.
+     * When restore is true, this updates the textarea div with the
+     * html in the state object.
      * @param {Object} state
+     * @param {Boolean} restore
      */
-    setState (state) {
+    setState (state, restore=false) {
       this.state = state
+
+      if (restore && ('html' in state)) {
+        this.updateContent(state.html)
+      }
+    },
+
+    computeState (html) {
+      const state = {
+        html: html
+      }
+      return state
     },
 
     setIsDisabled (isDisabled) {
@@ -211,19 +231,19 @@ export default {
     },
 
     /**
-     * @description Return text of the input element.
-     * @return {String}
+     * @description Return text of the div element.
+     * @return {String} text
      */
     getContent () {
       return this.getTextContent(this.$refs.textarea.childNodes)
     },
 
     /**
-     * @description Set the text of the input element.
-     * @param {String} response 
+     * @description Set the html of the div element.
+     * @param {String} html
      */
-    updateContent (content) {
-      this.$refs.textarea.innerText = content
+    updateContent (html) {
+      this.$refs.textarea.innerHTML = html
     },
     
     /**
@@ -233,7 +253,7 @@ export default {
      */
     getTextContent (elem) {
       let node
-      let ret = ''
+      let content = ''
       let i = 0
       let nodeType = elem.nodeType
       
@@ -241,7 +261,7 @@ export default {
         // If no nodeType, this is expected to be an array
         while ( (node = elem[i++]) ) {
           // Recurse
-          ret += this.getTextContent(node)
+          content += this.getTextContent(node)
         }
       }
       
@@ -255,7 +275,7 @@ export default {
         return elem.nodeValue
       }
       
-      return ret
+      return content
     },
 
     /**
@@ -302,13 +322,17 @@ export default {
       }
 
       this.setResponse(inputText)
+      
+      // Save html in state
+      this.setState(this.computeState(this.$refs.textarea.innerHTML))
 
       // Save textarea value for future limit checks
       this.priorResponse = inputText
 
       // Notify parent that we have an update
       this.$parent.$emit('extendedTextUpdate', {
-          response: this.getResponse()
+          response: this.getResponse(),
+          state: this.getState()
         })
     },
 
@@ -354,12 +378,16 @@ export default {
 
       this.setResponse(inputText)
 
+      // Save html in state
+      this.setState(this.computeState(this.replaceNewLines(inputText)))
+
       // Save textarea value for future limit checks
       this.priorResponse = inputText
 
       // Notify parent that we have an update
       this.$parent.$emit('extendedTextUpdate', {
-          response: this.getResponse()
+          response: this.getResponse(),
+          state: this.getState()
         })
     },
 

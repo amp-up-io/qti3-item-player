@@ -38,9 +38,11 @@
 <script>
 import { store } from '@/store/store'
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
+import QtiProcessing from '@/components/qti/processing/utils/QtiProcessing'
 import Tooltip from '@/shared/components/Tooltip'
 
 const qtiAttributeValidation = new QtiAttributeValidation()
+const qtiProcessing = new QtiProcessing()
 
 export default {
   name: 'ExtendedTextPlainDefault',
@@ -197,7 +199,7 @@ export default {
       }
 
       this.response = response
-      this.updateCounter(this.computeWordCount(this.response))
+      this.updateCounter(qtiProcessing.computeWordCount(this.response))
     },
 
     /**
@@ -281,16 +283,6 @@ export default {
       }
 
       this.counter = this.computedExpectedLength - contentLength
-    },
-
-    /**
-     * @description Calculate the number of words in a string response.
-     * @return {String} response
-     */
-    computeWordCount (response) {
-      // Match on any sequence of non-whitespace characters
-      const words = response.match(/\S+/g)
-      return (words === null) ? 0 : words.length
     },
 
     getLength () {

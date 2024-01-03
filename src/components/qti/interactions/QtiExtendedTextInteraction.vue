@@ -26,6 +26,7 @@ import QtiValidationException from '@/components/qti/exceptions/QtiValidationExc
 import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
 import QtiParseException from '@/components/qti/exceptions/QtiParseException'
 import QtiAttributeValidation from '@/components/qti/validation/QtiAttributeValidation'
+import QtiProcessing from '@/components/qti/processing/utils/QtiProcessing'
 import ExtendedTextPresentationFactory from '@/components/qti/interactions/presentation/ExtendedTextInteractionPresentationFactory'
 import { getExtendedTextInteractionSubType, extendedTextInteractionAdapter } from './adapters/extendedtext-interaction-adapter'
 import QtiPrompt from '@/components/qti/interactions/QtiPrompt'
@@ -33,6 +34,7 @@ import QtiPrompt from '@/components/qti/interactions/QtiPrompt'
 Vue.component('qti-prompt', QtiPrompt)
 
 const qtiAttributeValidation = new QtiAttributeValidation()
+const qtiProcessing = new QtiProcessing()
 
 export default {
   name: 'QtiExtendedTextInteraction',
@@ -90,6 +92,21 @@ export default {
     dataPatternmaskMessage: {
       required: false,
       type: String
+    },
+    /*
+     * The min-strings attribute specifies the minimum number separate (non-empty) strings 
+     * required from the candidate to form a valid response. If min-strings is 0 then the 
+     * candidate is not required to enter any strings at all.
+     */
+    minStrings: {
+      required: false,
+      type: String,
+      default: '0'
+    },
+    maxStrings: {
+      required: false,
+      type: String,
+      default: '0'
     }
   },
 
@@ -188,6 +205,12 @@ export default {
      */
     setState (state) {
       this.state = state
+
+      this.node.setState(this.state, true)
+    },
+
+    updateState (state) {
+      this.state = state
     },
 
     /**
@@ -279,12 +302,11 @@ export default {
     },
 
     /**
-     * @description For now, return an object with raw/rich text properties.
+     * @description For now, return an empty object.
      * @return {Object} state object
      */
     computeState () {
-      const state = {}
-      return state
+      return {}
     },
 
     /**
@@ -292,13 +314,24 @@ export default {
      * @return {Boolean} (true if valid, false if invalid)
      */
     computeIsValid () {
+      const min = this.minStrings*1
+
+      // If minStrings is 0, there are no constraints
+      if (min === 0) return true
+      
+      // minStrings is > 0.  There are constraints.
+
       // A null response is invalid
       if (this.response === null) return false
 
-      // An empty string is invalid
-      if (this.response.length < 1) return false
+      const response = this.response.trim()
 
-      // text entry interaction with a non-null response is valid
+      // An empty string is invalid
+      if (response.length < 1) return false
+
+      // The number of words must be >= minStrings, else invalid
+      if (qtiProcessing.computeWordCount(response) < min) return false
+
       return true
     },
 
@@ -381,6 +414,11 @@ export default {
 
     handleExtendedTextUpdate (data) {
       this.updateResponse(data.response)
+
+      if ('state' in data) {
+        this.updateState(data.state)
+      }
+
       // Update validity
       this.evaluateValidity()
     },
@@ -433,6 +471,8 @@ export default {
 
       // Set up a presentation factory
       this.presentationFactory = new ExtendedTextPresentationFactory(this.$vnode.data.staticClass, this.expectedLength)
+
+      qtiAttributeValidation.validateMaxMinStrings(this.maxStrings, this.minStrings)
 
       // Pull any prior interaction state.
       this.priorState = this.getPriorState(this.responseIdentifier)
