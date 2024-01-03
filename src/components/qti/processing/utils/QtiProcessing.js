@@ -368,8 +368,8 @@ export default class QtiProcessing {
     return this.gcd(b.toNumber(), new BigNumber(a).modulo(b).toNumber())
   }
 
-	getParametersFromDefinition (definition) {
-		let params = new Map()
+  getParametersFromDefinition (definition) {
+    let params = new Map()
 
     if (typeof definition === 'undefined') return params
     definition = definition.trim()
@@ -385,8 +385,19 @@ export default class QtiProcessing {
       params.set(pair[0], (pair.length < 2) ? '' : pair[1].replaceAll('&equals;', '='))
     }
 
-		return params
-	}
+    return params
+  }
+
+  /**
+   * @description Calculate the number of words in a string.
+   * @param {String} s
+   * @return {Integer} words
+   */
+  computeWordCount (s) {
+    // Match on any sequence of non-whitespace characters
+    const words = s.match(/\S+/g)
+    return (words === null) ? 0 : words.length
+  }
 
   /**
    * @description Convert a variable value to a PCI json representation.
