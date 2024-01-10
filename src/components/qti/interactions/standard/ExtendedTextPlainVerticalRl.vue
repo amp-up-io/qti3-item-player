@@ -158,12 +158,16 @@ export default {
      * @description Set this interaction's response
      * @param {String} response - string
      */
-    setResponse (response) {
+    setResponse (response, restore=false) {
       if (response === null) {
         response = ''
       }
       
       this.response = response
+
+      if (restore) {
+        this.updateContent(this.response)
+      }
 
       this.updateCounter(this.response.length)
     },
@@ -194,12 +198,8 @@ export default {
      * @param {Object} state
      * @param {Boolean} restore
      */
-    setState (state, restore=false) {
+    setState (state) {
       this.state = state
-
-      if (restore && ('html' in state)) {
-        this.updateContent(state.html)
-      }
     },
 
     computeState (html) {
@@ -227,7 +227,7 @@ export default {
 
     replaceNewLines (value) {
       if (value === null) return ''
-      return value.replace(/\r\n|\r|\n/g,'<br />')
+      return value.replace(/\r\n|\r|\n/g,'<br>')
     },
 
     /**
@@ -239,7 +239,7 @@ export default {
     },
 
     /**
-     * @description Set the html of the div element.
+     * @description Set the text of the div element.
      * @param {String} html
      */
     updateContent (html) {
@@ -305,7 +305,7 @@ export default {
 
       this.setCaretIndex(this.getCaretPos(this.$refs.textarea) - 1)
 
-      let inputText = this.getContent()     
+      let inputText = this.getContent()
 
       if (this.showCounter && !this.applyLimitCheck(inputText)) return
 
@@ -324,7 +324,7 @@ export default {
       this.setResponse(inputText)
       
       // Save html in state
-      this.setState(this.computeState(this.$refs.textarea.innerHTML))
+      this.setState(this.computeState(this.replaceNewLines(this.$refs.textarea.innerHTML)))
 
       // Save textarea value for future limit checks
       this.priorResponse = inputText
@@ -377,9 +377,9 @@ export default {
       }
 
       this.setResponse(inputText)
-
+      
       // Save html in state
-      this.setState(this.computeState(this.replaceNewLines(inputText)))
+      this.setState(this.computeState(this.replaceNewLines(this.$refs.textarea.innerHTML)))
 
       // Save textarea value for future limit checks
       this.priorResponse = inputText
@@ -529,6 +529,9 @@ export default {
 
   created () {
     this.appliedRegex = qtiAttributeValidation.validatePattern('pattern-mask', this.patternMask)
+    
+    // Initialize state
+    this.setState(this.computeState(''))
   },
 
   mounted () {
