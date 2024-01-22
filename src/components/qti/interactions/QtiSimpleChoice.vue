@@ -746,7 +746,11 @@ export default {
 .qti-choice-label {
   display: inline-block;
   vertical-align: top;
-  width: 1.25rem;
+  width: 1.5rem;
+}
+
+.qti-choice-interaction.qti-labels-cjk-ideographic .qti-choice-label {
+  width: 2rem;
 }
 
 /* When writing mode is vertical-rl and labels cjk-ideographic, add more height */
@@ -843,7 +847,11 @@ export default {
 .qti-choice-description {
   display: inline-block;
   vertical-align: top;
-  width: calc(100% - 1.25em);
+  width: calc(100% - 1.5em);
+}
+
+.qti-choice-interaction.qti-labels-cjk-ideographic .qti-choice-description {
+  width: calc(100% - 2rem);
 }
 
 .player-show-solution .qti-simple-choice-wrapper::after {
