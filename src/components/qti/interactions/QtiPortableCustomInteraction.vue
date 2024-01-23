@@ -390,21 +390,25 @@ export default {
     },
 
     loadPciIframe (width) {
-      let iframe = document.createElement('iframe')
+      const iframe = document.createElement('iframe')
       iframe.name = this.uniqueId
       iframe.id = this.uniqueId
       iframe.setAttribute('scrolling', 'no')
       iframe.style.border = 'none'
       iframe.style.width = `${width}px`
-      // bind before set src attribute!
-      iframe.onload = this.handleLoadIframe.bind(this)
+      // Bind before set src attribute!
+      iframe.addEventListener('load', this.handleLoadIframe.bind(this))
       iframe.src = `${this.renderer}?identifier=${this.responseIdentifier}&uniqueId=${this.uniqueId}`
 
       // Inject the frame into the container
+      // This should eventually fire a 'load' event
       this.$refs.ic.appendChild(iframe)
     },
 
     handleLoadIframe (event) {
+      // Remove the onload event listener
+      event.target.removeEventListener('load', this.handleLoadIframe)
+
       // Save off the iframe element
       this.pciIframe = event.target
     },
@@ -654,6 +658,7 @@ export default {
   },
 
   beforeDestroy () {
+    // Remove the iframe's onload event listener - just in case
     if (this.pciIframe !== null) {
       this.pciIframe.removeEventListener('load', this.handleLoadIframe)
     }

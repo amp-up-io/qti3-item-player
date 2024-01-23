@@ -459,6 +459,10 @@ export default {
         player: this
       })
     this.$emit('notifyQti3PlayerReady', this)
+  },
+
+  beforeDestroy () {
+    store.removePciMessageListener()
   }
 }
 </script>

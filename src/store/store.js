@@ -639,8 +639,15 @@ export const store = {
   },
 
   initializePciMessageListener () {
+    console.log('STORE:PCI InitializePciMessageListener')
     window.addEventListener('message', this.PciMessageListener.bind(this))
     window.addEventListener('resize', this.WindowResize.bind(this))
+  },
+
+  removePciMessageListener () {
+    console.log('STORE:PCI RemovePciMessageListener')
+    window.removeEventListener('message', this.PciMessageListener)
+    window.removeEventListener('resize', this.WindowResize)
   },
 
   PciMessageListener (event) {
