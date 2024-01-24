@@ -43,6 +43,9 @@ export const store = {
     renderer2p0: 'assets/pci/pci.html'
   },
 
+  pciMessageHandler: null,
+  windowResizeHandler: null,
+
   getResponseDeclarations () {
     return this.state.responseDeclarations
   },
@@ -639,15 +642,18 @@ export const store = {
   },
 
   initializePciMessageListener () {
-    console.log('STORE:PCI InitializePciMessageListener')
-    window.addEventListener('message', this.PciMessageListener.bind(this))
-    window.addEventListener('resize', this.WindowResize.bind(this))
+    // Keep a handle on the Window Resize Handler and
+    // the PCI PostMessage Handler
+    this.pciMessageHandler = this.PciMessageListener.bind(this)
+    this.windowResizeHandler = this.WindowResize.bind(this)
+
+    window.addEventListener('message', this.pciMessageHandler)
+    window.addEventListener('resize', this.windowResizeHandler)
   },
 
   removePciMessageListener () {
-    console.log('STORE:PCI RemovePciMessageListener')
-    window.removeEventListener('message', this.PciMessageListener)
-    window.removeEventListener('resize', this.WindowResize)
+    if (this.pciMessageHandler !== null) window.removeEventListener('message', this.pciMessageHandler)
+    if(this.windowResizeHandler !== null) window.removeEventListener('resize', this.windowResizeHandler)
   },
 
   PciMessageListener (event) {

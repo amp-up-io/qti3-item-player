@@ -462,6 +462,7 @@ export default {
   },
 
   beforeDestroy () {
+    // Tear down the PciMessageListener
     store.removePciMessageListener()
   }
 }
