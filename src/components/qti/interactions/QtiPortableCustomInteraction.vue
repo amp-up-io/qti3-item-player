@@ -104,6 +104,7 @@ export default {
       isQtiValid: true,
       pciModuleResolver: null,
 
+      loadIframeHandler: null,
       renderer: '',
       classAttribute: '',
       properties: {},
@@ -397,7 +398,7 @@ export default {
       iframe.style.border = 'none'
       iframe.style.width = `${width}px`
       // Bind before set src attribute!
-      iframe.addEventListener('load', this.handleLoadIframe.bind(this))
+      iframe.addEventListener('load', this.loadIframeHandler)
       iframe.src = `${this.renderer}?identifier=${this.responseIdentifier}&uniqueId=${this.uniqueId}`
 
       // Inject the frame into the container
@@ -406,9 +407,6 @@ export default {
     },
 
     handleLoadIframe (event) {
-      // Remove the onload event listener
-      event.target.removeEventListener('load', this.handleLoadIframe)
-
       // Save off the iframe element
       this.pciIframe = event.target
     },
@@ -605,6 +603,9 @@ export default {
       // Initialize the PCI renderer
       this.renderer = store.getPciContextRenderer()
 
+      // Init the iFrame onload handler
+      this.loadIframeHandler = this.handleLoadIframe.bind(this)
+
       const staticClass = (typeof this.$vnode.data.staticClass !== 'undefined') ? this.$vnode.data.staticClass : ''
       this.setClassAttribute(staticClass)
 
@@ -660,7 +661,7 @@ export default {
   beforeDestroy () {
     // Remove the iframe's onload event listener - just in case
     if (this.pciIframe !== null) {
-      this.pciIframe.removeEventListener('load', this.handleLoadIframe)
+      this.pciIframe.removeEventListener('load', this.loadIframeHandler)
     }
   }
 }
