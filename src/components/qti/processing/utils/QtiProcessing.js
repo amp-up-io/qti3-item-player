@@ -523,23 +523,25 @@ export default class QtiProcessing {
    *   value: 0,
    *   defaultValue: 0
    * }
-   *                      
+   * 
    * @returns Native QTI value
    */
-  valueFromPciJson (value, variable) {
-    console.log('[ValueFromPciJson][Value]',value, variable)
+  getValueFromPciJson (value, variable) {
+    console.log('[GetValueFromPciJson][Value]',value, variable)
     if ((value === null) || (typeof variable === 'undefined')) return this.nullValue()
 
     try {
+      // Must be an Object.
       if (typeof value !== 'object') {
         throw new QtiEvaluationException(`Improper value encoding.  Must be an Object.`)
       }
 
-      if ((typeof value === 'object') && Array.isArray(value)) {
+      // In JavaScript, Arrays are also Objects.  Make sure it's not an Array.
+      if (Array.isArray(value)) {
         throw new QtiEvaluationException(`Improper value encoding.  Found Array.  Must be an Object.`)
       }
 
-      // It's a proper object.  Let's transform it.
+      // It's a proper Object.  Transform it.
       if (value['base'] !== undefined) {
         if (variable.cardinality === 'single') {
           // It's a single cardinality primitive
@@ -565,7 +567,7 @@ export default class QtiProcessing {
     
       throw new QtiEvaluationException(`Improper value encoding.  Must be one of "base", "list", "record".`)
     } catch ({ name, message }) {
-      console.log('[VariableDecodingException][ValueFromJson] ', message)
+      console.log('[PciDecodingException][ValueFromJson] ', message)
       return this.nullValue()
     }
   }
@@ -574,11 +576,12 @@ export default class QtiProcessing {
     if (value === null) return this.nullValue()
 
     try {
-      // Return null if it's not an object or if it's an array
+      // Must be an Object.
       if (typeof value !== 'object') {
         throw new QtiEvaluationException(`Invalid value. Must be an Object.`)
       }
 
+      // In JavaScript, Arrays are also Objects.  Make sure it's not an Array.
       if (Array.isArray(value)) {
         throw new QtiEvaluationException(`Invalid value. Found Array. Must be an Object.`)
       }
@@ -588,7 +591,7 @@ export default class QtiProcessing {
       throw new QtiEvaluationException(`Value does not have the required base-type. Expecting ${baseType}.`)
     
     } catch ({ name, message }) {
-      console.log('[VariableDecodingException][BaseValueFromJson] ', message, value)
+      console.log('[PciDecodingException][BaseValueFromJson] ', message, value)
       return this.nullValue()
     }
   }
@@ -607,7 +610,7 @@ export default class QtiProcessing {
         throw new QtiEvaluationException(`Improper record value encoding.  Must be an Array.`)
       }
   
-      if ((typeof value === 'object') && !Array.isArray(value)) {
+      if (!Array.isArray(value)) {
         throw new QtiEvaluationException(`Improper record value encoding.  Must be an Array.`)
       }
 
