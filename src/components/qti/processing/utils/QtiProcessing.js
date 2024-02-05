@@ -499,7 +499,7 @@ export default class QtiProcessing {
    */
   processInteractionResponse (interaction, responseVariable) {
     return (interaction.interactionType === 'PortableCustom')
-              ? this.valueFromPciJson(interaction.node.getResponse(), responseVariable)
+              ? this.getValueFromPciJson(interaction.node.getResponse(), responseVariable)
               : interaction.node.getResponse()
   }
 
