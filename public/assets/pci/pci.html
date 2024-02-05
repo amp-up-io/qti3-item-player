@@ -132,6 +132,7 @@ const QTI_PCI_API = {
   response: null,
   state: null,
   boundTo: null,
+  status: 'interacting',
   width: 0,
   height: 0,
 
@@ -207,6 +208,14 @@ const QTI_PCI_API = {
     this.boundTo =  boundTo;
   },
 
+  getStatus: function () {
+    return this.status;
+  },
+
+  setStatus: function (status) {
+    this.status = status;
+  },
+
   getModuleResolution: function () {
 	  return this.moduleResolution;
   },
@@ -264,6 +273,7 @@ const QTI_PCI_API = {
     this.setContextVariables(pci.contextVariables);
     this.setTemplateVariables(pci.templateVariables);
     this.setBoundTo(pci.boundTo);
+    this.setStatus(pci.status)
 
     this.trackResize(this.getDom());
     this.injectClassAttribute()
@@ -275,9 +285,9 @@ const QTI_PCI_API = {
       this.getProperties(),
       this.getContextVariables(),
       this.getTemplateVariables(),
-      this.getResponseFromState(),
       this.getStateFromState(),
-      this.getBoundTo()
+      this.getBoundTo(),
+      this.getStatus()
     );
   },
 
@@ -315,7 +325,11 @@ const QTI_PCI_API = {
 	 * @param {HTMLElement} dom
 	 * @param {String} responseIdentifier the interaction's responseIdentifier
    * @param {Object} properties
-	 * @param {String} state A prior state 
+   * @param {Object} contextVariables
+   * @param {Object} templateVariables
+   * @param {String} state A prior state
+   * @param {Object} boundTo The response variable this PCI is bound to and its value
+   * @param {String} status Item lifecycle status; e.g., 'interacting'
    */
   launchPci: function (
       typeIdentifier,
@@ -324,14 +338,16 @@ const QTI_PCI_API = {
       properties,
       contextVariables,
       templateVariables,
-      response,
       state,
-      boundTo) {
+      boundTo,
+      status) {
 
     console.log('[PCI Context] Interaction Dependencies: ', this.getModuleDependencies());
 	
-    // Load it!
+    // Load module resolution
     require.config(this.getModuleResolution());
+
+    // Launch it!
     require(this.getModuleDependencies(), function(ctx) {
 
       const configuration = {
@@ -342,14 +358,18 @@ const QTI_PCI_API = {
         responseIdentifier: responseIdentifier,
         onready: ctx.notifyReady,
         ondone: ctx.notifyDone,
-        status: 'interacting'
+        status: status
       };
 
-      console.log('[PCI Context] Configuration: ', configuration)
+      console.log('[PCI Context] Configuration: ', configuration);
+      console.log('[PCI Context] State: ', (state === null ? undefined : state))
 
-      // Launch it with the provided parameters and a configuration!
-      ctx.getInstance(typeIdentifier, dom, configuration, state);
-	  }.bind(this));
+      if (state === null)
+        ctx.getInstance(typeIdentifier, dom, configuration)
+      else
+        ctx.getInstance(typeIdentifier, dom, configuration, state);
+
+    });
   },
 
   NotifyPciChildLoaded: function () {

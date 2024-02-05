@@ -1,4 +1,7 @@
 import BigNumber from 'bignumber.js'
+import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
+import { RecordField } from '@/shared/helpers/RecordField'
+
 
 /**
  * @description Qti Processing class
@@ -487,6 +490,158 @@ export default class QtiProcessing {
     }
 
     return result
+  }
+
+  /**
+   * Transform an interaction's response into a proper QTI response
+   * @param {Object} interaction 
+   * @returns response - a proper QTI response
+   */
+  processInteractionResponse (interaction, responseVariable) {
+    return (interaction.interactionType === 'PortableCustom')
+              ? this.valueFromPciJson(interaction.node.getResponse(), responseVariable)
+              : interaction.node.getResponse()
+  }
+
+  /**
+   * @description Convert a PCI-compliant json value to a native QTI value.
+   * 
+   * @param {Object} value - A PCI Type Definition-compliant value that follows 
+   * the PCI Type Definition Specification 
+   * https://www.imsglobal.org/spec/pci/v1p0#baseTypes
+   * 
+   * @param {Object} variable - A Response Variable definition which 
+   * follows the following schema, which includes baseType, cardinality,
+   * and defaultValue definitions.  In the case of a record, baseType 
+   * will be null, and the value + defaultValue will be a Map of field 
+   * definitions.
+   * 
+   * {
+   *   identifier: 'RESPONSE',
+   *   baseType: 'float',
+   *   cardinality: 'single',
+   *   value: 0,
+   *   defaultValue: 0
+   * }
+   *                      
+   * @returns Native QTI value
+   */
+  valueFromPciJson (value, variable) {
+    console.log('[ValueFromPciJson][Value]',value, variable)
+    if ((value === null) || (typeof variable === 'undefined')) return this.nullValue()
+
+    try {
+      if (typeof value !== 'object') {
+        throw new QtiEvaluationException(`Improper value encoding.  Must be an Object.`)
+      }
+
+      if ((typeof value === 'object') && Array.isArray(value)) {
+        throw new QtiEvaluationException(`Improper value encoding.  Found Array.  Must be an Object.`)
+      }
+
+      // It's a proper object.  Let's transform it.
+      if (value['base'] !== undefined) {
+        if (variable.cardinality === 'single') {
+          // It's a single cardinality primitive
+          return this.baseValueFromPciJson(value.base, variable.baseType)
+        }
+        throw new QtiEvaluationException(`Inconsistent value cardinality [base] for this variable.  Variable must be single cardinality.`)
+      }
+
+      if (value['list'] !== undefined) {
+        // Variable must be multiple or ordered
+        if ((variable.cardinality === 'multiple') || (variable.cardinality === 'ordered')) {
+          return this.baseValueFromPciJson(value.list, variable.baseType)
+        }
+        throw new QtiEvaluationException(`Inconsistent value cardinality [list] for this variable.  Variable must be multiple or ordered cardinality.`)
+      }
+
+      if (value['record'] !== undefined) {
+        if (variable.cardinality === 'record') {
+          return this.recordValueFromPciJson(value.record, variable)
+        }
+        throw new QtiEvaluationException(`Inconsistent value cardinality [record] for this variable.  Variable must be record cardinality.`)
+      }
+    
+      throw new QtiEvaluationException(`Improper value encoding.  Must be one of "base", "list", "record".`)
+    } catch ({ name, message }) {
+      console.log('[VariableDecodingException][ValueFromJson] ', message)
+      return this.nullValue()
+    }
+  }
+
+  baseValueFromPciJson (value, baseType) {
+    if (value === null) return this.nullValue()
+
+    try {
+      // Return null if it's not an object or if it's an array
+      if (typeof value !== 'object') {
+        throw new QtiEvaluationException(`Invalid value. Must be an Object.`)
+      }
+
+      if (Array.isArray(value)) {
+        throw new QtiEvaluationException(`Invalid value. Found Array. Must be an Object.`)
+      }
+
+      if (value[baseType] !== undefined) return value[baseType]
+
+      throw new QtiEvaluationException(`Value does not have the required base-type. Expecting ${baseType}.`)
+    
+    } catch ({ name, message }) {
+      console.log('[VariableDecodingException][BaseValueFromJson] ', message, value)
+      return this.nullValue()
+    }
+  }
+  
+  recordValueFromPciJson (value, variable) {
+    try {
+      // Try to get the variable's field definition.
+      let recordFieldMap = this.getRecordVariableFieldDefinition(variable)
+
+      // if recordFieldMap is not found, what should we do?
+      if (recordFieldMap === null) {
+        throw new QtiEvaluationException(`Unable to retrieve ${variable.identifier} record field definition.`)
+      }
+
+      if (typeof value !== 'object') {
+        throw new QtiEvaluationException(`Improper record value encoding.  Must be an Array.`)
+      }
+  
+      if ((typeof value === 'object') && !Array.isArray(value)) {
+        throw new QtiEvaluationException(`Improper record value encoding.  Must be an Array.`)
+      }
+
+      const valueMap = new Map()
+
+      for (let [fieldIdentifier, fieldDefinition] of recordFieldMap) {
+        // Loop through all elements of the JSON record array.
+        for (let i=0; i<value.length; i++) {
+          if ((value[i].name !== undefined) && (value[i].base !== undefined)) {
+            // 
+            if (value[i].name === fieldIdentifier) {
+              const fieldValue = this.baseValueFromPciJson(value[i].base, fieldDefinition.getBaseType())
+              const recordField = new RecordField(fieldIdentifier, fieldDefinition.getBaseType(), fieldValue)
+              valueMap.set(fieldIdentifier, recordField)
+              break
+            }
+          }
+        }
+      }
+
+      return valueMap
+
+    } catch ({ name, message }) {
+      console.log('[VariableDecodingException][RecordValueFromJson] ', message)
+      return new Map()
+    }
+  }
+
+  getRecordVariableFieldDefinition (variable) {
+    if (variable == null) return null
+    // Check defaultValue first
+    if (variable.defaultValue !== null) return variable.defaultValue
+    // Must be in correctResponse
+    return variable.correctResponse    
   }
 
 }

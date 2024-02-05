@@ -69,7 +69,10 @@ export class PciModuleResolver {
         let configuration = null
         if (modules === null) return configuration
 
-        const baseConfig = this.constants.BASE_CONFIG
+        let baseConfig = this.constants.BASE_CONFIG
+
+        // Init base config
+        baseConfig = await this.initBaseConfiguration(baseConfig, modules)
 
         // Attempt to resolve primary config modules
         configuration = await this.resolvePrimaryConfigurationModules(baseConfig, modules)
@@ -81,6 +84,20 @@ export class PciModuleResolver {
         configuration = await this.resolveSecondaryConfigurationModules(baseConfig, modules)
 
         return configuration
+    }
+
+    async initBaseConfiguration (baseConfig, modules) {
+
+        // Default module_resolution.js will be in the item's modules subfolder
+        const url = `${this.getItemPathUri()}modules/module_resolution.js`
+
+        if ((typeof modules.primaryconfiguration === 'undefined') &&
+            (typeof modules.secondaryConfiguration === 'undefined')) {
+            const mr = await this.fetchDefaultModuleResolution(url, false)
+            if (mr !== null) return mr
+        }
+
+        return baseConfig
     }
 
     async resolvePrimaryConfigurationModules (baseConfig, modules) {
@@ -278,6 +295,37 @@ export class PciModuleResolver {
             console.log((isPrimary ? 'Primary' : 'Fallback') + 'configuration Fetch error:', error)
             return null
         }        
+    }
+
+    async fetchDefaultModuleResolution (url, isConfigurationRelative) {
+        try {
+            const response = await fetch(url)
+            if (!response.ok) {
+                throw new Error(`HTTP error: ${response.status}`)
+            }
+
+            // Get the config json
+            const configuration = await response.json()
+
+            // Adjust relative paths to absolute paths
+            let paths = configuration.paths
+            for (let path in paths) {
+                if (paths[path] !== null && !paths[path].startsWith('http')) {
+
+                    if (isConfigurationRelative)
+                        // Paths should be relative to the URL of the configuration
+                        paths[path] = `${this.getConfigurationRelativePath(url)}${paths[path]}`
+                    else
+                        // Paths should be relative to the URL of the item
+                        paths[path] = `${this.getItemPathUri()}${paths[path]}`
+
+                }
+            }
+            return configuration
+        } catch (error) {
+            console.log('module_resolution.js Fetch error:', error)
+            return null
+        }           
     }
 
     getItemPathUri () {

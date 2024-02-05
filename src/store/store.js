@@ -3,6 +3,9 @@ import { PnpFactory } from '@/shared/helpers/PnpFactory'
 import { SessionControlFactory } from '@/shared/helpers/SessionControlFactory'
 import { ItemStateFactory } from '@/shared/helpers/ItemStateFactory'
 import { ItemTimer } from '@/shared/helpers/ItemTimer'
+import QtiProcessing from '@/components/qti/processing/utils/QtiProcessing'
+
+const qtiProcessing = new QtiProcessing()
 
 export const store = {
 
@@ -936,12 +939,10 @@ export const store = {
     // Should never happen
     if (typeof stateMapValue === 'undefined') return
 
-    console.log('[GetResponses][' + interaction.identifier + ']:', interaction.node.getResponse())
-
     // Notify store of our response
     this.setResponseVariableValue({
       identifier: interaction.identifier,
-      value: interaction.node.getResponse(),
+      value: qtiProcessing.processInteractionResponse(interaction, this.getResponseDeclaration(interaction.identifier)),
       state: interaction.node.getState()
     })
 
@@ -952,5 +953,5 @@ export const store = {
     if (this.getAsyncStateMap().size === 0) {
       this.getItem().triggerGetResponsesComplete()
     }
-  },
+  }
 }

@@ -485,10 +485,12 @@ export default {
     },
 
     getResponseVariable () {
-      let responseValue = 
-          (this.priorState === null) 
-            ? qtiProcessing.valueToPciJson(this.getResponse(), this.baseType, this.cardinality)
-            : this.getResponse()
+      //let responseValue = 
+      //    (this.priorState === null) 
+      //      ? qtiProcessing.valueToPciJson(this.getResponse(), this.baseType, this.cardinality)
+      //      : this.getResponse()
+
+      let responseValue = qtiProcessing.valueToPciJson(this.getResponse(), this.baseType, this.cardinality)
 
       let responseVariable = {}
       responseVariable[this.responseIdentifier] = responseValue
@@ -512,7 +514,9 @@ export default {
         contextVariables: this.getContextVariables(),
         module: this.module,
         modules: this.getModules(),
-        moduleResolution: this.getConfiguration()
+        moduleResolution: this.getConfiguration(),
+        // Pass item lifecycle status
+        status: store.getItemLifecycleStatus()
       }
 
       // Initialize the PciLoadInteraction message
@@ -525,7 +529,7 @@ export default {
       // if there is a priorState.
       if (this.priorState !== null) {
         message.state = JSON.stringify({
-            response: this.getResponse(),
+            response: qtiProcessing.valueToPciJson(this.getResponse(), this.baseType, this.cardinality),
             state: this.getState()
           })
       }
