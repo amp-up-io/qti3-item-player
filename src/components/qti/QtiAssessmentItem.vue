@@ -274,6 +274,8 @@ export default {
       // 11) Restart the item timer
       store.restartItemTimer()
       console.log('[QtiAssessmentItem][NewTemplate][Completed]')
+      // 12) Inform any listeners that we have completed generating the new template
+      this.$parent.$emit('itemNewTemplateCompleted')
     },
 
     evaluateTemplateMathVariables () {

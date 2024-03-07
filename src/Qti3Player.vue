@@ -11,6 +11,7 @@
       @itemScoreAttemptReady="handleScoreAttemptReady"
       @itemCatalogEvent="handleCatalogEvent"
       @itemNewTemplate="handleNewTemplate"
+      @itemNewTemplateCompleted="handleNewTemplateCompleted"
       v-bind:is="processedXml">
     </component>
     <catalog-dialog ref="catalogdialog" />
@@ -162,6 +163,11 @@ export default {
       this.item.getScoreAttempt(target)
     },
 
+    newTemplate () {
+      console.log('[Qti3Player][NewTemplate][Started]')
+      this.item.newTemplate()
+    },
+
     /**
      * @description Event handler for the itemReady Event triggered by
      * the qti-assessment-item component when the component is loaded.
@@ -242,6 +248,15 @@ export default {
     handleNewTemplate () {
       // Close/reset Catalog components
       this.resetCatalogComponents()
+    },
+
+    /**
+     * @description event handler for completion of a new template.
+     */
+    handleNewTemplateCompleted () {
+      console.log('[Qti3Player][NewTemplate][Completed]')
+      // Notify listener that we are finished generating a new template
+      this.$emit('itemNewTemplateCompleted')
     },
 
     /**
