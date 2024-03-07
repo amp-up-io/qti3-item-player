@@ -79,13 +79,13 @@ export default {
     validateAttributes() {
       let declaration
       try {
-        declaration =  qtiAttributeValidation.validateVariableIdentifierAttribute (store, this.pattern)
+        declaration =  qtiAttributeValidation.validateVariableIdentifierAttribute(store, this.pattern)
         // If we get to this line of code then we believe that 'pattern' is
         // a variable identifier, not a RegEx pattern.
         this.isPatternIdentifier = true
       } catch (err) {
-        // QtiParseException means that pattern wasn't an identifier
-        if (err.name === 'QtiParseException') {
+        // QtiValidationException means that pattern wasn't an identifier
+        if (err.name === 'QtiValidationException') {
           this.isPatternIdentifier = false
         } else {
           throw new Error(err.message)
