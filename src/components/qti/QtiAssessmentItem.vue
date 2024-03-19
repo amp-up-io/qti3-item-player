@@ -2558,6 +2558,13 @@ code {
   border-radius: 4px;
 }
 
+/* Hack to improve presentation of Shared CSS examples */
+div.code pre {
+  font-size: smaller;
+  line-height: .75rem;
+  overflow: unset;
+}
+
 /* Table classes */
 .table {
   width: 100%;
