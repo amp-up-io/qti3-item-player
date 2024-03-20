@@ -808,7 +808,8 @@ export default {
   display: inherit;
 }
 
-.qti-hidden {
+.qti-hidden,
+.qti-display-none {
   display: none;
 }
 
