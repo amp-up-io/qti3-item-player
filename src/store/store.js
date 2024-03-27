@@ -511,6 +511,14 @@ export const store = {
     this.state.interactions[interactionIndex].isValidResponse = validityObject.isValidResponse
   },
 
+  resetInteractionStateIsValidResponse () {
+    this.state.interactions.forEach((interaction) => {
+      if (interaction.interactionType !== 'EndAttemptInteraction') {
+        interaction.isValidResponse = false
+      }
+    })
+  },
+
   restoreResponseVariables () {
     if (!this.hasItemContextState()) return null
 
@@ -866,7 +874,7 @@ export const store = {
     this.state.item.endAttempt(stateObject, function() {
       // Report attempt state to listeners.  Any validation messages
       // will get reported here.
-      this.state.item.notifyAttemptResults(true)
+      this.state.item.notifyEndAttemptInteractionResults('itemEndAttemptReady')
     }.bind(this))
   },
 

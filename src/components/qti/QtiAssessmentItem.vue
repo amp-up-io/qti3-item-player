@@ -173,6 +173,33 @@ export default {
     },
 
     /**
+     * @description Should only be called from NotifyEndAttempt.
+     * Examine the saved state of the item's validationMessages.
+     * If there are messages, and validateResponses is true, reenable
+     * the EndAttemptInteraction's.
+     */
+     notifyEndAttemptInteractionResults () {
+      // Pull state from the store
+      const state = new ItemStateFactory(this.identifier, store)
+      const serializedState = state.getSerializedState()
+
+      // Enable the endAttempt interactions if there are validation
+      // messages and Session Control validateResponses is true
+      if (store.getItemContextSessionControl().getValidateResponses() && (serializedState.validationMessages.length > 0)) {
+        store.getInteractions().forEach((interaction) => {
+          if (interaction.interactionType !== 'EndAttemptInteraction') return
+          if (interaction.interactionSubType !== 'endattempt-controller-bar') return
+          interaction.enable()
+        })
+      }
+
+      this.$parent.$emit('itemEndAttemptReady', {
+        "state": serializedState,
+        "target": null
+      })
+    },
+
+    /**
      * @description This executes immediately upon completion
      * of an item's qti-template-processing $mount
      * @param node - an object containing a templateProcessing node
@@ -358,6 +385,7 @@ export default {
     },
 
     resetInteractions () {
+      // Reset the interactions themselves
       store.getInteractions().forEach((interaction) => {
         console.log('[ResetInteractions][' + interaction.identifier + ']', interaction)
         if (interaction.resetValue) {
@@ -368,6 +396,8 @@ export default {
           interaction.node.enable()
         }
       })
+      // Reset isValidResponse in the store's interaction state
+      store.resetInteractionStateIsValidResponse()
     },
 
     disableInteractions () {
