@@ -53,38 +53,81 @@ export default {
       type: String,
       required: true
     },
+    /**
+     * The intended audience for an outcome variable can be set with the view attribute. 
+     * If no view is specified the outcome is treated as relevant to all views. Complex 
+     * items, such as adaptive items or complex templates, may declare outcomes that are 
+     * of no interest to the candidate at all, but are merely used to hold intermediate 
+     * values or other information useful during the item or test session. Such variables 
+     * should be declared with a view of author (for item outcomes) or testConstructor 
+     * (for test outcomes). Systems may exclude outcomes from result reports on the basis 
+     * of their declared view if appropriate. Where more than one class of user should be 
+     * able to view an outcome variable the view attribute should contain a comma 
+     * delimited list.
+     * 
+     * A list from an enumerated value set of: 
+     * { author | candidate | proctor | scorer | testConstructor | tutor }
+     */
     view: {
-      // A list from an enumerated value set of: { author | candidate | proctor | scorer | testConstructor | tutor }
       type:String,
-      required: false
+      required: false,
+      default: null
     },
     interpretation: {
       type: String,
-      required: false
+      required: false,
+      default: null
     },
+    /**
+     * An optional link (URI) to an extended interpretation of the outcome variable's value.
+     */
     longInterpretation: {
       type: String,
-      required: false
+      required: false,
+      default: null
     },
+    /**
+     * The normalMaximum characteristic optionally defines the maximum magnitude of numeric 
+     * outcome variables, it must be a positive value. If given, the outcome's value can be 
+     * divided by normalMaximum and then truncated (if necessary) to obtain a normalized 
+     * score in the range [-1.0,1.0]. normalMaximum has no affect on responseProcessing or 
+     * the values that the outcome variable itself can take.
+     */
     normalMaximum: {
       type: String,
       required: false
     },
+    /**
+     * The normalMinimum characteristic optionally defines the minimum value of numeric outcome 
+     * variables, it may be negative.
+     */
     normalMinimum: {
       type: String,
       required: false
     },
+    /** 
+     * The masteryValue characteristic optionally defines a value for numeric outcome variables 
+     * above which the aspect being measured is considered to have been mastered by the 
+     * candidate.
+     */
     masteryValue: {
       type: String,
       required: false
     },
+    /**
+     * This identifies whether or not the value for this outcome is produced by human or by 
+     * machine scoring.
+     * Enumerated value set of: { externalMachine | human }
+     */
     externalScored: {
       type: String,
-      required: false
+      required: false,
+      default: null
     },
     variableIdentifierRef: {
       type: String,
-      required: false
+      required: false,
+      default: null
     }
   },
 
@@ -96,7 +139,13 @@ export default {
       /* [0-1] multiplicity */
       lookupTable: null,
       // internal validation status
-      isQtiValid: true
+      isQtiValid: true,
+      // normalMaximum float value
+      normalMaximumValue: null,
+      // normalMinimum float value
+      normalMinimumValue: null,
+      // masteryValue float value
+      masteryValueValue: null
     }
   },
 
@@ -124,6 +173,18 @@ export default {
 
     getCardinality () {
       return this.cardinality
+    },
+
+    getNormalMaximumValue () {
+      return this.normalMaximumValue
+    },
+
+    getNormalMinimumValue () {
+      return this.normalMinimumValue
+    },
+
+    getMasteryValueValue () {
+      return this.masteryValueValue
     },
 
     /**
@@ -225,7 +286,19 @@ export default {
       qtiAttributeValidation.validateBaseTypeAndCardinality(this.baseType, this.cardinality === 'record')
       qtiAttributeValidation.validateIdentifierAttribute(this.identifier)
 
-      // A little extra validation for the SCORE and MAXSCORE variables - because SCORE is frequently improperly defined.
+      // Convert normalMinimum, normalMaximum, masteryValue to floats or null
+      this.normalMaximumValue = qtiAttributeValidation.validateFloatAttribute('normal-maximum', this.normalMaximum, false, null)
+      if (this.normalMaximumValue !== null) {
+        if (this.normalMaximumValue <= 0) {
+          throw new QtiValidationException('Outcome declaration "' + this.identifier + '" has invalid normal-maximum attribute value.  Must be a positive value.')
+        }
+      }
+
+      this.normalMinimumValue = qtiAttributeValidation.validateFloatAttribute('normal-minimum', this.normalMinimum, false, null)
+      this.masteryValueValue = qtiAttributeValidation.validateFloatAttribute('mastery-value', this.masteryValue, false, null)
+
+      // A little extra validation for the SCORE and MAXSCORE variables - because SCORE 
+      // is frequently improperly defined.
       if ((this.identifier === 'SCORE') || (this.identifier === 'MAXSCORE')) {
         if ((typeof this.baseType === 'undefined') || (this.baseType !== 'float')) {
           throw new QtiValidationException('Outcome declaration "' + this.identifier + '" has invalid base-type.  Must be base-type="float".')
@@ -242,6 +315,14 @@ export default {
           identifier: this.identifier,
           baseType: this.getBaseType(),
           cardinality: this.getCardinality(),
+          view: this.view,
+          interpretation: this.interpretation,
+          longInterpretation: this.longInterpretation,
+          normalMaximum: this.getNormalMaximumValue(),
+          normalMinimum: this.getNormalMinimumValue(),
+          masteryValue: this.getMasteryValueValue(),
+          externalScored: this.externalScored,
+          variableIdentifierRef: this.variableIdentifierRef,
           value: null,
           defaultValue: null,
           node: this
@@ -276,9 +357,9 @@ export default {
             view: this.view,
             interpretation: this.interpretation,
             longInterpretation: this.longInterpretation,
-            normalMaximum: this.normalMaximum,
-            normalMinimum: this.normalMinimum,
-            masteryValue: this.masteryValue,
+            normalMaximum: this.getNormalMaximumValue(),
+            normalMinimum: this.getNormalMinimumValue(),
+            masteryValue: this.getMasteryValueValue(),
             externalScored: this.externalScored,
             variableIdentifierRef: this.variableIdentifierRef,
             value: this.getValue(),

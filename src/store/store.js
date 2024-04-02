@@ -370,9 +370,37 @@ export const store = {
       value: 0,
       defaultValue: 0,
       lookupTable: null,
-      lookupTableType: null
+      lookupTableType: null,
+      view: null,
+      interpretation: null,
+      longInterpretation: null,
+      normalMaximum: null,
+      normalMinimum: null,
+      masteryValue: null,
+      externalScored: null,
+      variableIdentifierRef: null
     })
     console.log('[QtiAssessmentItem][SCORE] initialized')
+
+    // MAXSCORE
+    this.defineOutcomeDeclaration({
+      identifier: 'MAXSCORE',
+      baseType: 'float',
+      cardinality: 'single',
+      value: 0,
+      defaultValue: 0,
+      lookupTable: null,
+      lookupTableType: null,
+      view: null,
+      interpretation: null,
+      longInterpretation: null,
+      normalMaximum: null,
+      normalMinimum: null,
+      masteryValue: null,
+      externalScored: null,
+      variableIdentifierRef: null
+    })
+    console.log('[QtiAssessmentItem][MAXSCORE] initialized')
 
     // completionStatus
     this.defineOutcomeDeclaration({
@@ -382,7 +410,11 @@ export const store = {
       value: 'not_attempted',
       defaultValue: 'not_attempted',
       lookupTable: null,
-      lookupTableType: null
+      lookupTableType: null,
+      normalMaximum: null,
+      normalMinimum: null,
+      externalScored: null,
+      interpretation: null
     })
     console.log('[QtiAssessmentItem][completionStatus] initialized')
 

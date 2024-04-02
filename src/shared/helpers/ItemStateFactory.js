@@ -33,7 +33,7 @@ export class ItemStateFactory {
       guid: this.guid,
       contextVariables: this.serializeVariables(this.contextVariables),
       responseVariables: this.serializeResponseVariables(this.responseVariables),
-      outcomeVariables: this.serializeVariables(this.outcomeVariables),
+      outcomeVariables: this.serializeOutcomeVariables(this.outcomeVariables),
       templateVariables: this.serializeVariables(this.templateVariables),
       validationMessages: this.serializeValidationMessages(this.validationMessages)
     }
@@ -58,6 +58,28 @@ export class ItemStateFactory {
       }
 
       variableArray.push(obj)
+    })
+
+    return variableArray
+  }
+
+  serializeOutcomeVariables (outcomeVariables) {
+    let variableArray = []
+    outcomeVariables.forEach((outcomeVariable) => {
+      variableArray.push({
+        identifier: outcomeVariable.identifier,
+        cardinality: outcomeVariable.cardinality,
+        baseType: outcomeVariable.baseType,
+        value: this.serializeVariableValue(outcomeVariable.cardinality, outcomeVariable.value),
+        view: outcomeVariable.view,
+        interpretation: outcomeVariable.interpretation,
+        longInterpretation: outcomeVariable.longInterpretation,
+        normalMaximum: outcomeVariable.normalMaximum,
+        normalMinimum: outcomeVariable.normalMinimum,
+        masteryValue: outcomeVariable.masteryValue,
+        externalScored: outcomeVariable.externalScored,
+        variableIdentifierRef: outcomeVariable.variableIdentifierRef    
+      })
     })
 
     return variableArray
