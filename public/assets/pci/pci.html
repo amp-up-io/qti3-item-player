@@ -135,6 +135,7 @@ const QTI_PCI_API = {
   status: 'interacting',
   width: 0,
   height: 0,
+  onQtiInteractionChanged: null,
 
   getInstance: function () {
     return this.instance;
@@ -276,7 +277,8 @@ const QTI_PCI_API = {
     this.setStatus(pci.status)
 
     this.trackResize(this.getDom());
-    this.injectClassAttribute()
+    this.trackQtiInteractionChanged(this.getDom());
+    this.injectClassAttribute();
 	  this.injectMarkup();
     this.launchPci(
       this.getTypeIdentifier(), 
@@ -461,6 +463,16 @@ const QTI_PCI_API = {
       characterData: true,
       subtree: true
     });
+  },
+
+  trackQtiInteractionChanged: function (domElement) {
+    this.onQtiInteractionChanged = this.onQtiInteractionChangedHandler.bind(this);
+    domElement.addEventListener('qti-interaction-changed', this.onQtiInteractionChanged);
+  },
+
+  onQtiInteractionChangedHandler: function(event) {
+    event.preventDefault();
+    console.log('[QtiInteractionChanged][Engine]', event.detail);
   }
 };
 
