@@ -413,6 +413,16 @@ const QTI_PCI_API = {
     window.parent.postMessage({ message: 'PciGetState_Reply', identifier: this.getResponseIdentifier(), state: stringifiedStateObject, success: true },'*');
   },
 
+  NotifyPciInteractionChanged: function(valid, value) {
+    if (self == top) return;
+
+    const stringifiedState = JSON.stringify({
+      valid: (typeof valid === 'undefined' ? null : valid),
+      value: (typeof value === 'undefined' ? null : value)
+    });
+    window.parent.postMessage({ message: 'PciInteractionChanged', identifier: this.getResponseIdentifier(), state: stringifiedStateObject, success: true },'*');
+  },  
+
   /**
    * @description Generic function for parsing URL params.
    * Via http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
@@ -472,7 +482,14 @@ const QTI_PCI_API = {
 
   onQtiInteractionChangedHandler: function(event) {
     event.preventDefault();
+
+    if (typeof event.detail === 'undefined') {
+      console.log('[QtiInteractionChanged][Engine][Module Error]: event is missing required "detail" property', event);
+      return;
+    }
+
     console.log('[QtiInteractionChanged][Engine]', event.detail);
+    this.NotifyPciInteractionChanged(event.detail.valid, event.detail.value);
   }
 };
 
