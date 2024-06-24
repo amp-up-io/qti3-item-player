@@ -181,7 +181,7 @@ export default {
       if (this.valueN !== null) {
         return (this.valueN)
       }
-      let declaration = store.getters.getVariableDeclaration(this.n)
+      let declaration = store.getVariableDeclaration(this.n)
       // Return the variable's value.  Return 0 if variable is somehow not found.
       return (declaration !== null ? declaration.value : 0)
     }
