@@ -75,7 +75,8 @@ export default {
      */
     required: {
       required: false,
-      type: String
+      type: String,
+      default: 'false'
     },
     /*
      * Custom text to be rendered by the delivery platform when the selection element is in an
@@ -132,6 +133,7 @@ export default {
       keysSoFar: '',
       searchIndex: null,
       isShuffle: null,
+      isRequired: false,
       isDisabled: false,
       isQtiValid: true,
       presentationFactory: null,
@@ -319,9 +321,9 @@ export default {
      */
     computeIsValid () {
       // If minChoices is 0, there are no constraints
-      if ((this.minChoices*1) === 0) return true
+      if ((!this.isRequired) && (this.minChoices*1) === 0) return true
 
-      // MinChoices is > 0.  There are constraints.
+      // MinChoices is > 0 or required == true.  There are constraints.
 
       // A null response is invalid
       if (this.response === null) return false
@@ -362,8 +364,8 @@ export default {
         this.minSelectionsMessage = this.dataMinSelectionsMessage
         return
       }
-      // If minChoices is 0 then there are no validity constraints.
-      if ((this.minChoices*1) === 0) return
+      // If isRequired is false and minChoices is 0 then there are no validity constraints.
+      if (!this.isRequired && (this.minChoices*1) === 0) return
       // There are validity constraints.
       this.minSelectionsMessage = 'You must make at least 1 choice for this question.'
     },
@@ -810,6 +812,8 @@ export default {
 
       this.cardinality = this.getCardinality()
       this.isShuffle = (this.shuffle === 'true' ? true : false)
+      this.isRequired = (this.required === 'true' ? true : false)
+      console.log('isRequired:', this.isRequired)
       this.computeMinSelectionsMessage()
     } catch (err) {
       this.isQtiValid = false
