@@ -118,6 +118,14 @@ export default {
           throw new Error(err.message)
         }
       }
+    },
+
+    hideTemplate () {
+      this.$refs.root.classList.add('hidden')
+    },
+
+    showTemplate () {
+      this.$refs.root.classList.remove('hidden')
     }
 
   },
