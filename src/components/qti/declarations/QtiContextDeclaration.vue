@@ -74,6 +74,7 @@ export default {
     },
 
     getBaseType () {
+      if (this.cardinality === 'record') return null
       return this.baseType
     },
 
