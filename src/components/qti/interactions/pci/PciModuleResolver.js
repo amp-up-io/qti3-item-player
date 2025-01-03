@@ -292,7 +292,7 @@ export class PciModuleResolver {
             }
             return configuration
         } catch (error) {
-            console.log((isPrimary ? 'Primary' : 'Fallback') + 'configuration Fetch error:', error)
+            console.log((isPrimary ? 'Primary' : 'Fallback') + ' Configuration Fetch error:', error)
             return null
         }        
     }
