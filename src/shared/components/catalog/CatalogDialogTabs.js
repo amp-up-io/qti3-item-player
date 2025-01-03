@@ -27,7 +27,9 @@ export class CatalogDialogTabs {
       GLOSSARY_ILLUSTRATION: 'glossaryIllustration'
     },
     keys: {
+      TAB:    9,
       ENTER: 13,
+      ESCAPE:27,
       SPACE: 32,
       END:   35,
       HOME:  36,

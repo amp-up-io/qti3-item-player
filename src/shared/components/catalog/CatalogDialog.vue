@@ -115,9 +115,16 @@ export default {
       this.tabs.create(content)
     },
 
+    focusFirstTab () {
+      if (this.tabs !== null) {
+        this.tabs.focusFirstTab()
+      }
+    },
+
     show () {
       this.state.hidden = false
       this.render()
+      this.focusFirstTab()
 
       // Center dialog if first time showing
       if (!this.state.isShown) {
