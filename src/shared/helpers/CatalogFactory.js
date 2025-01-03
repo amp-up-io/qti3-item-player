@@ -9,6 +9,7 @@ export class CatalogFactory {
     this.nodeList = null
     // Initialize the showGlossary function reference
     this.showGlossary = this.showGlossaryHandler.bind(this)
+    this.onKeyDown = this.keydownHandler.bind(this)
     return this
   }
 
@@ -22,6 +23,10 @@ export class CatalogFactory {
     GLOSSARY_CLICKABLE_CLASS: 'qti3-player-catalog-clickable-term',
     // No language specified
     LANGUAGE_OFF: '',
+    keys: {
+      ENTER: 13,
+      SPACE: 32
+    }
   }
 
   bindAll () {
@@ -125,10 +130,12 @@ export class CatalogFactory {
     if (node.classList.contains(this.constants.GLOSSARY_CLICKABLE_CLASS)) return
 
     node.classList.add(this.constants.GLOSSARY_CLICKABLE_CLASS)
+    node.setAttribute('tabindex', '0')
     // Add a data- for the term - if one does not already exist
     this.setGlossaryTerm(node)
     node.addEventListener('click',    this.showGlossary)
     node.addEventListener('touchend', this.showGlossary)
+    node.addEventListener('keydown',  this.onKeyDown)
   }
 
   /**
@@ -139,8 +146,10 @@ export class CatalogFactory {
   unbindGlossaryDOM (node) {
     if (node.classList.contains(this.constants.GLOSSARY_CLICKABLE_CLASS)) {
       node.classList.remove(this.constants.GLOSSARY_CLICKABLE_CLASS)
+      node.setAttribute('tabindex', '-1')
       node.removeEventListener('click',    this.showGlossary)
       node.removeEventListener('touchend', this.showGlossary)
+      node.removeEventListener('keydown',  this.keyDownHandler)
     }
   }
 
@@ -170,7 +179,42 @@ export class CatalogFactory {
   showGlossaryHandler (event) {
     event.preventDefault()
     event.stopPropagation()
+    this.emitShowGlossaryEvent(event)
+  }
 
+  /**
+   * @description Handles a Show Glossary Keydown  event.
+   * @param {Event} event - contains the event target and
+   *                        the data-catalog-idref
+   */
+  keydownHandler (event) {
+    let flag = false
+    const key = event.keyCode
+
+    switch (key) {
+      case this.constants.keys.SPACE:
+      case this.constants.keys.ENTER:
+        this.emitShowGlossaryEvent(event)
+        flag = true
+        break
+      default:
+        break
+    }
+
+    if (flag) {
+      event.stopPropagation()
+      event.preventDefault()
+    }
+  }
+
+  /**
+   * @description Does the heavy work of building a Glossary data payload.
+   * Sends an 'itemCatalogEvent' to the parent and passes the Glossary data
+   * payload.
+   * @param {Event} event - contains the event target and
+   *                        the data-catalog-idref
+   */
+  emitShowGlossaryEvent (event) {
     // Get the catalog idref from the DOM
     const idref = event.target.getAttribute('data-catalog-idref')
 
