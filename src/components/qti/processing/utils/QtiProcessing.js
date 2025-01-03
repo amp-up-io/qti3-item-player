@@ -452,11 +452,11 @@ export default class QtiProcessing {
       case 'directedPair':
       case 'pair':
       case 'uri':
+      case 'file':
         result[baseType] = value
         return result
 
       case 'intOrIdentifier':
-      case 'file':
         // These are unsupported in QTI 3 Player as of 3/9/2023
         result[baseType] = null
         return result
@@ -647,4 +647,35 @@ export default class QtiProcessing {
     return variable.correctResponse    
   }
 
+  base64ToBytes (base64) {
+    const binString = atob(base64)
+    return Uint8Array.from(binString, (m) => m.codePointAt(0))
+  }
+
+  bytesToBase64 (bytes) {
+    const binString = Array.from(bytes, (byte) =>
+      String.fromCodePoint(byte),
+    ).join("")
+    return btoa(binString)
+  }
+
+  /**
+   * @description Utility method to base64-encode arbitrary bytes.
+   * @param {*} bytes 
+   * @returns base64-encoded string
+   */
+  encodeBytesToBase64 (bytes) {
+    const textEncoder = new TextEncoder()
+    return this.bytesToBase64(textEncoder.encode(bytes))
+  }
+
+  /**
+   * @description Utility method to decode base64 bytes.
+   * @param {*} base64 
+   * @returns decoded string
+   */
+  decodeBase64ToBytes (base64) {
+    const textDecoder = new TextDecoder()
+    return textDecoder.decode(this.base64ToBytes(base64))
+  }
 }

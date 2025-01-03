@@ -127,6 +127,8 @@ const QTI_PCI_API = {
   properties: null,
   contextVariables: null,
   templateVariables: null,
+  stylesheets: null,
+  catalogInfo: null,
   moduleResolution: null,
   instance: null,
   response: null,
@@ -137,107 +139,125 @@ const QTI_PCI_API = {
   height: 0,
   onQtiInteractionChanged: null,
 
-  getInstance: function () {
+  getInstance () {
     return this.instance;
   },
 
-  setInstance: function (instance) {
+  setInstance (instance) {
     this.instance = instance;
   },
 	
-  getTypeIdentifier: function () {
+  getTypeIdentifier () {
 	  return this.typeIdentifier;
   },
 	
-  setTypeIdentifier: function (typeIdentifier) {
+  setTypeIdentifier (typeIdentifier) {
 	  this.typeIdentifier = typeIdentifier;
   },
 	
-  getResponseIdentifier: function () {
+  getResponseIdentifier () {
 	  return this.responseIdentifier;
   },
 
-  setResponseIdentifier: function (responseIdentifier) {
+  setResponseIdentifier (responseIdentifier) {
 	  this.responseIdentifier = responseIdentifier;
   },
 
-  getPci: function () {
+  getPci () {
 	  return this.pci;
   },
 
-  setPci: function (pci) {
+  setPci (pci) {
 	  this.pci = pci;
   },
 
-  getDom: function () {
+  getDom () {
 	  return this.dom;
   },
 
-  setDom: function (dom) {
+  setDom (dom) {
 	  this.dom = dom;
   },
 
-  getProperties: function () {
+  getProperties () {
 	  return this.properties;
   },
 
-  setProperties: function (properties) {
+  setProperties (properties) {
 	  this.properties = properties;
   },
 
-  getContextVariables: function () {
+  getContextVariables () {
 	  return this.contextVariables;
   },
 
-  setContextVariables: function (contextVariables) {
+  setContextVariables (contextVariables) {
 	  this.contextVariables = contextVariables;
   },
 
-  getTemplateVariables: function () {
+  getTemplateVariables () {
 	  return this.templateVariables;
   },
 
-  setTemplateVariables: function (templateVariables) {
+  setTemplateVariables (templateVariables) {
 	  this.templateVariables = templateVariables;
   },
 
-  getBoundTo: function () {
+  getStylesheets () {
+	  return this.stylesheets;
+  },
+
+  setStylesheets (stylesheets) {
+    if (typeof stylesheets === 'undefined') return;
+    this.stylesheets = stylesheets;
+  },
+
+  getCatalogInfo () {
+    return this.catalogInfo;
+  },
+
+  setCatalogInfo (catalogInfo) {
+    if (typeof catalogInfo === 'undefined') return;
+    this.catalogInfo = catalogInfo;
+  },
+
+  getBoundTo () {
     return this.boundTo;
   },
 
-  setBoundTo: function (boundTo) {
+  setBoundTo (boundTo) {
     this.boundTo =  boundTo;
   },
 
-  getStatus: function () {
+  getStatus () {
     return this.status;
   },
 
-  setStatus: function (status) {
+  setStatus (status) {
     this.status = status;
   },
 
-  getModuleResolution: function () {
+  getModuleResolution () {
 	  return this.moduleResolution;
   },
 	
-  setModuleResolution: function (moduleResolution) {
+  setModuleResolution (moduleResolution) {
 	  this.moduleResolution = moduleResolution;
   },
 
-  getState: function () {
+  getState () {
 	  return this.state;
   },
 
-  setState: function (state) {
+  setState (state) {
 	  this.state = (typeof state === 'undefined') ? null : JSON.parse(state);
   },
 
-  getStateFromState: function () {
+  getStateFromState () {
 	  return (this.state === null) ? null : this.state.state;
   },
 
-  getResponseFromState: function () {
+  getResponseFromState () {
     return (this.state === null) ? undefined : this.state.response;
   },
 
@@ -246,7 +266,7 @@ const QTI_PCI_API = {
    * Upon completion, call NotifyPciStateReady, passing the 
    * stringified response and state as parameters.
    */
-  getInteractionState: function () {
+  getInteractionState () {
     const obj = {
       response: null,
       state: null
@@ -265,21 +285,24 @@ const QTI_PCI_API = {
     this.NotifyPciStateReady(JSON.stringify(obj));
   },
 
-  initialize: function (pci) {
+  initialize (pci) {
     this.setDom(document.getElementById('qti3-player-pci-element'));
     this.setPci(pci);
     this.setTypeIdentifier(pci.typeIdentifier);
-    this.setProperties(pci.properties);
+    this.setProperties(this.transformProperties(pci.properties));
     this.setModuleResolution(pci.moduleResolution);
     this.setContextVariables(pci.contextVariables);
     this.setTemplateVariables(pci.templateVariables);
+    this.setStylesheets(pci.stylesheets);
+    this.setCatalogInfo(pci.catalogInfo);
     this.setBoundTo(pci.boundTo);
     this.setStatus(pci.status)
 
     this.trackResize(this.getDom());
     this.trackQtiInteractionChanged(this.getDom());
+    this.injectStylesheets();
     this.injectClassAttribute();
-	  this.injectMarkup();
+    this.injectMarkup();
     this.launchPci(
       this.getTypeIdentifier(), 
       this.getDom(), 
@@ -293,13 +316,13 @@ const QTI_PCI_API = {
     );
   },
 
-  injectClassAttribute: function () {
+  injectClassAttribute () {
     if (this.getPci().classAttribute.length == 0) return
     let wrapperEl = document.getElementById('qti3-player-pci-wrapper');
     wrapperEl.classList.add(this.getPci().classAttribute);
   },
 
-  injectMarkup: function () {
+  injectMarkup () {
     this.getDom().innerHTML =
       `<div
         id="qti3-player-pci-markup"
@@ -307,16 +330,53 @@ const QTI_PCI_API = {
        >${this.getPci().markup}</div>`;
   },
 
-  getModuleDependencies: function () {
+  injectStylesheets () {
+    const stylesheets = this.getStylesheets()
+    if (stylesheets === null) return
+    stylesheets.forEach((stylesheet) => {
+      if (!stylesheet.hasOwnProperty('css')) return
+      // Stylesheet css property is base64.  Decode it.
+      const cssText = this.decodeBase64ToBytes(stylesheet.css)
+      const style = document.createElement('style')
+      style.innerHTML = `${cssText}`
+      document.head.appendChild(style)
+    })
+  },
+
+  /**
+   * @description Transform the given properties object into a new object
+   * containing the same keys, but with base64-decoded values.
+   * @param {Object} properties
+   * @return {Object} transformed properties object with decoded values
+   */
+  transformProperties (properties) {
+    const props = {}
+    for (const [key, value] of Object.entries(properties)) {
+      props[`${key}`] = `${this.decodeBase64ToBytes(value)}`
+    }
+	  return props
+  },
+
+  decodeBase64ToBytes (base64) {
+    const textDecoder = new TextDecoder()
+    return textDecoder.decode(this.base64ToBytes(base64))
+  },
+
+  base64ToBytes (base64) {
+    const binString = atob(base64)
+    return Uint8Array.from(binString, (m) => m.codePointAt(0))
+  },
+
+  getModuleDependencies () {
     // Init qtiCustomInteractionContext as the first dependency
-    let dependencies = ['qtiCustomInteractionContext'];
+    let dependencies = ['qtiCustomInteractionContext']
 
-    const paths = this.getModuleResolution().paths;
+    const paths = this.getModuleResolution().paths
     for (let property in paths) {
-      dependencies.push(property);
-    };
+      dependencies.push(property)
+    }
 
-    return dependencies;
+    return dependencies
   },
 
   /**
@@ -333,7 +393,7 @@ const QTI_PCI_API = {
    * @param {Object} boundTo The response variable this PCI is bound to and its value
    * @param {String} status Item lifecycle status; e.g., 'interacting'
    */
-  launchPci: function (
+  launchPci (
       typeIdentifier,
       dom,
       responseIdentifier,
@@ -374,7 +434,7 @@ const QTI_PCI_API = {
     });
   },
 
-  NotifyPciChildLoaded: function () {
+  NotifyPciChildLoaded () {
     if (self == top) return;
 
     // Extract the identifier qs param
@@ -384,7 +444,7 @@ const QTI_PCI_API = {
     window.parent.postMessage({ message: 'PciChildLoaded', identifier: this.getResponseIdentifier(), success: true },'*');
   },
 
-  NotifyPciReady: function (instance, state) {
+  NotifyPciReady (instance, state) {
     this.setInstance(instance);
 
     if (self == top) return;
@@ -397,7 +457,7 @@ const QTI_PCI_API = {
     window.parent.postMessage({ message: 'PciReady', identifier: this.getResponseIdentifier(), width: computedWidth, height: computedHeight, success: true },'*');
   },
 
-  NotifyPciDone: function (instance, response, state, status) {
+  NotifyPciDone (instance, response, state, status) {
     if (self == top) return;
 
     const stringifiedState = JSON.stringify({
@@ -408,12 +468,12 @@ const QTI_PCI_API = {
     window.parent.postMessage({ message: 'PciDone', identifier: this.getResponseIdentifier(), state: stringifiedStateObject, status: status, success: true },'*');
   },
 
-  NotifyPciStateReady: function(stringifiedStateObject) {
+  NotifyPciStateReady (stringifiedStateObject) {
     if (self == top) return;
     window.parent.postMessage({ message: 'PciGetState_Reply', identifier: this.getResponseIdentifier(), state: stringifiedStateObject, success: true },'*');
   },
 
-  NotifyPciInteractionChanged: function(valid, value) {
+  NotifyPciInteractionChanged (valid, value) {
     if (self == top) return;
 
     const stringifiedState = JSON.stringify({
@@ -430,7 +490,7 @@ const QTI_PCI_API = {
    * @method getQueryParameterByName
    * @param {String} name The name of the paramter to get from the URL.
    */
-  getQueryParameterByName: function (name) {
+  getQueryParameterByName (name) {
     let regex = new RegExp("[\\?&]" + name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]') + '=([^&#]*)');
     let results = regex.exec(window.location.search);
 
@@ -439,7 +499,7 @@ const QTI_PCI_API = {
     return decodeURIComponent(results[1].replace(/\+/g, " "));
   },
 
-  bindWindowEventListener: function (element, eventName, eventHandler) {
+  bindWindowEventListener (element, eventName, eventHandler) {
     if (element.addEventListener) {
       element.addEventListener(eventName, eventHandler, false);
     } else if (element.attachEvent) {
@@ -448,7 +508,7 @@ const QTI_PCI_API = {
     }
   },
 
-  trackResize: function (element) {
+  trackResize (element) {
     // create a mutation observer instance
     let observer = new MutationObserver(function(mutations) {
       mutations.forEach(function(mutation) {
@@ -475,12 +535,12 @@ const QTI_PCI_API = {
     });
   },
 
-  trackQtiInteractionChanged: function (domElement) {
+  trackQtiInteractionChanged (domElement) {
     this.onQtiInteractionChanged = this.onQtiInteractionChangedHandler.bind(this);
     domElement.addEventListener('qti-interaction-changed', this.onQtiInteractionChanged);
   },
 
-  onQtiInteractionChangedHandler: function(event) {
+  onQtiInteractionChangedHandler (event) {
     event.preventDefault();
 
     if (typeof event.detail === 'undefined') {

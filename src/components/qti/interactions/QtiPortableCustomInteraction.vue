@@ -27,6 +27,8 @@
  * qti-interaction-markup [1]
  * qti-template-variable [0..unbounded]
  * qti-context-variable [0..unbounded]
+ * qti-stylesheet [0..unbounded]
+ * qti-catalog-info [0..1]
  */
 import Vue from 'vue'
 import { store } from '@/store/store'
@@ -103,7 +105,6 @@ export default {
       isValidResponse: true,
       isQtiValid: true,
       pciModuleResolver: null,
-
       loadIframeHandler: null,
       renderer: '',
       classAttribute: '',
@@ -113,6 +114,8 @@ export default {
       configuration: null,
       templateVariables: [],
       contextVariables: [],
+      stylesheets: [],
+      catalogInfoNode: null,
       uniqueId: null,
       pciIframe: null,
       isReady: false,
@@ -303,8 +306,104 @@ export default {
         })
     },
 
-    validateChildren () {
-      // No validation.  Save off our children.
+    /**
+     * @description Basic validation of the children.
+     */
+     validateChildren () {
+      if (!this.$slots.default) return
+
+      // eslint-disable-next-line
+      let hasPrompt = false
+      // eslint-disable-next-line
+      let hasMarkup = false
+      // eslint-disable-next-line
+      let hasModules = false
+      // eslint-disable-next-line
+      let hasContextVariable = false
+      // eslint-disable-next-line
+      let hasTemplateVariable = false
+      // eslint-disable-next-line
+      let hasStylesheet = false
+      // eslint-disable-next-line
+      let hasCatalogInfo = false
+
+      this.$slots.default.forEach((slot) => {
+        if (qtiAttributeValidation.isValidSlot(slot)) {
+          // Only the following permitted:
+          //
+          // qti-prompt [0-1]
+          // qti-interaction-modules [0-1]
+          // qti-interaction-markup [0-1]
+          // qti-template-variable [0-*]
+          // qti-context-variable [0-*]
+          // qti-stylesheet [0-*]
+          // qti-catalog-info [0-1]
+          //
+          if (slot.componentOptions.tag === 'qti-prompt') {
+            if (hasMarkup || hasModules || hasContextVariable || hasTemplateVariable || hasStylesheet || hasCatalogInfo) {
+              throw new QtiValidationException('Invalid element order. qti-prompt must be the first element')
+            }
+
+            if (!hasPrompt) return hasPrompt = true
+
+            throw new QtiValidationException('Maximum of 1 qti-prompt element permitted')
+          }
+
+          if (slot.componentOptions.tag === 'qti-interaction-modules') {
+            if (hasMarkup || hasContextVariable || hasTemplateVariable || hasStylesheet || hasCatalogInfo) {
+              throw new QtiValidationException('Invalid element order: qti-interaction-modules')
+            }
+
+            if (!hasModules) return hasModules = true
+
+            throw new QtiValidationException('Maximum of 1 qti-interaction-modules element permitted')
+          }
+
+          if (slot.componentOptions.tag === 'qti-interaction-markup') {
+            if (hasContextVariable || hasTemplateVariable || hasStylesheet || hasCatalogInfo) {
+              throw new QtiValidationException('Invalid element order: qti-interaction-markup')
+            }
+
+            if (!hasMarkup) return hasMarkup = true
+
+            throw new QtiValidationException('Maximum of 1 qti-interaction-markup element permitted')
+          }
+
+          if (slot.componentOptions.tag === 'qti-template-variable') {
+            if (hasContextVariable || hasStylesheet || hasCatalogInfo) {
+              throw new QtiValidationException('Invalid element order: qti-template-variable')
+            }
+
+            return hasTemplateVariable = true
+          }
+
+          if (slot.componentOptions.tag === 'qti-context-variable') {
+            if (hasStylesheet || hasCatalogInfo) {
+              throw new QtiValidationException('Invalid element order: qti-context-variable')
+            }
+
+            return hasContextVariable = true
+          }
+
+          if (slot.componentOptions.tag === 'qti-stylesheet') {
+            if (hasCatalogInfo) {
+              throw new QtiValidationException('Invalid element order: qti-stylesheet')
+            }
+
+            return hasStylesheet = true
+          }
+
+          if (slot.componentOptions.tag === 'qti-catalog-info') {
+            if (!hasCatalogInfo) return hasCatalogInfo = true
+
+            throw new QtiValidationException('Maximum of 1 qti-catalog-info element permitted')
+          }
+
+          throw new QtiValidationException('Node is not permitted inside QtiPortableCustomInteraction: "' + slot.type.name + '"')
+        }
+      })
+
+      // Save off our children.
       this.processChildren()
 
       // Restore priorState - if any
@@ -317,14 +416,25 @@ export default {
 
     processChildren () {
       this.$children.forEach((node) => {
-        if (node.$vnode.componentOptions.tag === 'qti-interaction-markup') {
-          this.markup = node.getMarkup()
-        } else if (node.$vnode.componentOptions.tag === 'qti-interaction-modules') {
-          this.modulesNode = node
-        } else if (node.$vnode.componentOptions.tag === 'qti-template-variable') {
-          this.templateVariables.push(node)
-        } else if (node.$vnode.componentOptions.tag === 'qti-context-variable') {
-          this.contextVariables.push(node)
+        switch (node.$vnode.componentOptions.tag) {
+          case 'qti-interaction-markup':
+            this.markup = node.getMarkup()
+            break
+          case 'qti-interaction-modules':
+            this.modulesNode = node
+            break
+          case 'qti-template-variable':
+            this.templateVariables.push(node)
+            break
+          case 'qti-context-variable':
+            this.contextVariables.push(node)
+            break
+          case 'qti-stylesheet':
+          this.stylesheets.push(node)
+            break
+          case 'qti-catalog-info':
+            this.catalogInfoNode = node
+            break            
         }
       })
     },
@@ -421,7 +531,7 @@ export default {
       const properties = {}
       for (let key in pci.dataset) {
         if ('uniqueId' !== key) {
-          properties[key] = pci.dataset[key]
+          properties[key] = qtiProcessing.encodeBytesToBase64(pci.dataset[key])
         }
       }
 
@@ -450,6 +560,20 @@ export default {
         templateVariablesObject[this.templateVariables[i].getIdentifier()] = this.templateVariables[i].evaluate()
       }
       return templateVariablesObject
+    },
+
+    getStylesheets () {
+      let stylesheets = []
+      for (let i=0; i<this.stylesheets.length; i++) {
+        const node = this.stylesheets[i]
+        const cssBase64 = qtiProcessing.encodeBytesToBase64(node.getRawCss())
+        stylesheets.push({ href: node.getHref(), type: node.getType(), css: `${cssBase64}`})
+      }
+      return stylesheets
+    },
+
+    getCatalogInfo () {
+      return this.catalogInfoNode
     },
 
     getModules () {
@@ -512,6 +636,8 @@ export default {
         boundTo: this.getResponseVariable(),
         templateVariables: this.getTemplateVariables(),
         contextVariables: this.getContextVariables(),
+        stylesheets: this.getStylesheets(),
+        catalogInfo: this.getCatalogInfo(),
         module: this.module,
         modules: this.getModules(),
         moduleResolution: this.getConfiguration(),
@@ -616,9 +742,8 @@ export default {
       // Pull any prior interaction state.
       this.priorState = this.getPriorState(this.responseIdentifier)
       this.$slots.prompt = this.getPrompt(this.$slots)
-
-      this.cardinality = this.getCardinality();
-      this.baseType = this.getBaseType();
+      this.cardinality = this.getCardinality()
+      this.baseType = this.getBaseType()
       this.uniqueId = this.createId()
     } catch (err) {
       this.isQtiValid = false
