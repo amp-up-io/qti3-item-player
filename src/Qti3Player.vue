@@ -25,9 +25,13 @@ import { XmlFilters } from '@/shared/helpers/XmlFilters'
 import Swal from 'sweetalert2'
 import CatalogDialog from '@/shared/components/catalog/CatalogDialog'
 import QtiAssessmentItem from '@/components/qti/QtiAssessmentItem'
+import AmpAudio from '@/components/qti/html/AmpAudio.vue'
+import AmpVideo from '@/components/qti/html/AmpVideo.vue'
 
 Vue.component('catalog-dialog', CatalogDialog)
 Vue.component('qti-assessment-item', QtiAssessmentItem)
+Vue.component('amp-audio', AmpAudio)
+Vue.component('amp-video', AmpVideo)
 
 export default {
   name: 'Qti3Player',
@@ -91,8 +95,8 @@ export default {
       xml = this.xmlFilters.filterCdata(xml)
       // Hack 2: Replace <style> tags with <amp-style>
       xml = this.xmlFilters.filterStyle(xml)
-      // Hack 3: Replace <audio> tags with <amp-audio>
-      xml = this.xmlFilters.filterAudio(xml)
+      // Hack 3: Replace <audio> tags with <amp-audio>, <video> tags with <amp-video>
+      xml = this.xmlFilters.filterMedia(xml)
 
       return {
         template: '<div id="qti-item-container">' + xml + '</div>'
@@ -584,6 +588,9 @@ export default {
   --order-target-active-color: var(--foreground);
   --order-target-active-bgc: #bbcef1;
   --order-placeholder-color: #d3d5d7;
+  /* Audio/Video slider */
+  --slider-track: var(--gray);
+  --slider-focus-track: #86b7fe;
 }
 
 /* Default foreground / background colors */
@@ -1172,6 +1179,8 @@ export default {
   --order-target-active-color: var(--darker);
   --order-target-active-bgc: #d8ade6;
   --order-placeholder-color: #bbcef1;
+  /* Audio/Video slider */
+  --slider-focus-track: rgba(13, 110, 253, 0.5);
 }
 
 .qti3-player-color-cyanblack {
@@ -1232,6 +1241,8 @@ export default {
   --order-target-active-color: var(--darker);
   --order-target-active-bgc: #d8ade6;
   --order-placeholder-color: var(--foreground);
+  /* Audio/Video slider */
+  --slider-focus-track: rgba(13, 110, 253, 0.95);
 }
 
 .qti3-player-color-blackcream {
