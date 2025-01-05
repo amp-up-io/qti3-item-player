@@ -21,6 +21,7 @@ import QtiGraphicGapMatchInteraction from '@/components/qti/interactions/QtiGrap
 import QtiHotspotInteraction from '@/components/qti/interactions/QtiHotspotInteraction'
 import QtiHottextInteraction from '@/components/qti/interactions/QtiHottextInteraction'
 import QtiMatchInteraction from '@/components/qti/interactions/QtiMatchInteraction'
+import QtiMediaInteraction from '@/components/qti/interactions/QtiMediaInteraction'
 import QtiOrderInteraction from '@/components/qti/interactions/QtiOrderInteraction'
 import QtiPortableCustomInteraction from '@/components/qti/interactions/QtiPortableCustomInteraction'
 import QtiFeedbackInline from '@/components/qti/body/QtiFeedbackInline'
@@ -29,10 +30,6 @@ import QtiRubricBlock from '@/components/qti/body/QtiRubricBlock'
 import QtiTemplateInline from '@/components/qti/body/QtiTemplateInline'
 import QtiTemplateBlock from '@/components/qti/body/QtiTemplateBlock'
 import QtiPrintedVariable from '@/components/qti/body/QtiPrintedVariable'
-/*
-import Img from '@/components/html/Img'
-import AmpAudio from '@/components/html/AmpAudio'
-*/
 
 const qtiAttributeValidation = new QtiAttributeValidation()
 
@@ -49,6 +46,7 @@ Vue.component('qti-graphic-gap-match-interaction', QtiGraphicGapMatchInteraction
 Vue.component('qti-hotspot-interaction', QtiHotspotInteraction)
 Vue.component('qti-hottext-interaction', QtiHottextInteraction)
 Vue.component('qti-match-interaction', QtiMatchInteraction)
+Vue.component('qti-media-interaction', QtiMediaInteraction)
 Vue.component('qti-order-interaction', QtiOrderInteraction)
 Vue.component('qti-portable-custom-interaction', QtiPortableCustomInteraction)
 Vue.component('qti-feedback-inline', QtiFeedbackInline)
@@ -57,10 +55,7 @@ Vue.component('qti-rubric-block', QtiRubricBlock)
 Vue.component('qti-template-inline', QtiTemplateInline)
 Vue.component('qti-template-block', QtiTemplateBlock)
 Vue.component('qti-printed-variable', QtiPrintedVariable)
-/*
-Vue.component('amp-img', Img)
-Vue.component('amp-audio', AmpAudio)
-*/
+
 Vue.component('amp-style', {
   render: function (createElement) {
     return createElement(

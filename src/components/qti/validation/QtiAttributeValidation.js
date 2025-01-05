@@ -315,6 +315,14 @@ export default class QtiAttributeValidation {
     }
   }
 
+  validateMaxMinPlays (maxPlays, minPlays) {
+    let maxPlaysValue = this.validatePositiveIntegerAttribute('max-plays', maxPlays)
+    let minPlaysValue = this.validatePositiveIntegerAttribute('min-plays', minPlays)
+    if ((maxPlaysValue > 0) && (minPlaysValue > maxPlaysValue)) {
+      throw new QtiValidationException('Invalid min-plays attribute "' + minPlays + '". Must be less than or equal to max-plays attribute when max-plays attribute is greater than 0')
+    }
+  }
+
   validatePattern (attributeName, pattern) {
     if (typeof pattern === 'undefined') {
       return null
