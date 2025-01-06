@@ -1,6 +1,7 @@
 export class CatalogAudioPlayer {
 
   constructor (element) {
+    // Raw <audio> element
     this.audioElement = element
     this.isPaused = true
     // Initialize the event handler function references
@@ -18,22 +19,46 @@ export class CatalogAudioPlayer {
   }
 
   create () {
-    this.createAudioTemplate()
+    this.createAudioTemplate(this.isNestedAmpAudioElement(this.audioElement))
     return this
   }
 
-  createAudioTemplate () {
-    this.outerWrapper = document.createElement('div')
-    this.outerWrapper.classList.add('cat-audio__wrapper')
-    this.wrapper = document.createElement('div')
-    this.wrapper.classList.add('cat-audio__holder')
-    this.audioElement.parentNode.appendChild(this.outerWrapper)
-    this.audioElement.setAttribute('tabindex', '-1')
-    this.outerWrapper.appendChild(this.wrapper)
-    this.wrapper.appendChild(this.audioElement)
+  isNestedAmpAudioElement (audioElement) {
+    return audioElement.parentNode.classList.contains('amp-audio__holder')
+  }
+
+  createAudioTemplate (isNestedAmpAudioElement) {
+    this.outerWrapper = 
+        (isNestedAmpAudioElement)
+          ? this.createNestedAmpAudioWrapper(this.audioElement)
+          : this.createAudioWrapper(this.audioElement)
+
     this.playerContainer = this.createPlayerContainer()
     this.outerWrapper.appendChild(this.playerContainer)
     this.addListeners()
+  }
+
+  createNestedAmpAudioWrapper (audioElement) {
+    const outerWrapper = audioElement.parentNode.parentNode
+    outerWrapper.classList.add('cat-audio__wrapper')
+    // Remove AmpAudio controls and captions container
+    const captionsContainer = outerWrapper.querySelector('.amp-audio-captions__container')
+    if (captionsContainer != null) captionsContainer.remove()
+    const audioContainer = outerWrapper.querySelector('.amp-audio__container')
+    if (audioContainer != null) audioContainer.remove()
+    return outerWrapper;
+  }
+
+  createAudioWrapper (audioElement) {
+    const outerWrapper = document.createElement('div')
+    outerWrapper.classList.add('cat-audio__wrapper')
+    const wrapper = document.createElement('div')
+    wrapper.classList.add('cat-audio__holder')
+    audioElement.parentNode.appendChild(outerWrapper)
+    audioElement.setAttribute('tabindex', '-1')
+    outerWrapper.appendChild(wrapper)
+    wrapper.appendChild(audioElement)
+    return outerWrapper
   }
 
   createPlayerContainer () {
