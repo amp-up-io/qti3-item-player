@@ -2,7 +2,7 @@
   <div ref="dialog" class="qti3-player-cat-dialog" role="dialog" style="display:none;">
     <div ref="header" class="qti3-player-cat-dialog-header">
       <span class="qti3-player-cat-dialog-term">{{content.term}}</span>
-      <button ref="close" type="button" class="qti3-player-cat-dialog-close" aria-label="Close">×</button>
+      <button ref="close" type="button" class="qti3-player-cat-dialog-close" tabindex="0" aria-label="Close">×</button>
     </div>
     <div ref="body" class="qti3-player-cat-dialog-body">
     </div>
@@ -41,7 +41,11 @@ export default {
        * The tabs property is for keeping a handle on the tabs
        * control of this Dialog.
        */
-      tabs: null
+      tabs: null,
+      /*
+       * Maintain a list of focusableElements for keyboard tabbing
+       */
+      focusableElements: []
     }
   },
 
@@ -60,6 +64,10 @@ export default {
       this.setDialogContent(content)
       // Create Tab structure
       this.createTabs(this.content)
+      // Create FocusableElements
+      this.focusableElements = this.tabs.getFocusableElements()
+      // Insert the close button
+      this.focusableElements.unshift(this.$refs.close)
     },
 
     /**
@@ -121,10 +129,14 @@ export default {
       }
     },
 
+    focusCloseButton () {
+      this.$refs.close.focus()
+    },
+
     show () {
       this.state.hidden = false
       this.render()
-      this.focusFirstTab()
+      this.focusCloseButton()
 
       // Center dialog if first time showing
       if (!this.state.isShown) {
@@ -176,6 +188,7 @@ export default {
       this.$refs.header.addEventListener('touchstart', this.onTouchStart.bind(this))
       this.$refs.header.addEventListener('touchmove',  this.onTouchMove.bind(this))
       this.$refs.header.addEventListener('touchend',   this.onTouchEnd.bind(this))
+      this.$refs.dialog.addEventListener('keydown',      this.onKeyDown.bind(this))
       this.$refs.close.addEventListener('click',       this.hide.bind(this))
       this.$refs.close.addEventListener('touchend',    this.hide.bind(this))
     },
@@ -188,6 +201,7 @@ export default {
       this.$refs.header.removeEventListener('touchstart', this.onTouchStart)
       this.$refs.header.removeEventListener('touchmove',  this.onTouchMove)
       this.$refs.header.removeEventListener('touchend',   this.onTouchEnd)
+      this.$refs.dialog.removeEventListener('keydown',      this.onKeyDown)
       this.$refs.close.removeEventListener('click',       this.hide)
       this.$refs.close.removeEventListener('touchend',    this.hide)
     },
@@ -236,6 +250,78 @@ export default {
     onTouchEnd (event) {
       event.preventDefault()
       this.state.dragging = false
+    },
+
+    onKeyDown (event) {
+      if (event.key === 'Tab') {
+        event.preventDefault()
+        const currentFocused = document.activeElement
+        const currentIndex = this.focusableElements.indexOf(currentFocused)
+
+        // Tab forward
+        if (!event.shiftKey) {
+          let nextIndex = currentIndex + 1
+
+          if (nextIndex >= this.focusableElements.length) {
+            // focus close button
+            this.focusCloseButton()
+            return
+          }
+
+          if (currentFocused.classList.contains('cat-tab-button') &&
+              currentFocused.getAttribute('aria-selected') === 'false') {
+            // focus next tab (if any) or the Close Button (if no next tab)
+            const el = this.findNextTabElement(currentIndex)
+            if (el === null)
+              this.focusCloseButton()
+            else
+              el.focus()
+            return
+          }
+
+          const nextFocusableElement = this.focusableElements[nextIndex]
+          nextFocusableElement.focus()
+          return
+        }
+
+        // Tab Backward
+        let nextIndex = currentIndex - 1
+        
+        if (nextIndex < 0) {
+          // focus last tab
+          this.tabs.focusLastTab()
+          return
+        }
+
+        if (currentFocused.classList.contains('cat-tab-button')) {
+          // focus previous tab (if any) or the Close Button (if no previous tab)
+          const el = this.findPrevTabElement(currentIndex)
+          if (el === null)
+            this.focusCloseButton()
+          else
+            el.focus()
+          return
+        }
+
+        const nextFocusableElement = this.focusableElements[nextIndex]
+        nextFocusableElement.focus()
+      }
+    },
+
+    findNextTabElement (currentIndex) {
+      for (let i=currentIndex+1; i < this.focusableElements.length; i++) {
+        const focusableElement = this.focusableElements[i]
+        if (focusableElement.classList.contains('cat-tab-button')) return focusableElement
+      }
+      return null
+    },
+
+    findPrevTabElement (currentIndex) {
+      for (let i=currentIndex-1; i > 0; i--) {
+        const focusableElement = this.focusableElements[i]
+        if (focusableElement.classList.contains('cat-tab-button')) return focusableElement
+      }
+      return null
     }
 
   },
@@ -303,6 +389,7 @@ button:not(:disabled) {
 
 button.qti3-player-cat-dialog-close {
   -webkit-appearance: button;
+  appearance: button;
   padding: 0;
   margin: .1rem 0 0 auto;
   background-color: transparent;
@@ -320,7 +407,7 @@ button.qti3-player-cat-dialog-close {
 }
 
 .qti3-player-cat-dialog-close:focus {
-  border-color: var(--foreground);
+  border: 1px solid var(--foreground);
 }
 
 .qti3-player-cat-dialog-header .qti3-player-cat-dialog-close {

@@ -3,6 +3,7 @@ export class CatalogAudioPlayer {
   constructor (element) {
     // Raw <audio> element
     this.audioElement = element
+    this.playPauseButton = null
     this.isPaused = true
     // Initialize the event handler function references
     this.onPlayPauseClick = this.playPauseClickHandler.bind(this)
@@ -64,8 +65,17 @@ export class CatalogAudioPlayer {
   createPlayerContainer () {
     const container = document.createElement('div')
     container.classList.add('cat-audio__container')
-    container.appendChild(this.createPlayPauseButton())
+    this.setPlayPauseButton(this.createPlayPauseButton())
+    container.appendChild(this.getPlayPauseButton())
     return container
+  }
+
+  getPlayPauseButton () {
+    return this.playPauseButton
+  }
+
+  setPlayPauseButton (button) {
+    this.playPauseButton = button
   }
 
   createPlayPauseButton () {

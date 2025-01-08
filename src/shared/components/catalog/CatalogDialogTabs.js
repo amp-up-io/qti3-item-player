@@ -8,6 +8,7 @@ export class CatalogDialogTabs {
     this.tabElements = []
     this.tabPanelElements = []
     this.audioPlayers = []
+    this.focusableElements = []
     // Initialize the event handler function references
     this.onTabClick = this.tabClickHandler.bind(this)
     this.onKeyDown = this.keydownHandler.bind(this)
@@ -126,6 +127,7 @@ export class CatalogDialogTabs {
   createTabButton (tabId, tabPanelId, tabLabel, isSelected=false) {
     return `<button type="button"
                 role="tab"
+                class="cat-tab-button"
                 aria-selected="${isSelected}"
                 aria-controls="${tabPanelId}"
                 id="${tabId}">${tabLabel}</button>`
@@ -137,7 +139,7 @@ export class CatalogDialogTabs {
 
     return `<div tabindex="${tabIndex}"
                 role="tabpanel"
-                class="${hidden}"
+                class="cat-tab-panel ${hidden}"
                 id="${tabPanelId}"
                 aria-labelledby="${tabId}">${tabContent}</div>`
   }
@@ -159,6 +161,10 @@ export class CatalogDialogTabs {
     }
 
     return obj
+  }
+
+  getFocusableElements () {
+    return this.focusableElements
   }
 
   tabList (hasGlossary, hasKeyword, hasIllustration) {
@@ -186,8 +192,17 @@ export class CatalogDialogTabs {
       this.addListeners(this.tabElements[index], this.tabPanelElements[index], index)
     }
 
-    // Override native audio with custom audio player
-    this.bindTabAudioPlayers()
+    this.focusableElements = []
+
+    for (let index=0; index < this.tabPanelElements.length; ++index) {
+      this.focusableElements.push(this.tabElements[index])
+      this.focusableElements.push(this.tabPanelElements[index])
+      const playerButtons = this.bindTabPanelAudioPlayers(this.tabPanelElements[index])
+      for (let i=0; i < playerButtons.length; i++) {
+        this.focusableElements.push(playerButtons[i])
+      }
+    }
+
   }
 
   unbindTabListEvents () {
@@ -195,12 +210,17 @@ export class CatalogDialogTabs {
     this.unbindTabAudioPlayers()
   }
 
-  bindTabAudioPlayers() {
-    const audioList = this.element.querySelectorAll('audio')
+  bindTabPanelAudioPlayers(panelElement) {
+    const audioButtons = []
+    const audioList = panelElement.querySelectorAll('audio')
     audioList.forEach((audio) => {
         const player = new CatalogAudioPlayer(audio).create()
+        // Get the button
+        const btn = player.getPlayPauseButton()
+        if (btn !== null) audioButtons.push(btn)
         this.audioPlayers.push(player)
       }, this)
+    return audioButtons
   }
 
   unbindTabAudioPlayers () {
@@ -239,7 +259,7 @@ export class CatalogDialogTabs {
       case this.constants.keys.END:
         event.preventDefault()
         this.focusLastTab()
-        break;
+        break
       case this.constants.keys.HOME:
         event.preventDefault()
         this.focusFirstTab()
@@ -247,7 +267,7 @@ export class CatalogDialogTabs {
       case this.constants.keys.UP:
       case this.constants.keys.DOWN:
         this.switchTabOnArrowPress(event)
-        break;
+        break
       default:
     }
   }
@@ -302,7 +322,9 @@ export class CatalogDialogTabs {
     // Get the value of aria-controls (which is an ID)
     let controls = tab.getAttribute('aria-controls')
     // Remove hidden class from tab panel to make it visible
-    document.getElementById(controls).classList.remove('hidden')
+    const panelElement = document.getElementById(controls)
+    panelElement.setAttribute('tabindex', '0')
+    panelElement.classList.remove('hidden')
     // Set focus when required
     if (setFocus) tab.focus()
   }
@@ -315,12 +337,12 @@ export class CatalogDialogTabs {
 
     // deselect all tabs
     this.tabElements.forEach((tab) => {
-        //tab.setAttribute('tabindex', '-1')
         tab.setAttribute('aria-selected', 'false')
       }, this)
 
     // hide all panels
     this.tabPanelElements.forEach((panel) => {
+        panel.setAttribute('tabindex', '-1')
         panel.classList.add('hidden')
       }, this)
   }
