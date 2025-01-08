@@ -683,7 +683,7 @@ QTI 3 Player has built-in support for 14 foreground / background color combinati
 
 ## Roadmap
 
-The QTI3 Item Player 2022-2023 development roadmap includes all features and capabilities included in QTI 3 Delivery System "Basic" and "Advanced" conformance + PCI support.
+The QTI3 Item Player 2022-2025 development roadmap includes all features and capabilities included in QTI 3 Delivery System "Basic" and "Advanced" conformance + PCI support.
 
 - [x] Support for the 14 Standard Color Combinations/Themes
 - [x] Support for Template Processing and all Template Rules
@@ -704,10 +704,12 @@ The QTI3 Item Player 2022-2023 development roadmap includes all features and cap
 - [x] QtiHotspot Interaction Support
 - [x] QtiOrder Interaction Support
 - [x] QtiPortableCustom Interaction Support
+- [x] QtiMediaInteraction Support
 - [x] Scoring API Examples
 - [x] Support for Interaction "Review" Status
-- [ ] Improved Audio Player
-- [ ] Improved Video Player
+- [x] Improved Audio Player
+- [x] Improved Video Player
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
