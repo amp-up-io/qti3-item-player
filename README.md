@@ -704,6 +704,7 @@ The QTI3 Item Player 2022-2025 development roadmap includes all features and cap
 - [x] QtiHotspot Interaction Support
 - [x] QtiOrder Interaction Support
 - [x] QtiPortableCustom Interaction Support
+- [x] QtiSelectPoint Interaction Support
 - [x] QtiMediaInteraction Support
 - [x] Scoring API Examples
 - [x] Support for Interaction "Review" Status
