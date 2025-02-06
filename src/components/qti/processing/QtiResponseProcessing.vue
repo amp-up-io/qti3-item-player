@@ -112,7 +112,7 @@ export default {
         xml = this.mapResponseXml
       } else if (isMapResponsePoint.test(this.template)) {
         console.log('[ResponseProcessing][template]', 'MAP_RESPONSE_POINT')
-        xml = this.mapResponsePoint
+        xml = this.mapResponsePointXml
       }
 
       return {

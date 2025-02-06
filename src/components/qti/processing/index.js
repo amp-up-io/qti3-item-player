@@ -23,6 +23,7 @@ import QtiDefault from './expressions/QtiDefault'
 import QtiVariable from './expressions/QtiVariable'
 import QtiMatch from './expressions/QtiMatch'
 import QtiMapResponse from './expressions/QtiMapResponse'
+import QtiMapResponsePoint from './expressions/QtiMapResponsePoint'
 import QtiIsNull from './expressions/QtiIsNull'
 import QtiAnd from './expressions/QtiAnd'
 import QtiOr from './expressions/QtiOr'
@@ -42,6 +43,7 @@ import QtiIntegerModulus from './expressions/QtiIntegerModulus'
 import QtiIntegerToFloat from './expressions/QtiIntegerToFloat'
 import QtiProduct from './expressions/QtiProduct'
 import QtiIndex from './expressions/QtiIndex'
+import QtiInside from './expressions/QtiInside'
 import QtiMember from './expressions/QtiMember'
 import QtiDelete from './expressions/QtiDelete'
 import QtiSubstring from './expressions/QtiSubstring'
@@ -90,6 +92,7 @@ Vue.component('qti-default', QtiDefault)
 Vue.component('qti-variable', QtiVariable)
 Vue.component('qti-match', QtiMatch)
 Vue.component('qti-map-response', QtiMapResponse)
+Vue.component('qti-map-response-point', QtiMapResponsePoint)
 Vue.component('qti-is-null', QtiIsNull)
 Vue.component('qti-and', QtiAnd)
 Vue.component('qti-or', QtiOr)
@@ -104,6 +107,7 @@ Vue.component('qti-equal-rounded', QtiEqualRounded)
 Vue.component('qti-field-value', QtiFieldValue)
 Vue.component('qti-random-float', QtiRandomFloat)
 Vue.component('qti-random-integer', QtiRandomInteger)
+Vue.component('qti-inside', QtiInside)
 Vue.component('qti-integer-divide', QtiIntegerDivide)
 Vue.component('qti-integer-modulus', QtiIntegerModulus)
 Vue.component('qti-integer-to-float', QtiIntegerToFloat)

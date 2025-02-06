@@ -84,7 +84,8 @@ export default class QtiProcessing {
       'qti-lcm',
       'qti-stats-operator',
       'qti-power',
-      'qti-any-n'
+      'qti-any-n',
+      'qti-inside'
     ]
   }
 
@@ -298,6 +299,93 @@ export default class QtiProcessing {
   }
 
   /**
+   * This expression looks up the value of a response variable that must be of base-type point, 
+   * and transforms it using the associated qti-area-mapping.
+   * @param {Object} declaration 
+   * @returns {Number} constrained mapped value
+   */
+  mapResponsePoint (declaration) {
+    if (this.isNullValue(declaration.value)) {
+      return declaration.areaMapping.getDefaultValue()
+    }
+
+    const areaMapEntries = declaration.areaMapping.getValue()
+    const len = areaMapEntries.length
+
+    /*
+     * The transformation is similar to mapResponse except that
+     * the points are tested against each area in turn. When
+     * mapping containers each area can be mapped once only. For
+     * example, if the candidate identified two points that both
+     * fall in the same area then the mappedValue is still added
+     * to the calculated total just once.
+     */
+
+    if (declaration.cardinality === 'single') {
+
+      let point = this.toPointObject(declaration.value)
+
+      for (let i = 0; i < len; i++) {
+        const areaMapEntry = areaMapEntries[i]
+        if (this.isPointInside(areaMapEntry.mapShape, areaMapEntry.mapCoords, point)) {
+          // Apply mapping constraints to our mappedValue and bail.
+          return declaration.areaMapping.applyConstraints(new BigNumber(areaMapEntry.mappedValue))
+        }
+      }
+
+    } else if (declaration.cardinality === 'multiple') {
+      
+      // Init a running total
+      let sum = new BigNumber(0)
+      // sourceValues is array with format ["x1 y1", "x2 y2", ... "xn yn"]
+      let sourceValues = declaration.value
+      // Clone sourceValues
+      let values = Array.from(sourceValues)
+
+      for (let i = 0; i < len; i++) {
+        const areaMapEntry = areaMapEntries[i]
+        let isMappingUnused = true
+        for (let j = 0; j < sourceValues.length; j++) {
+
+          let point = this.toPointObject(sourceValues[j])
+
+          if (this.isPointInside(areaMapEntry.mapShape, areaMapEntry.mapCoords, point)) {
+            if (isMappingUnused) {
+              sum = sum.plus(areaMapEntry.mappedValue)
+              isMappingUnused = false
+            }
+            // Remove the point from the cloned list of points
+            const pointIndex = values.indexOf(sourceValues[j])
+            if (pointIndex > -1) values.splice(pointIndex, 1)
+          }
+        }
+      }
+
+      sum = sum.plus(new BigNumber(declaration.areaMapping.getDefaultValue()).times(values.length))
+      return declaration.areaMapping.applyConstraints(sum)
+    } // end cardinality=multiple
+
+    // No key matches, bail with defaultValue
+    return declaration.areaMapping.getDefaultValue()
+  } // end mapResponsePoint
+
+  /**
+   * @description Convert a QTI point value (a string "x y") to an object.
+   * @param {String} pointString 
+   * @returns {Object} { x: <numeric x value>, y: <numeric y value> }
+   */
+  toPointObject (pointString) {
+    if (pointString === null) return null
+    if (typeof pointString !== 'string') return null
+
+    const parts = pointString.split(' ')
+    if (parts.length != 2) return null
+    const x = new BigNumber(parts[0]).toNumber()
+    const y = new BigNumber(parts[1]).toNumber()
+    return { x: x, y: y }
+  }
+
+  /**
    * @description Randomize array in-place using Durstenfeld shuffle algorithm
    * Algorithm runtime is O(n).
    * Note that the shuffle is done in-place so if you don't want to modify the original array,
@@ -400,6 +488,142 @@ export default class QtiProcessing {
     // Match on any sequence of non-whitespace characters
     const words = s.match(/\S+/g)
     return (words === null) ? 0 : words.length
+  }
+
+  /**
+   * @description Utility method to determine where or not a given Point object
+   * is within a shape container defined by a shape type and the boundary coordinates.
+   * @param {String} shape { circle | default | ellipse | poly | rect }
+   * @param {Array} coords
+   * @param {Object} point { x: x, y: y }
+   * @return {Boolean} true | false
+   */
+  isPointInside (shape, coords, point) {
+
+    const CIRCLE = {
+      COORDS_LENGTH: 3,
+      CENTER_X: 0,
+      CENTER_Y: 1,
+      RADIUS: 2,
+
+      isInside (coords, point) {
+        const x = Math.pow(point.x - coords[this.CENTER_X], 2)
+        const y = Math.pow(point.y - coords[this.CENTER_Y], 2)
+        return x + y <= Math.pow(coords[this.RADIUS], 2)
+      }
+    }
+
+    const RECT = {
+      COORDS_LENGTH: 4,
+      LEFT_X: 0,
+      TOP_Y: 1,
+      RIGHT_X: 2,
+      BOTTOM_Y: 3,
+
+      isInside (coords, point) {
+        return ((point.x >= coords[this.LEFT_X]) &&
+                (point.x <= coords[this.RIGHT_X]) &&
+                (point.y >= coords[this.TOP_Y]) &&
+                (point.y <= coords[this.BOTTOM_Y]))
+
+      }
+    }
+
+    const POLY = {
+      MINIMUM_COORDS_LENGTH: 6,
+      LEFT_X: 0,
+      TOP_Y: 1,
+      RIGHT_X: 2,
+      BOTTOM_Y: 3,
+
+      isInside (coords, point) {
+        // If the last point of poly is not the same like first one append it.
+        let co = coords
+
+        if ((co[0] != co[co.length - 2]) || (co[1] != co[co.length - 1])) {
+          // copy the array
+          let newCoords = co
+          // append 
+          newCoords.push(co[0])
+          newCoords.push(co[1])
+          co = newCoords
+        }
+        
+        // Sum the signed angles formed at the point (B) by each edge's endpoints (A, C).
+        // // If the sum is near zero, the point is outside; if not, it's inside.
+
+        // Sum of all signed angles (ABC).
+        let sum = new BigNumber(0)
+        
+        // Tested point. Second vertex (B).
+        const bx = new BigNumber(point.x).integerValue()
+        const by = new BigNumber(point.y).integerValue()
+
+        for (let i = 0; i < co.length - 3; i += 2) {
+          // First vertex (A).
+          const ax = new BigNumber(co[i]).integerValue()
+          const ay = new BigNumber(co[i + 1]).integerValue()
+          // Third vertex (B).
+          const cx = new BigNumber(co[i + 2]).integerValue()
+          const cy = new BigNumber(co[i + 3]).integerValue()
+
+          // Distance between B and C.
+          const a = (bx.minus(cx).pow(2).plus(by.minus(cy).pow(2))).sqrt()
+          //const a = Math.sqrt(Math.pow(bx - cx, 2) + Math.pow(by - cy, 2))
+          // Distance between C and A.
+          const b = (cx.minus(ax).pow(2).plus(cy.minus(ay).pow(2))).sqrt()
+          //const b = Math.sqrt(Math.pow(cx - ax, 2) + Math.pow(cy - ay, 2))
+          // Distance between a and B.
+          const c = (ax.minus(bx).pow(2).plus(ay.minus(by).pow(2))).sqrt()
+          //const c = Math.sqrt(Math.pow(ax - bx, 2) + Math.pow(ay - by, 2))
+
+          // Computes angle ABC.
+          const angle = new BigNumber(Math.acos((Math.pow(a.toNumber(), 2) - Math.pow(b.toNumber(), 2) + Math.pow(c.toNumber(), 2)) /
+                  (2 * a.toNumber() * c.toNumber())) * 180 / Math.PI)
+          // Orientation of angle. Positive: counter clockwise. Negative: clockwise.
+          const s1 = (cx.minus(bx)).times(by.minus(ay))
+          const s2 = (cy.minus(by)).times(bx.minus(ax))
+          const sign = s1.minus(s2)
+          //const sign = (cx - bx) * (by - ay) - (cy - by) * (bx - ax)
+
+          // If tested point (B) is same like first (A) or third (B) vertex, computed angle is NaN.
+          if (angle.isNaN()) {
+              return true
+          }
+
+          // Adds/removes computed angle to/from sum.
+          if (sign.gte(new BigNumber(0))) {
+            sum = sum.plus(angle)
+          } else {
+            sum = sum.minus(angle)
+          }
+        }
+
+        let bigDecimal = new BigNumber(sum)
+        // Rounds sum because of inaccuracy in computation.
+        bigDecimal = bigDecimal.dp(6, BigNumber.ROUND_HALF_UP)
+
+        // If and only if sum is zero, point is outside of polygon.
+        return !bigDecimal.isZero()
+      }
+    }
+
+    if (shape === 'circle') {
+      return CIRCLE.isInside(coords, point)
+    }
+    if (shape === 'rect') {
+      return RECT.isInside(coords, point)
+    }
+    if (shape === 'poly') {
+      return POLY.isInside(coords, point)
+    }
+    if (shape === 'default') {
+      return true
+    }
+    if (shape === 'ellipse') {
+      // This should have been flagged as unsupported during validation.
+      return false
+    }
   }
 
   /**
