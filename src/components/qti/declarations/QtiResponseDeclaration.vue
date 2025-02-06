@@ -136,11 +136,9 @@ export default {
             this.mapping = node
             break
 
-          /*
           case 'qti-area-mapping':
             this.areaMapping = node
             break
-          */
 
           default:
             throw new QtiValidationException('[' + this.$options.name + '][Unhandled Child Node]: "' + node.$el.className + '"')
