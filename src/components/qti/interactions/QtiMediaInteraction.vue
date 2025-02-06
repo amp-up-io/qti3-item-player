@@ -49,9 +49,8 @@ export default {
      * the control of the candidate (false).
      */
     autostart: {
-      required: false,
-      type: String,
-      default: 'false'
+      required: true,
+      type: String
     },
     /*
      * The min-plays attribute indicates that the media object should be played a minimum 
