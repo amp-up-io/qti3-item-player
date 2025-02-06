@@ -72,6 +72,7 @@ export default {
         case 'identifier':
         case 'directedPair':
         case 'pair':
+        case 'point':
           return this.singleValue
 
         default:
@@ -132,6 +133,7 @@ export default {
 
           case 'directedPair':
           case 'pair':
+          case 'point':
             value = qtiValueValidation.StringValue(textContent)
             break
 
