@@ -672,12 +672,18 @@ export default class QtiProcessing {
       case 'float':
       case 'duration':
       case 'boolean':
-      case 'point':
-      case 'directedPair':
-      case 'pair':
       case 'uri':
       case 'file':
         result[baseType] = value
+        return result
+
+      case 'point':
+        result[baseType] = (value) => value.split(' ').map(Number)
+        return
+
+      case 'directedPair':
+      case 'pair':
+        result[baseType] = value.split(' ')
         return result
 
       case 'intOrIdentifier':
@@ -810,7 +816,24 @@ export default class QtiProcessing {
         throw new QtiEvaluationException(`Invalid value. Found Array. Must be an Object.`)
       }
 
-      if (value[baseType] !== undefined) return value[baseType]
+      if (value[baseType] !== undefined) {
+        // Special handling for point, directedPair, pair.
+        if ((baseType === 'point') || (baseType === 'directedPair') || (baseType === 'pair')) {
+          
+          // Should be an array
+          if (!Array.isArray(value[baseType])) {
+            throw new QtiEvaluationException(`Invalid value. For baseType "${baseType}", must be an Array`)
+          }
+
+          if (value[baseType].length !== 2) {
+            throw new QtiEvaluationException(`Invalid value. For baseType "${baseType}", Array must have 2 elements`)
+          }
+          // Combine the two elements, space-separated
+          return `${value[baseType][0]} ${value[baseType][1]}`
+        }
+        // Just return the value
+        return value[baseType]
+      }
 
       throw new QtiEvaluationException(`Value does not have the required base-type. Expecting ${baseType}.`)
     
