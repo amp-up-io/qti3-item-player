@@ -775,7 +775,7 @@ export default class QtiProcessing {
       if (value['base'] !== undefined) {
         if (variable.cardinality === 'single') {
           // It's a single cardinality primitive
-          return this.baseValueFromPciJson(value.base, variable.baseType)
+          return this.baseValueFromPciJson(value.base, variable.baseType, true)
         }
         throw new QtiEvaluationException(`Inconsistent value cardinality [base] for this variable.  Variable must be single cardinality.`)
       }
@@ -783,7 +783,7 @@ export default class QtiProcessing {
       if (value['list'] !== undefined) {
         // Variable must be multiple or ordered
         if ((variable.cardinality === 'multiple') || (variable.cardinality === 'ordered')) {
-          return this.baseValueFromPciJson(value.list, variable.baseType)
+          return this.baseValueFromPciJson(value.list, variable.baseType, false)
         }
         throw new QtiEvaluationException(`Inconsistent value cardinality [list] for this variable.  Variable must be multiple or ordered cardinality.`)
       }
@@ -802,7 +802,7 @@ export default class QtiProcessing {
     }
   }
 
-  baseValueFromPciJson (value, baseType) {
+  baseValueFromPciJson (value, baseType, isSingleCardinality) {
     if (value === null) return this.nullValue()
 
     try {
@@ -819,18 +819,39 @@ export default class QtiProcessing {
       if (value[baseType] !== undefined) {
         // Special handling for point, directedPair, pair.
         if ((baseType === 'point') || (baseType === 'directedPair') || (baseType === 'pair')) {
-          
+
           // Should be an array
           if (!Array.isArray(value[baseType])) {
             throw new QtiEvaluationException(`Invalid value. For baseType "${baseType}", must be an Array`)
           }
 
-          if (value[baseType].length !== 2) {
-            throw new QtiEvaluationException(`Invalid value. For baseType "${baseType}", Array must have 2 elements`)
+          // Single
+          // For point, directedPair, pair, this is an array of pairs 
+          // with 2 elements
+          // e.g., [1,5] or ["a","b"]
+          if (isSingleCardinality) {
+            if (value[baseType].length !== 2) {
+              throw new QtiEvaluationException(`Invalid value. For baseType "${baseType}", Array must have 2 elements`)
+            }
+            // Combine the two elements, space-separated
+            return `${value[baseType][0]} ${value[baseType][1]}`
           }
-          // Combine the two elements, space-separated
-          return `${value[baseType][0]} ${value[baseType][1]}`
+
+          // Multiple or Ordered
+          // For point, directedPair, pair, this is an array of pairs, where 
+          // each pair is an array with 2 elements
+          // e.g., [[1,5],[0,2],[-1,0]] or [["a","b"],["a","c"],["b","a"]]
+          let result = []
+          value[baseType].forEach(pair => {
+            if (pair.length !== 2) {
+              throw new QtiEvaluationException(`Invalid value. For baseType "${baseType}", Array must have 2 elements`)
+            }
+            // Combine the two elements, space-separated
+            result.push(`${pair[0]} ${pair[1]}`)        
+          })
+          return result
         }
+
         // Just return the value
         return value[baseType]
       }
@@ -869,7 +890,8 @@ export default class QtiProcessing {
           if ((value[i].name !== undefined) && (value[i].base !== undefined)) {
             // 
             if (value[i].name === fieldIdentifier) {
-              const fieldValue = this.baseValueFromPciJson(value[i].base, fieldDefinition.getBaseType())
+              // Record fields are always single cardinality
+              const fieldValue = this.baseValueFromPciJson(value[i].base, fieldDefinition.getBaseType(), true)
               const recordField = new RecordField(fieldIdentifier, fieldDefinition.getBaseType(), fieldValue)
               valueMap.set(fieldIdentifier, recordField)
               break
