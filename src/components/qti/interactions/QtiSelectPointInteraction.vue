@@ -141,19 +141,25 @@ export default {
     },
 
     disable () {
-      this.toggleDisablePoints(true)
+      this.toggleDisable(true)
     },
 
     enable () {
-      this.toggleDisablePoints(false)
+      this.toggleDisable(false)
     },
 
     /**
      * @description Utility method to disable/enable this interaction's points.
      * @param {Boolean} isDisabled 
      */
-    toggleDisablePoints (isDisabled) {
+    toggleDisable (isDisabled) {
+      // Disable the event handlers
       this.isDisabled = isDisabled
+      // Make the overlay appear enabled/disabled
+      if (isDisabled)
+        this.$refs.overlay.classList.add('disabled')
+      else
+        this.$refs.overlay.classList.remove('disabled')
     },
 
     /**
@@ -536,6 +542,8 @@ export default {
     handleOverlayClick (event) {
       event.preventDefault()
 
+      if (this.isDisabled) return
+
       if (!this.checkMaxChoicesLimit()) {
         this.addPointFromClick(this.getMousePosition(event))
       }
@@ -872,6 +880,10 @@ export default {
   outline: none;
   user-select: none;
   cursor: pointer;
+}
+
+.qti-select-point-interaction .select-point-group svg.select-point-overlay.disabled {
+  cursor: auto;
 }
 
 .qti-select-point-interaction.responsive .select-point-group svg.select-point-overlay {
