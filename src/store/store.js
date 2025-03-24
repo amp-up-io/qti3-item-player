@@ -735,6 +735,15 @@ export const store = {
         this.pciSaveState(event.data.identifier, event.data.state)
         break
 
+      case 'PciInteractionChanged':
+        console.log('[PCI Parent] PCI InteractionChanged: ' + event.data.identifier + ', state: '+ event.data.state)
+
+        // This is the message we receive when a PCI emits a "qti-interaction-changed" event.
+        // The state property is a stringified object containing "valid" and "value" properties.
+        // "valid" represents the response's validity, and "value" is the response itself.
+        this.pciInteractionChanged(event.data.identifier, event.data.state)
+        break
+
       default:
         //console.log('[PCI Parent] Unknown Message: ' + event.data.message)
     }
@@ -745,6 +754,14 @@ export const store = {
     this.getInteractions().forEach((interaction) => {
       if (interaction.interactionType === 'PortableCustom') {
         interaction.node.pciResizeIframeWidthToContainer()
+      }
+    })
+  },
+
+  pciSetRenderingProperties () {
+    this.getInteractions().forEach((interaction) => {
+      if (interaction.interactionType === 'PortableCustom') {
+        interaction.node.pciSetRenderingProperties()
       }
     })
   },
@@ -782,6 +799,19 @@ export const store = {
         (interaction.interactionType !== 'PortableCustom')) return
 
     interaction.node.pciSaveState(state)   
+  },
+
+  pciInteractionChanged (identifier, state) {
+    let interaction = store.getInteraction(identifier)
+    if ((typeof interaction === 'undefined') || 
+        (interaction.interactionType !== 'PortableCustom')) return
+    
+    const stateObject = JSON.parse(state)
+    if (typeof stateObject.valid !== 'undefined')
+      interaction.node.pciUpdateValidity(stateObject.valid)  
+
+    if (typeof stateObject.value !== 'undefined')
+      interaction.node.pciUpdateResponse(stateObject.value) 
   },
 
   getAsyncStateMap () {

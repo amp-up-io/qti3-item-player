@@ -137,6 +137,21 @@ export class PnpFactory {
     return this.pnp
   }
 
+  getAfaPnp () {
+    const pnp = {
+      "ext:sbac-illustrated-glossary": (this.getExtSbacGlossaryIllustration() ? "on" : "off"),
+      "keyword-translation": this.getKeywordTranslationLanguage(),
+      "text-appearance": {
+        "color-theme": this.convertColorStyleToTheme()
+      }
+    }
+    const prohibitSet = this.getProhibitSet()
+    if (prohibitSet !== null) 
+      pnp["prohibit-set"] = prohibitSet
+
+    return { "access-for-all-pnp": pnp }
+  }
+
   getColorStyle () {
     return this.pnp.textAppearance.colorStyle
   }
@@ -175,6 +190,52 @@ export class PnpFactory {
 
   setLayoutSingleColumn (layoutSingleColumn) {
     this.pnp.layoutSingleColumn = layoutSingleColumn
+  }
+
+  /**
+   * @description Convert Qti 3 Player PNP colorStyle to standard QTI color theme.
+   * @returns {String} QTI color theme
+   */
+  convertColorStyleToTheme () {
+    const parts = this.getColorStyle().split('-')
+    if (parts.length !== 4) return 'default'
+    switch (parts[3]) {
+      case 'default':
+        return 'default'
+      case 'defaultreverse':
+        return 'default-reverse'
+      case 'blackwhite':
+        return 'high-contrast'
+      case 'whiteblack':
+        return 'high-contrast-reverse'
+      case 'blackrose':
+        return 'black-rose'
+      case 'roseblack':
+        return 'rose-black'
+      case 'yellowblue':
+        return 'yellow-blue'
+      case 'blueyellow':
+        return 'blue-yellow'
+      case 'mgraydgray':
+        return 'medgray-darkgray'
+      case 'dgraymgray':
+        return 'darkgray-medgray'
+      case 'blackcyan':
+        return 'black-cyan'
+      case 'cyanblack':
+        return 'cyan-black'
+      case 'blackcream':
+        return 'black-cream'
+      case 'creamblack':
+        return 'cream-black'
+      default:
+        return 'default'     
+    }
+  }
+
+  getProhibitSet () {
+    if (this.getGlossaryOnScreen()) return null
+    return { "glossary-on-screen": "active" }
   }
 
   evaluatePnpEvent (event) {

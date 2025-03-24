@@ -104,6 +104,7 @@ export default {
       cardinality: null,
       isValidResponse: true,
       isQtiValid: true,
+      invalidResponseMessage: 'Input Required',
       pciModuleResolver: null,
       loadIframeHandler: null,
       renderer: '',
@@ -192,7 +193,7 @@ export default {
      * @return {String} custom message
      */
     getInvalidResponseMessage () {
-      return ''
+      return this.invalidResponseMessage
     },
 
     /**
@@ -272,44 +273,9 @@ export default {
     },
 
     /**
-     * @description The determines an interaction's validity status.
-     * @return {Boolean} (true if valid, false if invalid)
-     */
-    computeIsValid () {
-      return true
-    },
-
-    /**
-     * @description Evaluate the interaction's response validity.
-     * Update the interaction's validity if there is a change.
-     */
-    evaluateValidity () {
-      // Save old validity value
-      const priorValidity = this.getIsValid()
-      // Compute new validity value
-      const currentValidity = this.computeIsValid()
-      // Bail if no change
-      if (priorValidity === currentValidity) return
-      // There is a change.
-      this.updateValidity(currentValidity)
-    },
-
-    /**
-     * @description Update the interaction's validity.
-     * @param {Boolean} isValid
-     */
-    updateValidity (isValid) {
-      this.setIsValid(isValid)
-      store.setInteractionIsValidResponse({
-          identifier: this.responseIdentifier,
-          isValidResponse: isValid
-        })
-    },
-
-    /**
      * @description Basic validation of the children.
      */
-     validateChildren () {
+    validateChildren () {
       if (!this.$slots.default) return
 
       // eslint-disable-next-line
@@ -621,6 +587,11 @@ export default {
       return responseVariable
     },
 
+    getAfaPnp () {
+      const pnp = store.getItemContextPnp()
+      return pnp.getAfaPnp()
+    },
+
     /**
      * @description Build a PciLoadInteraction message payload and send the
      * message to the pciIframe.  Optionally, include a priorState in the 
@@ -638,6 +609,7 @@ export default {
         contextVariables: this.getContextVariables(),
         stylesheets: this.getStylesheets(),
         catalogInfo: this.getCatalogInfo(),
+        pnp: this.getAfaPnp(),
         module: this.module,
         modules: this.getModules(),
         moduleResolution: this.getConfiguration(),
@@ -706,12 +678,45 @@ export default {
       this.notifyInteractionStateReady()
     },
 
+    /**
+     * @description Proxy to update this interaction's validity.
+     * @param {Boolean} isValid
+     */
+    pciUpdateValidity (isValid) {
+      this.setIsValid(isValid)
+      store.setInteractionIsValidResponse({
+          identifier: this.responseIdentifier,
+          isValidResponse: isValid
+        })
+    },
+
+    /**
+     * @description Proxy to update this interaction's response value.
+     * @param {Object} response
+     */
+    pciUpdateResponse (response) {
+      this.setResponse(response)
+    },
+
     pciSetReady () {
       this.isReady = true
     },
 
     pciIsReady () {
       return ((this.pciIframe !== null) && this.isReady)
+    },
+
+    pciSetRenderingProperties () {
+      // Pull the PNP from the store.
+      const message = { 
+        message: 'PciSetRenderingProperties', 
+        properties: {
+          pnp: this.getAfaPnp(),
+          status: store.getItemLifecycleStatus()
+        }
+      }
+
+      this.pciIframe.contentWindow.postMessage(message, '*')
     },
 
     /**

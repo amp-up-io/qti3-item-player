@@ -7,6 +7,7 @@
 
 body {
   --blue: #3d8ef8;
+  --navy: #003398;
   --indigo: #564ab1;
   --purple: #6f42c1;
   --pink: #e83e8c;
@@ -22,6 +23,8 @@ body {
   --white: #fff;
   --gray: #7c8a96;
   --gray-dark: #343a40;
+  --medgray: #e5e5e5;
+  --darkgray: #666;
   --primary: #3d8ef8;
   --success: #11c46e;
   --info: #0db4d6;
@@ -38,7 +41,6 @@ body {
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
   --font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --foreground: var(--darker);
   --background: var(--white);
   --secondary: #dbdbdb;
@@ -63,7 +65,72 @@ body {
   -webkit-tap-highlight-color: rgba(black, 0);
 }
 
-/* ========================================
+.theme-default-reverse {
+  color: var(--background);
+  background-color: var(--foreground);
+}
+
+.theme-high-contrast {
+  color: var(--black);
+  background-color: var(--white);
+}
+
+.theme-high-contrast-reverse {
+  color: var(--white);
+  background-color: var(--black);
+}
+
+.theme-black-rose {
+  color: var(--black);
+  background-color: var(--rose);
+}
+
+.theme-rose-black {
+  color: var(--rose);
+  background-color: var(--black);
+}
+
+.theme-black-cyan {
+  color: var(--black);
+  background-color: var(--lblue);
+}
+
+.theme-cyan-black {
+  color: var(--lblue);
+  background-color: var(--black);
+}
+
+.theme-black-cream {
+  color: var(--black);
+  background-color: var(--lchiffon);
+}
+
+.theme-cream-black {
+  color: var(--lchiffon);
+  background-color: var(--black);
+}
+
+.theme-medgray-darkgray {
+  color: var(--medgray);
+  background-color: var(--darkgray);
+}
+
+.theme-darkgray-medgray {
+  color: var(--darkgray);
+  background-color: var(--medgray);
+}
+
+.theme-yellow-blue {
+  color: var(--yellow);
+  background-color: var(--navy);
+}
+
+.theme-blue-yellow {
+  color: var(--navy);
+  background-color: var(--yellow);
+}
+
+/* =========================================
    QTI 3 shared css
    1. Display
    2. Special Flex styles
@@ -76,7 +143,7 @@ body {
    9. Float Styles
    10. Layout
    11. QtiAssessmentItem component utilities
-   ======================================== */
+   ========================================= */
 
 /* ==========
   Display css
