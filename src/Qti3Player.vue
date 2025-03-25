@@ -427,6 +427,15 @@ export default {
     },
 
     /**
+     * @description Utility method to dynamically update all item PCI 
+     * rendering properties.
+     */
+    pciSetRenderingProperties () {
+      // Force PCI setRenderingProperties
+      store.pciSetRenderingProperties()
+    },
+
+    /**
      * @description After an item is updated, we may need to do some cleanup of
      * the DOM or perform other post processing.
      */
