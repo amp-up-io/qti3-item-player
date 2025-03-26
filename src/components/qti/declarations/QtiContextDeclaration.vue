@@ -13,6 +13,7 @@
  */
 import Vue from 'vue'
 import { store } from '@/store/store'
+import { RecordField } from '@/shared/helpers/RecordField'
 import QtiValidationException from '@/components/qti/exceptions/QtiValidationException'
 import QtiEvaluationException from '@/components/qti/exceptions/QtiEvaluationException'
 import QtiParseException from '@/components/qti/exceptions/QtiParseException'
@@ -83,9 +84,14 @@ export default {
     },
 
     /**
-     * Utility method to resets value of this variable to default.
+     * Utility method to reset value of this variable to default.
      */
     initializeValue () {
+      if (this.getIdentifier() === 'QTI_CONTEXT') {
+        this.initializeQtiContext()
+        return
+      }
+
       // 1) if has defaultValue, use it
       if (this.defaultValue !== null) {
         this.setValue(this.defaultValue)
@@ -93,6 +99,22 @@ export default {
       }
       // 2) null
       this.setValue(qtiProcessing.nullValue())
+    },
+
+    initializeQtiContext () {
+      // Extra fussing for the built-in QTI_CONTEXT variable
+      const qtiContextValue = new Map()
+      qtiContextValue.set('candidateIdentifier', new RecordField('candidateIdentifier', 'string', null))
+      qtiContextValue.set('testIdentifier', new RecordField('testIdentifier', 'string', null))
+      qtiContextValue.set('environmentIdentifier', new RecordField('environmentIdentifier', 'string', null))
+
+      if (this.defaultValue !== null) {
+        // merge default value fields into QTI_CONTEXT
+        this.defaultValue.forEach((value, key) => {
+          qtiContextValue.set(key, new RecordField(key, value.getBaseType(), value.getValue()))
+        })
+      }
+      this.setValue(qtiContextValue)
     },
 
     /**
