@@ -714,8 +714,8 @@ export default class QtiProcessing {
       result.push({
         "name": fieldValue.fieldIdentifier, 
         "base": (fieldValue.value === null 
-            ? null 
-            : this.valueToPciJson(fieldValue.value, fieldValue.baseType, fieldValue.cardinality))        
+            ? null
+            : this.baseValueToPciJson(fieldValue.value, fieldValue.baseType))        
       })
     }
 
