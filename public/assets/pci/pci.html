@@ -131,7 +131,23 @@ let qtiCustomInteractionContext = {
       console.log('[PCI Context] Interaction SetRenderingProperties:', properties)
       instance.setRenderingProperties(properties)
     }
+  },
+
+  /**
+   * Allow the delivery engine to check the validity of PCI instance.
+   * If the PCI provides a checkValidity function then use that function.
+   * Otherwise, return boolean true (is valid).
+   * @param {Object} instance The Custom Interaction Instance.
+   */
+  checkValidity (instance) {
+    // default to true
+    let isValid = true
+    if ((typeof instance.checkValidity !== 'undefined') && typeof instance.checkValidity == 'function') {
+      isValid = instance.checkValidity()
+    }
+    return isValid
   }
+
 }
 
 define('qtiCustomInteractionContext',[],function(){
@@ -474,6 +490,10 @@ const QTI_PCI_API = {
     qtiCustomInteractionContext.setRenderingProperties(this.getInstance(), properties)
   },
 
+  checkValidity () {
+    return qtiCustomInteractionContext.checkValidity(this.getInstance())
+  },
+
   NotifyPciChildLoaded () {
     if (self == top) return
 
@@ -489,12 +509,13 @@ const QTI_PCI_API = {
 
     if (self == top) return
 
+    const isValid = this.checkValidity()
     const height = this.getDom().clientHeight
     const computedHeight = (height) ? height : 0
     const width = this.getDom().clientWidth
     const computedWidth = (width) ? width : 0
 
-    window.parent.postMessage({ message: 'PciReady', identifier: this.getResponseIdentifier(), width: computedWidth, height: computedHeight, success: true },'*')
+    window.parent.postMessage({ message: 'PciReady', identifier: this.getResponseIdentifier(), valid: isValid, width: computedWidth, height: computedHeight, success: true },'*')
   },
 
   NotifyPciDone (instance, response, state, status) {
