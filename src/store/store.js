@@ -781,6 +781,7 @@ export const store = {
 
     interaction.node.pciSetReady()
     interaction.node.setIsValid(valid)
+    interaction.isValidResponse = valid
   },
 
   pciResizeIframe (identifier, height, width, isInitialResize) {
