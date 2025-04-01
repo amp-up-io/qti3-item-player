@@ -574,9 +574,9 @@ const QTI_PCI_API = {
     // create a mutation observer instance
     let observer = new MutationObserver(function(mutations) {
       mutations.forEach(function(mutation) {
-        let bounds = element.getBoundingClientRect()
-        let width = Math.ceil(bounds.right)
-        let height = Math.ceil(bounds.bottom)
+        const bounds = element.getBoundingClientRect()
+        const width = bounds.right
+        const height = bounds.bottom
         if (Math.abs(width - this.width) > 15 || Math.abs(height - this.height) > 15) {
           this.width = width
           this.height = height
