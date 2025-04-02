@@ -457,8 +457,35 @@ export const store = {
       if (cdIndex < 0) return
 
       // Found the context variable, set its value
-      this.state.contextDeclarations[cdIndex].value = contextVariable.value
+      const cd = this.state.contextDeclarations[cdIndex]
+      if (cd.cardinality !== 'record')
+        cd.value = contextVariable.value
+      else
+        cd.value = this.createRecordFromMapValue(cd.identifier, cd.value, contextVariable.value)
+
     }, this)
+  },
+
+  createRecordFromMapValue (identifier, recordDefinition, mapValue) {
+    const recordValue = new Map()
+
+    // QTI_CONTEXT is a special case
+    if (identifier === 'QTI_CONTEXT') {
+      recordValue.set('candidateIdentifier', new RecordField('candidateIdentifier', 'string', mapValue.get('candidateIdentifier')))
+      recordValue.set('testIdentifier', new RecordField('testIdentifier', 'string', mapValue.get('testIdentifier')))
+      recordValue.set('environmentIdentifier', new RecordField('environmentIdentifier', 'string', mapValue.get('environmentIdentifier')))
+      return recordValue
+    }
+
+    // Iterate through the record definition.
+    for (const entry of recordDefinition.entries()) {
+      const [fieldIdentifier, fieldValue] = entry
+      recordValue.set(
+        fieldIdentifier, 
+        new RecordField(fieldIdentifier, fieldValue.getBaseType(), mapValue.get(fieldIdentifier))
+      )
+    }
+    return recordValue
   },
 
   restoreOutcomeVariables () {
@@ -882,7 +909,7 @@ export const store = {
     declaration = state.templateVariables.find(td => td.identifier === identifier)
     if (typeof declaration !== 'undefined') return declaration
 
-    declaration = state.contextDeclarations.find(cd => cd.identifier === identifier)
+    declaration = state.contextVariables.find(cd => cd.identifier === identifier)
     if (typeof declaration !== 'undefined') return declaration
 
     return null

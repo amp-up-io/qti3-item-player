@@ -162,7 +162,11 @@ export default {
         throw new QtiEvaluationException('Variable Restore State Invalid.  "value" property not found.')
       }
 
-      this.setValue(priorState.value)
+      if (this.getCardinality() !== 'record')
+        this.setValue(priorState.value)
+      else
+        this.setValue(store.createRecordFromMapValue(identifier, this.defaultValue, priorState.value))
+
       return priorState
     }
   },
@@ -173,9 +177,7 @@ export default {
       qtiAttributeValidation.validateBaseTypeAndCardinality(this.baseType, this.cardinality === 'record')
       qtiAttributeValidation.validateIdentifierAttribute(this.identifier)
 
-      // Notify store of our initial model.  We need this Initial
-      // definition before we can properly parse template variable references
-      // in the rest of the item.
+      // Notify store of our initial model
       store.defineContextDeclaration({
           identifier: this.identifier,
           baseType: this.getBaseType(),
