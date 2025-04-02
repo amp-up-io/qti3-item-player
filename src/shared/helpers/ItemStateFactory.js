@@ -47,12 +47,12 @@ export class ItemStateFactory {
       let obj = {
         identifier: responseVariable.identifier,
         cardinality: responseVariable.cardinality,
-        baseType: responseVariable.baseType,
+        baseType: this.resolveBaseType(responseVariable.baseType),
         value: this.serializeVariableValue(responseVariable.cardinality, responseVariable.value),
         state: this.serializeVariableState(responseVariable.state)
       }
 
-      // Response variable may have an optional correct.
+      // Only a Response Variable may have an optional correct response
       if ('correctResponse' in responseVariable) {
         obj.correctResponse = this.serializeVariableValue(responseVariable.cardinality, responseVariable.correctResponse)
       }
@@ -69,7 +69,7 @@ export class ItemStateFactory {
       variableArray.push({
         identifier: outcomeVariable.identifier,
         cardinality: outcomeVariable.cardinality,
-        baseType: outcomeVariable.baseType,
+        baseType: this.resolveBaseType(outcomeVariable.baseType),
         value: this.serializeVariableValue(outcomeVariable.cardinality, outcomeVariable.value),
         view: outcomeVariable.view,
         interpretation: outcomeVariable.interpretation,
@@ -91,7 +91,7 @@ export class ItemStateFactory {
       variableArray.push({
         identifier: variable.identifier,
         cardinality: variable.cardinality,
-        baseType: variable.baseType,
+        baseType: this.resolveBaseType(variable.baseType),
         value: this.serializeVariableValue(variable.cardinality, variable.value)
       })
     })
@@ -122,6 +122,10 @@ export class ItemStateFactory {
     return JSON.parse(JSON.stringify(state))
   }
 
+  resolveBaseType (baseType) {
+    return (typeof baseType === 'undefined') ? null : baseType
+  }
+
   serializeRecordVariableValue (value) {
     const jsonString = this.strMapToJson(value)
     return this.jsonToStrMap(jsonString)
@@ -138,9 +142,7 @@ export class ItemStateFactory {
   strMapToObj (strMap) {
     let obj = Object.create(null)
     for (let [k,v] of strMap) {
-      // We don’t escape the key '__proto__'
-      // which can cause problems on older engines
-      obj[k] = v
+      obj[k] = ((typeof v === 'object' && v !== null)) ? v.getValue() : v
     }
     return obj
   }
