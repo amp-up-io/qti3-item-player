@@ -85,7 +85,9 @@ export default class QtiProcessing {
       'qti-stats-operator',
       'qti-power',
       'qti-any-n',
-      'qti-inside'
+      'qti-inside',
+      'qti-contains',
+      'qti-container-size'
     ]
   }
 
@@ -176,6 +178,78 @@ export default class QtiProcessing {
       }
     }
     return true
+  }
+
+  /**
+   * For Unordered arrays (cardinality=multiple) the values are compared without regard 
+   * for ordering, for example, [A,B,C] contains [C,A].  Note that [A,B,C] does not 
+   * contain [B,B] but that [A,B,B,C] does.
+   * @param {Array} arr1 first unordered array
+   * @param {Array} arr2 second unordered array
+   * @returns boolean
+   */
+  isMultipleValuesContains (arr1, arr2) {
+    if (!Array.isArray(arr1) || !Array.isArray(arr2)) {
+      return false
+    }
+
+    if ((arr1.length === 0) || (arr2.length === 0)) {
+      return false
+    }
+
+    for (let i = 0; i < arr2.length; i++) {
+      const key = arr2[i]
+      const c2 = this.countOccurrences(arr2, key)
+      const c1 = this.countOccurrences(arr1, key)
+      if (c2 > c1) return false
+    }
+
+    return true
+  }
+  
+  countOccurrences (arr, key) {
+    let count = 0
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] === key) count++
+    }
+    return count
+  }
+
+  /**
+   * For Ordered arrays (cardinality=ordered) the second sub-expression must be a 
+   * strict sub-sequence within the first. In other words, [A,B,C] does not 
+   * contain [C,A] but it does contain [B,C].
+   * @param {Array} arr1 first ordered array
+   * @param {Array} arr2 second ordered array
+   * @returns boolean
+   */
+  isOrderedValuesContains (arr1, arr2) {
+    if (!Array.isArray(arr1) || !Array.isArray(arr2)) {
+      return false
+    }
+
+    if ((arr1.length === 0) || (arr2.length === 0)) {
+      return false
+    }
+
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr2[0] === arr1[i]) {
+        let found = true
+        for (let j = 1; j < arr2.length; j++) {
+          // Bail if we are off the end of arr1
+          if ((i + j) >= arr1.length) return false
+
+          if (arr2[j] !== arr1[i + j]) {
+            found = false
+            break
+          }
+        }
+
+        if (found) return true
+      }
+    }
+
+    return false
   }
 
   mapResponse (declaration) {

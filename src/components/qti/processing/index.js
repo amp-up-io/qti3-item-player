@@ -18,6 +18,8 @@ import QtiSetCorrectResponse from './rules/QtiSetCorrectResponse'
 import QtiSetDefaultValue from './rules/QtiSetDefaultValue'
 // Expressions
 import QtiBaseValue from './expressions/QtiBaseValue'
+import QtiContainerSize from './expressions/QtiContainerSize'
+import QtiContains from './expressions/QtiContains'
 import QtiCorrect from './expressions/QtiCorrect'
 import QtiDefault from './expressions/QtiDefault'
 import QtiVariable from './expressions/QtiVariable'
@@ -87,6 +89,8 @@ Vue.component('qti-set-correct-response', QtiSetCorrectResponse)
 Vue.component('qti-set-default-value', QtiSetDefaultValue)
 // Expressions
 Vue.component('qti-base-value', QtiBaseValue)
+Vue.component('qti-container-size', QtiContainerSize)
+Vue.component('qti-contains', QtiContains)
 Vue.component('qti-correct', QtiCorrect)
 Vue.component('qti-default', QtiDefault)
 Vue.component('qti-variable', QtiVariable)
