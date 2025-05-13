@@ -91,13 +91,6 @@ export default {
       required: false,
       type: String,
       default: ''
-    },
-    /*
-     * Optional attribute to override default PCI invalid response message.
-     */
-    dataMinSelectionsMessage: {
-      required: false,
-      type: String
     }
   },
 
@@ -200,7 +193,17 @@ export default {
      * @return {String} custom message
      */
     getInvalidResponseMessage () {
-      return this.invalidResponseMessage
+      return (this.invalidResponseMessage === '')
+        ? 'Input Required'
+        : this.invalidResponseMessage
+    },
+
+    /**
+     * @description Set this interaction's invalid response message.
+     * @param {String} message
+     */
+    setInvalidResponseMessage (message) {
+      this.invalidResponseMessage = message
     },
 
     /**
@@ -429,14 +432,6 @@ export default {
 
     enable () {
       // NOOP
-    },
-
-    computeMinSelectionsMessage () {
-      if (typeof this.dataMinSelectionsMessage !== 'undefined') {
-        this.invalidResponseMessage = this.dataMinSelectionsMessage
-        return
-      }
-      this.invalidResponseMessage = 'Input required'
     },
 
     /**
@@ -769,8 +764,6 @@ export default {
 
       const staticClass = (typeof this.$vnode.data.staticClass !== 'undefined') ? this.$vnode.data.staticClass : ''
       this.setClassAttribute(staticClass)
-
-      this.computeMinSelectionsMessage()
 
       // Pull any prior interaction state.
       this.priorState = this.getPriorState(this.responseIdentifier)

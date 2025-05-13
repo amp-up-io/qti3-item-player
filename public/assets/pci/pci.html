@@ -134,7 +134,7 @@ let qtiCustomInteractionContext = {
   },
 
   /**
-   * Allow the delivery engine to check the validity of PCI instance.
+   * Allow the delivery engine to check the validity of the PCI instance.
    * If the PCI provides a checkValidity function then use that function.
    * Otherwise, return boolean true (is valid).
    * @param {Object} instance The Custom Interaction Instance.
@@ -146,6 +146,20 @@ let qtiCustomInteractionContext = {
       isValid = instance.checkValidity()
     }
     return isValid
+  },
+
+  /**
+   * Allow the delivery engine to get the custom validity message of the PCI instance.
+   * If the PCI provides a getCustomValidity function then use that function.
+   * Otherwise, return the empty string.
+   * @param {Object} instance The Custom Interaction Instance.
+   */
+  getCustomValidityMessage (instance) {
+    let message = ''
+    if ((typeof instance.getCustomValidity !== 'undefined') && typeof instance.getCustomValidity == 'function') {
+      message = instance.getCustomValidity()
+    }
+    return message
   }
 
 }
@@ -494,6 +508,10 @@ const QTI_PCI_API = {
     return qtiCustomInteractionContext.checkValidity(this.getInstance())
   },
 
+  getCustomValidityMessage () {
+    return qtiCustomInteractionContext.getCustomValidityMessage(this.getInstance())
+  },
+
   NotifyPciChildLoaded () {
     if (self == top) return
 
@@ -510,12 +528,21 @@ const QTI_PCI_API = {
     if (self == top) return
 
     const isValid = this.checkValidity()
+    const invalidResponseMessage = this.getCustomValidityMessage()
     const height = this.getDom().clientHeight
     const computedHeight = (height) ? height : 0
     const width = this.getDom().clientWidth
     const computedWidth = (width) ? width : 0
 
-    window.parent.postMessage({ message: 'PciReady', identifier: this.getResponseIdentifier(), valid: isValid, width: computedWidth, height: computedHeight, success: true },'*')
+    window.parent.postMessage({
+        message: 'PciReady',
+        identifier: this.getResponseIdentifier(),
+        valid: isValid,
+        invalidResponseMessage: invalidResponseMessage,
+        width: computedWidth,
+        height: computedHeight,
+        success: true 
+      },'*')
   },
 
   NotifyPciDone (instance, response, state, status) {
