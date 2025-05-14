@@ -118,7 +118,7 @@ let qtiCustomInteractionContext = {
    * getInstance.  
    * If the PCI is interested in being notified it will provide a function
    * to implement setRenderingProperties.
-
+   *
    * @param {Object} instance The Custom Interaction Instance.
    * @param {Object} properties Properties is an Object consisting of two properties:
    * {
@@ -127,7 +127,7 @@ let qtiCustomInteractionContext = {
    * }
    */
   setRenderingProperties (instance, properties) {
-    if ((typeof instance.setRenderingProperties !== 'undefined') && typeof instance.setRenderingProperties == 'function') {
+    if ((typeof instance.setRenderingProperties !== 'undefined') && (typeof instance.setRenderingProperties == 'function')) {
       console.log('[PCI Context] Interaction SetRenderingProperties:', properties)
       instance.setRenderingProperties(properties)
     }
@@ -142,7 +142,7 @@ let qtiCustomInteractionContext = {
   checkValidity (instance) {
     // default to true
     let isValid = true
-    if ((typeof instance.checkValidity !== 'undefined') && typeof instance.checkValidity == 'function') {
+    if ((typeof instance.checkValidity !== 'undefined') && (typeof instance.checkValidity == 'function')) {
       isValid = instance.checkValidity()
     }
     return isValid
@@ -156,7 +156,7 @@ let qtiCustomInteractionContext = {
    */
   getCustomValidityMessage (instance) {
     let message = ''
-    if ((typeof instance.getCustomValidity !== 'undefined') && typeof instance.getCustomValidity == 'function') {
+    if ((typeof instance.getCustomValidity !== 'undefined') && (typeof instance.getCustomValidity == 'function')) {
       message = instance.getCustomValidity()
     }
     return message
@@ -570,7 +570,7 @@ const QTI_PCI_API = {
     })
 
     window.parent.postMessage({ message: 'PciInteractionChanged', identifier: this.getResponseIdentifier(), state: stringifiedStateObject, success: true },'*')
-  },  
+  },
 
   /**
    * @description Generic function for parsing URL params.
