@@ -417,7 +417,7 @@ export default {
       if (!store.getItemContextSessionControl().getShowSolution()) return
 
       // NOOP if Item lifecycle is not 'solution'
-      if (store.getItemLifecycleState() !== 'solution') return
+      if (store.getItemLifecycleStatus() !== 'solution') return
 
       store.getInteractions().forEach((interaction) => {
         if (interaction.node.showSolution) {
